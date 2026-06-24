@@ -58,6 +58,9 @@ abstract class Spell with _$Spell {
     @Default('') String range,
     @Default('1 action') String castingTime,
     @Default(true) bool prepared,
+
+    /// 是否需要專注（Concentration）。
+    @Default(false) bool concentration,
   }) = _Spell;
 
   factory Spell.fromJson(Map<String, dynamic> json) => _$SpellFromJson(json);
@@ -192,6 +195,9 @@ abstract class Character with _$Character {
     @Default('') String backstory,
     @Default(<String>[]) List<String> personalityTags,
     @Default(<String>[]) List<String> conditions,
+
+    /// 力竭等級（0–6，0 = 無）。
+    @Default(0) int exhaustionLevel,
   }) = _Character;
 
   factory Character.fromJson(Map<String, dynamic> json) =>
@@ -228,7 +234,7 @@ abstract class Character with _$Character {
       spellDc: 13,
       spellAttack: 5,
       spellcastingAbility: 'INT',
-      concentrationSpell: '朦朧術 (Blur)',
+      concentrationSpell: '朦朧術',
       abilityScores: AbilityScores(
         str: AbilityScore(score: 10, modifier: 0),
         dex: AbilityScore(score: 12, modifier: 1),
@@ -269,6 +275,7 @@ abstract class Character with _$Character {
         Spell(name: '護盾術', nameEn: 'Shield', level: 1, castingTime: '1 reaction', range: '自身', description: '一道無形的力場屏障保護你。直到你的下個回合開始，你的 AC 獲得 +5（含觸發此反應的攻擊），並且不受魔法飛彈傷害。'),
         Spell(name: '迷蹤步', nameEn: 'Misty Step', level: 2, castingTime: 'bonus action', range: '自身', description: '你被一陣銀霧短暫包圍，瞬間傳送至 30 呎內一處你能看見的未被佔據空間。'),
         Spell(name: '法師護甲', nameEn: 'Mage Armor', level: 1, range: '觸碰', description: '你碰觸一名未著甲的目標，一層魔法力場護甲環繞它，使其基礎 AC 變為 13 + 敏捷調整值，持續 8 小時，或直到目標著甲或你解除法術。'),
+        Spell(name: '朦朧術', nameEn: 'Blur', level: 2, range: '自身', concentration: true, description: '你的身形變得模糊晃動。專注期間（至多 1 分鐘），攻擊你的生物其攻擊檢定具有劣勢，除非攻擊者不依賴視覺或能看穿幻象。'),
       ],
       spellSlots: [
         SpellSlots(level: 1, total: 4, used: 0),
