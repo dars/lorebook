@@ -368,69 +368,63 @@ class _ConditionsRow extends StatelessWidget {
     final hasAny =
         character.conditions.isNotEmpty || character.exhaustionLevel > 0;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+    // 整個區塊可點 → 開啟狀態選單；chip 自身的點擊/移除不受影響。
+    return InkWell(
+      onTap: onEdit,
+      borderRadius: BorderRadius.circular(6),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.warning_amber_rounded,
-                size: 12, color: AppColors.sectionLabel),
-            const SizedBox(width: 6),
-            Text(
-              '狀態異常・CONDITIONS',
-              style: TextStyle(
-                fontFamily: 'NotoSerifTC',
-                fontSize: 10,
-                color: AppColors.goldDim,
-              ),
+            Row(
+              children: [
+                Icon(Icons.warning_amber_rounded,
+                    size: 12, color: AppColors.sectionLabel),
+                const SizedBox(width: 6),
+                Text(
+                  '狀態異常・CONDITIONS',
+                  style: TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 10,
+                    color: AppColors.goldDim,
+                  ),
+                ),
+              ],
             ),
-            const Spacer(),
-            InkWell(
-              onTap: onEdit,
-              borderRadius: BorderRadius.circular(4),
-              child: Padding(
-                padding: const EdgeInsets.all(4),
-                child: Icon(Icons.edit_outlined,
-                    size: 16, color: AppColors.darkTextSecondary),
+            const SizedBox(height: 6),
+            if (!hasAny)
+              Text(
+                '目前無異常狀態',
+                style: TextStyle(
+                  fontFamily: 'NotoSerifTC',
+                  fontSize: 11,
+                  color: AppColors.darkTextSecondary,
+                ),
+              )
+            else
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final name in character.conditions)
+                    _ConditionChip(
+                      label: name,
+                      onRemove: () => notifier.removeCondition(name),
+                      onTap: () => _showEffectDialog(context, name),
+                    ),
+                  if (character.exhaustionLevel > 0)
+                    _ConditionChip(
+                      label: '力竭 ${character.exhaustionLevel}',
+                      onRemove: () =>
+                          notifier.adjustExhaustion(-character.exhaustionLevel),
+                      onTap: () => _showEffectDialog(context, '力竭'),
+                    ),
+                ],
               ),
-            ),
           ],
         ),
-        const SizedBox(height: 6),
-        if (!hasAny)
-          GestureDetector(
-            onTap: onEdit,
-            behavior: HitTestBehavior.opaque,
-            child: Text(
-              '目前無異常狀態',
-              style: TextStyle(
-                fontFamily: 'NotoSerifTC',
-                fontSize: 11,
-                color: AppColors.darkTextSecondary,
-              ),
-            ),
-          )
-        else
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: [
-              for (final name in character.conditions)
-                _ConditionChip(
-                  label: name,
-                  onRemove: () => notifier.removeCondition(name),
-                  onTap: () => _showEffectDialog(context, name),
-                ),
-              if (character.exhaustionLevel > 0)
-                _ConditionChip(
-                  label: '力竭 ${character.exhaustionLevel}',
-                  onRemove: () =>
-                      notifier.adjustExhaustion(-character.exhaustionLevel),
-                  onTap: () => _showEffectDialog(context, '力竭'),
-                ),
-            ],
-          ),
-      ],
+      ),
     );
   }
 }
