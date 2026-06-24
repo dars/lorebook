@@ -264,14 +264,14 @@ abstract class Character with _$Character {
         Skill(name: '求生', nameEn: 'Survival', abilityType: 'WIS', modifier: 1),
       ],
       cantrips: [
-        Spell(name: '火焰箭', nameEn: 'Fire Bolt', level: 0, damage: '1D10', damageType: 'fire', range: '120 FT (24格)', description: '你對施法距離內一名生物或物體擲出一團火焰，進行一次遠程法術攻擊。命中時，目標受到 1d10 點火焰傷害。未被穿著或攜帶的可燃物件被擊中時會開始燃燒。', upgrade: '升級效應：當你到達特定等級，傷害增加 1d10（5級 2d10、11級 3d10、17級 4d10）。'),
-        Spell(name: '冰霜射線', nameEn: 'Ray of Frost', level: 0, damage: '1D8', damageType: 'cold', range: '60 FT (12格)', description: '一道冰冷的藍白光束射向射程內一名生物，進行一次遠程法術攻擊。命中時造成 1d8 點寒冰傷害，且目標速度降低 10 呎直到你的下個回合開始。', upgrade: '升級效應：5級 2d8、11級 3d8、17級 4d8。'),
+        Spell(name: '火焰箭', nameEn: 'Fire Bolt', level: 0, damage: '1d10', damageType: 'fire', range: '120 FT (24格)', description: '你對施法距離內一名生物或物體擲出一團火焰，進行一次遠程法術攻擊。命中時，目標受到 1d10 點火焰傷害。未被穿著或攜帶的可燃物件被擊中時會開始燃燒。', upgrade: '升級效應：當你到達特定等級，傷害增加 1d10（5級 2d10、11級 3d10、17級 4d10）。'),
+        Spell(name: '冰霜射線', nameEn: 'Ray of Frost', level: 0, damage: '1d8', damageType: 'cold', range: '60 FT (12格)', description: '一道冰冷的藍白光束射向射程內一名生物，進行一次遠程法術攻擊。命中時造成 1d8 點寒冰傷害，且目標速度降低 10 呎直到你的下個回合開始。', upgrade: '升級效應：5級 2d8、11級 3d8、17級 4d8。'),
         Spell(name: '法師之手', nameEn: 'Mage Hand', level: 0, range: '30 FT (6格)', description: '在射程內出現一隻幽靈般的漂浮手，持續 1 分鐘。你可用動作操控它搬運物件、開關容器或傾倒瓶罐，但無法攻擊、啟動魔法物品，也無法搬運超過 10 磅的重物。'),
         Spell(name: '光亮術', nameEn: 'Light', level: 0, range: '觸碰', description: '你碰觸一件不大於 10 呎的物體，使其發出 20 呎明亮光線與額外 20 呎微光，持續 1 小時。若目標被他人持有且不情願，需進行敏捷豁免。'),
       ],
       spells: [
-        Spell(name: '魔法飛彈', nameEn: 'Magic Missile', level: 1, damage: '3×1D4+1', damageType: 'force', range: '120 FT (24格)', description: '你創造三枚閃耀的力場飛彈，各自命中射程內你選定的目標並自動命中，每枚造成 1d4+1 點力場傷害。', upgrade: '升環施法：每提升一環，飛彈數量增加 1 枚。'),
-        Spell(name: '燃燒之手', nameEn: 'Burning Hands', level: 1, damage: '3D6', damageType: 'fire', range: '自身 (15呎錐形)', description: '你的指尖噴出一片 15 呎錐形烈焰。範圍內每個生物需進行敏捷豁免，失敗受到 3d6 點火焰傷害，成功則減半。', upgrade: '升環施法：每提升一環，傷害增加 1d6。'),
+        Spell(name: '魔法飛彈', nameEn: 'Magic Missile', level: 1, damage: '3×1d4+1', damageType: 'force', range: '120 FT (24格)', description: '你創造三枚閃耀的力場飛彈，各自命中射程內你選定的目標並自動命中，每枚造成 1d4+1 點力場傷害。', upgrade: '升環施法：每提升一環，飛彈數量增加 1 枚。'),
+        Spell(name: '燃燒之手', nameEn: 'Burning Hands', level: 1, damage: '3d6', damageType: 'fire', range: '自身 (15呎錐形)', description: '你的指尖噴出一片 15 呎錐形烈焰。範圍內每個生物需進行敏捷豁免，失敗受到 3d6 點火焰傷害，成功則減半。', upgrade: '升環施法：每提升一環，傷害增加 1d6。'),
         Spell(name: '護盾術', nameEn: 'Shield', level: 1, castingTime: '1 reaction', range: '自身', description: '一道無形的力場屏障保護你。直到你的下個回合開始，你的 AC 獲得 +5（含觸發此反應的攻擊），並且不受魔法飛彈傷害。'),
         Spell(name: '迷蹤步', nameEn: 'Misty Step', level: 2, castingTime: 'bonus action', range: '自身', description: '你被一陣銀霧短暫包圍，瞬間傳送至 30 呎內一處你能看見的未被佔據空間。'),
         Spell(name: '法師護甲', nameEn: 'Mage Armor', level: 1, range: '觸碰', description: '你碰觸一名未著甲的目標，一層魔法力場護甲環繞它，使其基礎 AC 變為 13 + 敏捷調整值，持續 8 小時，或直到目標著甲或你解除法術。'),
@@ -282,8 +282,8 @@ abstract class Character with _$Character {
         SpellSlots(level: 2, total: 2, used: 0),
       ],
       weapons: [
-        Weapon(name: '長棍', nameEn: 'Quarterstaff', attackBonus: 4, damage: '1D6', damageType: 'bludgeoning', properties: ['versatile (1D8)']),
-        Weapon(name: '匕首 ×2', nameEn: 'Dagger ×2', attackBonus: 3, damage: '1D4+1', damageType: 'piercing', properties: ['finesse', 'light', 'thrown (20/60)']),
+        Weapon(name: '長棍', nameEn: 'Quarterstaff', attackBonus: 4, damage: '1d6', damageType: 'bludgeoning', properties: ['versatile (1d8)']),
+        Weapon(name: '匕首 ×2', nameEn: 'Dagger ×2', attackBonus: 3, damage: '1d4+1', damageType: 'piercing', properties: ['finesse', 'light', 'thrown (20/60)']),
       ],
       equipment: [
         Equipment(name: '水晶球', nameEn: 'Crystal Orb', type: 'arcane focus', description: '奧術法器', equipped: true),
