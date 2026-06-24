@@ -5429,6 +5429,1044 @@
           "fontWeight": "700"
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "DiMV0",
+      "x": 908,
+      "y": -568,
+      "name": "ACShield",
+      "reusable": true,
+      "width": 160,
+      "height": 220,
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "R1cCj7",
+          "name": "LabelRow",
+          "gap": 4,
+          "padding": [
+            0,
+            0,
+            4,
+            0
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "nOJKw",
+              "name": "ShieldIcon",
+              "width": 14,
+              "height": 14,
+              "icon": "shield",
+              "library": "Material Symbols Rounded",
+              "fill": "#C8A86B"
+            },
+            {
+              "type": "text",
+              "id": "jnJX1",
+              "name": "ACLabel",
+              "fill": "#C8A86B",
+              "content": "AC",
+              "fontFamily": "Cinzel",
+              "fontSize": 12,
+              "fontWeight": "600",
+              "letterSpacing": 1.5
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "LQq9H",
+          "name": "ShieldBody",
+          "width": 140,
+          "height": 150,
+          "layout": "none",
+          "children": [
+            {
+              "type": "path",
+              "id": "wVyVj",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "ShieldShape",
+              "geometry": "M70 0l70 28 0 62c0 38-70 60-70 60 0 0-70-22-70-60l0-62z",
+              "viewBox": [
+                0,
+                0,
+                140,
+                150
+              ],
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": 180,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#3A2E1E",
+                    "position": 0
+                  },
+                  {
+                    "color": "#1E1710",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": 140,
+              "height": 150,
+              "stroke": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": 180,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#D4A843",
+                    "position": 0
+                  },
+                  {
+                    "color": "#8B6820",
+                    "position": 0.5
+                  },
+                  {
+                    "color": "#D4A843",
+                    "position": 1
+                  }
+                ]
+              },
+              "strokeWidth": 3,
+              "strokeAlignment": "inner",
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#00000088",
+                "offset": {
+                  "x": 0,
+                  "y": 4
+                },
+                "blur": 12
+              }
+            },
+            {
+              "type": "path",
+              "id": "U9eZd",
+              "layoutPosition": "absolute",
+              "x": 10,
+              "y": 10,
+              "name": "ShieldInner",
+              "opacity": 0.6,
+              "geometry": "M60 0l60 24 0 52c0 33-60 52-60 52 0 0-60-19-60-52l0-52z",
+              "viewBox": [
+                0,
+                0,
+                120,
+                128
+              ],
+              "fill": "#00000000",
+              "width": 120,
+              "height": 128,
+              "stroke": "#8B6820",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner"
+            },
+            {
+              "type": "frame",
+              "id": "vxOZQ",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "TextOverlay",
+              "width": 140,
+              "height": 150,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "VEobX",
+                  "name": "ACValue",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 180,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#F0D080",
+                        "position": 0
+                      },
+                      {
+                        "color": "#C8963C",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#00000099",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 8
+                  },
+                  "content": "12",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 48,
+                  "fontWeight": "700"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "zlwBh",
+          "name": "SubtitleRow",
+          "gap": 4,
+          "padding": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "b9bU9",
+              "name": "SubtitleText",
+              "fill": "#A08050",
+              "content": "無甲・敏捷",
+              "fontFamily": "Noto Sans TC",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "F8af7",
+      "x": 908,
+      "y": -268,
+      "name": "StatCard",
+      "reusable": true,
+      "width": 340,
+      "height": 130,
+      "fill": "$dnd-bg",
+      "layout": "none",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "mhcC5",
+          "layoutPosition": "absolute",
+          "x": 10,
+          "y": 10,
+          "name": "Border",
+          "fill": "#00000000",
+          "width": 320,
+          "height": 110,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1
+        },
+        {
+          "type": "path",
+          "id": "PWreC",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "CornerTL",
+          "geometry": "M0 10l5 0m5-10l0 5m0 0l5 5-5 5-5-5z m5 5l7 0m-12 5l0 7",
+          "viewBox": [
+            0,
+            0,
+            22,
+            22
+          ],
+          "fill": "$dnd-bg",
+          "width": 22,
+          "height": 22,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1.5,
+          "strokeLinecap": "square"
+        },
+        {
+          "type": "path",
+          "id": "n78bHn",
+          "layoutPosition": "absolute",
+          "x": 318,
+          "y": 0,
+          "name": "CornerTR",
+          "geometry": "M22 10l-5 0m-5-10l0 5m0 0l5 5-5 5-5-5z m-5 5l-7 0m12 5l0 7",
+          "viewBox": [
+            0,
+            0,
+            22,
+            22
+          ],
+          "fill": "$dnd-bg",
+          "width": 22,
+          "height": 22,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1.5,
+          "strokeLinecap": "square"
+        },
+        {
+          "type": "path",
+          "id": "kc9yd",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 108,
+          "name": "CornerBL",
+          "geometry": "M0 12l5 0m5 10l0-5m0-10l5 5-5 5-5-5z m5 5l7 0m-12-5l0-7",
+          "viewBox": [
+            0,
+            0,
+            22,
+            22
+          ],
+          "fill": "$dnd-bg",
+          "width": 22,
+          "height": 22,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1.5,
+          "strokeLinecap": "square"
+        },
+        {
+          "type": "path",
+          "id": "idkTL",
+          "layoutPosition": "absolute",
+          "x": 318,
+          "y": 108,
+          "name": "CornerBR",
+          "geometry": "M22 12l-5 0m-5 10l0-5m0-10l5 5-5 5-5-5z m-5 5l-7 0m12-5l0-7",
+          "viewBox": [
+            0,
+            0,
+            22,
+            22
+          ],
+          "fill": "$dnd-bg",
+          "width": 22,
+          "height": 22,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1.5,
+          "strokeLinecap": "square"
+        },
+        {
+          "type": "icon",
+          "id": "Pnbqa",
+          "layoutPosition": "absolute",
+          "x": 140,
+          "y": 35,
+          "name": "BgGlow",
+          "opacity": 0.05,
+          "width": 60,
+          "height": 60,
+          "icon": "flare",
+          "library": "Material Symbols Rounded",
+          "fill": "$dnd-gold"
+        },
+        {
+          "type": "frame",
+          "id": "u5kQOg",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Content",
+          "width": 340,
+          "height": 130,
+          "gap": 16,
+          "padding": [
+            22,
+            32
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "X7zNi",
+              "name": "StatIcon",
+              "opacity": 0.85,
+              "width": 48,
+              "height": 48,
+              "icon": "hiking",
+              "library": "Material Symbols Rounded",
+              "fill": "$dnd-gold-dim"
+            },
+            {
+              "type": "frame",
+              "id": "I3LbL",
+              "name": "TextCol",
+              "layout": "vertical",
+              "gap": 3,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "HAJ1x",
+                  "name": "Label",
+                  "fill": "$dnd-section-label",
+                  "content": "速度 Speed",
+                  "fontFamily": "Noto Sans TC",
+                  "fontSize": 11,
+                  "fontWeight": "normal",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "YzQYX",
+                  "name": "ValueRow",
+                  "gap": 5,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VFWcX",
+                      "name": "Value",
+                      "fill": "$dnd-gold",
+                      "content": "30",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 40,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "honGN",
+                      "name": "Unit",
+                      "fill": "$dnd-text-dim",
+                      "content": "FT",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "ovAMr",
+                  "name": "Sub",
+                  "fill": "$dnd-text-dim",
+                  "content": "6 格",
+                  "fontFamily": "Noto Sans TC",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "soFaF",
+      "x": 1288,
+      "y": -268,
+      "name": "MiniStatCard",
+      "reusable": true,
+      "width": 130,
+      "height": 90,
+      "fill": "$dnd-bg",
+      "layout": "none",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "V9d4Fh",
+          "layoutPosition": "absolute",
+          "x": 10,
+          "y": 10,
+          "name": "Border",
+          "fill": "#00000000",
+          "width": 110,
+          "height": 70,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1
+        },
+        {
+          "type": "path",
+          "id": "PLkNp",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "CornerTL",
+          "geometry": "M0 10l5 0m5-10l0 5m0 0l5 5-5 5-5-5z m5 5l7 0m-12 5l0 7",
+          "viewBox": [
+            0,
+            0,
+            22,
+            22
+          ],
+          "fill": "$dnd-bg",
+          "width": 22,
+          "height": 22,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1.5,
+          "strokeLinecap": "square"
+        },
+        {
+          "type": "path",
+          "id": "I7AtGN",
+          "layoutPosition": "absolute",
+          "x": 108,
+          "y": 0,
+          "name": "CornerTR",
+          "geometry": "M22 10l-5 0m-5-10l0 5m0 0l5 5-5 5-5-5z m-5 5l-7 0m12 5l0 7",
+          "viewBox": [
+            0,
+            0,
+            22,
+            22
+          ],
+          "fill": "$dnd-bg",
+          "width": 22,
+          "height": 22,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1.5,
+          "strokeLinecap": "square"
+        },
+        {
+          "type": "path",
+          "id": "MnGFj",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 68,
+          "name": "CornerBL",
+          "geometry": "M0 12l5 0m5 10l0-5m0-10l5 5-5 5-5-5z m5 5l7 0m-12-5l0-7",
+          "viewBox": [
+            0,
+            0,
+            22,
+            22
+          ],
+          "fill": "$dnd-bg",
+          "width": 22,
+          "height": 22,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1.5,
+          "strokeLinecap": "square"
+        },
+        {
+          "type": "path",
+          "id": "tIfAu",
+          "layoutPosition": "absolute",
+          "x": 108,
+          "y": 68,
+          "name": "CornerBR",
+          "geometry": "M22 12l-5 0m-5 10l0-5m0-10l5 5-5 5-5-5z m-5 5l-7 0m12-5l0-7",
+          "viewBox": [
+            0,
+            0,
+            22,
+            22
+          ],
+          "fill": "$dnd-bg",
+          "width": 22,
+          "height": 22,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1.5,
+          "strokeLinecap": "square"
+        },
+        {
+          "type": "frame",
+          "id": "AeSq3",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Content",
+          "width": 130,
+          "height": 90,
+          "layout": "vertical",
+          "gap": 4,
+          "padding": [
+            14,
+            12
+          ],
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "W4ZVC",
+              "name": "Value",
+              "fill": "$dnd-gold",
+              "content": "+3",
+              "fontFamily": "Cinzel",
+              "fontSize": 34,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "RBX5z",
+              "name": "Label",
+              "fill": "$dnd-section-label",
+              "content": "先攻 Initiative",
+              "fontFamily": "Noto Sans TC",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 0.8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Tjdrz",
+      "x": 908,
+      "y": 54,
+      "name": "HPCard",
+      "reusable": true,
+      "width": 340,
+      "height": 110,
+      "fill": "$dnd-bg",
+      "layout": "none",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "gClAc",
+          "layoutPosition": "absolute",
+          "x": 10,
+          "y": 10,
+          "name": "Border",
+          "fill": "#00000000",
+          "width": 320,
+          "height": 90,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1
+        },
+        {
+          "type": "path",
+          "id": "FC6v0",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "CornerTL",
+          "geometry": "M0 10l5 0m5-10l0 5m0 0l5 5-5 5-5-5z m5 5l7 0m-12 5l0 7",
+          "viewBox": [
+            0,
+            0,
+            22,
+            22
+          ],
+          "fill": "$dnd-bg",
+          "width": 22,
+          "height": 22,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1.5,
+          "strokeLinecap": "square"
+        },
+        {
+          "type": "path",
+          "id": "varq2",
+          "layoutPosition": "absolute",
+          "x": 318,
+          "y": 0,
+          "name": "CornerTR",
+          "geometry": "M22 10l-5 0m-5-10l0 5m0 0l5 5-5 5-5-5z m-5 5l-7 0m12 5l0 7",
+          "viewBox": [
+            0,
+            0,
+            22,
+            22
+          ],
+          "fill": "$dnd-bg",
+          "width": 22,
+          "height": 22,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1.5,
+          "strokeLinecap": "square"
+        },
+        {
+          "type": "path",
+          "id": "BQLDT",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 88,
+          "name": "CornerBL",
+          "geometry": "M0 12l5 0m5 10l0-5m0-10l5 5-5 5-5-5z m5 5l7 0m-12-5l0-7",
+          "viewBox": [
+            0,
+            0,
+            22,
+            22
+          ],
+          "fill": "$dnd-bg",
+          "width": 22,
+          "height": 22,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1.5,
+          "strokeLinecap": "square"
+        },
+        {
+          "type": "path",
+          "id": "FSA0H",
+          "layoutPosition": "absolute",
+          "x": 318,
+          "y": 88,
+          "name": "CornerBR",
+          "geometry": "M22 12l-5 0m-5 10l0-5m0-10l5 5-5 5-5-5z m-5 5l-7 0m12-5l0-7",
+          "viewBox": [
+            0,
+            0,
+            22,
+            22
+          ],
+          "fill": "$dnd-bg",
+          "width": 22,
+          "height": 22,
+          "stroke": "$dnd-border",
+          "strokeWidth": 1.5,
+          "strokeLinecap": "square"
+        },
+        {
+          "type": "frame",
+          "id": "n28AP5",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Content",
+          "width": 340,
+          "height": 110,
+          "padding": [
+            18,
+            28
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "nzVcN",
+              "name": "HPMain",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "OQjZU",
+                  "name": "HPLabel",
+                  "fill": "$dnd-section-label",
+                  "content": "生命值 HP",
+                  "fontFamily": "Noto Sans TC",
+                  "fontSize": 11,
+                  "fontWeight": "normal",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "ze1rC",
+                  "name": "HPRow",
+                  "gap": 4,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "b09lfJ",
+                      "name": "HPCurrent",
+                      "fill": "$dnd-gold",
+                      "content": "45",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 38,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Lowqu",
+                      "name": "HPSep",
+                      "fill": "$dnd-text-dim",
+                      "content": "/",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 20,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "y5xpyP",
+                      "name": "HPMax",
+                      "fill": "$dnd-text-light",
+                      "content": "56",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 22,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "lnRSu",
+              "name": "Divider",
+              "fill": "$dnd-border",
+              "width": 1,
+              "height": 50
+            },
+            {
+              "type": "frame",
+              "id": "XHO6j",
+              "name": "HPTemp",
+              "layout": "vertical",
+              "gap": 4,
+              "padding": [
+                0,
+                0,
+                0,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Z2ohln",
+                  "name": "TempVal",
+                  "fill": "$dnd-text-dim",
+                  "content": "0",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 26,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "pxIli",
+                  "name": "TempLabel",
+                  "fill": "$dnd-section-label",
+                  "content": "臨時",
+                  "fontFamily": "Noto Sans TC",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "oFI1j",
+      "x": 1816,
+      "y": -268,
+      "name": "InfoCardSet Demo",
+      "width": 390,
+      "height": 500,
+      "fill": "$dnd-bg",
+      "layout": "vertical",
+      "gap": 12,
+      "padding": [
+        24,
+        25
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "x0tleE",
+          "name": "Row1",
+          "width": "fill_container",
+          "gap": 10,
+          "children": [
+            {
+              "id": "ng1m5",
+              "type": "ref",
+              "ref": "soFaF",
+              "name": "Initiative",
+              "width": "fill_container",
+              "descendants": {
+                "W4ZVC": {
+                  "content": "+3"
+                },
+                "RBX5z": {
+                  "content": "先攻 Initiative"
+                }
+              }
+            },
+            {
+              "id": "spS2b",
+              "type": "ref",
+              "ref": "soFaF",
+              "name": "Proficiency",
+              "width": "fill_container",
+              "descendants": {
+                "W4ZVC": {
+                  "content": "+3"
+                },
+                "RBX5z": {
+                  "content": "熟練 Proficiency"
+                }
+              }
+            },
+            {
+              "id": "fPiyz",
+              "type": "ref",
+              "ref": "soFaF",
+              "name": "Perception",
+              "width": "fill_container",
+              "descendants": {
+                "W4ZVC": {
+                  "content": "14"
+                },
+                "RBX5z": {
+                  "content": "被動感知 Passive"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "GIEes",
+          "type": "ref",
+          "ref": "F8af7",
+          "name": "SpeedCard",
+          "width": "fill_container",
+          "descendants": {
+            "X7zNi": {
+              "icon": "hiking"
+            },
+            "HAJ1x": {
+              "content": "速度 Speed"
+            },
+            "VFWcX": {
+              "content": "30"
+            },
+            "honGN": {
+              "content": "FT"
+            },
+            "ovAMr": {
+              "content": "6 格"
+            }
+          }
+        },
+        {
+          "id": "nGjaQ",
+          "type": "ref",
+          "ref": "Tjdrz",
+          "name": "HealthCard",
+          "width": "fill_container",
+          "descendants": {
+            "b09lfJ": {
+              "content": "45"
+            },
+            "y5xpyP": {
+              "content": "56"
+            },
+            "Z2ohln": {
+              "content": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "m3Zmy",
+      "x": 908,
+      "y": 264,
+      "name": "TempHpShield",
+      "reusable": true,
+      "width": 28,
+      "height": 28,
+      "fill": "#00000000",
+      "layout": "none",
+      "children": [
+        {
+          "type": "icon",
+          "id": "OHAJn",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "ShieldIcon",
+          "width": 28,
+          "height": 28,
+          "icon": "shield",
+          "library": "Material Symbols Rounded",
+          "fill": "#6FB0D4"
+        },
+        {
+          "type": "frame",
+          "id": "BPz9v",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "NumWrap",
+          "width": 28,
+          "height": 28,
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "jsi7o",
+              "name": "TempVal",
+              "fill": "#FFFFFF",
+              "content": "5",
+              "fontFamily": "Cinzel",
+              "fontSize": 11,
+              "fontWeight": "700"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ZXrpk",
+      "x": 996,
+      "y": 264,
+      "name": "ConditionChip",
+      "reusable": true,
+      "fill": "#C0392B33",
+      "cornerRadius": 12,
+      "stroke": "#C0392B80",
+      "strokeWidth": 1,
+      "gap": 2,
+      "padding": [
+        4,
+        8,
+        4,
+        10
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "ixm1D",
+          "name": "Label",
+          "fill": "$dnd-text",
+          "content": "中毒",
+          "fontFamily": "Noto Serif TC",
+          "fontSize": 11,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "icon",
+          "id": "JXDMV",
+          "name": "Remove",
+          "width": 14,
+          "height": 14,
+          "icon": "close",
+          "library": "Material Symbols Rounded",
+          "fill": "$dnd-text-dim"
+        }
+      ]
     }
   ],
   "variables": {
