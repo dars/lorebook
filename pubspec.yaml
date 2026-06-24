@@ -1,0 +1,49 @@
+name: lorebook
+description: "D&D 5.5e character sheet & campaign companion"
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.6.1
+  go_router: ^14.8.1
+  supabase_flutter: ^2.10.1
+  shared_preferences: ^2.5.3
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.12.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.15.0
+  freezed: ^3.2.5
+  json_serializable: ^6.14.0
+  # Riverpod codegen 暫未採用（provider 目前手寫）；如需再加：
+  # riverpod_generator / riverpod_annotation / riverpod_lint
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Cinzel
+      fonts:
+        - asset: assets/fonts/Cinzel-Variable.ttf
+    - family: SourceSans3
+      fonts:
+        - asset: assets/fonts/SourceSans3-Variable.ttf
+        - asset: assets/fonts/SourceSans3-Italic-Variable.ttf
+          style: italic
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Variable.ttf
+    - family: NotoSerifTC
+      fonts:
+        - asset: assets/fonts/NotoSerifTC-Variable.ttf
+  assets:
+    - shorebird.yaml

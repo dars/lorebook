@@ -1,0 +1,95 @@
+schema: spec-driven
+
+context: |
+  # Lorebook — D&D 5.5e (2024) 角色卡 App
+
+  ## Tech Stack
+  - Flutter（iOS + Android，同一份 codebase）
+  - Dart
+  - 狀態管理：Riverpod（flutter_riverpod + riverpod_annotation）
+  - 路由：go_router
+  - 後端：Supabase（Auth + PostgreSQL + Realtime）
+  - 版型適配：LayoutBuilder / 螢幕寬度判斷，平板 breakpoint ≥ 600dp
+
+  ## 資料夾結構（feature-first）
+  ```
+  lib/
+    main.dart
+    app/          # App 入口、路由、主題
+    features/     # 以功能為單位的模組
+    shared/       # 跨功能共用的 widget、util、model
+  ```
+
+  ## 資料架構
+
+  ### 資料分類
+  1. **靜態遊戲資料**（唯讀，從雲端同步至本機快取）
+     - D&D 5.5e 規則內容：法術（Spells）、職業（Classes）、種族（Species）、專長（Feats）、裝備清單等
+     - 這類資料不會異動，App 啟動時按版本號決定是否更新快取
+  2. **角色卡資料**（使用者自有，跨裝置同步）
+     - 屬於單一使用者，可跨裝置存取
+     - 一個使用者可建立多個角色
+  3. **Campaign（跑團團隊）資料**（多人即時協作）
+     - 多個玩家各自用自己的裝置，看到同一份 Campaign 記錄
+     - 使用 Supabase Realtime 監聽即時變更
+     - 包含：團隊共用筆記、團隊金幣/資源、事件記錄等
+
+  ### 資料模型（概要）
+  - `users`：Supabase Auth 管理
+  - `campaigns`：跑團 Campaign 實體
+  - `campaign_members`：使用者 ↔ Campaign 多對多關聯（含角色：DM / Player）
+  - `characters`：角色卡，屬於特定使用者（可選擇性關聯至 Campaign）
+  - `campaign_notes`：Campaign 層級共用筆記（團隊金幣、事件、地點、NPC 等）
+  - `character_notes`：角色個人筆記（外觀、性格、背景故事等）
+  - `static_data_version`：靜態資料版本號，用於判斷是否需要更新本機快取
+
+  ### Supabase 使用原則
+  - 所有表格需設定 Row Level Security（RLS）
+  - Campaign 資料使用 Supabase Realtime（`supabase_flutter` channel 訂閱）
+  - 靜態遊戲資料讀取後快取至本機（可用 Hive 或 Isar）
+  - 角色卡資料透過 Supabase PostgreSQL CRUD，搭配 Riverpod AsyncNotifierProvider
+
+  ## 核心功能域
+
+  ### 1. 角色卡（Character Sheet）— D&D 5.5e 2024
+  - 基本資訊：名稱、種族（Species）、背景（Background）、職業（Class）、等級、陣營
+  - 能力值：STR / DEX / CON / INT / WIS / CHA（含修正值、豁免骰）
+  - 戰鬥數值：AC、HP（最大值/當前/臨時）、速度、先攻、熟練加值
+  - 技能熟練度
+  - 武器與攻擊
+  - 法術：法術位、已知法術（按環數分類，資料來自靜態快取）
+  - 裝備與金幣
+  - 特性與專長（Traits / Feats）
+  - 個人筆記（外觀、性格、背景故事）
+
+  ### 2. 世界觀筆記（Lorebook）
+  - **角色個人筆記**：僅自己可見，依附於角色卡
+  - **Campaign 共用筆記**：Campaign 內所有成員可見，即時同步
+    - 團隊資源（金幣、物資）
+    - NPC、地點、派系、事件等條目（結構化 or 自由文字，待定）
+
+  ## 開發慣例
+  - 全域狀態用 Provider / AsyncNotifierProvider
+  - 本地 UI 狀態優先用 StateProvider 或 widget 內 useState
+  - 手機與平板共用 widget，版型差異在 layout 層切換
+  - Supabase 操作封裝在 repository class，不直接在 provider 呼叫 Supabase client
+  - 語言：UI 為繁體中文，程式碼與 identifier 用英文
+
+rules:
+  proposal:
+    - 明確說明影響的資料層（靜態快取 / 角色卡 / Campaign 共用）
+    - 若涉及 Campaign 即時同步，需說明 Realtime 訂閱的範圍與觸發時機
+    - 若涉及新的資料表，需列出主要欄位、型別，並說明 RLS 規則
+    - 明確說明是否影響手機版型、平板版型，或兩者皆有
+    - 避免依賴尚未引入的第三方套件
+  design:
+    - 遵循 Material 3 設計規範
+    - 手機版採單欄、平板版採雙欄或主從（master-detail）佈局
+    - 所有互動元件需考量觸控目標大小（最小 48dp）
+    - Campaign 即時更新需有視覺回饋（例如資料更新動畫或 indicator）
+  tasks:
+    - 每個 task 限定在單一 feature 或 shared 模組內
+    - task 粒度以「一個 widget」或「一個 repository method」或「一個 provider」為單位
+    - 標示依賴關係（例如「需先完成 character model task」）
+    - 涉及 D&D 規則計算的 task 需在描述中附上計算公式或規則來源
+    - 涉及 Supabase 的 task 需標示是否需要 migration 或 RLS 異動
