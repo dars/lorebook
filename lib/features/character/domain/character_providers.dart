@@ -130,15 +130,25 @@ class CurrentCharacterNotifier extends Notifier<Character> {
     );
   }
 
-  /// 長休：完整恢復 — HP 全滿、法術位全滿、職業資源全滿、臨時 HP 清空、力竭 −1。
+  /// 長休：完整恢復 — HP 全滿、法術位全滿、職業資源全滿、臨時 HP 清空、力竭 −1、
+  /// 回復一半生命骰（最少 1）。
   void longRest() {
+    final regain = state.level ~/ 2 < 1 ? 1 : state.level ~/ 2;
     state = state.copyWith(
       currentHp: state.maxHp,
       tempHp: 0,
       spellSlots: [for (final s in state.spellSlots) s.copyWith(used: 0)],
       resources: [for (final r in state.resources) r.copyWith(current: r.max)],
       exhaustionLevel: (state.exhaustionLevel - 1).clamp(0, 6),
+      hitDiceUsed: (state.hitDiceUsed - regain).clamp(0, state.level),
     );
+  }
+
+  /// 標記花用 1 顆生命骰（剩餘 −1）。
+  /// App 不擲骰、不自動改 HP；玩家自行擲 `d{faces}`+體質並用 HP +/- 調整。
+  void useHitDie() {
+    if (state.hitDiceRemaining <= 0) return;
+    state = state.copyWith(hitDiceUsed: state.hitDiceUsed + 1);
   }
 }
 

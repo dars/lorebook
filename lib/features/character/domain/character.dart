@@ -232,10 +232,22 @@ abstract class Character with _$Character {
 
     /// 通用職業資源（非法術位；空 = 該職業無遊玩消耗資源）。
     @Default(<ClassResource>[]) List<ClassResource> resources,
+
+    /// 生命骰骰面（依職業，如法師 6、野蠻人 12）。總數 = 角色等級。
+    @Default(8) int hitDieFaces,
+
+    /// 已花用的生命骰數。
+    @Default(0) int hitDiceUsed,
   }) = _Character;
 
   factory Character.fromJson(Map<String, dynamic> json) =>
       _$CharacterFromJson(json);
+
+  /// 生命骰總數（= 角色等級）。
+  int get hitDiceTotal => level;
+
+  /// 剩餘可花用的生命骰。
+  int get hitDiceRemaining => (level - hitDiceUsed).clamp(0, level);
 
   static Character mock() {
     return const Character(
@@ -340,6 +352,8 @@ abstract class Character with _$Character {
       backstory: '',
       personalityTags: ['好奇', '書蟲', '理性'],
       conditions: [],
+      hitDieFaces: 6,
+      hitDiceUsed: 1,
     );
   }
 
@@ -427,6 +441,8 @@ abstract class Character with _$Character {
       languages: ['Common', 'Orc'],
       personalityTags: ['暴躁', '忠誠', '直接'],
       conditions: [],
+      hitDieFaces: 12,
+      hitDiceUsed: 2,
     );
   }
 }

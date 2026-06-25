@@ -7,23 +7,6 @@ import '../../../../app/theme/decorations.dart';
 import '../../../../features/character/domain/character_providers.dart';
 import '../../../../shared/presentation/widgets/entry_card.dart';
 
-/// 職業 → 生命骰骰面（D&D 5.5e）。
-int _hitDieFaces(String className) {
-  switch (className) {
-    case '野蠻人':
-      return 12;
-    case '戰士':
-    case '聖騎士':
-    case '遊俠':
-      return 10;
-    case '法師':
-    case '術士':
-      return 6;
-    default:
-      return 8; // 多數職業
-  }
-}
-
 class RestSection extends ConsumerWidget {
   const RestSection({super.key});
 
@@ -38,7 +21,7 @@ class RestSection extends ConsumerWidget {
                 icon: Icons.free_breakfast,
                 label: '短休',
                 subtitle: '生命骰・職業能力',
-                onTap: () => _showShortRest(context, ref),
+                onTap: () => _showShortRest(context),
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
@@ -86,81 +69,101 @@ class RestSection extends ConsumerWidget {
     );
   }
 
-  void _showShortRest(BuildContext context, WidgetRef ref) {
-    final character = ref.read(currentCharacterProvider);
-    final faces = _hitDieFaces(character.className);
-    final arcane = character.features.where(
-      (f) => f.nameEn == 'Arcane Recovery' || f.name == '奧術恢復',
-    );
-
+  void _showShortRest(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.darkSurface1,
       showDragHandle: true,
       isScrollControlled: true,
-      builder: (context) => SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(bottom: 12),
-                child: Text('短休',
-                    style: TextStyle(
-                        fontFamily: 'NotoSerifTC',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700)),
-              ),
-              // 生命骰資訊
-              _HitDiceInfo(count: character.level, faces: faces),
-              const SizedBox(height: 12),
-              // 奧術恢復（若有）
-              for (final f in arcane)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: EntryCard(
-                    badge: '復',
-                    title: f.name,
-                    subtitle: f.nameEn,
-                    meta: '1/天',
-                    description: f.description,
-                    emphasizeBadge: true,
+      builder: (context) => Consumer(
+        builder: (context, ref, _) {
+          final character = ref.watch(currentCharacterProvider);
+          final arcane = character.features.where(
+            (f) => f.nameEn == 'Arcane Recovery' || f.name == '奧術恢復',
+          );
+          return SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 12),
+                    child: Text('短休',
+                        style: TextStyle(
+                            fontFamily: 'NotoSerifTC',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700)),
                   ),
-                ),
-              const SizedBox(height: 4),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () {
-                    ref.read(currentCharacterProvider.notifier).shortRest();
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('短休完成：短休資源已回復'),
-                        duration: Duration(seconds: 2),
+                  // 生命骰（標記花用；擲骰與回血由玩家自行處理）
+                  _HitDiceTile(
+                    faces: character.hitDieFaces,
+                    remaining: character.hitDiceRemaining,
+                    total: character.hitDiceTotal,
+                    onUse: () => ref
+                        .read(currentCharacterProvider.notifier)
+                        .useHitDie(),
+                  ),
+                  const SizedBox(height: 12),
+                  // 奧術恢復（若有）
+                  for (final f in arcane)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: EntryCard(
+                        badge: '復',
+                        title: f.name,
+                        subtitle: f.nameEn,
+                        meta: '1/天',
+                        description: f.description,
+                        emphasizeBadge: true,
                       ),
-                    );
-                  },
-                  child: const Text('完成短休'),
-                ),
+                    ),
+                  const SizedBox(height: 4),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        ref
+                            .read(currentCharacterProvider.notifier)
+                            .shortRest();
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('短休完成：短休資源已回復'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                      child: const Text('完成短休'),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
-class _HitDiceInfo extends StatelessWidget {
-  final int count;
+class _HitDiceTile extends StatelessWidget {
   final int faces;
-  const _HitDiceInfo({required this.count, required this.faces});
+  final int remaining;
+  final int total;
+  final VoidCallback onUse;
+
+  const _HitDiceTile({
+    required this.faces,
+    required this.remaining,
+    required this.total,
+    required this.onUse,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final canUse = remaining > 0;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -172,21 +175,29 @@ class _HitDiceInfo extends StatelessWidget {
         children: [
           Icon(Icons.casino, size: 18, color: AppColors.goldDim),
           const SizedBox(width: 10),
-          Text('生命骰',
-              style: TextStyle(
-                fontFamily: 'NotoSerifTC',
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppColors.darkTextPrimary,
-              )),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('生命骰',
+                  style: TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.darkTextPrimary,
+                  )),
+              Text('d$faces · 剩餘 $remaining/$total',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 10,
+                    color: AppColors.darkTextSecondary,
+                  )),
+            ],
+          ),
           const Spacer(),
-          Text('${count}d$faces',
-              style: TextStyle(
-                fontFamily: 'Cinzel',
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: AppColors.accentGold,
-              )),
+          OutlinedButton(
+            onPressed: canUse ? onUse : null,
+            child: Text(canUse ? '花 1 顆' : '已用盡'),
+          ),
         ],
       ),
     );
