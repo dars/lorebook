@@ -215,15 +215,15 @@ class _CollapsibleSectionState extends State<CollapsibleSection> {
           onTap: () => setState(() => _expanded = !_expanded),
           child: Padding(
             padding: const EdgeInsets.only(
-              top: AppSpacing.lg,
+              top: AppSpacing.md,
               bottom: AppSpacing.sm,
             ),
             child: Row(
               children: [
                 Icon(
                   _expanded ? Icons.expand_more : Icons.chevron_right,
-                  size: 14,
-                  color: labelColor,
+                  size: 17,
+                  color: AppColors.accentGold,
                 ),
                 const SizedBox(width: 6),
                 Text(
@@ -233,7 +233,7 @@ class _CollapsibleSectionState extends State<CollapsibleSection> {
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 2,
-                    color: labelColor,
+                    color: AppColors.accentGold,
                   ),
                 ),
                 if (cnLabel != null) ...[
@@ -242,9 +242,9 @@ class _CollapsibleSectionState extends State<CollapsibleSection> {
                     cnLabel,
                     style: const TextStyle(
                       fontFamily: 'NotoSerifTC',
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      color: labelColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.darkTextPrimary,
                     ),
                   ),
                 ],

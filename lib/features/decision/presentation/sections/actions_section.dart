@@ -231,7 +231,9 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
     required List<Widget> children,
   }) {
     final collapsed = _isCollapsed(key);
-    return Column(
+    return Padding(
+      padding: const EdgeInsets.only(left: 14),
+      child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
@@ -241,14 +243,14 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
             child: Row(
               children: [
                 Icon(collapsed ? Icons.chevron_right : Icons.expand_more,
-                    size: 16, color: AppColors.accentGold),
+                    size: 15, color: AppColors.goldDim),
                 const SizedBox(width: 4),
                 Text(label,
                     style: TextStyle(
                       fontFamily: 'NotoSerifTC',
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.accentGold,
+                      color: AppColors.goldDim,
                     )),
                 const SizedBox(width: 6),
                 Expanded(
@@ -276,6 +278,7 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
             ),
           ),
       ],
+      ),
     );
   }
 

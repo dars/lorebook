@@ -63,8 +63,7 @@ class _MovementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 90,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
         gradient: const LinearGradient(
@@ -76,18 +75,17 @@ class _MovementCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, size: 28, color: AppColors.darkTextSecondary),
-          const SizedBox(width: 12),
+          Icon(icon, size: 22, color: AppColors.darkTextSecondary),
+          const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(label, style: TextStyle(
                 fontFamily: 'NotoSerifTC',
-                fontSize: 10,
+                fontSize: 9,
                 color: AppColors.darkTextLight,
               )),
-              const SizedBox(height: 2),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
@@ -96,7 +94,7 @@ class _MovementCard extends StatelessWidget {
                     '$value',
                     style: TextStyle(
                       fontFamily: 'Cinzel',
-                      fontSize: 24,
+                      fontSize: 20,
                       fontWeight: FontWeight.w700,
                       color: AppColors.darkTextPrimary,
                     ),
@@ -112,7 +110,7 @@ class _MovementCard extends StatelessWidget {
               ),
               Text('$squares 格', style: TextStyle(
                 fontFamily: 'NotoSerifTC',
-                fontSize: 10,
+                fontSize: 9,
                 color: AppColors.darkTextSecondary,
               )),
             ],

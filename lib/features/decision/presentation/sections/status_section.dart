@@ -51,7 +51,7 @@ class StatusSection extends ConsumerWidget {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
                   child: Divider(color: dividerColor, height: 1),
                 ),
                 // 下半：狀態異常列
@@ -69,7 +69,7 @@ class StatusSection extends ConsumerWidget {
 
   Widget _vDivider(Color color) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-        child: Container(width: 1, height: 120, color: color),
+        child: Container(width: 1, height: 100, color: color),
       );
 }
 
