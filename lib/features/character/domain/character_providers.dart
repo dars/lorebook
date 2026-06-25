@@ -118,12 +118,14 @@ class CurrentCharacterNotifier extends Notifier<Character> {
     );
   }
 
-  /// 長休：回滿所有職業資源 + 清空臨時 HP。
-  /// （HP / 法術位完整恢復屬 rest-flow 後續變更。）
+  /// 長休：完整恢復 — HP 全滿、法術位全滿、職業資源全滿、臨時 HP 清空、力竭 −1。
   void longRest() {
     state = state.copyWith(
+      currentHp: state.maxHp,
       tempHp: 0,
+      spellSlots: [for (final s in state.spellSlots) s.copyWith(used: 0)],
       resources: [for (final r in state.resources) r.copyWith(current: r.max)],
+      exhaustionLevel: (state.exhaustionLevel - 1).clamp(0, 6),
     );
   }
 }
