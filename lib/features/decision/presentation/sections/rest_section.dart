@@ -22,9 +22,16 @@ class RestSection extends ConsumerWidget {
               child: _RestButton(
                 icon: Icons.free_breakfast,
                 label: '短休',
-                subtitle: '恢復 Hit Dice',
-                // 短休不影響臨時 HP。
-                onTap: () {},
+                subtitle: '恢復短休資源',
+                onTap: () {
+                  ref.read(currentCharacterProvider.notifier).shortRest();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('短休：短休資源已回復'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                },
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
@@ -33,12 +40,12 @@ class RestSection extends ConsumerWidget {
                 icon: Icons.nights_stay,
                 label: '長休',
                 subtitle: '完全恢復',
-                // 長休清空臨時 HP（其他資源完整恢復屬後續 rest 範疇）。
+                // 長休：回滿職業資源 + 清空臨時 HP（HP/法術位完整恢復屬 rest-flow 後續）。
                 onTap: () {
-                  ref.read(currentCharacterProvider.notifier).clearTempHp();
+                  ref.read(currentCharacterProvider.notifier).longRest();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('長休：臨時 HP 已清空'),
+                      content: Text('長休：資源回滿、臨時 HP 已清空'),
                       duration: Duration(seconds: 2),
                     ),
                   );

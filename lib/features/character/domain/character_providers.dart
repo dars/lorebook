@@ -66,6 +66,66 @@ class CurrentCharacterNotifier extends Notifier<Character> {
   void endConcentration() {
     state = state.copyWith(concentrationSpell: null);
   }
+
+  // ── 法術位 ──
+
+  /// 設定某環法術位的已使用數（夾在 0~total）。
+  void setSlotUsed(int level, int used) {
+    state = state.copyWith(
+      spellSlots: [
+        for (final s in state.spellSlots)
+          s.level == level ? s.copyWith(used: used.clamp(0, s.total)) : s,
+      ],
+    );
+  }
+
+  // ── 職業資源 ──
+
+  void _updateResource(String name, ClassResource Function(ClassResource) f) {
+    state = state.copyWith(
+      resources: [
+        for (final r in state.resources) r.name == name ? f(r) : r,
+      ],
+    );
+  }
+
+  void spendResource(String name) => _updateResource(
+        name,
+        (r) => r.copyWith(current: (r.current - 1).clamp(0, r.max)),
+      );
+
+  void restoreResource(String name) => _updateResource(
+        name,
+        (r) => r.copyWith(current: (r.current + 1).clamp(0, r.max)),
+      );
+
+  void resetResource(String name) =>
+      _updateResource(name, (r) => r.copyWith(current: r.max));
+
+  /// 直接設定某資源當前值（pips 點選用；夾 0~max）。
+  void setResourceCurrent(String name, int value) =>
+      _updateResource(name, (r) => r.copyWith(current: value.clamp(0, r.max)));
+
+  // ── 休息 ──
+
+  /// 短休：回滿「短休回復」的職業資源（臨時 HP 不動）。
+  void shortRest() {
+    state = state.copyWith(
+      resources: [
+        for (final r in state.resources)
+          r.recovery == ResourceRecovery.short ? r.copyWith(current: r.max) : r,
+      ],
+    );
+  }
+
+  /// 長休：回滿所有職業資源 + 清空臨時 HP。
+  /// （HP / 法術位完整恢復屬 rest-flow 後續變更。）
+  void longRest() {
+    state = state.copyWith(
+      tempHp: 0,
+      resources: [for (final r in state.resources) r.copyWith(current: r.max)],
+    );
+  }
 }
 
 final characterListProvider =

@@ -146,6 +146,37 @@ abstract class CharacterFeature with _$CharacterFeature {
       _$CharacterFeatureFromJson(json);
 }
 
+/// 職業資源的回復時機。
+enum ResourceRecovery { short, long, none }
+
+/// 職業資源的顯示型態：次數點 / 數字池 / 骰子。
+enum ResourceDisplay { pips, number, dice }
+
+/// 通用職業資源（狂暴、氣、法術點數、契約位、戰技骰…）。
+///
+/// 只收「遊玩當下會即時消耗」的資源；休息才用（奧術恢復、生命骰）與
+/// 1/天施放（祕法奧義）不放此處。
+@freezed
+abstract class ClassResource with _$ClassResource {
+  const factory ClassResource({
+    required String name,
+    @Default('') String nameEn,
+    @Default(0) int current,
+    @Default(0) int max,
+    @Default(ResourceRecovery.long) ResourceRecovery recovery,
+    @Default(ResourceDisplay.pips) ResourceDisplay display,
+
+    /// display == dice 時的骰面（如吟遊激勵 d8 → 8）。
+    @Default(0) int dieFaces,
+
+    /// display == number 時的單位（如「HP」「點」；可空）。
+    @Default('') String unit,
+  }) = _ClassResource;
+
+  factory ClassResource.fromJson(Map<String, dynamic> json) =>
+      _$ClassResourceFromJson(json);
+}
+
 @freezed
 abstract class Character with _$Character {
   const Character._();
@@ -198,6 +229,9 @@ abstract class Character with _$Character {
 
     /// 力竭等級（0–6，0 = 無）。
     @Default(0) int exhaustionLevel,
+
+    /// 通用職業資源（非法術位；空 = 該職業無遊玩消耗資源）。
+    @Default(<ClassResource>[]) List<ClassResource> resources,
   }) = _Character;
 
   factory Character.fromJson(Map<String, dynamic> json) =>
