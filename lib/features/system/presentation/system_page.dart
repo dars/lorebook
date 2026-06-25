@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/decorations.dart';
+import '../../character/domain/character_providers.dart';
 import 'theme_provider.dart';
 
 String get _currentEmail {
@@ -22,6 +24,7 @@ class SystemPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final currentMode = ref.watch(themeModeProvider);
+    final character = ref.watch(currentCharacterProvider);
 
     return SingleChildScrollView(
       padding: AppSpacing.pagePadding,
@@ -29,6 +32,32 @@ class SystemPage extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: AppSpacing.sm),
+
+          // Character
+          ParchmentCard(
+            padding: AppSpacing.cardPadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('角色', style: theme.textTheme.titleSmall),
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  '當前：${character.name}・${character.className} ${character.level}',
+                  style: theme.textTheme.bodyMedium,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () => context.go('/character-select'),
+                    icon: const Icon(Icons.swap_horiz),
+                    label: const Text('切換角色'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.lg),
 
           // Theme
           ParchmentCard(

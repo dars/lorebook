@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../features/auth/presentation/login_page.dart';
 import '../features/auth/presentation/register_page.dart';
+import '../features/character/domain/character_providers.dart';
 import '../features/character/presentation/character_page.dart';
 import '../features/character/presentation/character_select_page.dart';
 import '../features/decision/presentation/decision_page.dart';
@@ -14,7 +15,6 @@ import '../features/journal/presentation/journal_page.dart';
 import '../features/system/presentation/system_page.dart';
 import '../shared/presentation/app_scaffold.dart';
 
-final _selectedCharacterProvider = StateProvider<String?>((ref) => null);
 final devBypassAuthProvider = StateProvider<bool>((ref) => false);
 
 bool get _isSupabaseInitialized {
@@ -41,7 +41,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isLoggedIn = session != null || devBypass;
       final isAuthRoute = state.matchedLocation.startsWith('/auth');
       final isCharSelect = state.matchedLocation == '/character-select';
-      final selectedChar = ref.read(_selectedCharacterProvider);
+      final selectedChar = ref.read(selectedCharacterIdProvider);
 
       if (!isLoggedIn && !isAuthRoute) return '/auth/login';
       if (isLoggedIn && isAuthRoute) {
@@ -69,7 +69,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           return CharacterSelectPage(
             onCharacterSelected: (id) {
-              ref.read(_selectedCharacterProvider.notifier).state = id;
+              // 切換前把當前角色暫存編輯寫回清單，再切換（session 內保留）。
+              ref
+                  .read(characterListProvider.notifier)
+                  .upsert(ref.read(currentCharacterProvider));
+              ref.read(selectedCharacterIdProvider.notifier).state = id;
               GoRouter.of(context).go('/main/decision');
             },
           );

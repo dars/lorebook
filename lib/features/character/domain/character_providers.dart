@@ -6,6 +6,9 @@ import 'character.dart';
 ///
 /// 本階段以 mock 角色運作；之後接雲端時，於各方法內改呼叫 repository 即可，
 /// UI 層（`ref.watch(currentCharacterProvider)`）不需變動。
+/// 當前選取的角色 id（null = 尚未選取）。當前角色與路由 gate 的單一來源。
+final selectedCharacterIdProvider = StateProvider<String?>((ref) => null);
+
 final currentCharacterProvider =
     NotifierProvider<CurrentCharacterNotifier, Character>(
   CurrentCharacterNotifier.new,
@@ -13,7 +16,16 @@ final currentCharacterProvider =
 
 class CurrentCharacterNotifier extends Notifier<Character> {
   @override
-  Character build() => Character.mock();
+  Character build() {
+    final id = ref.watch(selectedCharacterIdProvider);
+    final list = ref.read(characterListProvider);
+    if (id != null) {
+      for (final c in list) {
+        if (c.id == id) return c;
+      }
+    }
+    return list.isNotEmpty ? list.first : Character.mock();
+  }
 
   /// 調整 HP：delta<0 為傷害（先扣臨時 HP 再扣當前 HP）；delta>0 為治療（只補當前 HP）。
   void adjustHp(int delta) {
@@ -136,9 +148,22 @@ final characterListProvider =
 });
 
 class CharacterListNotifier extends StateNotifier<List<Character>> {
-  CharacterListNotifier() : super([Character.mock()]);
+  CharacterListNotifier()
+      : super([Character.mock(), Character.mockBarbarian()]);
 
   void add(Character c) => state = [...state, c];
 
   void remove(String id) => state = state.where((c) => c.id != id).toList();
+
+  /// 以 id 取代清單中該角色；不存在則新增（切換時保留編輯用）。
+  void upsert(Character c) {
+    final i = state.indexWhere((e) => e.id == c.id);
+    if (i >= 0) {
+      final copy = [...state];
+      copy[i] = c;
+      state = copy;
+    } else {
+      state = [...state, c];
+    }
+  }
 }

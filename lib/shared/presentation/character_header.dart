@@ -69,24 +69,14 @@ class CharacterHeader extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              character.name,
-                              style: TextStyle(
-                                fontFamily: 'Cinzel',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.darkTextPrimary,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 18,
-                              color: AppColors.darkTextSecondary,
-                            ),
-                          ],
+                        Text(
+                          character.name,
+                          style: TextStyle(
+                            fontFamily: 'Cinzel',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.darkTextPrimary,
+                          ),
                         ),
                         Text(
                           '${character.species} · ${character.className} ${character.level}',
