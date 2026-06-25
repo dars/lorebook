@@ -29,12 +29,9 @@ class RestSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppSpacing.sectionSpacing,
-        const SectionTitle(title: 'REST 休息'),
-        Row(
+    return CollapsibleSection(
+      title: 'REST 休息',
+      child: Row(
           children: [
             Expanded(
               child: _RestButton(
@@ -55,7 +52,6 @@ class RestSection extends ConsumerWidget {
             ),
           ],
         ),
-      ],
     );
   }
 

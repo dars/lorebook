@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
-import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/decorations.dart';
 import '../../../../features/character/domain/character.dart';
 import '../../../../features/character/domain/character_providers.dart';
@@ -45,12 +44,12 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
       ('魅力', 'Charisma', 'CHA', character.abilityScores.cha),
     ];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppSpacing.sectionSpacing,
-        const SectionTitle(title: 'CHECKS 檢定'),
-        _buildTabs(),
+    return CollapsibleSection(
+      title: 'CHECKS 檢定',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTabs(),
         const SizedBox(height: 8),
         _buildModifierBanner(_selected),
         const SizedBox(height: 8),
@@ -58,7 +57,8 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
         if (_tabIndex == 1)
           _buildSavesGrid(abilities, character.proficiencyBonus),
         if (_tabIndex == 2) _buildSkillsView(character, abilities),
-      ],
+        ],
+      ),
     );
   }
 

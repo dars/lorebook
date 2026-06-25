@@ -20,12 +20,9 @@ class MovementSection extends ConsumerWidget {
     final speedSquares = speedNum ~/ 5;
     final dashSquares = dashNum ~/ 5;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppSpacing.sectionSpacing,
-        const SectionTitle(title: 'MOVEMENT 移動'),
-        Row(
+    return CollapsibleSection(
+      title: 'MOVEMENT 移動',
+      child: Row(
           children: [
             Expanded(
               child: _MovementCard(
@@ -46,7 +43,6 @@ class MovementSection extends ConsumerWidget {
             ),
           ],
         ),
-      ],
     );
   }
 }

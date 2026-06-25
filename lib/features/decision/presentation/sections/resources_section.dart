@@ -28,12 +28,9 @@ class ResourcesSection extends ConsumerWidget {
 
     final dividerColor = Theme.of(context).colorScheme.outline;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppSpacing.sectionSpacing,
-        const SectionTitle(title: 'RESOURCES 資源'),
-        Card(
+    return CollapsibleSection(
+      title: 'RESOURCES 資源',
+      child: Card(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Column(
@@ -71,7 +68,6 @@ class ResourcesSection extends ConsumerWidget {
             ),
           ),
         ),
-      ],
     );
   }
 }

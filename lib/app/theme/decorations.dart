@@ -174,6 +174,106 @@ class SectionTitle extends StatelessWidget {
   }
 }
 
+/// 可收合的頂層區段：標題樣式對齊 [SectionTitle]，加上 chevron，點標題切換收合。
+/// 收合時僅顯示標題列；展開時於下方顯示 [child]。
+class CollapsibleSection extends StatefulWidget {
+  final String title;
+  final Widget child;
+  final bool initiallyExpanded;
+
+  /// 收合時於標題列顯示的摘要（如「攻擊・施法・其他」）；null 則不顯示。
+  final String? summary;
+
+  const CollapsibleSection({
+    super.key,
+    required this.title,
+    required this.child,
+    this.initiallyExpanded = true,
+    this.summary,
+  });
+
+  @override
+  State<CollapsibleSection> createState() => _CollapsibleSectionState();
+}
+
+class _CollapsibleSectionState extends State<CollapsibleSection> {
+  late bool _expanded = widget.initiallyExpanded;
+
+  @override
+  Widget build(BuildContext context) {
+    final match =
+        RegExp(r'^([A-Za-z0-9·_\s]+?)\s+([一-鿿].*)$').firstMatch(widget.title);
+    final enLabel = match?.group(1) ?? widget.title;
+    final cnLabel = match?.group(2);
+    const labelColor = AppColors.sectionLabel;
+    final lineColor = AppColors.darkBorder2;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: () => setState(() => _expanded = !_expanded),
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: AppSpacing.lg,
+              bottom: AppSpacing.sm,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  _expanded ? Icons.expand_more : Icons.chevron_right,
+                  size: 14,
+                  color: labelColor,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  enLabel,
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 2,
+                    color: labelColor,
+                  ),
+                ),
+                if (cnLabel != null) ...[
+                  const SizedBox(width: 6),
+                  Text(
+                    cnLabel,
+                    style: const TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                      color: labelColor,
+                    ),
+                  ),
+                ],
+                const SizedBox(width: 8),
+                if (!_expanded && widget.summary != null)
+                  Flexible(
+                    child: Text(
+                      widget.summary!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: 'NotoSerifTC',
+                        fontSize: 10,
+                        color: labelColor.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ),
+                const SizedBox(width: 6),
+                Expanded(child: Container(height: 1, color: lineColor)),
+              ],
+            ),
+          ),
+        ),
+        if (_expanded) widget.child,
+      ],
+    );
+  }
+}
+
 class ParchmentCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;

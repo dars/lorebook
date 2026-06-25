@@ -8009,6 +8009,1901 @@
           ]
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "F8HDH",
+      "x": 2286,
+      "y": -568,
+      "name": "Action Layout — 法師",
+      "clip": true,
+      "width": 360,
+      "fill": "#14110C",
+      "layout": "vertical",
+      "gap": 14,
+      "padding": 16,
+      "children": [
+        {
+          "type": "text",
+          "id": "PsDiT",
+          "name": "Title",
+          "fill": "#C9A84C",
+          "content": "ACTION 動作",
+          "fontFamily": "Cinzel",
+          "fontSize": 13,
+          "fontWeight": "700",
+          "letterSpacing": 2
+        },
+        {
+          "type": "frame",
+          "id": "R8b933",
+          "name": "Sec 動作",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "children": [
+            {
+              "type": "frame",
+              "id": "vFAbl",
+              "name": "L1",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "A9iy7",
+                  "name": "bar",
+                  "fill": "#C9A84C",
+                  "width": 3,
+                  "height": 18
+                },
+                {
+                  "type": "text",
+                  "id": "oUxbN",
+                  "name": "label",
+                  "fill": "#E8DFC9",
+                  "content": "動作",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "lWREe",
+                  "name": "hint",
+                  "fill": "#7A6A48",
+                  "content": "每回合 1 個",
+                  "fontFamily": "Inter",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "J8onAs",
+              "name": "Body",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                0,
+                0,
+                0,
+                11
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "HxtHg",
+                  "name": "L2 攻擊",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "D8wfdq",
+                      "name": "cat",
+                      "fill": "#C9A84C",
+                      "content": "攻擊",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "MfpSZ",
+                      "name": "inner",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "padding": [
+                        0,
+                        0,
+                        0,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "t4tqi",
+                          "name": "Card 法杖",
+                          "width": "fill_container",
+                          "fill": "#221C14",
+                          "cornerRadius": 8,
+                          "stroke": "#3A2F1C",
+                          "strokeWidth": 1,
+                          "gap": 10,
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "r5xEoc",
+                              "name": "badge",
+                              "width": 22,
+                              "height": 22,
+                              "fill": "#2E2616",
+                              "cornerRadius": 4,
+                              "stroke": "#C9A84C",
+                              "strokeWidth": 1,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "f7W2j",
+                                  "name": "bt",
+                                  "fill": "#C9A84C",
+                                  "content": "攻",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 11,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "zLqm0",
+                              "name": "txt",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 1,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "OM4PZ",
+                                  "name": "title",
+                                  "fill": "#E8DFC9",
+                                  "content": "法杖",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "yrddz",
+                                  "name": "sub",
+                                  "fill": "#9A8A66",
+                                  "content": "Quarterstaff",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 9,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "U4FvZ",
+                              "name": "meta",
+                              "fill": "#C9A84C",
+                              "content": "1d6",
+                              "fontFamily": "Cinzel",
+                              "fontSize": 12,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yAIQx",
+                  "name": "L2 施法",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "fFSjt",
+                      "name": "cat",
+                      "fill": "#C9A84C",
+                      "content": "施法",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "aTNqo",
+                      "name": "inner",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "padding": [
+                        0,
+                        0,
+                        0,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "daYc6",
+                          "name": "L3 戲法",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "S7sOs",
+                              "name": "ring",
+                              "fill": "#9A8A66",
+                              "content": "戲法",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "600",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "frame",
+                              "id": "MaXkw",
+                              "name": "items",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 5,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "B42QH",
+                                  "name": "Card 火焰箭",
+                                  "width": "fill_container",
+                                  "fill": "#221C14",
+                                  "cornerRadius": 8,
+                                  "stroke": "#3A2F1C",
+                                  "strokeWidth": 1,
+                                  "gap": 10,
+                                  "padding": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "O3x3d",
+                                      "name": "badge",
+                                      "width": 22,
+                                      "height": 22,
+                                      "fill": "#2E2616",
+                                      "cornerRadius": 4,
+                                      "stroke": "#C9A84C",
+                                      "strokeWidth": 1,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "Ay2XF",
+                                          "name": "bt",
+                                          "fill": "#C9A84C",
+                                          "content": "戲",
+                                          "fontFamily": "Noto Serif TC",
+                                          "fontSize": 11,
+                                          "fontWeight": "700"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "t0Eyw3",
+                                      "name": "txt",
+                                      "width": "fill_container",
+                                      "layout": "vertical",
+                                      "gap": 1,
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "gknUD",
+                                          "name": "title",
+                                          "fill": "#E8DFC9",
+                                          "content": "火焰箭",
+                                          "fontFamily": "Noto Serif TC",
+                                          "fontSize": 13,
+                                          "fontWeight": "600"
+                                        },
+                                        {
+                                          "type": "text",
+                                          "id": "ZNkex",
+                                          "name": "sub",
+                                          "fill": "#9A8A66",
+                                          "content": "Fire Bolt",
+                                          "fontFamily": "Inter",
+                                          "fontSize": 9,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "VPmRB",
+                                      "name": "meta",
+                                      "fill": "#C9A84C",
+                                      "content": "1d10",
+                                      "fontFamily": "Cinzel",
+                                      "fontSize": 12,
+                                      "fontWeight": "700"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "ktn1D",
+                                  "name": "Card 法師之手",
+                                  "width": "fill_container",
+                                  "fill": "#221C14",
+                                  "cornerRadius": 8,
+                                  "stroke": "#3A2F1C",
+                                  "strokeWidth": 1,
+                                  "gap": 10,
+                                  "padding": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "l6IjtE",
+                                      "name": "badge",
+                                      "width": 22,
+                                      "height": 22,
+                                      "fill": "#2E2616",
+                                      "cornerRadius": 4,
+                                      "stroke": "#C9A84C",
+                                      "strokeWidth": 1,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "h1s9d",
+                                          "name": "bt",
+                                          "fill": "#C9A84C",
+                                          "content": "戲",
+                                          "fontFamily": "Noto Serif TC",
+                                          "fontSize": 11,
+                                          "fontWeight": "700"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "VYwtZ",
+                                      "name": "txt",
+                                      "width": "fill_container",
+                                      "layout": "vertical",
+                                      "gap": 1,
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "MSQ3X",
+                                          "name": "title",
+                                          "fill": "#E8DFC9",
+                                          "content": "法師之手",
+                                          "fontFamily": "Noto Serif TC",
+                                          "fontSize": 13,
+                                          "fontWeight": "600"
+                                        },
+                                        {
+                                          "type": "text",
+                                          "id": "DrsnA",
+                                          "name": "sub",
+                                          "fill": "#9A8A66",
+                                          "content": "Mage Hand",
+                                          "fontFamily": "Inter",
+                                          "fontSize": 9,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "lIKfL",
+                          "name": "L3 一環",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "hbSb0",
+                              "name": "ring",
+                              "fill": "#9A8A66",
+                              "content": "一環",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "600",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "frame",
+                              "id": "ZVTah",
+                              "name": "items",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 5,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ZWjqy",
+                                  "name": "Card 魔法飛彈",
+                                  "width": "fill_container",
+                                  "fill": "#221C14",
+                                  "cornerRadius": 8,
+                                  "stroke": "#3A2F1C",
+                                  "strokeWidth": 1,
+                                  "gap": 10,
+                                  "padding": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "aeosA",
+                                      "name": "badge",
+                                      "width": 22,
+                                      "height": 22,
+                                      "fill": "#2E2616",
+                                      "cornerRadius": 4,
+                                      "stroke": "#C9A84C",
+                                      "strokeWidth": 1,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "B4UicE",
+                                          "name": "bt",
+                                          "fill": "#C9A84C",
+                                          "content": "1",
+                                          "fontFamily": "Noto Serif TC",
+                                          "fontSize": 11,
+                                          "fontWeight": "700"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "wcj5T",
+                                      "name": "txt",
+                                      "width": "fill_container",
+                                      "layout": "vertical",
+                                      "gap": 1,
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "w0HQh",
+                                          "name": "title",
+                                          "fill": "#E8DFC9",
+                                          "content": "魔法飛彈",
+                                          "fontFamily": "Noto Serif TC",
+                                          "fontSize": 13,
+                                          "fontWeight": "600"
+                                        },
+                                        {
+                                          "type": "text",
+                                          "id": "Lc2uI",
+                                          "name": "sub",
+                                          "fill": "#9A8A66",
+                                          "content": "Magic Missile",
+                                          "fontFamily": "Inter",
+                                          "fontSize": 9,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "pRMN2",
+                          "name": "L3 二環",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "fbQEz",
+                              "name": "ring",
+                              "fill": "#9A8A66",
+                              "content": "二環",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "600",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "frame",
+                              "id": "zfKUx",
+                              "name": "items",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 5,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "m6Xhqg",
+                                  "name": "Card 朦朧術",
+                                  "width": "fill_container",
+                                  "fill": "#221C14",
+                                  "cornerRadius": 8,
+                                  "stroke": "#3A2F1C",
+                                  "strokeWidth": 1,
+                                  "gap": 10,
+                                  "padding": 10,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "hLKKI",
+                                      "name": "badge",
+                                      "width": 22,
+                                      "height": 22,
+                                      "fill": "#2E2616",
+                                      "cornerRadius": 4,
+                                      "stroke": "#C9A84C",
+                                      "strokeWidth": 1,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "LRjZE",
+                                          "name": "bt",
+                                          "fill": "#C9A84C",
+                                          "content": "2",
+                                          "fontFamily": "Noto Serif TC",
+                                          "fontSize": 11,
+                                          "fontWeight": "700"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "iBmPD",
+                                      "name": "txt",
+                                      "width": "fill_container",
+                                      "layout": "vertical",
+                                      "gap": 1,
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "SSJWR",
+                                          "name": "title",
+                                          "fill": "#E8DFC9",
+                                          "content": "朦朧術",
+                                          "fontFamily": "Noto Serif TC",
+                                          "fontSize": 13,
+                                          "fontWeight": "600"
+                                        },
+                                        {
+                                          "type": "text",
+                                          "id": "ge6ao",
+                                          "name": "sub",
+                                          "fill": "#9A8A66",
+                                          "content": "Blur",
+                                          "fontFamily": "Inter",
+                                          "fontSize": 9,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "F2IXVv",
+                                      "name": "meta",
+                                      "fill": "#C9A84C",
+                                      "content": "專注",
+                                      "fontFamily": "Cinzel",
+                                      "fontSize": 12,
+                                      "fontWeight": "700"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Q2Yf4X",
+                  "name": "L2 其他",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "pkyc9",
+                      "name": "cat",
+                      "fill": "#C9A84C",
+                      "content": "其他",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "T4wc02",
+                      "name": "inner",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "padding": [
+                        0,
+                        0,
+                        0,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "oeRST",
+                          "name": "Card 疾走",
+                          "width": "fill_container",
+                          "fill": "#221C14",
+                          "cornerRadius": 8,
+                          "stroke": "#3A2F1C",
+                          "strokeWidth": 1,
+                          "gap": 10,
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "SNHgZ",
+                              "name": "badge",
+                              "width": 22,
+                              "height": 22,
+                              "fill": "#2E2616",
+                              "cornerRadius": 4,
+                              "stroke": "#C9A84C",
+                              "strokeWidth": 1,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "avYYP",
+                                  "name": "bt",
+                                  "fill": "#C9A84C",
+                                  "content": "動",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 11,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "o7qjg",
+                              "name": "txt",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 1,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "hnzOJ",
+                                  "name": "title",
+                                  "fill": "#E8DFC9",
+                                  "content": "疾走",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "y1A4QP",
+                                  "name": "sub",
+                                  "fill": "#9A8A66",
+                                  "content": "Dash",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 9,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "qmlOo",
+                          "name": "Card 撤離",
+                          "width": "fill_container",
+                          "fill": "#221C14",
+                          "cornerRadius": 8,
+                          "stroke": "#3A2F1C",
+                          "strokeWidth": 1,
+                          "gap": 10,
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "WpKqp",
+                              "name": "badge",
+                              "width": 22,
+                              "height": 22,
+                              "fill": "#2E2616",
+                              "cornerRadius": 4,
+                              "stroke": "#C9A84C",
+                              "strokeWidth": 1,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "xspEo",
+                                  "name": "bt",
+                                  "fill": "#C9A84C",
+                                  "content": "動",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 11,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "gpuiu",
+                              "name": "txt",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 1,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "l3RB4N",
+                                  "name": "title",
+                                  "fill": "#E8DFC9",
+                                  "content": "撤離",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "R1q5CH",
+                                  "name": "sub",
+                                  "fill": "#9A8A66",
+                                  "content": "Disengage",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 9,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Pqjz9",
+          "name": "Sec 附贈動作",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "children": [
+            {
+              "type": "frame",
+              "id": "VAfeO",
+              "name": "L1",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "ebxGs",
+                  "name": "bar",
+                  "fill": "#C9A84C",
+                  "width": 3,
+                  "height": 18
+                },
+                {
+                  "type": "text",
+                  "id": "alqcm",
+                  "name": "label",
+                  "fill": "#E8DFC9",
+                  "content": "附贈動作",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "DAZ9S",
+                  "name": "hint",
+                  "fill": "#7A6A48",
+                  "content": "每回合 1 個",
+                  "fontFamily": "Inter",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qzZHD",
+              "name": "Body",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                0,
+                0,
+                0,
+                11
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "c9DMTV",
+                  "name": "Card 迷霧步",
+                  "width": "fill_container",
+                  "fill": "#221C14",
+                  "cornerRadius": 8,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "gap": 10,
+                  "padding": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "sOvGO",
+                      "name": "badge",
+                      "width": 22,
+                      "height": 22,
+                      "fill": "#2E2616",
+                      "cornerRadius": 4,
+                      "stroke": "#C9A84C",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "vIsWP",
+                          "name": "bt",
+                          "fill": "#C9A84C",
+                          "content": "贈",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "yaGbb",
+                      "name": "txt",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Q28BZC",
+                          "name": "title",
+                          "fill": "#E8DFC9",
+                          "content": "迷霧步",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "D8ZcQ7",
+                          "name": "sub",
+                          "fill": "#9A8A66",
+                          "content": "Misty Step",
+                          "fontFamily": "Inter",
+                          "fontSize": 9,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "vfbwg",
+          "name": "Sec 反應",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "children": [
+            {
+              "type": "frame",
+              "id": "IZZrT",
+              "name": "L1",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "pqodZ",
+                  "name": "bar",
+                  "fill": "#C9A84C",
+                  "width": 3,
+                  "height": 18
+                },
+                {
+                  "type": "text",
+                  "id": "JNWRU",
+                  "name": "label",
+                  "fill": "#E8DFC9",
+                  "content": "反應",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "C5RlF",
+                  "name": "hint",
+                  "fill": "#7A6A48",
+                  "content": "觸發時",
+                  "fontFamily": "Inter",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "SdsXS",
+              "name": "Body",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                0,
+                0,
+                0,
+                11
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "z7hmGe",
+                  "name": "Card 護盾術",
+                  "width": "fill_container",
+                  "fill": "#221C14",
+                  "cornerRadius": 8,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "gap": 10,
+                  "padding": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "hq5wW",
+                      "name": "badge",
+                      "width": 22,
+                      "height": 22,
+                      "fill": "#2E2616",
+                      "cornerRadius": 4,
+                      "stroke": "#C9A84C",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "TTjod",
+                          "name": "bt",
+                          "fill": "#C9A84C",
+                          "content": "盾",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "SbZ8a",
+                      "name": "txt",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "k1ztnb",
+                          "name": "title",
+                          "fill": "#E8DFC9",
+                          "content": "護盾術",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "dvKZZ",
+                          "name": "sub",
+                          "fill": "#9A8A66",
+                          "content": "Shield",
+                          "fontFamily": "Inter",
+                          "fontSize": 9,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "d52ADS",
+                  "name": "Card 機會攻擊",
+                  "width": "fill_container",
+                  "fill": "#221C14",
+                  "cornerRadius": 8,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "gap": 10,
+                  "padding": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "VgooB",
+                      "name": "badge",
+                      "width": 22,
+                      "height": 22,
+                      "fill": "#2E2616",
+                      "cornerRadius": 4,
+                      "stroke": "#C9A84C",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "RuXLf",
+                          "name": "bt",
+                          "fill": "#C9A84C",
+                          "content": "攻",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "mikpB",
+                      "name": "txt",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "I14LJ",
+                          "name": "title",
+                          "fill": "#E8DFC9",
+                          "content": "機會攻擊",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "QFmY8",
+                          "name": "sub",
+                          "fill": "#9A8A66",
+                          "content": "Opportunity Attack",
+                          "fontFamily": "Inter",
+                          "fontSize": 9,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "x8VWN",
+      "x": 2706,
+      "y": -568,
+      "name": "Action Layout — 野蠻人",
+      "clip": true,
+      "width": 360,
+      "fill": "#14110C",
+      "layout": "vertical",
+      "gap": 14,
+      "padding": 16,
+      "children": [
+        {
+          "type": "text",
+          "id": "Z1Pemd",
+          "name": "Title",
+          "fill": "#C9A84C",
+          "content": "ACTION 動作",
+          "fontFamily": "Cinzel",
+          "fontSize": 13,
+          "fontWeight": "700",
+          "letterSpacing": 2
+        },
+        {
+          "type": "frame",
+          "id": "Hagw1",
+          "name": "Sec 動作",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "children": [
+            {
+              "type": "frame",
+              "id": "Hdqme",
+              "name": "L1",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "FJ6nT",
+                  "name": "bar",
+                  "fill": "#C9A84C",
+                  "width": 3,
+                  "height": 18
+                },
+                {
+                  "type": "text",
+                  "id": "Roify",
+                  "name": "label",
+                  "fill": "#E8DFC9",
+                  "content": "動作",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "VgJTb",
+                  "name": "hint",
+                  "fill": "#7A6A48",
+                  "content": "每回合 1 個",
+                  "fontFamily": "Inter",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "IjAUC",
+              "name": "Body",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                0,
+                0,
+                0,
+                11
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "qBbku",
+                  "name": "L2 攻擊",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "pwIlp",
+                      "name": "cat",
+                      "fill": "#C9A84C",
+                      "content": "攻擊",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "GI02I",
+                      "name": "inner",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "padding": [
+                        0,
+                        0,
+                        0,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "b29oR",
+                          "name": "Card 巨斧",
+                          "width": "fill_container",
+                          "fill": "#221C14",
+                          "cornerRadius": 8,
+                          "stroke": "#3A2F1C",
+                          "strokeWidth": 1,
+                          "gap": 10,
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "bWYbB",
+                              "name": "badge",
+                              "width": 22,
+                              "height": 22,
+                              "fill": "#2E2616",
+                              "cornerRadius": 4,
+                              "stroke": "#C9A84C",
+                              "strokeWidth": 1,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "XpYFy",
+                                  "name": "bt",
+                                  "fill": "#C9A84C",
+                                  "content": "攻",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 11,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "aWxgK",
+                              "name": "txt",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 1,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "dxUN0",
+                                  "name": "title",
+                                  "fill": "#E8DFC9",
+                                  "content": "巨斧",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "GP7W8",
+                                  "name": "sub",
+                                  "fill": "#9A8A66",
+                                  "content": "Greataxe",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 9,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "EB4vJ",
+                              "name": "meta",
+                              "fill": "#C9A84C",
+                              "content": "1d12",
+                              "fontFamily": "Cinzel",
+                              "fontSize": 12,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "DAvha",
+                          "name": "Card 魯莽攻擊",
+                          "width": "fill_container",
+                          "fill": "#221C14",
+                          "cornerRadius": 8,
+                          "stroke": "#3A2F1C",
+                          "strokeWidth": 1,
+                          "gap": 10,
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "v267b",
+                              "name": "badge",
+                              "width": 22,
+                              "height": 22,
+                              "fill": "#2E2616",
+                              "cornerRadius": 4,
+                              "stroke": "#C9A84C",
+                              "strokeWidth": 1,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "ILkeW",
+                                  "name": "bt",
+                                  "fill": "#C9A84C",
+                                  "content": "攻",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 11,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "tzE3L",
+                              "name": "txt",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 1,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "pOQdI",
+                                  "name": "title",
+                                  "fill": "#E8DFC9",
+                                  "content": "魯莽攻擊",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "IdrlR",
+                                  "name": "sub",
+                                  "fill": "#9A8A66",
+                                  "content": "Reckless Attack",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 9,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "Wabt1",
+                              "name": "meta",
+                              "fill": "#C9A84C",
+                              "content": "優勢",
+                              "fontFamily": "Cinzel",
+                              "fontSize": 12,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vvEew",
+                  "name": "L2 其他",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "gIm4g",
+                      "name": "cat",
+                      "fill": "#C9A84C",
+                      "content": "其他",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Ij7bM",
+                      "name": "inner",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "padding": [
+                        0,
+                        0,
+                        0,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "m2ETor",
+                          "name": "Card 疾走",
+                          "width": "fill_container",
+                          "fill": "#221C14",
+                          "cornerRadius": 8,
+                          "stroke": "#3A2F1C",
+                          "strokeWidth": 1,
+                          "gap": 10,
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "hAooa",
+                              "name": "badge",
+                              "width": 22,
+                              "height": 22,
+                              "fill": "#2E2616",
+                              "cornerRadius": 4,
+                              "stroke": "#C9A84C",
+                              "strokeWidth": 1,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "RUpER",
+                                  "name": "bt",
+                                  "fill": "#C9A84C",
+                                  "content": "動",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 11,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "iPbJK",
+                              "name": "txt",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 1,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "xVaeD",
+                                  "name": "title",
+                                  "fill": "#E8DFC9",
+                                  "content": "疾走",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "YJwxS",
+                                  "name": "sub",
+                                  "fill": "#9A8A66",
+                                  "content": "Dash",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 9,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "gZipp",
+                          "name": "Card 閃避",
+                          "width": "fill_container",
+                          "fill": "#221C14",
+                          "cornerRadius": 8,
+                          "stroke": "#3A2F1C",
+                          "strokeWidth": 1,
+                          "gap": 10,
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "LHFWR",
+                              "name": "badge",
+                              "width": 22,
+                              "height": 22,
+                              "fill": "#2E2616",
+                              "cornerRadius": 4,
+                              "stroke": "#C9A84C",
+                              "strokeWidth": 1,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "g2P7u",
+                                  "name": "bt",
+                                  "fill": "#C9A84C",
+                                  "content": "動",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 11,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "L3EjJN",
+                              "name": "txt",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 1,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "a88Vg8",
+                                  "name": "title",
+                                  "fill": "#E8DFC9",
+                                  "content": "閃避",
+                                  "fontFamily": "Noto Serif TC",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "fFhq7",
+                                  "name": "sub",
+                                  "fill": "#9A8A66",
+                                  "content": "Dodge",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 9,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "kYmlt",
+          "name": "Sec 附贈動作",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "children": [
+            {
+              "type": "frame",
+              "id": "I2HvK",
+              "name": "L1",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "d9WcCk",
+                  "name": "bar",
+                  "fill": "#C9A84C",
+                  "width": 3,
+                  "height": 18
+                },
+                {
+                  "type": "text",
+                  "id": "vuyJJ",
+                  "name": "label",
+                  "fill": "#E8DFC9",
+                  "content": "附贈動作",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "FBe3I",
+                  "name": "hint",
+                  "fill": "#7A6A48",
+                  "content": "每回合 1 個",
+                  "fontFamily": "Inter",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qEvdw",
+              "name": "Body",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                0,
+                0,
+                0,
+                11
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bivS4",
+                  "name": "Card 狂暴",
+                  "width": "fill_container",
+                  "fill": "#221C14",
+                  "cornerRadius": 8,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "gap": 10,
+                  "padding": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "cHn0H",
+                      "name": "badge",
+                      "width": 22,
+                      "height": 22,
+                      "fill": "#2E2616",
+                      "cornerRadius": 4,
+                      "stroke": "#C9A84C",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "G8sbR",
+                          "name": "bt",
+                          "fill": "#C9A84C",
+                          "content": "狂",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dy76V",
+                      "name": "txt",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "NjCBy",
+                          "name": "title",
+                          "fill": "#E8DFC9",
+                          "content": "狂暴",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "jX6fH",
+                          "name": "sub",
+                          "fill": "#9A8A66",
+                          "content": "Rage",
+                          "fontFamily": "Inter",
+                          "fontSize": 9,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "plCeg",
+                      "name": "meta",
+                      "fill": "#C9A84C",
+                      "content": "2/3",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "AgfgL",
+          "name": "Sec 反應",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "children": [
+            {
+              "type": "frame",
+              "id": "E9YDZ",
+              "name": "L1",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "lZxui",
+                  "name": "bar",
+                  "fill": "#C9A84C",
+                  "width": 3,
+                  "height": 18
+                },
+                {
+                  "type": "text",
+                  "id": "k3O7j",
+                  "name": "label",
+                  "fill": "#E8DFC9",
+                  "content": "反應",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "URKKK",
+                  "name": "hint",
+                  "fill": "#7A6A48",
+                  "content": "觸發時",
+                  "fontFamily": "Inter",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WDzAs",
+              "name": "Body",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                0,
+                0,
+                0,
+                11
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "iEF3x",
+                  "name": "Card 機會攻擊",
+                  "width": "fill_container",
+                  "fill": "#221C14",
+                  "cornerRadius": 8,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "gap": 10,
+                  "padding": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "zTKxK",
+                      "name": "badge",
+                      "width": 22,
+                      "height": 22,
+                      "fill": "#2E2616",
+                      "cornerRadius": 4,
+                      "stroke": "#C9A84C",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Q38U4h",
+                          "name": "bt",
+                          "fill": "#C9A84C",
+                          "content": "攻",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "orkCE",
+                      "name": "txt",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "c9lo1",
+                          "name": "title",
+                          "fill": "#E8DFC9",
+                          "content": "機會攻擊",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "D2kIJf",
+                          "name": "sub",
+                          "fill": "#9A8A66",
+                          "content": "Opportunity Attack",
+                          "fontFamily": "Inter",
+                          "fontSize": 9,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "variables": {

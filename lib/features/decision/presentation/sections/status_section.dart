@@ -18,11 +18,9 @@ class StatusSection extends ConsumerWidget {
     final notifier = ref.read(currentCharacterProvider.notifier);
     final dividerColor = Theme.of(context).colorScheme.outline;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionTitle(title: 'STATUS 狀態'),
-        Card(
+    return CollapsibleSection(
+      title: 'STATUS 狀態',
+      child: Card(
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
             child: Column(
@@ -66,7 +64,6 @@ class StatusSection extends ConsumerWidget {
             ),
           ),
         ),
-      ],
     );
   }
 
