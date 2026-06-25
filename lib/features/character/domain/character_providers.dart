@@ -150,6 +150,38 @@ class CurrentCharacterNotifier extends Notifier<Character> {
     if (state.hitDiceRemaining <= 0) return;
     state = state.copyWith(hitDiceUsed: state.hitDiceUsed + 1);
   }
+
+  // ── 冒險日誌 ──
+
+  void addJournalEntry(String title, String body) {
+    final now = DateTime.now();
+    state = state.copyWith(journalEntries: [
+      ...state.journalEntries,
+      JournalEntry(
+        id: now.microsecondsSinceEpoch.toString(),
+        title: title,
+        body: body,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    ]);
+  }
+
+  void updateJournalEntry(String id, String title, String body) {
+    state = state.copyWith(journalEntries: [
+      for (final e in state.journalEntries)
+        e.id == id
+            ? e.copyWith(title: title, body: body, updatedAt: DateTime.now())
+            : e,
+    ]);
+  }
+
+  void removeJournalEntry(String id) {
+    state = state.copyWith(
+      journalEntries:
+          state.journalEntries.where((e) => e.id != id).toList(),
+    );
+  }
 }
 
 final characterListProvider =
@@ -158,8 +190,30 @@ final characterListProvider =
 });
 
 class CharacterListNotifier extends StateNotifier<List<Character>> {
-  CharacterListNotifier()
-      : super([Character.mock(), Character.mockBarbarian()]);
+  CharacterListNotifier() : super(_seed());
+
+  static List<Character> _seed() {
+    final now = DateTime(2026, 6, 24, 21, 30);
+    return [
+      Character.mock().copyWith(journalEntries: [
+        JournalEntry(
+          id: 'j1',
+          title: '抵達銀谷鎮',
+          body: '黃昏時分抵達銀谷鎮。鎮民談論著礦坑深處傳出的怪聲，鐵匠願以折扣換取我們調查。今晚先在「醉龍旅店」落腳。',
+          createdAt: now.subtract(const Duration(days: 3)),
+          updatedAt: now.subtract(const Duration(days: 3)),
+        ),
+        JournalEntry(
+          id: 'j2',
+          title: '哥布林洞窟',
+          body: '循足跡進入北側洞窟，遭遇一隊哥布林伏擊。魔法飛彈解決了弓手；洞穴深處似乎還有更大的存在。撤退前撿到一枚刻著奇異符文的戒指。',
+          createdAt: now.subtract(const Duration(days: 1)),
+          updatedAt: now,
+        ),
+      ]),
+      Character.mockBarbarian(),
+    ];
+  }
 
   void add(Character c) => state = [...state, c];
 

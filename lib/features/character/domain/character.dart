@@ -177,6 +177,21 @@ abstract class ClassResource with _$ClassResource {
       _$ClassResourceFromJson(json);
 }
 
+/// 冒險日誌條目（歸屬角色）。
+@freezed
+abstract class JournalEntry with _$JournalEntry {
+  const factory JournalEntry({
+    required String id,
+    @Default('') String title,
+    @Default('') String body,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _JournalEntry;
+
+  factory JournalEntry.fromJson(Map<String, dynamic> json) =>
+      _$JournalEntryFromJson(json);
+}
+
 @freezed
 abstract class Character with _$Character {
   const Character._();
@@ -238,6 +253,9 @@ abstract class Character with _$Character {
 
     /// 已花用的生命骰數。
     @Default(0) int hitDiceUsed,
+
+    /// 冒險日誌條目（歸屬此角色）。
+    @Default(<JournalEntry>[]) List<JournalEntry> journalEntries,
   }) = _Character;
 
   factory Character.fromJson(Map<String, dynamic> json) =>
