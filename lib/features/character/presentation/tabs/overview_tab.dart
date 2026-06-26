@@ -175,7 +175,8 @@ class _InfoGrid extends StatelessWidget {
       ],
     ];
 
-    final divider = Theme.of(context).colorScheme.outline;
+    final divider =
+        Theme.of(context).colorScheme.outline.withValues(alpha: 0.4);
 
     return ParchmentCard(
       padding: const EdgeInsets.symmetric(
@@ -212,16 +213,18 @@ class _StatCards extends StatelessWidget {
   Widget build(BuildContext context) {
     final speedNum = character.speed.replaceAll(RegExp(r'[^0-9]'), '');
     final stats = [
-      _StatData('SPEED', speedNum, '呎 速度'),
+      _StatData('SPEED', speedNum, '速度', Icons.directions_run),
       _StatData(
         'PROF',
         character.proficiencyBonus >= 0
             ? '+${character.proficiencyBonus}'
             : '${character.proficiencyBonus}',
-        '熟練加值',
+        '熟練',
+        Icons.verified_outlined,
       ),
-      _StatData('PERC', '${character.passivePerception}', '被動察覺'),
-      _StatData('DC', '${character.spellDc}', '法術 DC'),
+      _StatData('PERC', '${character.passivePerception}', '察覺',
+          Icons.visibility_outlined),
+      _StatData('DC', '${character.spellDc}', '法術 DC', Icons.auto_awesome),
     ];
 
     return Row(
@@ -239,7 +242,8 @@ class _StatData {
   final String label;
   final String value;
   final String sub;
-  const _StatData(this.label, this.value, this.sub);
+  final IconData icon;
+  const _StatData(this.label, this.value, this.sub, this.icon);
 }
 
 class _StatCard extends StatelessWidget {
@@ -253,23 +257,15 @@ class _StatCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
       child: Column(
         children: [
-          Text(
-            data.label,
-            style: const TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 9,
-              letterSpacing: 1.5,
-              color: AppColors.sectionLabel,
-            ),
-          ),
+          Icon(data.icon, size: 16, color: AppColors.accentGold),
           const SizedBox(height: 4),
           Text(
             data.value,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Cinzel',
-              fontSize: 24,
+              fontSize: 22,
               fontWeight: FontWeight.w700,
-              color: theme.colorScheme.onSurface,
+              color: AppColors.accentGold,
             ),
           ),
           const SizedBox(height: 2),

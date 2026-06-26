@@ -54,6 +54,10 @@ class AbilitiesTab extends StatelessWidget {
             ),
           ),
           CollapsibleSection(
+            title: 'SAVING THROWS 豁免',
+            child: _SavingThrows(character: character),
+          ),
+          CollapsibleSection(
             title: 'SKILLS 技能',
             child: _SkillsByAbility(character: character),
           ),
@@ -83,6 +87,106 @@ class AbilitiesTab extends StatelessWidget {
       modifier: s.modifier,
       score: s.score,
       highlighted: code == character.spellcastingAbility,
+    );
+  }
+}
+
+class _SavingThrows extends StatelessWidget {
+  final Character character;
+  const _SavingThrows({required this.character});
+
+  AbilityScore _scoreFor(String code) {
+    final a = character.abilityScores;
+    return switch (code) {
+      'STR' => a.str,
+      'DEX' => a.dex,
+      'CON' => a.con,
+      'INT' => a.int_,
+      'WIS' => a.wis,
+      'CHA' => a.cha,
+      _ => a.str,
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final pb = character.proficiencyBonus;
+    final entries = _abilityOrder.map((e) {
+      final s = _scoreFor(e.$1);
+      final save = s.modifier + (s.proficientSave ? pb : 0);
+      return (e.$2, save, s.proficientSave);
+    }).toList();
+
+    final rows = <Widget>[];
+    for (var i = 0; i < entries.length; i += 2) {
+      rows.add(Padding(
+        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+        child: Row(
+          children: [
+            Expanded(child: _SaveCell(data: entries[i])),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(child: _SaveCell(data: entries[i + 1])),
+          ],
+        ),
+      ));
+    }
+    return Column(children: rows);
+  }
+}
+
+class _SaveCell extends StatelessWidget {
+  final (String, int, bool) data;
+  const _SaveCell({required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final (cn, save, prof) = data;
+    final modText = save >= 0 ? '+$save' : '$save';
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.darkSurface1,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: prof ? AppColors.accentGold : theme.colorScheme.outline,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            prof ? Icons.check_circle : Icons.circle_outlined,
+            size: 11,
+            color: prof
+                ? AppColors.accentGold
+                : theme.colorScheme.onSurface.withValues(alpha: 0.3),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              '$cn豁免',
+              style: TextStyle(
+                fontFamily: 'NotoSerifTC',
+                fontSize: 13,
+                fontWeight: prof ? FontWeight.w600 : FontWeight.w400,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+          ),
+          Text(
+            modText,
+            style: TextStyle(
+              fontFamily: 'Cinzel',
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: prof
+                  ? AppColors.accentGold
+                  : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -200,7 +304,7 @@ class _SkillRow extends StatelessWidget {
     final modText =
         skill.modifier >= 0 ? '+${skill.modifier}' : '${skill.modifier}';
     final accent = skill.proficient
-        ? AppColors.goldDim
+        ? AppColors.accentGold
         : theme.colorScheme.onSurface.withValues(alpha: 0.3);
 
     return Padding(
@@ -240,7 +344,7 @@ class _SkillRow extends StatelessWidget {
               fontSize: 14,
               fontWeight: FontWeight.w700,
               color: skill.proficient
-                  ? theme.colorScheme.onSurface
+                  ? AppColors.accentGold
                   : theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),

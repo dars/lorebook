@@ -12013,6 +12013,1455 @@
           ]
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "Q2looE",
+      "x": 4906,
+      "y": -568,
+      "name": "Character Cards Mockup",
+      "clip": true,
+      "width": 360,
+      "fill": "#14110C",
+      "layout": "vertical",
+      "gap": 10,
+      "padding": 16,
+      "children": [
+        {
+          "type": "text",
+          "id": "zvfON",
+          "name": "lab",
+          "fill": "#7A6A48",
+          "content": "戰鬥數值（金色強調 + icon）",
+          "fontFamily": "Inter",
+          "fontSize": 9,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "bI52M",
+          "name": "Stats",
+          "width": "fill_container",
+          "gap": 8,
+          "children": [
+            {
+              "type": "frame",
+              "id": "oUA3I",
+              "name": "Stat 速度",
+              "width": "fill_container",
+              "fill": "#1E160C",
+              "cornerRadius": 10,
+              "stroke": "#3A2F1C",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 3,
+              "padding": [
+                10,
+                4
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "IZSGw",
+                  "name": "i",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "footprints",
+                  "library": "lucide",
+                  "fill": "#C9A84C"
+                },
+                {
+                  "type": "text",
+                  "id": "kl0pZ",
+                  "name": "v",
+                  "fill": "#C9A84C",
+                  "content": "40",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 22,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "Qlz9w",
+                  "name": "s",
+                  "fill": "#9A8A66",
+                  "content": "速度",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "DLXia",
+              "name": "Stat 熟練",
+              "width": "fill_container",
+              "fill": "#1E160C",
+              "cornerRadius": 10,
+              "stroke": "#3A2F1C",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 3,
+              "padding": [
+                10,
+                4
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "yhPqX",
+                  "name": "i",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "badge-check",
+                  "library": "lucide",
+                  "fill": "#C9A84C"
+                },
+                {
+                  "type": "text",
+                  "id": "eqJO1",
+                  "name": "v",
+                  "fill": "#C9A84C",
+                  "content": "+2",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 22,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "AUvPo",
+                  "name": "s",
+                  "fill": "#9A8A66",
+                  "content": "熟練",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "g0L2MN",
+              "name": "Stat 察覺",
+              "width": "fill_container",
+              "fill": "#1E160C",
+              "cornerRadius": 10,
+              "stroke": "#3A2F1C",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 3,
+              "padding": [
+                10,
+                4
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "iDDDP",
+                  "name": "i",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "eye",
+                  "library": "lucide",
+                  "fill": "#C9A84C"
+                },
+                {
+                  "type": "text",
+                  "id": "g65Z0j",
+                  "name": "v",
+                  "fill": "#C9A84C",
+                  "content": "13",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 22,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "ZuLUB",
+                  "name": "s",
+                  "fill": "#9A8A66",
+                  "content": "察覺",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "dn0zV",
+              "name": "Stat 法術DC",
+              "width": "fill_container",
+              "fill": "#1E160C",
+              "cornerRadius": 10,
+              "stroke": "#3A2F1C",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 3,
+              "padding": [
+                10,
+                4
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "p6yl0",
+                  "name": "i",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "sparkles",
+                  "library": "lucide",
+                  "fill": "#C9A84C"
+                },
+                {
+                  "type": "text",
+                  "id": "r0xos",
+                  "name": "v",
+                  "fill": "#C9A84C",
+                  "content": "13",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 22,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "u6xF7",
+                  "name": "s",
+                  "fill": "#9A8A66",
+                  "content": "法術DC",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "WC2Qx",
+          "name": "lab",
+          "fill": "#7A6A48",
+          "content": "屬性盾牌（施法屬性金色高亮）",
+          "fontFamily": "Inter",
+          "fontSize": 9,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "N3y5xg",
+          "name": "AbiRow",
+          "width": "fill_container",
+          "gap": 8,
+          "children": [
+            {
+              "type": "frame",
+              "id": "K4chkI",
+              "name": "Abi 力量",
+              "width": "fill_container",
+              "fill": "#1E160C",
+              "cornerRadius": 12,
+              "stroke": "#3A2F1C",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 2,
+              "padding": [
+                12,
+                6
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "bqHfU",
+                  "name": "cn",
+                  "fill": "#E8DFC9",
+                  "content": "力量",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Uw2Gw",
+                  "name": "mod",
+                  "fill": "#E8DFC9",
+                  "content": "+0",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 26,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "kZpfg",
+                  "name": "en",
+                  "fill": "#9A8A66",
+                  "content": "STR",
+                  "fontFamily": "Inter",
+                  "fontSize": 9,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "Z1COw",
+                  "name": "circ",
+                  "width": 24,
+                  "height": 24,
+                  "fill": "#2E2616",
+                  "cornerRadius": 12,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "KoF12",
+                      "name": "sc",
+                      "fill": "#9A8A66",
+                      "content": "10",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "lzXhi",
+              "name": "Abi 敏捷",
+              "width": "fill_container",
+              "fill": "#1E160C",
+              "cornerRadius": 12,
+              "stroke": "#3A2F1C",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 2,
+              "padding": [
+                12,
+                6
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "nTwcu",
+                  "name": "cn",
+                  "fill": "#E8DFC9",
+                  "content": "敏捷",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "XGkY4",
+                  "name": "mod",
+                  "fill": "#E8DFC9",
+                  "content": "+1",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 26,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "p5xqO",
+                  "name": "en",
+                  "fill": "#9A8A66",
+                  "content": "DEX",
+                  "fontFamily": "Inter",
+                  "fontSize": 9,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "WBTnv",
+                  "name": "circ",
+                  "width": 24,
+                  "height": 24,
+                  "fill": "#2E2616",
+                  "cornerRadius": 12,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "La18Z",
+                      "name": "sc",
+                      "fill": "#9A8A66",
+                      "content": "12",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "PHHF9",
+              "name": "Abi 體魄",
+              "width": "fill_container",
+              "fill": "#1E160C",
+              "cornerRadius": 12,
+              "stroke": "#3A2F1C",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 2,
+              "padding": [
+                12,
+                6
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "R9oeKY",
+                  "name": "cn",
+                  "fill": "#E8DFC9",
+                  "content": "體魄",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "evxyq",
+                  "name": "mod",
+                  "fill": "#E8DFC9",
+                  "content": "+1",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 26,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "aAqYM",
+                  "name": "en",
+                  "fill": "#9A8A66",
+                  "content": "CON",
+                  "fontFamily": "Inter",
+                  "fontSize": 9,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "eyJtD",
+                  "name": "circ",
+                  "width": 24,
+                  "height": 24,
+                  "fill": "#2E2616",
+                  "cornerRadius": 12,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "X8i8e",
+                      "name": "sc",
+                      "fill": "#9A8A66",
+                      "content": "12",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "XW3FB",
+          "name": "AbiRow",
+          "width": "fill_container",
+          "gap": 8,
+          "children": [
+            {
+              "type": "frame",
+              "id": "qE5fJ",
+              "name": "Abi 智力",
+              "width": "fill_container",
+              "fill": "#C9A84C1A",
+              "cornerRadius": 12,
+              "stroke": "#C9A84C",
+              "strokeWidth": 2,
+              "layout": "vertical",
+              "gap": 2,
+              "padding": [
+                12,
+                6
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "C45lbY",
+                  "name": "cn",
+                  "fill": "#C9A84C",
+                  "content": "智力",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "B5un5",
+                  "name": "mod",
+                  "fill": "#C9A84C",
+                  "content": "+3",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 26,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "ykdYL",
+                  "name": "en",
+                  "fill": "#9A8A66",
+                  "content": "INT",
+                  "fontFamily": "Inter",
+                  "fontSize": 9,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "R2Ebv",
+                  "name": "circ",
+                  "width": 24,
+                  "height": 24,
+                  "fill": "#2E2616",
+                  "cornerRadius": 12,
+                  "stroke": "#C9A84C",
+                  "strokeWidth": 1,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "GAGG2",
+                      "name": "sc",
+                      "fill": "#C9A84C",
+                      "content": "17",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "sM10M",
+              "name": "Abi 感知",
+              "width": "fill_container",
+              "fill": "#1E160C",
+              "cornerRadius": 12,
+              "stroke": "#3A2F1C",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 2,
+              "padding": [
+                12,
+                6
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "d3eur",
+                  "name": "cn",
+                  "fill": "#E8DFC9",
+                  "content": "感知",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "SrNdx",
+                  "name": "mod",
+                  "fill": "#E8DFC9",
+                  "content": "+1",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 26,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "j23zwt",
+                  "name": "en",
+                  "fill": "#9A8A66",
+                  "content": "WIS",
+                  "fontFamily": "Inter",
+                  "fontSize": 9,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "El8UY",
+                  "name": "circ",
+                  "width": 24,
+                  "height": 24,
+                  "fill": "#2E2616",
+                  "cornerRadius": 12,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "f4sbbV",
+                      "name": "sc",
+                      "fill": "#9A8A66",
+                      "content": "13",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Z6Nrf",
+              "name": "Abi 魅力",
+              "width": "fill_container",
+              "fill": "#1E160C",
+              "cornerRadius": 12,
+              "stroke": "#3A2F1C",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 2,
+              "padding": [
+                12,
+                6
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "pqSiA",
+                  "name": "cn",
+                  "fill": "#E8DFC9",
+                  "content": "魅力",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "CXY4H",
+                  "name": "mod",
+                  "fill": "#E8DFC9",
+                  "content": "+1",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 26,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "p3PwM9",
+                  "name": "en",
+                  "fill": "#9A8A66",
+                  "content": "CHA",
+                  "fontFamily": "Inter",
+                  "fontSize": 9,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "mU8zh",
+                  "name": "circ",
+                  "width": 24,
+                  "height": 24,
+                  "fill": "#2E2616",
+                  "cornerRadius": 12,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "XIg0E",
+                      "name": "sc",
+                      "fill": "#9A8A66",
+                      "content": "12",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "FBV1J",
+          "name": "labSaves",
+          "fill": "#7A6A48",
+          "content": "豁免（SAVING THROWS・熟練金色）",
+          "fontFamily": "Inter",
+          "fontSize": 9,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "i9a3F",
+          "name": "SavesGrid",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "frame",
+              "id": "u5faR",
+              "name": "SRow",
+              "width": "fill_container",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Gm2SW",
+                  "name": "Save 力量",
+                  "width": "fill_container",
+                  "fill": "#1E160C",
+                  "cornerRadius": 6,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "E5RQY",
+                      "name": "l",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "K64e7o",
+                          "name": "dot",
+                          "width": 11,
+                          "height": 11,
+                          "icon": "circle",
+                          "library": "lucide",
+                          "fill": "#9A8A66"
+                        },
+                        {
+                          "type": "text",
+                          "id": "RjoZc",
+                          "name": "cn",
+                          "fill": "#E8DFC9",
+                          "content": "力量",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "EWvn9",
+                      "name": "mod",
+                      "fill": "#9A8A66",
+                      "content": "+0",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kQvzz",
+                  "name": "Save 敏捷",
+                  "width": "fill_container",
+                  "fill": "#1E160C",
+                  "cornerRadius": 6,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kVeHv",
+                      "name": "l",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "p6Afzh",
+                          "name": "dot",
+                          "width": 11,
+                          "height": 11,
+                          "icon": "circle",
+                          "library": "lucide",
+                          "fill": "#9A8A66"
+                        },
+                        {
+                          "type": "text",
+                          "id": "X0DLG",
+                          "name": "cn",
+                          "fill": "#E8DFC9",
+                          "content": "敏捷",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "z60Of",
+                      "name": "mod",
+                      "fill": "#9A8A66",
+                      "content": "+1",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tdlJP",
+              "name": "SRow",
+              "width": "fill_container",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "T4AU9K",
+                  "name": "Save 體魄",
+                  "width": "fill_container",
+                  "fill": "#1E160C",
+                  "cornerRadius": 6,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "j58e9A",
+                      "name": "l",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "N13Kdp",
+                          "name": "dot",
+                          "width": 11,
+                          "height": 11,
+                          "icon": "circle",
+                          "library": "lucide",
+                          "fill": "#9A8A66"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Y3YNtp",
+                          "name": "cn",
+                          "fill": "#E8DFC9",
+                          "content": "體魄",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "K3vz7",
+                      "name": "mod",
+                      "fill": "#9A8A66",
+                      "content": "+1",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bPcya",
+                  "name": "Save 智力",
+                  "width": "fill_container",
+                  "fill": "#1E160C",
+                  "cornerRadius": 6,
+                  "stroke": "#C9A84C",
+                  "strokeWidth": 1,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "QpSf5",
+                      "name": "l",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Wr09A",
+                          "name": "dot",
+                          "width": 11,
+                          "height": 11,
+                          "icon": "circle-check",
+                          "library": "lucide",
+                          "fill": "#C9A84C"
+                        },
+                        {
+                          "type": "text",
+                          "id": "aiKPc",
+                          "name": "cn",
+                          "fill": "#E8DFC9",
+                          "content": "智力",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "H5nY0s",
+                      "name": "mod",
+                      "fill": "#C9A84C",
+                      "content": "+5",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "R4qpKp",
+              "name": "SRow",
+              "width": "fill_container",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Ukwoi",
+                  "name": "Save 感知",
+                  "width": "fill_container",
+                  "fill": "#1E160C",
+                  "cornerRadius": 6,
+                  "stroke": "#C9A84C",
+                  "strokeWidth": 1,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "l67A4t",
+                      "name": "l",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "H5680",
+                          "name": "dot",
+                          "width": 11,
+                          "height": 11,
+                          "icon": "circle-check",
+                          "library": "lucide",
+                          "fill": "#C9A84C"
+                        },
+                        {
+                          "type": "text",
+                          "id": "KT9gw",
+                          "name": "cn",
+                          "fill": "#E8DFC9",
+                          "content": "感知",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "cUcNH",
+                      "name": "mod",
+                      "fill": "#C9A84C",
+                      "content": "+3",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "faxJH",
+                  "name": "Save 魅力",
+                  "width": "fill_container",
+                  "fill": "#1E160C",
+                  "cornerRadius": 6,
+                  "stroke": "#3A2F1C",
+                  "strokeWidth": 1,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "mNawj",
+                      "name": "l",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "W2d8i",
+                          "name": "dot",
+                          "width": 11,
+                          "height": 11,
+                          "icon": "circle",
+                          "library": "lucide",
+                          "fill": "#9A8A66"
+                        },
+                        {
+                          "type": "text",
+                          "id": "CteBj",
+                          "name": "cn",
+                          "fill": "#E8DFC9",
+                          "content": "魅力",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "G5ezwl",
+                      "name": "mod",
+                      "fill": "#9A8A66",
+                      "content": "+1",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "KrLkT",
+          "name": "lab",
+          "fill": "#7A6A48",
+          "content": "基本資訊（精煉）",
+          "fontFamily": "Inter",
+          "fontSize": 9,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "i5LS7u",
+          "name": "InfoCard",
+          "width": "fill_container",
+          "fill": "#1E160C",
+          "cornerRadius": 12,
+          "stroke": "#3A2F1C",
+          "strokeWidth": 1,
+          "layout": "vertical",
+          "padding": [
+            6,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "WaYra",
+              "name": "InfoRow",
+              "width": "fill_container",
+              "gap": 16,
+              "padding": [
+                12,
+                0
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "OEvHX",
+                  "name": "F SPECIES · 物種",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Qj6Ta",
+                      "name": "l",
+                      "fill": "#7A6A48",
+                      "content": "SPECIES · 物種",
+                      "fontFamily": "Inter",
+                      "fontSize": 9,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1.5
+                    },
+                    {
+                      "type": "frame",
+                      "id": "JgbaP",
+                      "name": "vr",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Qd0mw",
+                          "name": "v",
+                          "fill": "#E8DFC9",
+                          "content": "人類",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "kuTW0",
+                          "name": "e",
+                          "fill": "#9A8A66",
+                          "content": "Human",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "wiS58",
+                  "name": "F TYPE · 生物類型",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Aei3C",
+                      "name": "l",
+                      "fill": "#7A6A48",
+                      "content": "TYPE · 生物類型",
+                      "fontFamily": "Inter",
+                      "fontSize": 9,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1.5
+                    },
+                    {
+                      "type": "frame",
+                      "id": "x781IU",
+                      "name": "vr",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "InFxD",
+                          "name": "v",
+                          "fill": "#E8DFC9",
+                          "content": "Humanoid",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "thkU0",
+              "name": "div",
+              "fill": "#2A2114",
+              "width": "fill_container",
+              "height": 1
+            },
+            {
+              "type": "frame",
+              "id": "MTN7L",
+              "name": "InfoRow",
+              "width": "fill_container",
+              "gap": 16,
+              "padding": [
+                12,
+                0
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "M2RqlV",
+                  "name": "F SIZE · 體型",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "rbEEh",
+                      "name": "l",
+                      "fill": "#7A6A48",
+                      "content": "SIZE · 體型",
+                      "fontFamily": "Inter",
+                      "fontSize": 9,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1.5
+                    },
+                    {
+                      "type": "frame",
+                      "id": "MyGSN",
+                      "name": "vr",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "yYFj7",
+                          "name": "v",
+                          "fill": "#E8DFC9",
+                          "content": "Medium",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "dbRWT",
+                  "name": "F ALIGNMENT · 陣營",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "xd3SX",
+                      "name": "l",
+                      "fill": "#7A6A48",
+                      "content": "ALIGNMENT · 陣營",
+                      "fontFamily": "Inter",
+                      "fontSize": 9,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1.5
+                    },
+                    {
+                      "type": "frame",
+                      "id": "i4DgM1",
+                      "name": "vr",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "pn3Ib",
+                          "name": "v",
+                          "fill": "#E8DFC9",
+                          "content": "守序善良",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "zHoQd",
+                          "name": "e",
+                          "fill": "#9A8A66",
+                          "content": "Lawful Good",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "Zy72D",
+              "name": "div",
+              "fill": "#2A2114",
+              "width": "fill_container",
+              "height": 1
+            },
+            {
+              "type": "frame",
+              "id": "J1sg5",
+              "name": "InfoRow",
+              "width": "fill_container",
+              "gap": 16,
+              "padding": [
+                12,
+                0
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "hCBRE",
+                  "name": "F DEITY · 信仰",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "vKfwL",
+                      "name": "l",
+                      "fill": "#7A6A48",
+                      "content": "DEITY · 信仰",
+                      "fontFamily": "Inter",
+                      "fontSize": 9,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1.5
+                    },
+                    {
+                      "type": "frame",
+                      "id": "o1Png",
+                      "name": "vr",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "B0Mom",
+                          "name": "v",
+                          "fill": "#E8DFC9",
+                          "content": "乜斯乍",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Eo3Mx",
+                          "name": "e",
+                          "fill": "#9A8A66",
+                          "content": "Mystra",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bYukm",
+                  "name": "F BACKGROUND · 背景",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "bsnuX",
+                      "name": "l",
+                      "fill": "#7A6A48",
+                      "content": "BACKGROUND · 背景",
+                      "fontFamily": "Inter",
+                      "fontSize": 9,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1.5
+                    },
+                    {
+                      "type": "frame",
+                      "id": "sJX9E",
+                      "name": "vr",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "O9sGVS",
+                          "name": "v",
+                          "fill": "#E8DFC9",
+                          "content": "賢者",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "wtvGW",
+                          "name": "e",
+                          "fill": "#9A8A66",
+                          "content": "Sage",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "variables": {

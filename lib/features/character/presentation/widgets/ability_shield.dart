@@ -26,9 +26,9 @@ class AbilityShield extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final accent =
-        highlighted ? AppColors.primaryDark : theme.colorScheme.outline;
+        highlighted ? AppColors.accentGold : theme.colorScheme.outline;
     final fill = highlighted
-        ? AppColors.primaryDark.withValues(alpha: 0.08)
+        ? AppColors.accentGold.withValues(alpha: 0.08)
         : (theme.cardTheme.color ?? theme.colorScheme.surfaceContainerHighest);
 
     return AspectRatio(
@@ -57,7 +57,7 @@ class AbilityShield extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   height: 1,
                   color: highlighted
-                      ? AppColors.primaryDark
+                      ? AppColors.accentGold
                       : theme.colorScheme.onSurface,
                 ),
               ),

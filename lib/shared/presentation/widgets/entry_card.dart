@@ -78,6 +78,8 @@ class _EntryCardState extends State<EntryCard> {
     final panelBg = theme.scaffoldBackgroundColor;
 
     return DecoratedBox(
+      // 邊框畫在前景，避免被內層不透明的 ClipRRect 蓋掉（外框才看得見）。
+      position: DecorationPosition.foreground,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(_radius),
         border: Border.all(color: border),
