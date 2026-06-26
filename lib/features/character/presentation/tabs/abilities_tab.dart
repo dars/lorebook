@@ -42,12 +42,21 @@ class AbilitiesTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionTitle(title: 'ABILITIES 屬性'),
-          _abilityRow(['STR', 'DEX', 'CON']),
-          const SizedBox(height: AppSpacing.sm),
-          _abilityRow(['INT', 'WIS', 'CHA']),
-          const SectionTitle(title: 'SKILLS 技能'),
-          _SkillsByAbility(character: character),
+          CollapsibleSection(
+            title: 'ABILITIES 屬性',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _abilityRow(['STR', 'DEX', 'CON']),
+                const SizedBox(height: AppSpacing.sm),
+                _abilityRow(['INT', 'WIS', 'CHA']),
+              ],
+            ),
+          ),
+          CollapsibleSection(
+            title: 'SKILLS 技能',
+            child: _SkillsByAbility(character: character),
+          ),
         ],
       ),
     );

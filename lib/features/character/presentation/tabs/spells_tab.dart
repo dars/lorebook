@@ -22,16 +22,27 @@ class SpellsTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionTitle(title: 'SPELLCASTING 施法'),
-          _SpellcastingCard(character: character),
-          const SectionTitle(title: 'CANTRIPS 戲法'),
-          for (final c in character.cantrips)
-            Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-              child: spellEntryCard(c, badge: '戲', dnd: dnd),
+          CollapsibleSection(
+            title: 'SPELLCASTING 施法',
+            child: _SpellcastingCard(character: character),
+          ),
+          CollapsibleSection(
+            title: 'CANTRIPS 戲法',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final c in character.cantrips)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                    child: spellEntryCard(c, badge: '戲', dnd: dnd),
+                  ),
+              ],
             ),
-          const SectionTitle(title: 'SPELLBOOK 已備法術'),
-          _Spellbook(spells: character.spells, dnd: dnd),
+          ),
+          CollapsibleSection(
+            title: 'SPELLBOOK 已備法術',
+            child: _Spellbook(spells: character.spells, dnd: dnd),
+          ),
         ],
       ),
     );

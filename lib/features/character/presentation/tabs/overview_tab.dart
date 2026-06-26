@@ -24,10 +24,14 @@ class OverviewTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _Hero(character: character),
-          const SizedBox(height: AppSpacing.lg),
-          _InfoGrid(character: character),
-          const SizedBox(height: AppSpacing.lg),
-          _StatCards(character: character),
+          CollapsibleSection(
+            title: 'BASIC 基本資訊',
+            child: _InfoGrid(character: character),
+          ),
+          CollapsibleSection(
+            title: 'STATS 戰鬥數值',
+            child: _StatCards(character: character),
+          ),
         ],
       ),
     );
@@ -43,17 +47,18 @@ class _Hero extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppSpacing.radiusCharacterHeader),
       child: Container(
-        height: 340,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
+        height: 320,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF2A2438),
-              Color(0xFF1C1A2A),
+              Color(0xFF2E2418),
+              Color(0xFF1E160C),
               Color(0xFF14110C),
             ],
           ),
+          border: Border.all(color: AppColors.darkBorder, width: 1),
         ),
         child: Stack(
           fit: StackFit.expand,
@@ -182,7 +187,7 @@ class _InfoGrid extends StatelessWidget {
           for (var i = 0; i < rows.length; i++) ...[
             if (i > 0) Divider(color: divider, height: 1),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 
 /// 角色頁上方的水平分頁列（總覽 / 屬性 / 法術 / 物品 / 傳記）。
@@ -26,7 +27,7 @@ class CharacterTabBar extends StatelessWidget {
       child: Row(
         children: [
           for (var i = 0; i < tabs.length; i++) ...[
-            if (i > 0) const SizedBox(width: AppSpacing.sm),
+            if (i > 0) const SizedBox(width: AppSpacing.lg),
             _TabPill(
               label: tabs[i],
               selected: i == currentIndex,
@@ -52,30 +53,37 @@ class _TabPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final bg = selected ? scheme.primary : Colors.transparent;
-    final fg = selected ? scheme.onPrimary : scheme.onSurface;
-    final border = selected ? scheme.primary : scheme.outline;
-
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(AppSpacing.sm),
-          border: Border.all(color: border, width: 1),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontFamily: 'NotoSerifTC',
-            fontSize: 15,
-            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-            color: fg,
-          ),
+      child: IntrinsicWidth(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 8),
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'NotoSerifTC',
+                  fontSize: 15,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  color: selected
+                      ? AppColors.accentGold
+                      : AppColors.darkTextSecondary,
+                ),
+              ),
+            ),
+            Container(
+              height: 2,
+              decoration: BoxDecoration(
+                color: selected ? AppColors.accentGold : Colors.transparent,
+                borderRadius: BorderRadius.circular(1),
+              ),
+            ),
+          ],
         ),
       ),
     );

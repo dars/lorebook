@@ -22,22 +22,32 @@ class InventoryTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionTitle(title: 'TREASURY 財富'),
-          _Treasury(currency: character.currency),
-          const SectionTitle(title: 'EQUIPMENT 裝備'),
-          if (character.weapons.isNotEmpty) ...[
-            const _SubLabel(icon: Icons.gavel, text: '武器 WEAPONS'),
-            const SizedBox(height: AppSpacing.sm),
-            for (final w in character.weapons)
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                child: weaponEntryCard(w, dnd: dnd),
-              ),
-            const SizedBox(height: AppSpacing.md),
-          ],
-          const _SubLabel(icon: Icons.backpack_outlined, text: '裝備 GEAR'),
-          const SizedBox(height: AppSpacing.sm),
-          ...character.equipment.map((e) => _EquipmentRow(item: e)),
+          CollapsibleSection(
+            title: 'TREASURY 財富',
+            child: _Treasury(currency: character.currency),
+          ),
+          CollapsibleSection(
+            title: 'EQUIPMENT 裝備',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (character.weapons.isNotEmpty) ...[
+                  const _SubLabel(icon: Icons.gavel, text: '武器 WEAPONS'),
+                  const SizedBox(height: AppSpacing.sm),
+                  for (final w in character.weapons)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                      child: weaponEntryCard(w, dnd: dnd),
+                    ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                const _SubLabel(
+                    icon: Icons.backpack_outlined, text: '裝備 GEAR'),
+                const SizedBox(height: AppSpacing.sm),
+                ...character.equipment.map((e) => _EquipmentRow(item: e)),
+              ],
+            ),
+          ),
         ],
       ),
     );

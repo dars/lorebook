@@ -38,7 +38,7 @@ class InfoField extends StatelessWidget {
                 text: value,
                 style: TextStyle(
                   fontFamily: 'NotoSerifTC',
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),

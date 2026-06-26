@@ -19,29 +19,37 @@ class BiographyTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionTitle(title: 'ABOUT 其人其事'),
-          _About(character: character),
-          const SectionTitle(title: 'PERSONALITY 性格'),
-          ParchmentCard(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.sm,
-            ),
-            child: Column(
-              children: [
-                if (p.traits.isNotEmpty)
-                  _TraitRow(label: '特質', value: p.traits),
-                if (p.ideals.isNotEmpty)
-                  _TraitRow(label: '理念', value: p.ideals),
-                if (p.bonds.isNotEmpty) _TraitRow(label: '羈絆', value: p.bonds),
-                if (p.flaws.isNotEmpty) _TraitRow(label: '缺陷', value: p.flaws),
-              ],
+          CollapsibleSection(
+            title: 'ABOUT 其人其事',
+            child: _About(character: character),
+          ),
+          CollapsibleSection(
+            title: 'PERSONALITY 性格',
+            child: ParchmentCard(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.sm,
+              ),
+              child: Column(
+                children: [
+                  if (p.traits.isNotEmpty)
+                    _TraitRow(label: '特質', value: p.traits),
+                  if (p.ideals.isNotEmpty)
+                    _TraitRow(label: '理念', value: p.ideals),
+                  if (p.bonds.isNotEmpty)
+                    _TraitRow(label: '羈絆', value: p.bonds),
+                  if (p.flaws.isNotEmpty)
+                    _TraitRow(label: '缺陷', value: p.flaws),
+                ],
+              ),
             ),
           ),
-          const SectionTitle(title: 'FEATURES & TRAITS 特長'),
-          _Features(
-            features: character.features,
-            languages: character.languages,
+          CollapsibleSection(
+            title: 'FEATURES & TRAITS 特長',
+            child: _Features(
+              features: character.features,
+              languages: character.languages,
+            ),
           ),
         ],
       ),
