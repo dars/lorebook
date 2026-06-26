@@ -49,14 +49,14 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _buildModifierBanner(_selected),
+          const SizedBox(height: 10),
           _buildTabs(),
-        const SizedBox(height: 8),
-        _buildModifierBanner(_selected),
-        const SizedBox(height: 8),
-        if (_tabIndex == 0) _buildAbilityGrid(abilities),
-        if (_tabIndex == 1)
-          _buildSavesGrid(abilities, character.proficiencyBonus),
-        if (_tabIndex == 2) _buildSkillsView(character, abilities),
+          const SizedBox(height: 10),
+          if (_tabIndex == 0) _buildAbilityGrid(abilities),
+          if (_tabIndex == 1)
+            _buildSavesGrid(abilities, character.proficiencyBonus),
+          if (_tabIndex == 2) _buildSkillsView(character, abilities),
         ],
       ),
     );
@@ -64,57 +64,41 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
 
   Widget _buildTabs() {
     final tabs = ['能力', '豁免', '技能'];
-    return Container(
-      height: 42,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E160C),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.darkBorder, width: 1),
-      ),
-      child: Row(
-        children: tabs.asMap().entries.map((entry) {
-          final isActive = entry.key == _tabIndex;
-          return Expanded(
-            child: GestureDetector(
-              onTap: () => _switchTab(entry.key),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: isActive ? const Color(0x22C9A84C) : Colors.transparent,
-                ),
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      entry.value,
-                      style: TextStyle(
-                        fontFamily: 'NotoSerifTC',
-                        fontSize: 13,
-                        fontWeight:
-                            isActive ? FontWeight.w700 : FontWeight.normal,
-                        color: isActive
-                            ? AppColors.accentGold
-                            : AppColors.darkTextSecondary,
-                      ),
+    return Row(
+      children: tabs.asMap().entries.map((entry) {
+        final isActive = entry.key == _tabIndex;
+        return Expanded(
+          child: GestureDetector(
+            onTap: () => _switchTab(entry.key),
+            behavior: HitTestBehavior.opaque,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    entry.value,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 13,
+                      fontWeight:
+                          isActive ? FontWeight.w700 : FontWeight.normal,
+                      color: isActive
+                          ? AppColors.accentGold
+                          : AppColors.darkTextSecondary,
                     ),
-                    if (isActive)
-                      Container(
-                        width: 28,
-                        height: 2,
-                        margin: const EdgeInsets.only(top: 2),
-                        decoration: BoxDecoration(
-                          color: AppColors.accentGold,
-                          borderRadius: BorderRadius.circular(1),
-                        ),
-                      ),
-                  ],
+                  ),
                 ),
-              ),
+                Container(
+                  height: 2,
+                  color: isActive ? AppColors.accentGold : AppColors.darkBorder,
+                ),
+              ],
             ),
-          );
-        }).toList(),
-      ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -122,8 +106,9 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
     final active = sel != null;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      constraints: const BoxConstraints(minHeight: 72),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      height: 60,
+      alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topCenter,
@@ -204,7 +189,7 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
           _fmt(sel.modifier),
           style: TextStyle(
             fontFamily: 'Cinzel',
-            fontSize: 44,
+            fontSize: 32,
             fontWeight: FontWeight.w700,
             color: AppColors.accentGold,
           ),
@@ -308,7 +293,7 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
         final ability = abilityMap[key]!;
         final skills = groups[key]!;
         return Padding(
-          padding: const EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.only(bottom: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -334,7 +319,7 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
                   ),
                 ],
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               ...List.generate((skills.length / 2).ceil(), (rowIdx) {
                 final s1 = skills[rowIdx * 2];
                 final s2 = rowIdx * 2 + 1 < skills.length

@@ -112,7 +112,7 @@ class CompactStatRow extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: fillColor,
           borderRadius: BorderRadius.circular(6),
@@ -128,7 +128,7 @@ class CompactStatRow extends StatelessWidget {
                   labelCN,
                   style: TextStyle(
                     fontFamily: 'NotoSerifTC',
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: AppColors.darkTextPrimary,
                   ),
@@ -148,7 +148,7 @@ class CompactStatRow extends StatelessWidget {
             modifier,
             style: TextStyle(
               fontFamily: 'Cinzel',
-              fontSize: 17,
+              fontSize: 16,
               fontWeight: FontWeight.w700,
               color: modColor,
             ),
