@@ -19,7 +19,9 @@ final devBypassAuthProvider = StateProvider<bool>((ref) => false);
 
 bool get _isSupabaseInitialized {
   try {
-    Supabase.instance;
+    // 必須存取 .client：未初始化（或 initialize 失敗留下半初始化 instance）時
+    // 才會丟 LateInitializationError，避免誤判為已初始化而存取未就緒的 client。
+    Supabase.instance.client;
     return true;
   } catch (_) {
     return false;
