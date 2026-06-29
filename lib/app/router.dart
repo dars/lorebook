@@ -8,6 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../features/auth/presentation/login_page.dart';
 import '../features/auth/presentation/register_page.dart';
 import '../features/character/domain/character_providers.dart';
+import '../features/character/presentation/character_create_page.dart';
 import '../features/character/presentation/character_page.dart';
 import '../features/character/presentation/character_select_page.dart';
 import '../features/decision/presentation/decision_page.dart';
@@ -43,13 +44,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isLoggedIn = session != null || devBypass;
       final isAuthRoute = state.matchedLocation.startsWith('/auth');
       final isCharSelect = state.matchedLocation == '/character-select';
+      final isCreate = state.matchedLocation == '/character-create';
       final selectedChar = ref.read(selectedCharacterIdProvider);
 
       if (!isLoggedIn && !isAuthRoute) return '/auth/login';
       if (isLoggedIn && isAuthRoute) {
         return selectedChar != null ? '/main/decision' : '/character-select';
       }
-      if (isLoggedIn && !isCharSelect && selectedChar == null) {
+      if (isLoggedIn && !isCharSelect && !isCreate && selectedChar == null) {
         if (!state.matchedLocation.startsWith('/auth')) {
           return '/character-select';
         }
@@ -80,6 +82,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             },
           );
         },
+      ),
+      GoRoute(
+        path: '/character-create',
+        builder: (context, state) => const CharacterCreatePage(),
       ),
       ShellRoute(
         builder: (context, state, child) => AppScaffold(child: child),

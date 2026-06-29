@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
@@ -47,6 +48,26 @@ class CharacterSelectPage extends ConsumerWidget {
                           onTap: () => onCharacterSelected(c.id),
                         );
                       },
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () => context.push('/character-create'),
+                      icon: const Icon(Icons.add, color: AppColors.accentGold),
+                      label: Text(
+                        '新增角色',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: AppColors.accentGold,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        padding:
+                            const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                        side: const BorderSide(color: AppColors.accentGold),
+                      ),
                     ),
                   ),
                 ],
