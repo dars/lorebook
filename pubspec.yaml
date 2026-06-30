@@ -16,6 +16,10 @@ dependencies:
   shared_preferences: ^2.5.3
   freezed_annotation: ^3.1.0
   json_annotation: ^4.12.0
+  # Widgetbook：被 lib/widgetbook/ use-case 引用，故置 dependencies；
+  # 僅 lib/widgetbook.dart 進入點可達，正式 App（main.dart）不會打包進去。
+  widgetbook: ^3.23.0
+  widgetbook_annotation: ^3.11.0
 
 dev_dependencies:
   flutter_test:
@@ -25,6 +29,7 @@ dev_dependencies:
   freezed: ^3.2.5
   json_serializable: ^6.14.0
   flutter_launcher_icons: ^0.14.4
+  widgetbook_generator: ^3.24.0
   # Riverpod codegen 暫未採用（provider 目前手寫）；如需再加：
   # riverpod_generator / riverpod_annotation / riverpod_lint
 

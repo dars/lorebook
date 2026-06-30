@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/decorations.dart';
+import '../../../shared/presentation/widgets/ability_hex_chart.dart';
 import '../domain/character.dart';
 import '../domain/character_creation_data.dart';
 import '../domain/character_providers.dart';
@@ -509,7 +508,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _HexChart(values: _realHexValues, highlights: const {}),
+        AbilityHexChart(values: _realHexValues),
         const SizedBox(height: AppSpacing.md),
         _methodTabs(),
         const SizedBox(height: AppSpacing.md),
@@ -1010,7 +1009,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         const SizedBox(height: AppSpacing.sm),
         _statGrid(combat),
         const SizedBox(height: AppSpacing.lg),
-        _HexChart(values: _realHexValues, highlights: const {}),
+        AbilityHexChart(values: _realHexValues),
         const SizedBox(height: AppSpacing.lg),
         _SectionHeader('屬性值'),
         const SizedBox(height: AppSpacing.sm),
@@ -1545,96 +1544,3 @@ class _PortraitPlaceholder extends StatelessWidget {
   }
 }
 
-/// 六角能力雷達圖。values 為 6 軸正規化值（0~1，依 kAbilityOrder），
-/// highlights 為要以金色強調的軸索引。
-class _HexChart extends StatelessWidget {
-  final List<double> values;
-  final Set<int> highlights;
-  const _HexChart({required this.values, required this.highlights});
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: 220,
-        height: 200,
-        child: CustomPaint(
-          painter: _HexChartPainter(values: values, highlights: highlights),
-        ),
-      ),
-    );
-  }
-}
-
-class _HexChartPainter extends CustomPainter {
-  final List<double> values;
-  final Set<int> highlights;
-  _HexChartPainter({required this.values, required this.highlights});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = math.min(size.width, size.height) / 2 - 26;
-
-    Offset vertex(int i, double r) {
-      final angle = -math.pi / 2 + i * math.pi / 3;
-      return center + Offset(math.cos(angle) * r, math.sin(angle) * r);
-    }
-
-    final grid = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1
-      ..color = AppColors.darkBorder2;
-    for (final ring in [0.4, 0.7, 1.0]) {
-      final path = Path();
-      for (var i = 0; i < 6; i++) {
-        final p = vertex(i, radius * ring);
-        i == 0 ? path.moveTo(p.dx, p.dy) : path.lineTo(p.dx, p.dy);
-      }
-      path.close();
-      canvas.drawPath(path, grid);
-    }
-    for (var i = 0; i < 6; i++) {
-      canvas.drawLine(center, vertex(i, radius), grid);
-    }
-
-    final dataPath = Path();
-    for (var i = 0; i < 6; i++) {
-      final p = vertex(i, radius * values[i].clamp(0.0, 1.0));
-      i == 0 ? dataPath.moveTo(p.dx, p.dy) : dataPath.lineTo(p.dx, p.dy);
-    }
-    dataPath.close();
-    canvas.drawPath(
-        dataPath,
-        Paint()
-          ..style = PaintingStyle.fill
-          ..color = AppColors.accentGold.withValues(alpha: 0.30));
-    canvas.drawPath(
-        dataPath,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.5
-          ..color = AppColors.accentGold);
-
-    for (var i = 0; i < 6; i++) {
-      final on = highlights.contains(i);
-      final tp = TextPainter(
-        text: TextSpan(
-          text: kAbilityCn[kAbilityOrder[i]],
-          style: TextStyle(
-            fontFamily: 'NotoSerifTC',
-            fontSize: 12,
-            fontWeight: on ? FontWeight.w700 : FontWeight.w400,
-            color: on ? AppColors.accentGold : AppColors.darkTextSecondary,
-          ),
-        ),
-        textDirection: TextDirection.ltr,
-      )..layout();
-      final p = vertex(i, radius + 16);
-      tp.paint(canvas, p - Offset(tp.width / 2, tp.height / 2));
-    }
-  }
-
-  @override
-  bool shouldRepaint(_HexChartPainter old) =>
-      old.values != values || old.highlights != highlights;
-}
