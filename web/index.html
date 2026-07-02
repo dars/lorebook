@@ -31,6 +31,12 @@
 
   <title>lorebook</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- Required by transitive dep `passkeys` (via supabase_flutter) for WebAuthn support -->
+  <script
+    src="https://github.com/corbado/flutter-passkeys/releases/download/2.4.0/bundle.js"
+    type="application/javascript"
+  ></script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
