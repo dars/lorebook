@@ -5,6 +5,9 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/decorations.dart';
 import '../../../../app/theme/dnd_colors.dart';
+import '../../../../features/catalog/data/catalog_repository.dart';
+import '../../../../features/catalog/domain/catalog_models.dart';
+import '../../../../features/catalog/presentation/fivetools_renderer.dart';
 import '../../../../features/character/domain/character.dart';
 import '../../../../features/character/domain/character_providers.dart';
 import '../../domain/conditions_catalog.dart';
@@ -21,56 +24,55 @@ class StatusSection extends ConsumerWidget {
     return CollapsibleSection(
       title: 'STATUS 狀態',
       child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Column(
-              children: [
-                // 上半：HP ｜ AC ｜ 專注
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: _HpColumn(
-                        character: character,
-                        onMinus: () => notifier.adjustHp(-1),
-                        onPlus: () => notifier.adjustHp(1),
-                        onTapShield: () =>
-                            _showTempHpDialog(context, ref, character.tempHp),
-                      ),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Column(
+            children: [
+              // 上半：HP ｜ AC ｜ 專注
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: _HpColumn(
+                      character: character,
+                      onMinus: () => notifier.adjustHp(-1),
+                      onPlus: () => notifier.adjustHp(1),
+                      onTapShield: () =>
+                          _showTempHpDialog(context, ref, character.tempHp),
                     ),
-                    _vDivider(dividerColor),
-                    const _AcShield(),
-                    _vDivider(dividerColor),
-                    Expanded(
-                      child: _ConcentrationColumn(
-                        character: character,
-                        onTap: () =>
-                            _onTapConcentration(context, ref, character),
-                      ),
+                  ),
+                  _vDivider(dividerColor),
+                  const _AcShield(),
+                  _vDivider(dividerColor),
+                  Expanded(
+                    child: _ConcentrationColumn(
+                      character: character,
+                      onTap: () => _onTapConcentration(context, ref, character),
                     ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-                  child: Divider(color: dividerColor, height: 1),
-                ),
-                // 下半：狀態異常列
-                _ConditionsRow(
-                  character: character,
-                  notifier: notifier,
-                  onEdit: () => _showConditionsSheet(context, ref),
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                child: Divider(color: dividerColor, height: 1),
+              ),
+              // 下半：狀態異常列
+              _ConditionsRow(
+                character: character,
+                notifier: notifier,
+                onEdit: () => _showConditionsSheet(context, ref),
+              ),
+            ],
           ),
         ),
+      ),
     );
   }
 
   Widget _vDivider(Color color) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-        child: Container(width: 1, height: 100, color: color),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+    child: Container(width: 1, height: 100, color: color),
+  );
 }
 
 // ─────────────────────────────────────────── HP 欄
@@ -176,9 +178,17 @@ class _HpColumn extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _HpButton(icon: Icons.remove, onPressed: onMinus),
+            _HpButton(
+              key: const Key('hp-minus'),
+              icon: Icons.remove,
+              onPressed: onMinus,
+            ),
             const SizedBox(width: 10),
-            _HpButton(icon: Icons.add, onPressed: onPlus),
+            _HpButton(
+              key: const Key('hp-plus'),
+              icon: Icons.add,
+              onPressed: onPlus,
+            ),
           ],
         ),
       ],
@@ -234,7 +244,7 @@ class _TempHpShield extends StatelessWidget {
 class _HpButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
-  const _HpButton({required this.icon, required this.onPressed});
+  const _HpButton({super.key, required this.icon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -269,8 +279,10 @@ class _ConcentrationColumn extends StatelessWidget {
 
     String? subLabel;
     if (active) {
-      final match = [...character.spells, ...character.cantrips]
-          .where((s) => s.name == spellName);
+      final match = [
+        ...character.spells,
+        ...character.cantrips,
+      ].where((s) => s.name == spellName);
       subLabel = match.isNotEmpty && match.first.nameEn.isNotEmpty
           ? '${match.first.nameEn}・專注'
           : '專注中';
@@ -288,7 +300,11 @@ class _ConcentrationColumn extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.auto_fix_high, size: 12, color: AppColors.accentGold),
+                Icon(
+                  Icons.auto_fix_high,
+                  size: 12,
+                  color: AppColors.accentGold,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   '專注',
@@ -376,8 +392,11 @@ class _ConditionsRow extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.warning_amber_rounded,
-                    size: 12, color: AppColors.sectionLabel),
+                Icon(
+                  Icons.warning_amber_rounded,
+                  size: 12,
+                  color: AppColors.sectionLabel,
+                ),
                 const SizedBox(width: 6),
                 Text(
                   '狀態異常・CONDITIONS',
@@ -463,8 +482,11 @@ class _ConditionChip extends StatelessWidget {
             GestureDetector(
               onTap: onRemove,
               behavior: HitTestBehavior.opaque,
-              child: Icon(Icons.close,
-                  size: 14, color: AppColors.darkTextSecondary),
+              child: Icon(
+                Icons.close,
+                size: 14,
+                color: AppColors.darkTextSecondary,
+              ),
             ),
           ],
         ),
@@ -517,7 +539,10 @@ void _showTempHpDialog(BuildContext context, WidgetRef ref, int current) {
 }
 
 void _onTapConcentration(
-    BuildContext context, WidgetRef ref, Character character) {
+  BuildContext context,
+  WidgetRef ref,
+  Character character,
+) {
   final spellName = character.concentrationSpell;
   if (spellName != null && spellName.isNotEmpty) {
     // 專注中 → 確認取消
@@ -548,9 +573,10 @@ void _onTapConcentration(
 
 void _showConcentrationSheet(BuildContext context, WidgetRef ref) {
   final character = ref.read(currentCharacterProvider);
-  final items = [...character.spells, ...character.cantrips]
-      .where((s) => s.concentration)
-      .toList();
+  final items = [
+    ...character.spells,
+    ...character.cantrips,
+  ].where((s) => s.concentration).toList();
 
   showModalBottomSheet<void>(
     context: context,
@@ -563,17 +589,22 @@ void _showConcentrationSheet(BuildContext context, WidgetRef ref) {
         children: [
           const Padding(
             padding: EdgeInsets.fromLTRB(20, 4, 20, 8),
-            child: Text('選擇專注法術',
-                style: TextStyle(
-                    fontFamily: 'NotoSerifTC',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700)),
+            child: Text(
+              '選擇專注法術',
+              style: TextStyle(
+                fontFamily: 'NotoSerifTC',
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
           if (items.isEmpty)
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Text('沒有需要專注的法術',
-                  style: TextStyle(color: AppColors.darkTextSecondary)),
+              child: Text(
+                '沒有需要專注的法術',
+                style: TextStyle(color: AppColors.darkTextSecondary),
+              ),
             )
           else
             Flexible(
@@ -582,11 +613,15 @@ void _showConcentrationSheet(BuildContext context, WidgetRef ref) {
                 children: [
                   for (final s in items)
                     ListTile(
-                      title: Text(s.name,
-                          style: const TextStyle(fontFamily: 'NotoSerifTC')),
+                      title: Text(
+                        s.name,
+                        style: const TextStyle(fontFamily: 'NotoSerifTC'),
+                      ),
                       subtitle: s.nameEn.isNotEmpty ? Text(s.nameEn) : null,
-                      trailing: Text('${s.level}環',
-                          style: TextStyle(color: AppColors.darkTextSecondary)),
+                      trailing: Text(
+                        '${s.level}環',
+                        style: TextStyle(color: AppColors.darkTextSecondary),
+                      ),
                       onTap: () {
                         ref
                             .read(currentCharacterProvider.notifier)
@@ -624,11 +659,14 @@ void _showConditionsSheet(BuildContext context, WidgetRef ref) {
                 padding: EdgeInsets.fromLTRB(20, 4, 20, 8),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('異常狀態',
-                      style: TextStyle(
-                          fontFamily: 'NotoSerifTC',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700)),
+                  child: Text(
+                    '異常狀態',
+                    style: TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
               ),
               Expanded(
@@ -653,12 +691,17 @@ void _showConditionsSheet(BuildContext context, WidgetRef ref) {
                               notifier.removeCondition(c.name);
                             }
                           },
-                          title: Text('${c.name}　${c.nameEn}',
-                              style: const TextStyle(fontFamily: 'NotoSerifTC')),
-                          subtitle: Text(c.effect,
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  color: AppColors.darkTextSecondary)),
+                          title: Text(
+                            '${c.name}　${c.nameEn}',
+                            style: const TextStyle(fontFamily: 'NotoSerifTC'),
+                          ),
+                          subtitle: Text(
+                            c.effect,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: AppColors.darkTextSecondary,
+                            ),
+                          ),
                           controlAffinity: ListTileControlAffinity.leading,
                           dense: true,
                         ),
@@ -689,10 +732,14 @@ class _ExhaustionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text('${info.name}　${info.nameEn}　Lv$level',
-          style: const TextStyle(fontFamily: 'NotoSerifTC')),
-      subtitle: Text(info.effect,
-          style: TextStyle(fontSize: 11, color: AppColors.darkTextSecondary)),
+      title: Text(
+        '${info.name}　${info.nameEn}　Lv$level',
+        style: const TextStyle(fontFamily: 'NotoSerifTC'),
+      ),
+      subtitle: Text(
+        info.effect,
+        style: TextStyle(fontSize: 11, color: AppColors.darkTextSecondary),
+      ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -700,9 +747,13 @@ class _ExhaustionTile extends StatelessWidget {
             onPressed: level > 0 ? onMinus : null,
             icon: const Icon(Icons.remove_circle_outline),
           ),
-          Text('$level',
-              style: const TextStyle(
-                  fontFamily: 'Cinzel', fontWeight: FontWeight.w700)),
+          Text(
+            '$level',
+            style: const TextStyle(
+              fontFamily: 'Cinzel',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           IconButton(
             onPressed: level < 6 ? onPlus : null,
             icon: const Icon(Icons.add_circle_outline),
@@ -720,7 +771,56 @@ void _showEffectDialog(BuildContext context, String name) {
     context: context,
     builder: (context) => AlertDialog(
       title: Text('${info.name}　${info.nameEn}'),
-      content: Text(info.effect),
+      // 規則全文來自內容庫（entries kind=condition）；本地目錄的中文譯名
+      // 與內容庫不一致（如「被擒抱」vs「被擒」），以英文名對應。
+      content: Consumer(
+        builder: (context, ref, _) {
+          final async = ref.watch(entryCatalogProvider('condition'));
+          return ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 420),
+            child: SingleChildScrollView(
+              child: async.when(
+                data: (entries) {
+                  CatalogEntry? match;
+                  for (final e in entries) {
+                    if (e.engName == info.nameEn) {
+                      match = e;
+                      break;
+                    }
+                  }
+                  final full = match?.data['entries'] as List?;
+                  if (full == null) return Text(info.effect);
+                  return FtEntriesView(full);
+                },
+                loading: () => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(info.effect),
+                    const SizedBox(height: 12),
+                    const LinearProgressIndicator(minHeight: 2),
+                  ],
+                ),
+                error: (_, _) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(info.effect),
+                    const SizedBox(height: 12),
+                    Text(
+                      '內容庫離線，僅顯示摘要。',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.darkTextSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
@@ -741,8 +841,7 @@ class _AcShield extends StatelessWidget {
     // AC 為唯讀，直接從 provider 取。
     return Consumer(
       builder: (context, ref, _) {
-        final value = ref.watch(
-            currentCharacterProvider.select((c) => c.ac));
+        final value = ref.watch(currentCharacterProvider.select((c) => c.ac));
         return SizedBox(
           width: 96,
           child: Column(
@@ -751,17 +850,22 @@ class _AcShield extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.shield_outlined,
-                      size: 14, color: const Color(0xFFC8A86B)),
+                  Icon(
+                    Icons.shield_outlined,
+                    size: 14,
+                    color: const Color(0xFFC8A86B),
+                  ),
                   const SizedBox(width: 4),
-                  Text('AC',
-                      style: TextStyle(
-                        fontFamily: 'Cinzel',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.5,
-                        color: const Color(0xFFC8A86B),
-                      )),
+                  Text(
+                    'AC',
+                    style: TextStyle(
+                      fontFamily: 'Cinzel',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.5,
+                      color: const Color(0xFFC8A86B),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 4),
