@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/decorations.dart';
+import '../data/character_sync_repository.dart';
 import '../domain/character.dart';
 import '../domain/character_providers.dart';
 
@@ -15,7 +16,15 @@ class CharacterSelectPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 雲端清單抓成功 → 取代本地清單；失敗（離線/未登入）→ 維持本地資料。
+    ref.listen(remoteCharactersProvider, (_, next) {
+      final remote = next.valueOrNull;
+      if (remote != null) {
+        ref.read(characterListProvider.notifier).replaceAll(remote);
+      }
+    });
     final characters = ref.watch(characterListProvider);
+    final isSyncing = ref.watch(remoteCharactersProvider).isLoading;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -36,6 +45,10 @@ class CharacterSelectPage extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xxl),
+                  if (isSyncing) ...[
+                    const LinearProgressIndicator(minHeight: 2),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
                   Expanded(
                     child: ListView.separated(
                       itemCount: characters.length,
@@ -64,8 +77,9 @@ class CharacterSelectPage extends ConsumerWidget {
                         ),
                       ),
                       style: OutlinedButton.styleFrom(
-                        padding:
-                            const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSpacing.lg,
+                        ),
                         side: const BorderSide(color: AppColors.accentGold),
                       ),
                     ),

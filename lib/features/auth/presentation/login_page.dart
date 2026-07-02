@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/router.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../shared/domain/app_exception.dart';
 import '../data/auth_repository.dart';
@@ -29,14 +28,25 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     super.dispose();
   }
 
-  void _bypassLogin() {
-    ref.read(devBypassAuthProvider.notifier).state = true;
-    if (mounted) context.go('/main/decision');
-  }
-
   Future<void> _signInWithEmail() async {
-    // TODO: 驗證完成後移除 bypass，改回真實 auth
-    _bypassLogin();
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    setState(() => _isLoading = true);
+    try {
+      final repo = ref.read(authRepositoryProvider);
+      await repo.signInWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
+      // 成功後 router 的 refreshListenable 會依 session 自動導向。
+    } on AuthException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   Future<void> _signInWithGoogle() async {
@@ -46,9 +56,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       await repo.signInWithGoogle();
     } on AuthException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -62,9 +72,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       await repo.signInWithApple();
     } on AuthException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -116,10 +126,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    'D&D 5.5e 角色卡管理',
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                  Text('D&D 5.5e 角色卡管理', style: theme.textTheme.bodyMedium),
                   const SizedBox(height: AppSpacing.xxxxl),
                   Card(
                     child: Padding(
@@ -130,6 +137,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             TextFormField(
+                              key: const Key('login-email'),
                               controller: _emailController,
                               decoration: const InputDecoration(
                                 labelText: '電子信箱',
@@ -142,6 +150,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                             const SizedBox(height: AppSpacing.lg),
                             TextFormField(
+                              key: const Key('login-password'),
                               controller: _passwordController,
                               decoration: InputDecoration(
                                 labelText: '密碼',
@@ -186,8 +195,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     TargetPlatform.iOS) ...[
                               const SizedBox(height: AppSpacing.sm),
                               OutlinedButton.icon(
-                                onPressed:
-                                    _isLoading ? null : _signInWithApple,
+                                onPressed: _isLoading ? null : _signInWithApple,
                                 icon: const Icon(Icons.apple, size: 24),
                                 label: const Text('以 Apple 登入'),
                               ),

@@ -11,8 +11,8 @@ final selectedCharacterIdProvider = StateProvider<String?>((ref) => null);
 
 final currentCharacterProvider =
     NotifierProvider<CurrentCharacterNotifier, Character>(
-  CurrentCharacterNotifier.new,
-);
+      CurrentCharacterNotifier.new,
+    );
 
 class CurrentCharacterNotifier extends Notifier<Character> {
   @override
@@ -95,21 +95,19 @@ class CurrentCharacterNotifier extends Notifier<Character> {
 
   void _updateResource(String name, ClassResource Function(ClassResource) f) {
     state = state.copyWith(
-      resources: [
-        for (final r in state.resources) r.name == name ? f(r) : r,
-      ],
+      resources: [for (final r in state.resources) r.name == name ? f(r) : r],
     );
   }
 
   void spendResource(String name) => _updateResource(
-        name,
-        (r) => r.copyWith(current: (r.current - 1).clamp(0, r.max)),
-      );
+    name,
+    (r) => r.copyWith(current: (r.current - 1).clamp(0, r.max)),
+  );
 
   void restoreResource(String name) => _updateResource(
-        name,
-        (r) => r.copyWith(current: (r.current + 1).clamp(0, r.max)),
-      );
+    name,
+    (r) => r.copyWith(current: (r.current + 1).clamp(0, r.max)),
+  );
 
   void resetResource(String name) =>
       _updateResource(name, (r) => r.copyWith(current: r.max));
@@ -155,39 +153,42 @@ class CurrentCharacterNotifier extends Notifier<Character> {
 
   void addJournalEntry(String title, String body) {
     final now = DateTime.now();
-    state = state.copyWith(journalEntries: [
-      ...state.journalEntries,
-      JournalEntry(
-        id: now.microsecondsSinceEpoch.toString(),
-        title: title,
-        body: body,
-        createdAt: now,
-        updatedAt: now,
-      ),
-    ]);
+    state = state.copyWith(
+      journalEntries: [
+        ...state.journalEntries,
+        JournalEntry(
+          id: now.microsecondsSinceEpoch.toString(),
+          title: title,
+          body: body,
+          createdAt: now,
+          updatedAt: now,
+        ),
+      ],
+    );
   }
 
   void updateJournalEntry(String id, String title, String body) {
-    state = state.copyWith(journalEntries: [
-      for (final e in state.journalEntries)
-        e.id == id
-            ? e.copyWith(title: title, body: body, updatedAt: DateTime.now())
-            : e,
-    ]);
+    state = state.copyWith(
+      journalEntries: [
+        for (final e in state.journalEntries)
+          e.id == id
+              ? e.copyWith(title: title, body: body, updatedAt: DateTime.now())
+              : e,
+      ],
+    );
   }
 
   void removeJournalEntry(String id) {
     state = state.copyWith(
-      journalEntries:
-          state.journalEntries.where((e) => e.id != id).toList(),
+      journalEntries: state.journalEntries.where((e) => e.id != id).toList(),
     );
   }
 }
 
 final characterListProvider =
     StateNotifierProvider<CharacterListNotifier, List<Character>>((ref) {
-  return CharacterListNotifier();
-});
+      return CharacterListNotifier();
+    });
 
 class CharacterListNotifier extends StateNotifier<List<Character>> {
   CharacterListNotifier() : super(_seed());
@@ -195,22 +196,25 @@ class CharacterListNotifier extends StateNotifier<List<Character>> {
   static List<Character> _seed() {
     final now = DateTime(2026, 6, 24, 21, 30);
     return [
-      Character.mock().copyWith(journalEntries: [
-        JournalEntry(
-          id: 'j1',
-          title: '抵達銀谷鎮',
-          body: '黃昏時分抵達銀谷鎮。鎮民談論著礦坑深處傳出的怪聲，鐵匠願以折扣換取我們調查。今晚先在「醉龍旅店」落腳。',
-          createdAt: now.subtract(const Duration(days: 3)),
-          updatedAt: now.subtract(const Duration(days: 3)),
-        ),
-        JournalEntry(
-          id: 'j2',
-          title: '哥布林洞窟',
-          body: '循足跡進入北側洞窟，遭遇一隊哥布林伏擊。魔法飛彈解決了弓手；洞穴深處似乎還有更大的存在。撤退前撿到一枚刻著奇異符文的戒指。',
-          createdAt: now.subtract(const Duration(days: 1)),
-          updatedAt: now,
-        ),
-      ]),
+      Character.mock().copyWith(
+        journalEntries: [
+          JournalEntry(
+            id: 'j1',
+            title: '抵達銀谷鎮',
+            body: '黃昏時分抵達銀谷鎮。鎮民談論著礦坑深處傳出的怪聲，鐵匠願以折扣換取我們調查。今晚先在「醉龍旅店」落腳。',
+            createdAt: now.subtract(const Duration(days: 3)),
+            updatedAt: now.subtract(const Duration(days: 3)),
+          ),
+          JournalEntry(
+            id: 'j2',
+            title: '哥布林洞窟',
+            body:
+                '循足跡進入北側洞窟，遭遇一隊哥布林伏擊。魔法飛彈解決了弓手；洞穴深處似乎還有更大的存在。撤退前撿到一枚刻著奇異符文的戒指。',
+            createdAt: now.subtract(const Duration(days: 1)),
+            updatedAt: now,
+          ),
+        ],
+      ),
       Character.mockBarbarian(),
     ];
   }
@@ -218,6 +222,9 @@ class CharacterListNotifier extends StateNotifier<List<Character>> {
   void add(Character c) => state = [...state, c];
 
   void remove(String id) => state = state.where((c) => c.id != id).toList();
+
+  /// 以雲端清單取代整份本地清單（登入後同步用）。
+  void replaceAll(List<Character> list) => state = list;
 
   /// 以 id 取代清單中該角色；不存在則新增（切換時保留編輯用）。
   void upsert(Character c) {
