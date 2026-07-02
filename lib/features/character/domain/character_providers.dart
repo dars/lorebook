@@ -18,7 +18,9 @@ class CurrentCharacterNotifier extends Notifier<Character> {
   @override
   Character build() {
     final id = ref.watch(selectedCharacterIdProvider);
-    final list = ref.read(characterListProvider);
+    // watch（非 read）：雲端清單抓回後 replaceAll 時，已選角色要跟著
+    // 換成雲端版本，否則會停留在選取當下的過時資料。
+    final list = ref.watch(characterListProvider);
     if (id != null) {
       for (final c in list) {
         if (c.id == id) return c;
