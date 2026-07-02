@@ -1,0 +1,434 @@
+[
+    {
+        "id": "90fdb2da-2e85-4bf4-a26f-acf8a584a1a9",
+        "kind": "condition",
+        "name": "中毒",
+        "eng_name": "Poisoned",
+        "source": "PHB",
+        "page": 292,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "中毒",
+            "page": 292,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "一箇中毒的生物在攻擊檢定與屬性檢定上具有劣勢。"
+                    ]
+                }
+            ],
+            "ENG_name": "Poisoned",
+            "hasFluffImages": true
+        }
+    },
+    {
+        "id": "d3a1e710-17ec-46b6-a166-99831bd03565",
+        "kind": "condition",
+        "name": "伏地",
+        "eng_name": "Prone",
+        "source": "PHB",
+        "page": 292,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "伏地",
+            "page": 292,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "一個伏地的生物唯一的移動方式是爬行，除非它站起來以結束此狀態。",
+                        "該生物在攻擊檢定上具有劣勢。",
+                        "如果攻擊者距離該生物5尺以內，則對該生物進行的攻擊檢定將具有優勢。除此之外，對該生物的攻擊檢定具有劣勢。"
+                    ]
+                }
+            ],
+            "ENG_name": "Prone",
+            "hasFluffImages": true
+        }
+    },
+    {
+        "id": "7c4c74f6-a1af-4994-95ca-3773beff070c",
+        "kind": "condition",
+        "name": "力竭",
+        "eng_name": "Exhaustion",
+        "source": "PHB",
+        "page": 291,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "力竭",
+            "page": 291,
+            "source": "PHB",
+            "entries": [
+                "某些特殊能力和險酷環境，例如飢餓或長時間處於寒冷或炎熱的溫度下，將會導致一個被稱為力竭的特殊狀態。力竭分成六個等級。根據效果的敘述，一個效果可能會使生物獲得一個或多個力竭等級。",
+                {
+                    "rows": [
+                        [
+                            "1",
+                            "所有屬性檢定具有劣勢"
+                        ],
+                        [
+                            "2",
+                            "移動速度減半"
+                        ],
+                        [
+                            "3",
+                            "所有攻擊檢定和豁免檢定具有劣勢"
+                        ],
+                        [
+                            "4",
+                            "最大生命值減半"
+                        ],
+                        [
+                            "5",
+                            "移動速度歸零"
+                        ],
+                        [
+                            "6",
+                            "死亡"
+                        ]
+                    ],
+                    "type": "table",
+                    "colLabels": [
+                        "等級",
+                        "效果"
+                    ],
+                    "colStyles": [
+                        "col-1 text-center",
+                        "col-11"
+                    ]
+                },
+                "如果一個已經力竭的生物再次受到會導致力竭的效果影響，它現在的力竭等級將會再加上該效果敘述中所記載的力竭等級。",
+                "一個生物會承受他目前力竭等級和以下等級的所有力竭效果。例如：一個力竭等級2的生物會同時承受速度減半以及屬性檢定劣勢的效果。",
+                "一個移除力竭狀態的能力會依照該能力的敘述來減少對應程度的力竭等級。當一個生物的力竭等級被減少至低於1，則結束所有的力竭效果。",
+                "只要一個生物有進食和飲水，則完成一次長休將可以減少它1級力竭等級。此外，被從死裡復活會使生物的力竭等級減少1級。"
+            ],
+            "ENG_name": "Exhaustion"
+        }
+    },
+    {
+        "id": "50e55c42-5c87-4713-a9f3-d0ade04d3920",
+        "kind": "condition",
+        "name": "恐懼",
+        "eng_name": "Frightened",
+        "source": "PHB",
+        "page": 290,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "恐懼",
+            "page": 290,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "當恐懼的來源在視線可及的範圍時，被恐懼的生物在屬性檢定和攻擊檢定上具有劣勢。",
+                        "生物不能自願地移近它恐懼的來源。"
+                    ]
+                }
+            ],
+            "ENG_name": "Frightened",
+            "hasFluffImages": true
+        }
+    },
+    {
+        "id": "dc4ca073-46c5-449b-8bb0-cc60c9203525",
+        "kind": "condition",
+        "name": "昏迷",
+        "eng_name": "Unconscious",
+        "source": "PHB",
+        "page": 292,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "昏迷",
+            "page": 292,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "一個昏迷的生物處於{@condition 無力}，不能移動或說話，且無法感知其周遭的環境。",
+                        "該生物持握的所有東西都會脫手，並且陷入{@condition 伏地}狀態。",
+                        "該生物的力量和敏捷豁免自動失敗。",
+                        "對該生物進行的攻擊檢定具有優勢。",
+                        "若攻擊者距離該生物5尺以內，則任何其命中該生物的攻擊都視為重擊。"
+                    ]
+                }
+            ],
+            "ENG_name": "Unconscious",
+            "hasFluffImages": true
+        }
+    },
+    {
+        "id": "6ddc7610-c759-48e4-a9c1-78b5431ac1dd",
+        "kind": "condition",
+        "name": "束縛",
+        "eng_name": "Restrained",
+        "source": "PHB",
+        "page": 292,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "束縛",
+            "page": 292,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "一個被束縛生物的移動速度歸0，且不能受益於任何對它移動速度的加值。",
+                        "對該生物進行的攻擊檢定具有優勢，且該生物的攻擊檢定具有劣勢。",
+                        "該生物在敏捷豁免上具有劣勢。"
+                    ]
+                }
+            ],
+            "ENG_name": "Restrained",
+            "hasFluffImages": true
+        }
+    },
+    {
+        "id": "6c0156d0-37f3-48d1-9908-61b30ca39362",
+        "kind": "condition",
+        "name": "無力",
+        "eng_name": "Incapacitated",
+        "source": "PHB",
+        "page": 290,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "無力",
+            "page": 290,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "一個無力的生物不能採取任何動作或反應。"
+                    ]
+                }
+            ],
+            "ENG_name": "Incapacitated"
+        }
+    },
+    {
+        "id": "6afaea4b-0a79-47bc-b30a-2cc87c1cf366",
+        "kind": "condition",
+        "name": "目盲",
+        "eng_name": "Blinded",
+        "source": "PHB",
+        "page": 290,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "目盲",
+            "page": 290,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "一個目盲的生物無法看見，且在任何需要視覺的屬性檢定中自動失敗。",
+                        "對目盲生物進行的攻擊檢定具有優勢，且目盲生物的攻擊檢定具有劣勢。"
+                    ]
+                }
+            ],
+            "ENG_name": "Blinded",
+            "hasFluffImages": true
+        }
+    },
+    {
+        "id": "0e95bd57-d829-4552-aa05-f76f8a6096b4",
+        "kind": "condition",
+        "name": "石化",
+        "eng_name": "Petrified",
+        "source": "PHB",
+        "page": 291,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "石化",
+            "page": 291,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "一個被石化的生物和它身上穿戴或攜帶的任何非魔法物品都會一起被變形成無生命的固體材質（通常是石頭）。它的重量將增加至十倍，並且停止老化。",
+                        "該生物陷入{@condition 無力}，不能移動或說話、且無法感知其周遭的環境。",
+                        "對該生物進行的攻擊檢定具有優勢。",
+                        "該生物的力量和敏捷豁免自動失敗。",
+                        "該生物對所有的傷害具有抗力。",
+                        "該生物免疫毒素和疾病，已存在於該生物體內的毒素或疾病將會停止運作，而非被解除。"
+                    ]
+                }
+            ],
+            "ENG_name": "Petrified",
+            "hasFluffImages": true
+        }
+    },
+    {
+        "id": "7ffd86c1-4fc5-4cde-9113-f328f443ba98",
+        "kind": "condition",
+        "name": "耳聾",
+        "eng_name": "Deafened",
+        "source": "PHB",
+        "page": 290,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "耳聾",
+            "page": 290,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "一個耳聾的生物無法聽見聲音，且在任何需要聽力的屬性檢定中自動失敗。"
+                    ]
+                }
+            ],
+            "ENG_name": "Deafened",
+            "hasFluffImages": true
+        }
+    },
+    {
+        "id": "bc23a91a-a6a5-4699-935e-d69342ea15f2",
+        "kind": "condition",
+        "name": "被擒",
+        "eng_name": "Grappled",
+        "source": "PHB",
+        "page": 290,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "被擒",
+            "page": 290,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "一個被擒生物的移動速度歸0，且不能受益於任何對它移動速度的加值。",
+                        "如果擒抱者陷入{@condition 無力}，被擒狀態將就此結束。",
+                        "如果被擒生物被移出擒抱者或是其他造成擒抱效果的來源的觸及範圍，被擒狀態將就此結束。像是被{@spell 雷鳴波|phb}給擊飛。"
+                    ]
+                }
+            ],
+            "ENG_name": "Grappled",
+            "hasFluffImages": true
+        }
+    },
+    {
+        "id": "290c2979-c5b0-48fe-b4fe-7b8c84dfff8c",
+        "kind": "condition",
+        "name": "隱形",
+        "eng_name": "Invisible",
+        "source": "PHB",
+        "page": 291,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "隱形",
+            "page": 291,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "若是沒有魔法或特殊感官的幫助，是不可能看見一個隱形生物的。在要進行躲藏時，該生物被視作重度遮蔽。該生物的所在位置可以通過任何它發出的噪音或留下的蹤跡被偵測到。",
+                        "對隱形生物進行的攻擊檢定具有劣勢，且隱形生物的攻擊檢定具有優勢。"
+                    ]
+                }
+            ],
+            "ENG_name": "Invisible",
+            "hasFluffImages": true
+        }
+    },
+    {
+        "id": "0deaee0a-b6c2-4be4-943c-0d1d0608f388",
+        "kind": "condition",
+        "name": "震懾",
+        "eng_name": "Stunned",
+        "source": "PHB",
+        "page": 292,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "震懾",
+            "page": 292,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "一個被震懾的生物處於{@condition 無力}，不能移動，且只能有氣無力地說話。",
+                        "該生物的力量和敏捷豁免自動失敗。",
+                        "對該生物進行的攻擊檢定具有優勢。"
+                    ]
+                }
+            ],
+            "ENG_name": "Stunned",
+            "hasFluffImages": true
+        }
+    },
+    {
+        "id": "a18f0cf0-72b6-452d-9fe7-97df1cde08fb",
+        "kind": "condition",
+        "name": "魅惑",
+        "eng_name": "Charmed",
+        "source": "PHB",
+        "page": 290,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "魅惑",
+            "page": 290,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "一個被魅惑的生物不能攻擊魅惑者、或以魅惑者作為有害能力或魔法效果的目標。",
+                        "魅惑者在對被魅惑的生物社交互動時所進行的所有屬性檢定具有優勢。"
+                    ]
+                }
+            ],
+            "ENG_name": "Charmed",
+            "hasFluffImages": true
+        }
+    },
+    {
+        "id": "1f6b4b87-63b8-4c96-bb56-ee659c53fe3f",
+        "kind": "condition",
+        "name": "麻痺",
+        "eng_name": "Paralyzed",
+        "source": "PHB",
+        "page": 291,
+        "srd": true,
+        "data": {
+            "srd": true,
+            "name": "麻痺",
+            "page": 291,
+            "source": "PHB",
+            "entries": [
+                {
+                    "type": "list",
+                    "items": [
+                        "一個被麻痺的生物處於{@condition 無力}，且不能移動或說話。",
+                        "該生物的力量和敏捷豁免自動失敗。對該生物進行的攻擊檢定具有優勢。",
+                        "若攻擊者距離該生物5尺以內，則任何其命中該生物的攻擊都視為重擊。"
+                    ]
+                }
+            ],
+            "ENG_name": "Paralyzed",
+            "hasFluffImages": true
+        }
+    }
+]

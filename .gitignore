@@ -51,3 +51,6 @@ app.*.map.json
 # Generated code (freezed / json_serializable) — run `dart run build_runner build`
 *.freezed.dart
 *.g.dart
+
+# Supabase CLI link artifacts
+supabase/.temp/
