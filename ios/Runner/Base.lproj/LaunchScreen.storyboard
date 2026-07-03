@@ -20,7 +20,9 @@
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="LaunchImage" translatesAutoresizingMaskIntoConstraints="NO" id="YRO-k0-Ey4">
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.078" green="0.067" blue="0.047" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <!-- 與 LaunchImage 主背景同色（羊皮紙 #FAF3E8），
+                             aspectFit 的留白區才能與圖無縫。 -->
+                        <color key="backgroundColor" red="0.980" green="0.953" blue="0.910" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="YRO-k0-Ey4" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="ls-top"/>
                             <constraint firstItem="YRO-k0-Ey4" firstAttribute="bottom" secondItem="Ze5-6b-2t3" secondAttribute="bottom" id="ls-bot"/>
