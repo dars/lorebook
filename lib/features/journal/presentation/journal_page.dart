@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/decorations.dart';
+import '../../../shared/presentation/responsive_layout.dart';
 import '../../character/domain/character.dart';
 import '../../character/domain/character_providers.dart';
 import 'journal_editor_page.dart';
@@ -29,24 +30,15 @@ class JournalPage extends ConsumerWidget {
         if (entries.isEmpty)
           const _EmptyState()
         else
-          ListView(
-            padding: EdgeInsets.fromLTRB(
-              AppSpacing.lg,
-              AppSpacing.lg,
-              AppSpacing.lg,
-              context.bottomNavClearance + 80,
+          ResponsiveLayout(
+            mobile: _singleColumn(context, entries),
+            tablet: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: _singleColumn(context, entries),
+              ),
             ),
-            children: [
-              const SectionTitle(title: 'JOURNAL 旅程筆記'),
-              for (final e in entries)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                  child: _JournalCard(
-                    entry: e,
-                    onTap: () => _openEditor(context, entry: e),
-                  ),
-                ),
-            ],
+            expanded: _twoColumn(context, entries),
           ),
         Positioned(
           right: AppSpacing.lg,
@@ -57,6 +49,75 @@ class JournalPage extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _singleColumn(BuildContext context, List<JournalEntry> entries) {
+    return ListView(
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.lg,
+        AppSpacing.lg,
+        context.bottomNavClearance + 80,
+      ),
+      children: [
+        const SectionTitle(title: 'JOURNAL 旅程筆記'),
+        for (final e in entries)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
+            child: _JournalCard(
+              entry: e,
+              onTap: () => _openEditor(context, entry: e),
+            ),
+          ),
+      ],
+    );
+  }
+
+  /// expanded（iPad 橫向）：卡片依排序奇偶分左右欄，整頁單一捲動。
+  Widget _twoColumn(BuildContext context, List<JournalEntry> entries) {
+    Widget cardColumn(List<JournalEntry> list) => Expanded(
+      child: Column(
+        children: [
+          for (final e in list)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.md),
+              child: _JournalCard(
+                entry: e,
+                onTap: () => _openEditor(context, entry: e),
+              ),
+            ),
+        ],
+      ),
+    );
+
+    final left = <JournalEntry>[];
+    final right = <JournalEntry>[];
+    for (var i = 0; i < entries.length; i++) {
+      (i.isEven ? left : right).add(entries[i]);
+    }
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.lg,
+        AppSpacing.lg,
+        AppSpacing.xl + 80,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SectionTitle(title: 'JOURNAL 旅程筆記'),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              cardColumn(left),
+              const SizedBox(width: AppSpacing.lg),
+              cardColumn(right),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
