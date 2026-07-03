@@ -37,62 +37,66 @@ class AbilityShield extends StatelessWidget {
       child: CustomPaint(
         painter: _ShieldPainter(fill: fill, stroke: accent),
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                nameCn,
-                style: TextStyle(
-                  fontFamily: 'NotoSerifTC',
-                  fontSize: 13,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                _modText,
-                style: TextStyle(
-                  fontFamily: 'Cinzel',
-                  fontSize: 30,
-                  fontWeight: FontWeight.w700,
-                  height: 1,
-                  color: highlighted
-                      ? AppColors.accentGold
-                      : theme.colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                nameEn,
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 10,
-                  letterSpacing: 1,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                ),
-              ),
-              const SizedBox(height: 6),
-              Container(
-                width: 28,
-                height: 28,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: theme.scaffoldBackgroundColor,
-                  border: Border.all(color: accent, width: 1),
-                ),
-                child: Text(
-                  '$score',
+          padding: const EdgeInsets.only(bottom: 8, left: 6, right: 6, top: 4),
+          // 內容依盾牌實際尺寸等比縮放（六顆一排的窄欄自動縮小）。
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  nameCn,
                   style: TextStyle(
-                    fontFamily: 'Cinzel',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 11,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 2),
+                Text(
+                  _modText,
+                  style: TextStyle(
+                    fontFamily: 'Cinzel',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    height: 1,
+                    color: highlighted
+                        ? AppColors.accentGold
+                        : theme.colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  nameEn,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 9,
+                    letterSpacing: 1,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Container(
+                  width: 24,
+                  height: 24,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: theme.scaffoldBackgroundColor,
+                    border: Border.all(color: accent, width: 1),
+                  ),
+                  child: Text(
+                    '$score',
+                    style: TextStyle(
+                      fontFamily: 'Cinzel',
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

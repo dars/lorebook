@@ -51,9 +51,7 @@ class AbilitiesTab extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _abilityRow(['STR', 'DEX', 'CON']),
-                const SizedBox(height: AppSpacing.sm),
-                _abilityRow(['INT', 'WIS', 'CHA']),
+                _abilityRow(['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']),
               ],
             ),
           ),
@@ -70,13 +68,19 @@ class AbilitiesTab extends StatelessWidget {
     );
   }
 
-  Widget _abilityRow(List<String> codes) {
+  /// [slots] 每排格數（不足以空位補齊，讓各排盾牌同尺寸）。
+  Widget _abilityRow(List<String> codes, {int? slots}) {
+    final n = slots ?? codes.length;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (var i = 0; i < codes.length; i++) ...[
+        for (var i = 0; i < n; i++) ...[
           if (i > 0) const SizedBox(width: AppSpacing.sm),
-          Expanded(child: _buildShield(codes[i])),
+          Expanded(
+            child: i < codes.length
+                ? _buildShield(codes[i])
+                : const SizedBox.shrink(),
+          ),
         ],
       ],
     );
