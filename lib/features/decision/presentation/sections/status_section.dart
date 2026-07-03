@@ -755,6 +755,7 @@ class _ExhaustionTile extends StatelessWidget {
             ),
           ),
           IconButton(
+            key: const Key('exhaustion-plus'),
             onPressed: level < 6 ? onPlus : null,
             icon: const Icon(Icons.add_circle_outline),
           ),
@@ -764,9 +765,41 @@ class _ExhaustionTile extends StatelessWidget {
   }
 }
 
+/// 力竭 2024 規則全文（自撰文字）。內容庫全文為 2014 六級效果表，
+/// 與 2024 差異過大，此狀態一律用本地版本（見 openspec
+/// creation-choices-2024 design D4）。
+const _exhaustion2024 = <String>[
+  '力竭以等級累計（0–6 級），某些效果會使你獲得 1 級或多級力竭。',
+  '每有 1 級力竭：所有 d20 檢定（屬性檢定、攻擊檢定、豁免檢定）承受 −2 減值，且速度減少 5 呎。',
+  '效果依當前總等級計算，重複獲得力竭時等級累加。',
+  '力竭等級達到 6 級時，你死亡。',
+  '完成長休時移除 1 級力竭；等級降至 0 時狀態解除。',
+];
+
 void _showEffectDialog(BuildContext context, String name) {
   final info = conditionByName(name);
   if (info == null) return;
+  if (info.nameEn == 'Exhaustion') {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('${info.name}　${info.nameEn}'),
+        content: ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 420),
+          child: const SingleChildScrollView(
+            child: FtEntriesView(_exhaustion2024),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('關閉'),
+          ),
+        ],
+      ),
+    );
+    return;
+  }
   showDialog<void>(
     context: context,
     builder: (context) => AlertDialog(

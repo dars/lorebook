@@ -61,6 +61,12 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
 
   final Set<String> _classSkills = {};
 
+  /// 種族技能特性的已選技能（人類任選 1、精靈鷹眼三選一）。
+  final Set<String> _speciesSkills = {};
+
+  /// 所選體型（多體型種族如人類；null = 種族預設）。
+  String? _sizeChoice;
+
   /// 已選法術（id → 目錄法術）。戲法與一環分開計數。
   final Map<String, CatalogSpell> _selCantrips = {};
   final Map<String, CatalogSpell> _selSpells = {};
@@ -139,7 +145,8 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
             return _base.values.every((v) => v != null && v >= 3 && v <= 18);
         }
       case '技能':
-        return _classSkills.length == (_classOpt?.skillCount ?? 0);
+        return _classSkills.length == (_classOpt?.skillCount ?? 0) &&
+            _speciesSkills.length == (_species?.skillPickCount ?? 0);
       case '法術':
         return _canLeaveSpellStep;
       default:
@@ -283,7 +290,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       proficientSave: cls.saves.contains(code),
     );
 
-    final profSkills = {..._classSkills, ...bg.skills};
+    final profSkills = {..._classSkills, ..._speciesSkills, ...bg.skills};
     final skills = [
       for (final s in kSkills)
         Skill(
@@ -319,7 +326,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       backgroundEn: bg.en,
       alignment: _alignment,
       creatureType: 'Humanoid',
-      size: sp.size,
+      size: _sizeChoice ?? sp.size,
       ac: level1UnarmoredAc(cls, mods),
       maxHp: maxHp,
       currentHp: maxHp,
@@ -477,9 +484,27 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         _OptionChips(
           options: [for (final s in kSpecies) s.cn],
           selected: _species?.cn,
-          onSelect: (cn) =>
-              setState(() => _species = kSpecies.firstWhere((s) => s.cn == cn)),
+          onSelect: (cn) => setState(() {
+            _species = kSpecies.firstWhere((s) => s.cn == cn);
+            _speciesSkills.clear();
+            _sizeChoice = _species!.effectiveSizeChoices.first;
+          }),
         ),
+        if (_species != null && _species!.effectiveSizeChoices.length > 1) ...[
+          const SizedBox(height: AppSpacing.lg),
+          const _FieldLabel('體型 SIZE'),
+          const SizedBox(height: AppSpacing.sm),
+          _OptionChips(
+            options: [
+              for (final s in _species!.effectiveSizeChoices)
+                s == 'Small' ? '小型' : '中型',
+            ],
+            selected: (_sizeChoice ?? _species!.size) == 'Small' ? '小型' : '中型',
+            onSelect: (label) => setState(
+              () => _sizeChoice = label == '小型' ? 'Small' : 'Medium',
+            ),
+          ),
+        ],
         if (_species != null) ...[
           const SizedBox(height: AppSpacing.lg),
           _DescCard(
@@ -967,11 +992,10 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     );
   }
 
+  /// 背景加值卡（2024：玩家可於背景三屬性間自選 +2/+1，或 +1/+1/+1）。
   Widget _bonusExplain() {
-    final parts = [
-      for (final code in kAbilityOrder)
-        if (_bonusMap[code]! > 0) '${kAbilityCn[code]} +${_bonusMap[code]}',
-    ];
+    final bg = _background!;
+    final is21 = _bonusMode == '2/1';
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -979,22 +1003,162 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppColors.darkBorder2),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.auto_awesome, size: 15, color: AppColors.accentGold),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Text(
-              '背景加值 · ${_background!.cn}：${parts.join('、')}（已套用）',
+          Row(
+            children: [
+              const Icon(
+                Icons.auto_awesome,
+                size: 15,
+                color: AppColors.accentGold,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  '背景加值 · ${bg.cn}',
+                  style: const TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.darkTextLight,
+                  ),
+                ),
+              ),
+              _bonusModePill(
+                '+2/+1',
+                is21,
+                () => setState(() {
+                  _bonusMode = '2/1';
+                  if (_plus2 == null) _autofillBonus();
+                }),
+              ),
+              const SizedBox(width: 6),
+              _bonusModePill(
+                '+1×3',
+                !is21,
+                () => setState(() => _bonusMode = '1/1/1'),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          if (is21) ...[
+            _bonusAssignRow(
+              '+2',
+              _plus2,
+              (a) => setState(() {
+                if (_plus1 == a) _plus1 = _plus2;
+                _plus2 = a;
+              }),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _bonusAssignRow(
+              '+1',
+              _plus1,
+              (a) => setState(() {
+                if (_plus2 == a) _plus2 = _plus1;
+                _plus1 = a;
+              }),
+            ),
+          ] else
+            Text(
+              '三屬性各 +1：${bg.abilities.map((a) => kAbilityCn[a]).join('、')}',
               style: const TextStyle(
                 fontFamily: 'NotoSerifTC',
                 fontSize: 12,
                 color: AppColors.darkTextLight,
               ),
             ),
-          ),
         ],
       ),
+    );
+  }
+
+  Widget _bonusModePill(String label, bool selected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.accentGold : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: selected ? AppColors.accentGold : AppColors.darkBorder2,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            color: selected
+                ? const Color(0xFF1A1206)
+                : AppColors.darkTextSecondary,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _bonusAssignRow(
+    String label,
+    String? selected,
+    ValueChanged<String> onPick,
+  ) {
+    final bg = _background!;
+    return Row(
+      children: [
+        SizedBox(
+          width: 30,
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontFamily: 'Cinzel',
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: AppColors.accentGold,
+            ),
+          ),
+        ),
+        for (final a in bg.abilities) ...[
+          Expanded(
+            child: GestureDetector(
+              key: ValueKey('bonus-$label-$a'),
+              onTap: () => onPick(a),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: selected == a
+                      ? AppColors.accentGold.withValues(alpha: 0.18)
+                      : AppColors.darkSurface2,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: selected == a
+                        ? AppColors.accentGold
+                        : AppColors.darkBorder2,
+                  ),
+                ),
+                child: Text(
+                  kAbilityCn[a]!,
+                  style: TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 12,
+                    fontWeight: selected == a
+                        ? FontWeight.w700
+                        : FontWeight.w400,
+                    color: selected == a
+                        ? AppColors.accentGold
+                        : AppColors.darkTextPrimary,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (a != bg.abilities.last) const SizedBox(width: 6),
+        ],
+      ],
     );
   }
 
@@ -1003,6 +1167,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
   Widget _skillStep() {
     final cls = _classOpt!;
     final bg = _background!;
+    final sp = _species!;
+    // 職業/背景已取得的熟練（種族區重複選擇時加註記）。
+    final owned = {..._classSkills, ...bg.skills};
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -1023,6 +1190,26 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
               }
             }),
           ),
+        if (sp.skillPickCount > 0) ...[
+          const SizedBox(height: AppSpacing.md),
+          _SubLabel('種族 ${sp.cn}（選 ${sp.skillPickCount}）'),
+          const SizedBox(height: AppSpacing.sm),
+          for (final name in sp.skillPickFrom)
+            _SkillRow(
+              label:
+                  '$name ${skillByName(name).nameEn}'
+                  '${owned.contains(name) ? '（已具熟練）' : ''}',
+              selected: _speciesSkills.contains(name),
+              locked: false,
+              onTap: () => setState(() {
+                if (_speciesSkills.contains(name)) {
+                  _speciesSkills.remove(name);
+                } else if (_speciesSkills.length < sp.skillPickCount) {
+                  _speciesSkills.add(name);
+                }
+              }),
+            ),
+        ],
         const SizedBox(height: AppSpacing.md),
         _SubLabel('背景 ${bg.cn}（自動）'),
         const SizedBox(height: AppSpacing.sm),
@@ -1242,7 +1429,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       for (final a in kAbilityOrder) a: abilityModifier(scores[a]!),
     };
     final caster = cls.spellAbility.isNotEmpty;
-    final profSkills = {..._classSkills, ...bg.skills};
+    final profSkills = {..._classSkills, ..._speciesSkills, ...bg.skills};
     final perceptionMod = mods['WIS']! + (profSkills.contains('感知') ? pb : 0);
     final spellMod = caster ? mods[cls.spellAbility]! : 0;
     final hp = level1MaxHp(cls, sp, mods);

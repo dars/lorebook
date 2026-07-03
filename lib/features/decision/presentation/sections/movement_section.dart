@@ -12,10 +12,8 @@ class MovementSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final character = ref.watch(currentCharacterProvider);
 
-    final speedNum = int.tryParse(
-          character.speed.replaceAll(RegExp(r'[^0-9]'), ''),
-        ) ??
-        30;
+    final speedNum =
+        int.tryParse(character.speed.replaceAll(RegExp(r'[^0-9]'), '')) ?? 30;
     final dashNum = speedNum * 2;
 
     return CollapsibleSection(
@@ -63,44 +61,56 @@ class _MovementStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final numColor = dim ? AppColors.darkTextSecondary : AppColors.darkTextPrimary;
+    final numColor = dim
+        ? AppColors.darkTextSecondary
+        : AppColors.darkTextPrimary;
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon,
-            size: 16,
-            color: dim ? AppColors.darkTextSecondary : AppColors.accentGold),
+        Icon(
+          icon,
+          size: 16,
+          color: dim ? AppColors.darkTextSecondary : AppColors.accentGold,
+        ),
         const SizedBox(width: 6),
-        Text(label,
-            style: TextStyle(
-              fontFamily: 'NotoSerifTC',
-              fontSize: 11,
-              color: AppColors.darkTextLight,
-            )),
+        Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'NotoSerifTC',
+            fontSize: 11,
+            color: AppColors.darkTextLight,
+          ),
+        ),
         const SizedBox(width: 5),
-        Text('$value',
-            style: TextStyle(
-              fontFamily: 'Cinzel',
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: numColor,
-            )),
+        Text(
+          '$value',
+          style: TextStyle(
+            fontFamily: 'Cinzel',
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: numColor,
+          ),
+        ),
         const SizedBox(width: 2),
-        Text('FT',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 9,
-              fontWeight: FontWeight.w600,
-              color: AppColors.darkTextSecondary,
-            )),
+        Text(
+          'FT',
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 9,
+            fontWeight: FontWeight.w600,
+            color: AppColors.darkTextSecondary,
+          ),
+        ),
         const SizedBox(width: 5),
-        Text('· $squares 格',
-            style: TextStyle(
-              fontFamily: 'NotoSerifTC',
-              fontSize: 10,
-              color: AppColors.sectionLabel,
-            )),
+        Text(
+          '· $squares 格',
+          style: TextStyle(
+            fontFamily: 'NotoSerifTC',
+            fontSize: 10,
+            color: AppColors.sectionLabel,
+          ),
+        ),
       ],
     );
   }

@@ -28,11 +28,7 @@ const kConditions = <ConditionInfo>[
     nameEn: 'Charmed',
     effect: '不能攻擊魅惑你的來源；對方對你的社交檢定有優勢。',
   ),
-  ConditionInfo(
-    name: '耳聾',
-    nameEn: 'Deafened',
-    effect: '聽不見；自動失敗需聽覺的檢定。',
-  ),
+  ConditionInfo(name: '耳聾', nameEn: 'Deafened', effect: '聽不見；自動失敗需聽覺的檢定。'),
   ConditionInfo(
     name: '力竭',
     nameEn: 'Exhaustion',
@@ -44,21 +40,13 @@ const kConditions = <ConditionInfo>[
     nameEn: 'Frightened',
     effect: '來源在視線內時攻擊與檢定有劣勢；無法主動接近來源。',
   ),
-  ConditionInfo(
-    name: '被擒抱',
-    nameEn: 'Grappled',
-    effect: '速度歸 0；無法受益於速度加成。',
-  ),
+  ConditionInfo(name: '被擒抱', nameEn: 'Grappled', effect: '速度歸 0；無法受益於速度加成。'),
   ConditionInfo(
     name: '失能',
     nameEn: 'Incapacitated',
     effect: '無法執行動作、附贈動作或反應（含施法）。',
   ),
-  ConditionInfo(
-    name: '隱形',
-    nameEn: 'Invisible',
-    effect: '看不見；你攻擊有優勢、攻擊你有劣勢。',
-  ),
+  ConditionInfo(name: '隱形', nameEn: 'Invisible', effect: '看不見；你攻擊有優勢、攻擊你有劣勢。'),
   ConditionInfo(
     name: '麻痺',
     nameEn: 'Paralyzed',
@@ -69,11 +57,7 @@ const kConditions = <ConditionInfo>[
     nameEn: 'Petrified',
     effect: '化為石；失能、無察覺；對多數傷害有抗性；免疫中毒與疾病。',
   ),
-  ConditionInfo(
-    name: '中毒',
-    nameEn: 'Poisoned',
-    effect: '攻擊檢定與能力檢定有劣勢。',
-  ),
+  ConditionInfo(name: '中毒', nameEn: 'Poisoned', effect: '攻擊檢定與能力檢定有劣勢。'),
   ConditionInfo(
     name: '倒地',
     nameEn: 'Prone',

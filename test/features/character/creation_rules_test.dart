@@ -39,6 +39,27 @@ void main() {
     });
   });
 
+  group('種族特性資料（2024）', () {
+    test('人類：任選 1 技能、體型可選中/小型', () {
+      final human = _sp('人類');
+      expect(human.skillPickCount, 1);
+      expect(human.skillPickFrom, hasLength(18));
+      expect(human.effectiveSizeChoices, ['Medium', 'Small']);
+    });
+
+    test('精靈：鷹眼自洞察/感知/求生擇一', () {
+      final elf = _sp('精靈');
+      expect(elf.skillPickCount, 1);
+      expect(elf.skillPickFrom, ['洞察', '感知', '求生']);
+    });
+
+    test('半身人含天生隱匿；單一體型種族 effectiveSizeChoices 為固定值', () {
+      expect(_sp('半身人').traits, contains('天生隱匿'));
+      expect(_sp('半身人').effectiveSizeChoices, ['Small']);
+      expect(_sp('矮人').effectiveSizeChoices, ['Medium']);
+    });
+  });
+
   test('盜賊技能清單為 2024 版（10 項、無表演）', () {
     final rogue = _cls('盜賊');
     expect(rogue.skillChoices, hasLength(10));

@@ -82,8 +82,9 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
                     style: TextStyle(
                       fontFamily: 'NotoSerifTC',
                       fontSize: 13,
-                      fontWeight:
-                          isActive ? FontWeight.w700 : FontWeight.normal,
+                      fontWeight: isActive
+                          ? FontWeight.w700
+                          : FontWeight.normal,
                       color: isActive
                           ? AppColors.accentGold
                           : AppColors.darkTextSecondary,
@@ -199,7 +200,8 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
   }
 
   Widget _buildAbilityGrid(
-      List<(String, String, String, AbilityScore)> abilities) {
+    List<(String, String, String, AbilityScore)> abilities,
+  ) {
     CompactStatRow cell((String, String, String, AbilityScore) a) {
       final id = 'A:${a.$3}';
       return CompactStatRow(
@@ -207,12 +209,14 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
         labelEN: a.$2,
         modifier: _fmt(a.$4.modifier),
         selected: _selected?.id == id,
-        onTap: () => _select(_Selection(
-          id: id,
-          labelCn: a.$1,
-          labelEn: a.$2,
-          modifier: a.$4.modifier,
-        )),
+        onTap: () => _select(
+          _Selection(
+            id: id,
+            labelCn: a.$1,
+            labelEn: a.$2,
+            modifier: a.$4.modifier,
+          ),
+        ),
       );
     }
 
@@ -220,23 +224,27 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
     for (var i = 0; i < abilities.length; i += 2) {
       final a1 = abilities[i];
       final a2 = i + 1 < abilities.length ? abilities[i + 1] : null;
-      rows.add(Row(
-        children: [
-          Expanded(child: cell(a1)),
-          const SizedBox(width: 6),
-          if (a2 != null)
-            Expanded(child: cell(a2))
-          else
-            const Expanded(child: SizedBox()),
-        ],
-      ));
+      rows.add(
+        Row(
+          children: [
+            Expanded(child: cell(a1)),
+            const SizedBox(width: 6),
+            if (a2 != null)
+              Expanded(child: cell(a2))
+            else
+              const Expanded(child: SizedBox()),
+          ],
+        ),
+      );
       rows.add(const SizedBox(height: 6));
     }
     return Column(children: rows);
   }
 
   Widget _buildSavesGrid(
-      List<(String, String, String, AbilityScore)> abilities, int profBonus) {
+    List<(String, String, String, AbilityScore)> abilities,
+    int profBonus,
+  ) {
     CompactStatRow cell((String, String, String, AbilityScore) a) {
       final id = 'V:${a.$3}';
       final save = a.$4.modifier + (a.$4.proficientSave ? profBonus : 0);
@@ -248,12 +256,9 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
         modifier: _fmt(save),
         isProficient: a.$4.proficientSave,
         selected: _selected?.id == id,
-        onTap: () => _select(_Selection(
-          id: id,
-          labelCn: cn,
-          labelEn: en,
-          modifier: save,
-        )),
+        onTap: () => _select(
+          _Selection(id: id, labelCn: cn, labelEn: en, modifier: save),
+        ),
       );
     }
 
@@ -261,27 +266,29 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
     for (var i = 0; i < abilities.length; i += 2) {
       final a1 = abilities[i];
       final a2 = i + 1 < abilities.length ? abilities[i + 1] : null;
-      rows.add(Row(
-        children: [
-          Expanded(child: cell(a1)),
-          const SizedBox(width: 6),
-          if (a2 != null)
-            Expanded(child: cell(a2))
-          else
-            const Expanded(child: SizedBox()),
-        ],
-      ));
+      rows.add(
+        Row(
+          children: [
+            Expanded(child: cell(a1)),
+            const SizedBox(width: 6),
+            if (a2 != null)
+              Expanded(child: cell(a2))
+            else
+              const Expanded(child: SizedBox()),
+          ],
+        ),
+      );
       rows.add(const SizedBox(height: 6));
     }
     return Column(children: rows);
   }
 
-  Widget _buildSkillsView(Character character,
-      List<(String, String, String, AbilityScore)> abilities) {
+  Widget _buildSkillsView(
+    Character character,
+    List<(String, String, String, AbilityScore)> abilities,
+  ) {
     final abilityOrder = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
-    final abilityMap = {
-      for (final a in abilities) a.$3: a,
-    };
+    final abilityMap = {for (final a in abilities) a.$3: a};
 
     final groups = <String, List<Skill>>{};
     for (final skill in character.skills) {
@@ -354,12 +361,14 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
       modifier: _fmt(skill.modifier),
       isProficient: skill.proficient,
       selected: _selected?.id == id,
-      onTap: () => _select(_Selection(
-        id: id,
-        labelCn: skill.name,
-        labelEn: skill.nameEn,
-        modifier: skill.modifier,
-      )),
+      onTap: () => _select(
+        _Selection(
+          id: id,
+          labelCn: skill.name,
+          labelEn: skill.nameEn,
+          modifier: skill.modifier,
+        ),
+      ),
     );
   }
 

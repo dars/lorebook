@@ -48,12 +48,12 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
 
   bool _isCollapsed(String k) => _collapsed.contains(k);
   void _toggle(String k) => setState(() {
-        if (!_collapsed.remove(k)) _collapsed.add(k);
-      });
+    if (!_collapsed.remove(k)) _collapsed.add(k);
+  });
 
   void _toggleRing(String k) => setState(() {
-        if (!_expandedRings.remove(k)) _expandedRings.add(k);
-      });
+    if (!_expandedRings.remove(k)) _expandedRings.add(k);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +63,10 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
     final weapons = character.weapons;
     final cantrips = character.cantrips;
     final actionSpells = character.spells
-        .where((s) =>
-            s.level > 0 && s.prepared && s.castKind == SpellCastKind.action)
+        .where(
+          (s) =>
+              s.level > 0 && s.prepared && s.castKind == SpellCastKind.action,
+        )
         .toList();
     final isCaster = cantrips.isNotEmpty || actionSpells.isNotEmpty;
     final rings = actionSpells.map((s) => s.level).toSet().toList()..sort();
@@ -124,12 +126,17 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
                         count:
                             '${actionSpells.where((s) => s.level == ring).length}',
                         children: [
-                          for (final s
-                              in actionSpells.where((x) => x.level == ring))
+                          for (final s in actionSpells.where(
+                            (x) => x.level == ring,
+                          ))
                             Padding(
                               padding: const EdgeInsets.only(bottom: 6),
-                              child: spellEntryCard(s,
-                                  badge: '$ring', dnd: dnd, emphasize: true),
+                              child: spellEntryCard(
+                                s,
+                                badge: '$ring',
+                                dnd: dnd,
+                                emphasize: true,
+                              ),
                             ),
                         ],
                       ),
@@ -169,16 +176,21 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
             children: bonusSpells.isEmpty
                 ? [
                     const EntryCard(
-                        badge: '贈',
-                        title: '無附贈動作',
-                        subtitle: 'No Bonus Actions')
+                      badge: '贈',
+                      title: '無附贈動作',
+                      subtitle: 'No Bonus Actions',
+                    ),
                   ]
                 : [
                     for (final s in bonusSpells)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8),
-                        child: spellEntryCard(s,
-                            badge: '贈', dnd: dnd, emphasize: true),
+                        child: spellEntryCard(
+                          s,
+                          badge: '贈',
+                          dnd: dnd,
+                          emphasize: true,
+                        ),
                       ),
                   ],
           ),
@@ -194,8 +206,12 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
               for (final s in reactionSpells)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child:
-                      spellEntryCard(s, badge: '盾', dnd: dnd, emphasize: true),
+                  child: spellEntryCard(
+                    s,
+                    badge: '盾',
+                    dnd: dnd,
+                    emphasize: true,
+                  ),
                 ),
               EntryCard(
                 badge: '攻',
@@ -213,7 +229,10 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
   }
 
   String _castCount(
-      List<Spell> cantrips, List<Spell> actionSpells, List<int> rings) {
+    List<Spell> cantrips,
+    List<Spell> actionSpells,
+    List<int> rings,
+  ) {
     final parts = <String>[];
     if (cantrips.isNotEmpty) parts.add('戲法 ${cantrips.length}');
     for (final r in rings) {
@@ -233,50 +252,55 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
     return Padding(
       padding: const EdgeInsets.only(left: 14),
       child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InkWell(
-          onTap: () => _toggle(key),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5),
-            child: Row(
-              children: [
-                Icon(collapsed ? Icons.chevron_right : Icons.expand_more,
-                    size: 15, color: AppColors.goldDim),
-                const SizedBox(width: 4),
-                Text(label,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: () => _toggle(key),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Row(
+                children: [
+                  Icon(
+                    collapsed ? Icons.chevron_right : Icons.expand_more,
+                    size: 15,
+                    color: AppColors.goldDim,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    label,
                     style: TextStyle(
                       fontFamily: 'NotoSerifTC',
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: AppColors.goldDim,
-                    )),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    '· $count',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 10,
-                      color: AppColors.darkTextSecondary,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      '· $count',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 10,
+                        color: AppColors.darkTextSecondary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        if (!collapsed)
-          Padding(
-            padding: const EdgeInsets.only(left: 8, top: 6, bottom: 2),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: children,
+          if (!collapsed)
+            Padding(
+              padding: const EdgeInsets.only(left: 8, top: 6, bottom: 2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: children,
+              ),
             ),
-          ),
-      ],
+        ],
       ),
     );
   }
@@ -298,24 +322,31 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Row(
               children: [
-                Icon(expanded ? Icons.expand_more : Icons.chevron_right,
-                    size: 14, color: AppColors.darkTextSecondary),
+                Icon(
+                  expanded ? Icons.expand_more : Icons.chevron_right,
+                  size: 14,
+                  color: AppColors.darkTextSecondary,
+                ),
                 const SizedBox(width: 4),
-                Text(label,
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1,
-                      color: AppColors.darkTextSecondary,
-                    )),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1,
+                    color: AppColors.darkTextSecondary,
+                  ),
+                ),
                 const SizedBox(width: 6),
-                Text('· $count',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 10,
-                      color: AppColors.darkTextSecondary.withValues(alpha: 0.6),
-                    )),
+                Text(
+                  '· $count',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 10,
+                    color: AppColors.darkTextSecondary.withValues(alpha: 0.6),
+                  ),
+                ),
               ],
             ),
           ),

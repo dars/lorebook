@@ -15,26 +15,26 @@ class RestSection extends ConsumerWidget {
     return CollapsibleSection(
       title: 'REST 休息',
       child: Row(
-          children: [
-            Expanded(
-              child: _RestButton(
-                icon: Icons.free_breakfast,
-                label: '短休',
-                subtitle: '生命骰・職業能力',
-                onTap: () => _showShortRest(context),
-              ),
+        children: [
+          Expanded(
+            child: _RestButton(
+              icon: Icons.free_breakfast,
+              label: '短休',
+              subtitle: '生命骰・職業能力',
+              onTap: () => _showShortRest(context),
             ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: _RestButton(
-                icon: Icons.nights_stay,
-                label: '長休',
-                subtitle: '完全恢復',
-                onTap: () => _confirmLongRest(context, ref),
-              ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: _RestButton(
+              icon: Icons.nights_stay,
+              label: '長休',
+              subtitle: '完全恢復',
+              onTap: () => _confirmLongRest(context, ref),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -43,9 +43,7 @@ class RestSection extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('確定長休？'),
-        content: const Text(
-          '將回滿 HP、法術位、職業資源，清除臨時 HP，並降低 1 級力竭。',
-        ),
+        content: const Text('將回滿 HP、法術位、職業資源，清除臨時 HP，並降低 1 級力竭。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -90,20 +88,22 @@ class RestSection extends ConsumerWidget {
                 children: [
                   const Padding(
                     padding: EdgeInsets.only(bottom: 12),
-                    child: Text('短休',
-                        style: TextStyle(
-                            fontFamily: 'NotoSerifTC',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700)),
+                    child: Text(
+                      '短休',
+                      style: TextStyle(
+                        fontFamily: 'NotoSerifTC',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                   // 生命骰（標記花用；擲骰與回血由玩家自行處理）
                   _HitDiceTile(
                     faces: character.hitDieFaces,
                     remaining: character.hitDiceRemaining,
                     total: character.hitDiceTotal,
-                    onUse: () => ref
-                        .read(currentCharacterProvider.notifier)
-                        .useHitDie(),
+                    onUse: () =>
+                        ref.read(currentCharacterProvider.notifier).useHitDie(),
                   ),
                   const SizedBox(height: 12),
                   // 奧術恢復（若有）
@@ -124,9 +124,7 @@ class RestSection extends ConsumerWidget {
                     width: double.infinity,
                     child: OutlinedButton(
                       onPressed: () {
-                        ref
-                            .read(currentCharacterProvider.notifier)
-                            .shortRest();
+                        ref.read(currentCharacterProvider.notifier).shortRest();
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -178,19 +176,23 @@ class _HitDiceTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('生命骰',
-                  style: TextStyle(
-                    fontFamily: 'NotoSerifTC',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.darkTextPrimary,
-                  )),
-              Text('d$faces · 剩餘 $remaining/$total',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 10,
-                    color: AppColors.darkTextSecondary,
-                  )),
+              Text(
+                '生命骰',
+                style: TextStyle(
+                  fontFamily: 'NotoSerifTC',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.darkTextPrimary,
+                ),
+              ),
+              Text(
+                'd$faces · 剩餘 $remaining/$total',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 10,
+                  color: AppColors.darkTextSecondary,
+                ),
+              ),
             ],
           ),
           const Spacer(),
@@ -238,12 +240,14 @@ class _RestButton extends StatelessWidget {
                   color: AppColors.darkTextPrimary,
                 ),
               ),
-              Text(subtitle,
-                  style: TextStyle(
-                    fontFamily: 'NotoSerifTC',
-                    fontSize: 10,
-                    color: AppColors.darkTextSecondary,
-                  )),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontFamily: 'NotoSerifTC',
+                  fontSize: 10,
+                  color: AppColors.darkTextSecondary,
+                ),
+              ),
             ],
           ),
         ),

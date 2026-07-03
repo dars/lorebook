@@ -80,6 +80,15 @@ class SpeciesOption {
 
   /// 每等級額外 HP（矮人堅韌 Dwarven Toughness = 1；其餘 0）。
   final int hpPerLevel;
+
+  /// 種族技能特性可選數（人類「技能熟練」1、精靈「鷹眼」1；其餘 0）。
+  final int skillPickCount;
+
+  /// 種族技能可選清單（中文名；空 = 無種族技能特性）。
+  final List<String> skillPickFrom;
+
+  /// 可選體型（2024 人類可選中型/小型；空 = 固定為 [size]）。
+  final List<String> sizeChoices;
   final List<String> traits;
   final String description; // 佔位文案
   const SpeciesOption({
@@ -89,23 +98,35 @@ class SpeciesOption {
     this.size = 'Medium',
     this.darkvision = false,
     this.hpPerLevel = 0,
+    this.skillPickCount = 0,
+    this.skillPickFrom = const [],
+    this.sizeChoices = const [],
     this.traits = const [],
     this.description = '',
   });
+
+  /// 實際可選體型清單（未宣告 sizeChoices 時為固定單值）。
+  List<String> get effectiveSizeChoices =>
+      sizeChoices.isEmpty ? [size] : sizeChoices;
 }
 
 const kSpecies = <SpeciesOption>[
   SpeciesOption(
     cn: '人類',
     en: 'Human',
-    traits: ['多才', '技能熟練', '起源專長'],
+    skillPickCount: 1,
+    skillPickFrom: _allSkillNames,
+    sizeChoices: ['Medium', 'Small'],
+    traits: ['多才', '技能熟練 選1', '起源專長'],
     description: '〔敘述佔位〕適應力極強、分布最廣的種族，靠才智與韌性立足於各地。（文案待補）',
   ),
   SpeciesOption(
     cn: '精靈',
     en: 'Elf',
     darkvision: true,
-    traits: ['仙靈血脈', '鷹眼', '漫遊冥思'],
+    skillPickCount: 1,
+    skillPickFrom: ['洞察', '感知', '求生'],
+    traits: ['仙靈血脈', '鷹眼 擇一熟練', '漫遊冥思'],
     description: '〔敘述佔位〕優雅長壽、與魔法和自然親近的種族，感官敏銳。（文案待補）',
   ),
   SpeciesOption(
@@ -120,7 +141,7 @@ const kSpecies = <SpeciesOption>[
     cn: '半身人',
     en: 'Halfling',
     size: 'Small',
-    traits: ['幸運', '勇敢', '敏捷靈活'],
+    traits: ['幸運', '勇敢', '敏捷靈活', '天生隱匿'],
     description: '〔敘述佔位〕樂天知足的小個子，天生幸運、臨危不亂。（文案待補）',
   ),
   SpeciesOption(
