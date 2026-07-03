@@ -6,9 +6,13 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/decorations.dart';
 import '../../../shared/presentation/widgets/ability_hex_chart.dart';
+import '../../catalog/data/catalog_repository.dart';
+import '../../catalog/domain/catalog_models.dart';
+import '../../catalog/presentation/fivetools_renderer.dart';
 import '../domain/character.dart';
 import '../domain/character_creation_data.dart';
 import '../domain/character_providers.dart';
+import '../domain/spell_from_catalog.dart';
 
 /// 能力值產生方式。
 enum _AbilityMethod { array, buy, roll }
@@ -23,7 +27,17 @@ class CharacterCreatePage extends ConsumerStatefulWidget {
 }
 
 class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
-  static const _steps = ['基本', '職業', '背景', '能力值', '技能', '確認'];
+  /// 步驟清單依職業動態決定：施法職業多一步「法術」（7 步），
+  /// 非施法職業維持 6 步。
+  List<String> get _steps => [
+    '基本',
+    '職業',
+    '背景',
+    '能力值',
+    '技能',
+    if (_classOpt?.isCaster ?? false) '法術',
+    '確認',
+  ];
 
   int _step = 0;
 
@@ -47,6 +61,13 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
 
   final Set<String> _classSkills = {};
 
+  /// 已選法術（id → 目錄法術）。戲法與一環分開計數。
+  final Map<String, CatalogSpell> _selCantrips = {};
+  final Map<String, CatalogSpell> _selSpells = {};
+
+  SpellQuery get _cantripQuery => (level: 0, className: _classOpt!.en);
+  SpellQuery get _spellQuery => (level: 1, className: _classOpt!.en);
+
   // ── 衍生 ──
 
   Map<String, int> get _bonusMap {
@@ -68,16 +89,18 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       ((_base[code] ?? 0) + _bonusMap[code]!).clamp(0, 20);
 
   List<double> get _realHexValues => [
-        for (final code in kAbilityOrder)
-          () {
-            final s = _finalScore(code);
-            return s <= 0 ? 0.15 : ((s - 6) / 12).clamp(0.15, 1.0);
-          }(),
-      ];
+    for (final code in kAbilityOrder)
+      () {
+        final s = _finalScore(code);
+        return s <= 0 ? 0.15 : ((s - 6) / 12).clamp(0.15, 1.0);
+      }(),
+  ];
 
   // 標準陣列：尚未指派的值。
-  List<int> get _pool =>
-      [for (final v in kStandardArray) if (!_base.values.contains(v)) v];
+  List<int> get _pool => [
+    for (final v in kStandardArray)
+      if (!_base.values.contains(v)) v,
+  ];
 
   // 購點。
   int get _pointsSpent {
@@ -98,14 +121,14 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
   // ── 驗證 ──
 
   bool get _canNext {
-    switch (_step) {
-      case 0:
+    switch (_steps[_step]) {
+      case '基本':
         return _name.trim().isNotEmpty && _species != null;
-      case 1:
+      case '職業':
         return _classOpt != null;
-      case 2:
+      case '背景':
         return _background != null;
-      case 3:
+      case '能力值':
         final filled = _base.values.every((v) => v != null);
         switch (_method) {
           case _AbilityMethod.array:
@@ -115,18 +138,30 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           case _AbilityMethod.roll:
             return _base.values.every((v) => v != null && v >= 3 && v <= 18);
         }
-      case 4:
+      case '技能':
         return _classSkills.length == (_classOpt?.skillCount ?? 0);
+      case '法術':
+        return _canLeaveSpellStep;
       default:
         return true;
     }
+  }
+
+  /// 法術步驟閘門：選滿數量才放行；內容庫離線時允許跳過。
+  bool get _canLeaveSpellStep {
+    final cls = _classOpt!;
+    final cantrips = ref.read(spellCatalogProvider(_cantripQuery));
+    final spells = ref.read(spellCatalogProvider(_spellQuery));
+    if (cantrips.hasError || spells.hasError) return true;
+    return _selCantrips.length == cls.cantripsKnown &&
+        _selSpells.length == cls.preparedSpells;
   }
 
   void _next() {
     if (_step < _steps.length - 1) {
       setState(() {
         _step++;
-        if (_step == 3 && !_abilitiesInit) {
+        if (_steps[_step] == '能力值' && !_abilitiesInit) {
           _initAbilities();
           _abilitiesInit = true;
         }
@@ -162,8 +197,10 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
   void _autofillBonus() {
     final cands = _background!.abilities;
     _bonusMode = '2/1';
-    _plus2 = _classOpt!.primaryAbilities
-        .firstWhere(cands.contains, orElse: () => cands.first);
+    _plus2 = _classOpt!.primaryAbilities.firstWhere(
+      cands.contains,
+      orElse: () => cands.first,
+    );
     _plus1 = cands.firstWhere(
       (a) => a != _plus2 && a == 'CON',
       orElse: () => cands.firstWhere((a) => a != _plus2),
@@ -236,13 +273,15 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     const pb = 2;
 
     final scores = {for (final a in kAbilityOrder) a: _finalScore(a)};
-    final mods = {for (final a in kAbilityOrder) a: abilityModifier(scores[a]!)};
+    final mods = {
+      for (final a in kAbilityOrder) a: abilityModifier(scores[a]!),
+    };
 
     AbilityScore ab(String code) => AbilityScore(
-          score: scores[code]!,
-          modifier: mods[code]!,
-          proficientSave: cls.saves.contains(code),
-        );
+      score: scores[code]!,
+      modifier: mods[code]!,
+      proficientSave: cls.saves.contains(code),
+    );
 
     final profSkills = {..._classSkills, ...bg.skills};
     final skills = [
@@ -256,8 +295,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         ),
     ];
 
-    final perceptionMod =
-        mods['WIS']! + (profSkills.contains('感知') ? pb : 0);
+    final perceptionMod = mods['WIS']! + (profSkills.contains('感知') ? pb : 0);
     final maxHp = (cls.hitDie + mods['CON']!).clamp(1, 999);
 
     final caster = cls.spellAbility.isNotEmpty;
@@ -301,6 +339,12 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         cha: ab('CHA'),
       ),
       skills: skills,
+      // 法術：選擇當下反正規化（跳過法術步驟時為空，法術位仍建立）。
+      cantrips: [for (final s in _selCantrips.values) spellFromCatalog(s)],
+      spells: [for (final s in _selSpells.values) spellFromCatalog(s)],
+      spellSlots: caster
+          ? [SpellSlots(level: 1, total: cls.level1Slots)]
+          : const [],
       features: features,
       hitDieFaces: cls.hitDie,
     );
@@ -316,9 +360,13 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       backgroundColor: AppColors.darkSurface0,
       appBar: AppBar(
         backgroundColor: AppColors.darkSurface0,
-        title: const Text('新增角色',
-            style: TextStyle(
-                fontFamily: 'NotoSerifTC', fontWeight: FontWeight.w700)),
+        title: const Text(
+          '新增角色',
+          style: TextStyle(
+            fontFamily: 'NotoSerifTC',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => context.canPop()
@@ -332,15 +380,22 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.sm),
+                AppSpacing.lg,
+                0,
+                AppSpacing.lg,
+                AppSpacing.sm,
+              ),
               child: Row(
                 children: [
-                  Text('步驟 ${_step + 1} / ${_steps.length} · ${_steps[_step]}',
-                      style: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.accentGold)),
+                  Text(
+                    '步驟 ${_step + 1} / ${_steps.length} · ${_steps[_step]}',
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.accentGold,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -359,17 +414,19 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
   }
 
   Widget _buildStep() {
-    switch (_step) {
-      case 0:
+    switch (_steps[_step]) {
+      case '基本':
         return _basicStep();
-      case 1:
+      case '職業':
         return _classStep();
-      case 2:
+      case '背景':
         return _backgroundStep();
-      case 3:
+      case '能力值':
         return _abilityStep();
-      case 4:
+      case '技能':
         return _skillStep();
+      case '法術':
+        return _spellStep();
       default:
         return _confirmStep();
     }
@@ -388,7 +445,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         TextField(
           onChanged: (v) => setState(() => _name = v),
           style: const TextStyle(
-              fontFamily: 'NotoSerifTC', color: AppColors.darkTextPrimary),
+            fontFamily: 'NotoSerifTC',
+            color: AppColors.darkTextPrimary,
+          ),
           decoration: InputDecoration(
             hintText: '輸入角色名稱',
             filled: true,
@@ -450,6 +509,8 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           onSelect: (cn) => setState(() {
             _classOpt = kClasses.firstWhere((c) => c.cn == cn);
             _classSkills.clear();
+            _selCantrips.clear();
+            _selSpells.clear();
             _resetAbilities();
           }),
         ),
@@ -540,20 +601,24 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                       : AppColors.darkSurface1,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: _method == e.key
-                          ? AppColors.accentGold
-                          : AppColors.darkBorder2),
+                    color: _method == e.key
+                        ? AppColors.accentGold
+                        : AppColors.darkBorder2,
+                  ),
                 ),
-                child: Text(e.value,
-                    style: TextStyle(
-                        fontFamily: 'NotoSerifTC',
-                        fontSize: 13,
-                        fontWeight: _method == e.key
-                            ? FontWeight.w700
-                            : FontWeight.w400,
-                        color: _method == e.key
-                            ? const Color(0xFF1A1206)
-                            : AppColors.darkTextSecondary)),
+                child: Text(
+                  e.value,
+                  style: TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 13,
+                    fontWeight: _method == e.key
+                        ? FontWeight.w700
+                        : FontWeight.w400,
+                    color: _method == e.key
+                        ? const Color(0xFF1A1206)
+                        : AppColors.darkTextSecondary,
+                  ),
+                ),
               ),
             ),
           ),
@@ -575,97 +640,117 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
   }
 
   List<Widget> _arrayBody() => [
-        Row(
-          children: [
-            Expanded(
-              child: Text('剩餘可分配 ${_pool.length}／6',
-                  style: const TextStyle(
-                      fontFamily: 'NotoSerifTC',
-                      fontSize: 12,
-                      color: AppColors.darkTextSecondary)),
+    Row(
+      children: [
+        Expanded(
+          child: Text(
+            '剩餘可分配 ${_pool.length}／6',
+            style: const TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 12,
+              color: AppColors.darkTextSecondary,
             ),
-            _pill('套用建議', () => setState(_recommendArray)),
-            const SizedBox(width: 6),
-            _pill('清空', _clearBase),
-          ],
+          ),
         ),
-        const SizedBox(height: AppSpacing.md),
-        for (final code in kAbilityOrder)
-          _abilityRowFrame(code, _arrayControl(code)),
-      ];
+        _pill('套用建議', () => setState(_recommendArray)),
+        const SizedBox(width: 6),
+        _pill('清空', _clearBase),
+      ],
+    ),
+    const SizedBox(height: AppSpacing.md),
+    for (final code in kAbilityOrder)
+      _abilityRowFrame(code, _arrayControl(code)),
+  ];
 
   List<Widget> _buyBody() => [
-        Row(
-          children: [
-            const Text('剩餘點數',
-                style: TextStyle(
-                    fontFamily: 'NotoSerifTC',
-                    fontSize: 12,
-                    color: AppColors.darkTextSecondary)),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: _pointsSpent / kPointBuyBudget,
-                  minHeight: 8,
-                  backgroundColor: AppColors.darkSurface2,
-                  valueColor: const AlwaysStoppedAnimation(AppColors.accentGold),
-                ),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Text('$_pointsRemaining / $kPointBuyBudget',
-                style: const TextStyle(
-                    fontFamily: 'Cinzel',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.accentGold)),
-            const SizedBox(width: AppSpacing.sm),
-            _pill('重置', () => setState(() {
-                  for (final k in kAbilityOrder) {
-                    _base[k] = 8;
-                  }
-                })),
-          ],
+    Row(
+      children: [
+        const Text(
+          '剩餘點數',
+          style: TextStyle(
+            fontFamily: 'NotoSerifTC',
+            fontSize: 12,
+            color: AppColors.darkTextSecondary,
+          ),
         ),
-        const SizedBox(height: AppSpacing.md),
-        for (final code in kAbilityOrder)
-          _abilityRowFrame(code, _buyControl(code)),
-        const SizedBox(height: AppSpacing.sm),
-        const Text('六項由 8 起，花點數買高（最高 15，可重複）',
-            style: TextStyle(
-                fontFamily: 'NotoSerifTC',
-                fontSize: 11,
-                color: AppColors.darkTextSecondary)),
-      ];
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: _pointsSpent / kPointBuyBudget,
+              minHeight: 8,
+              backgroundColor: AppColors.darkSurface2,
+              valueColor: const AlwaysStoppedAnimation(AppColors.accentGold),
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Text(
+          '$_pointsRemaining / $kPointBuyBudget',
+          style: const TextStyle(
+            fontFamily: 'Cinzel',
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            color: AppColors.accentGold,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        _pill(
+          '重置',
+          () => setState(() {
+            for (final k in kAbilityOrder) {
+              _base[k] = 8;
+            }
+          }),
+        ),
+      ],
+    ),
+    const SizedBox(height: AppSpacing.md),
+    for (final code in kAbilityOrder) _abilityRowFrame(code, _buyControl(code)),
+    const SizedBox(height: AppSpacing.sm),
+    const Text(
+      '六項由 8 起，花點數買高（最高 15，可重複）',
+      style: TextStyle(
+        fontFamily: 'NotoSerifTC',
+        fontSize: 11,
+        color: AppColors.darkTextSecondary,
+      ),
+    ),
+  ];
 
   List<Widget> _rollBody() => [
-        const Text('自行擲 4d6 去最低 ×6，將結果填入（App 不代擲）',
-            style: TextStyle(
-                fontFamily: 'NotoSerifTC',
-                fontSize: 11,
-                color: AppColors.darkTextSecondary)),
-        const SizedBox(height: AppSpacing.md),
-        for (final code in kAbilityOrder)
-          _abilityRowFrame(code, _rollControl(code)),
-      ];
+    const Text(
+      '自行擲 4d6 去最低 ×6，將結果填入（App 不代擲）',
+      style: TextStyle(
+        fontFamily: 'NotoSerifTC',
+        fontSize: 11,
+        color: AppColors.darkTextSecondary,
+      ),
+    ),
+    const SizedBox(height: AppSpacing.md),
+    for (final code in kAbilityOrder)
+      _abilityRowFrame(code, _rollControl(code)),
+  ];
 
   Widget _pill(String label, VoidCallback onTap) => GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.accentGold),
-          ),
-          child: Text(label,
-              style: const TextStyle(
-                  fontFamily: 'NotoSerifTC',
-                  fontSize: 12,
-                  color: AppColors.accentGold)),
+    onTap: onTap,
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.accentGold),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontFamily: 'NotoSerifTC',
+          fontSize: 12,
+          color: AppColors.accentGold,
         ),
-      );
+      ),
+    ),
+  );
 
   Widget _abilityRowFrame(String code, Widget control) {
     final bonus = _bonusMap[code]!;
@@ -678,29 +763,40 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         children: [
           SizedBox(
             width: 40,
-            child: Text(kAbilityCn[code]!,
-                style: const TextStyle(
-                    fontFamily: 'NotoSerifTC',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.darkTextPrimary)),
+            child: Text(
+              kAbilityCn[code]!,
+              style: const TextStyle(
+                fontFamily: 'NotoSerifTC',
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.darkTextPrimary,
+              ),
+            ),
           ),
           const Spacer(),
           if (bonus > 0)
             Padding(
               padding: const EdgeInsets.only(right: 6),
-              child: Text('+$bonus',
-                  style: const TextStyle(
-                      fontFamily: 'Cinzel',
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.goldDim)),
+              child: Text(
+                '+$bonus',
+                style: const TextStyle(
+                  fontFamily: 'Cinzel',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.goldDim,
+                ),
+              ),
             ),
           control,
           const SizedBox(width: 6),
-          const Text('→',
-              style: TextStyle(
-                  fontFamily: 'Inter', fontSize: 12, color: AppColors.sectionLabel)),
+          const Text(
+            '→',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 12,
+              color: AppColors.sectionLabel,
+            ),
+          ),
           const SizedBox(width: 6),
           SizedBox(
             width: 58,
@@ -708,10 +804,11 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
               fin == null ? '—' : '$fin (${mod! >= 0 ? '+$mod' : '$mod'})',
               textAlign: TextAlign.right,
               style: const TextStyle(
-                  fontFamily: 'Cinzel',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.accentGold),
+                fontFamily: 'Cinzel',
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: AppColors.accentGold,
+              ),
             ),
           ),
         ],
@@ -720,8 +817,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
   }
 
   String _arrayLabel(String code, int v) {
-    final h =
-        _base.entries.where((e) => e.value == v && e.key != code).toList();
+    final h = _base.entries
+        .where((e) => e.value == v && e.key != code)
+        .toList();
     return h.isEmpty ? '$v' : '$v · ${kAbilityCn[h.first.key]}';
   }
 
@@ -739,19 +837,26 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           value: _base[code],
           isExpanded: true,
           isDense: true,
-          hint: const Text('—',
-              style: TextStyle(
-                  fontFamily: 'Cinzel',
-                  fontSize: 16,
-                  color: AppColors.darkTextSecondary)),
-          dropdownColor: AppColors.darkSurface1,
-          icon: const Icon(Icons.expand_more,
-              size: 18, color: AppColors.darkTextSecondary),
-          style: const TextStyle(
+          hint: const Text(
+            '—',
+            style: TextStyle(
               fontFamily: 'Cinzel',
               fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: AppColors.darkTextPrimary),
+              color: AppColors.darkTextSecondary,
+            ),
+          ),
+          dropdownColor: AppColors.darkSurface1,
+          icon: const Icon(
+            Icons.expand_more,
+            size: 18,
+            color: AppColors.darkTextSecondary,
+          ),
+          style: const TextStyle(
+            fontFamily: 'Cinzel',
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: AppColors.darkTextPrimary,
+          ),
           selectedItemBuilder: (c) => [
             for (final v in kStandardArray)
               Align(alignment: Alignment.centerLeft, child: Text('$v')),
@@ -760,11 +865,14 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
             for (final v in kStandardArray)
               DropdownMenuItem(
                 value: v,
-                child: Text(_arrayLabel(code, v),
-                    style: const TextStyle(
-                        fontFamily: 'NotoSerifTC',
-                        fontSize: 13,
-                        color: AppColors.darkTextPrimary)),
+                child: Text(
+                  _arrayLabel(code, v),
+                  style: const TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 13,
+                    color: AppColors.darkTextPrimary,
+                  ),
+                ),
               ),
           ],
           onChanged: (v) => _selectArrayValue(code, v),
@@ -788,13 +896,17 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           isExpanded: true,
           isDense: true,
           dropdownColor: AppColors.darkSurface1,
-          icon: const Icon(Icons.expand_more,
-              size: 18, color: AppColors.darkTextSecondary),
+          icon: const Icon(
+            Icons.expand_more,
+            size: 18,
+            color: AppColors.darkTextSecondary,
+          ),
           style: const TextStyle(
-              fontFamily: 'Cinzel',
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: AppColors.darkTextPrimary),
+            fontFamily: 'Cinzel',
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: AppColors.darkTextPrimary,
+          ),
           selectedItemBuilder: (c) => [
             for (var v = 8; v <= 15; v++)
               Align(alignment: Alignment.centerLeft, child: Text('$v')),
@@ -804,17 +916,19 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
               DropdownMenuItem(
                 value: v,
                 enabled: _buyAffordable(code, v),
-                child: Text('$v（${kPointBuyCost[v]}點）',
-                    style: TextStyle(
-                        fontFamily: 'NotoSerifTC',
-                        fontSize: 13,
-                        color: _buyAffordable(code, v)
-                            ? AppColors.darkTextPrimary
-                            : AppColors.darkTextSecondary.withValues(alpha: 0.4))),
+                child: Text(
+                  '$v（${kPointBuyCost[v]}點）',
+                  style: TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 13,
+                    color: _buyAffordable(code, v)
+                        ? AppColors.darkTextPrimary
+                        : AppColors.darkTextSecondary.withValues(alpha: 0.4),
+                  ),
+                ),
               ),
           ],
-          onChanged: (v) =>
-              v == null ? null : setState(() => _base[code] = v),
+          onChanged: (v) => v == null ? null : setState(() => _base[code] = v),
         ),
       ),
     );
@@ -829,10 +943,11 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
         style: const TextStyle(
-            fontFamily: 'Cinzel',
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: AppColors.darkTextPrimary),
+          fontFamily: 'Cinzel',
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+          color: AppColors.darkTextPrimary,
+        ),
         decoration: InputDecoration(
           isDense: true,
           contentPadding: const EdgeInsets.symmetric(vertical: 8),
@@ -872,9 +987,10 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
             child: Text(
               '背景加值 · ${_background!.cn}：${parts.join('、')}（已套用）',
               style: const TextStyle(
-                  fontFamily: 'NotoSerifTC',
-                  fontSize: 12,
-                  color: AppColors.darkTextLight),
+                fontFamily: 'NotoSerifTC',
+                fontSize: 12,
+                color: AppColors.darkTextLight,
+              ),
             ),
           ),
         ],
@@ -934,7 +1050,187 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     );
   }
 
-  // ── 步驟七：確認 ──
+  // ── 步驟七：法術（施法職業限定）──
+
+  Widget _spellStep() {
+    final cls = _classOpt!;
+    final cantripsAsync = ref.watch(spellCatalogProvider(_cantripQuery));
+    final spellsAsync = ref.watch(spellCatalogProvider(_spellQuery));
+    final offline = cantripsAsync.hasError || spellsAsync.hasError;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            const Icon(
+              Icons.auto_awesome,
+              size: 15,
+              color: AppColors.accentGold,
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Text(
+              '${cls.cn} · 施法屬性 ${kAbilityCn[cls.spellAbility]}',
+              style: const TextStyle(
+                fontFamily: 'NotoSerifTC',
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.darkTextLight,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.md),
+        if (offline)
+          _offlineCard()
+        else ...[
+          if (cls.cantripsKnown > 0) ...[
+            _spellSectionHeader(
+              '戲法 CANTRIPS · 選 ${cls.cantripsKnown}',
+              _selCantrips.length,
+              cls.cantripsKnown,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _spellList(cantripsAsync, _selCantrips, cls.cantripsKnown),
+            const SizedBox(height: AppSpacing.lg),
+          ],
+          _spellSectionHeader(
+            '一環法術 1ST LEVEL · 準備 ${cls.preparedSpells}',
+            _selSpells.length,
+            cls.preparedSpells,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          _spellList(spellsAsync, _selSpells, cls.preparedSpells),
+        ],
+      ],
+    );
+  }
+
+  Widget _spellSectionHeader(String label, int selected, int max) {
+    final done = selected == max;
+    return Row(
+      children: [
+        Expanded(child: _FieldLabel(label)),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+          decoration: BoxDecoration(
+            color: AppColors.accentGold.withValues(alpha: done ? 0.25 : 0.13),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Text(
+            '已選 $selected/$max',
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: AppColors.accentGold,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _spellList(
+    AsyncValue<List<CatalogSpell>> async,
+    Map<String, CatalogSpell> selection,
+    int max,
+  ) {
+    return async.when(
+      data: (spells) => Column(
+        children: [
+          for (final s in spells)
+            _SpellPickRow(
+              spell: s,
+              selected: selection.containsKey(s.id),
+              disabled: !selection.containsKey(s.id) && selection.length >= max,
+              onToggle: () => setState(() {
+                if (selection.containsKey(s.id)) {
+                  selection.remove(s.id);
+                } else if (selection.length < max) {
+                  selection[s.id] = s;
+                }
+              }),
+            ),
+        ],
+      ),
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
+        child: Center(
+          child: SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+      ),
+      error: (_, _) => const SizedBox.shrink(),
+    );
+  }
+
+  Widget _offlineCard() {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: AppColors.darkSurface1,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.darkBorder2),
+      ),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.cloud_off,
+            size: 28,
+            color: AppColors.darkTextSecondary,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          const Text(
+            '內容庫離線',
+            style: TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: AppColors.darkTextPrimary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          const Text(
+            '目前無法載入法術清單。可先完成建角，之後再補選法術。',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 12,
+              color: AppColors.darkTextSecondary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          OutlinedButton.icon(
+            onPressed: () {
+              ref.invalidate(spellCatalogProvider(_cantripQuery));
+              ref.invalidate(spellCatalogProvider(_spellQuery));
+            },
+            icon: const Icon(
+              Icons.refresh,
+              size: 16,
+              color: AppColors.accentGold,
+            ),
+            label: const Text(
+              '重試',
+              style: TextStyle(
+                fontFamily: 'NotoSerifTC',
+                color: AppColors.accentGold,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: AppColors.accentGold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── 步驟八：確認 ──
 
   Widget _confirmStep() {
     final cls = _classOpt!;
@@ -942,7 +1238,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     final bg = _background!;
     const pb = 2;
     final scores = {for (final a in kAbilityOrder) a: _finalScore(a)};
-    final mods = {for (final a in kAbilityOrder) a: abilityModifier(scores[a]!)};
+    final mods = {
+      for (final a in kAbilityOrder) a: abilityModifier(scores[a]!),
+    };
     final caster = cls.spellAbility.isNotEmpty;
     final profSkills = {..._classSkills, ...bg.skills};
     final perceptionMod = mods['WIS']! + (profSkills.contains('感知') ? pb : 0);
@@ -964,7 +1262,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         (
           kAbilityCn[code]!,
           mods[code]! + (cls.saves.contains(code) ? pb : 0),
-          cls.saves.contains(code)
+          cls.saves.contains(code),
         ),
     ];
     final skills = [
@@ -972,7 +1270,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         (
           s.name,
           mods[s.ability]! + (profSkills.contains(s.name) ? pb : 0),
-          profSkills.contains(s.name)
+          profSkills.contains(s.name),
         ),
     ];
 
@@ -987,18 +1285,24 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(_name.trim().isEmpty ? '（未命名）' : _name.trim(),
-                      style: const TextStyle(
-                          fontFamily: 'NotoSerifTC',
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.darkTextPrimary)),
+                  Text(
+                    _name.trim().isEmpty ? '（未命名）' : _name.trim(),
+                    style: const TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.darkTextPrimary,
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text('${sp.cn} · ${cls.cn} 1 · ${bg.cn} · $_alignment',
-                      style: const TextStyle(
-                          fontFamily: 'NotoSerifTC',
-                          fontSize: 11,
-                          color: AppColors.darkTextSecondary)),
+                  Text(
+                    '${sp.cn} · ${cls.cn} 1 · ${bg.cn} · $_alignment',
+                    style: const TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 11,
+                      color: AppColors.darkTextSecondary,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -1014,6 +1318,22 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         _SectionHeader('屬性值'),
         const SizedBox(height: AppSpacing.sm),
         _abilityGrid(scores, mods),
+        if (caster && (_selCantrips.isNotEmpty || _selSpells.isNotEmpty)) ...[
+          const SizedBox(height: AppSpacing.lg),
+          _SectionHeader('法術'),
+          if (_selCantrips.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.sm),
+            const _SubLabel('戲法'),
+            const SizedBox(height: AppSpacing.xs),
+            _spellChips(_selCantrips.values),
+          ],
+          if (_selSpells.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.sm),
+            const _SubLabel('一環法術（已準備）'),
+            const SizedBox(height: AppSpacing.xs),
+            _spellChips(_selSpells.values),
+          ],
+        ],
         const SizedBox(height: AppSpacing.sm),
         CollapsibleSection(
           title: 'SAVING THROWS 豁免',
@@ -1031,33 +1351,67 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     );
   }
 
-  Widget _portraitSmall() => Container(
-        width: 56,
-        height: 56,
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: AppColors.accentGold),
-          gradient: const RadialGradient(
-            colors: [Color(0xFF33291A), Color(0xFF0C0A06)],
+  Widget _spellChips(Iterable<CatalogSpell> spells) {
+    return Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      children: [
+        for (final s in spells)
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm,
+              vertical: AppSpacing.xs,
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.darkSurface2,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: AppColors.darkBorder2),
+            ),
+            child: Text(
+              (s.engName ?? '').isEmpty ? s.name : '${s.name} ${s.engName}',
+              style: const TextStyle(
+                fontFamily: 'NotoSerifTC',
+                fontSize: 11,
+                color: AppColors.accentGold,
+              ),
+            ),
           ),
-        ),
-        child: const Icon(Icons.person, size: 26, color: Color(0xFF6B582F)),
-      );
+      ],
+    );
+  }
+
+  Widget _portraitSmall() => Container(
+    width: 56,
+    height: 56,
+    clipBehavior: Clip.antiAlias,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      border: Border.all(color: AppColors.accentGold),
+      gradient: const RadialGradient(
+        colors: [Color(0xFF33291A), Color(0xFF0C0A06)],
+      ),
+    ),
+    child: const Icon(Icons.person, size: 26, color: Color(0xFF6B582F)),
+  );
 
   Widget _statGrid(List<(String, String)> items) {
     final rows = <Widget>[];
     for (var i = 0; i < items.length; i += 3) {
       final cells = <Widget>[];
       for (var j = i; j < i + 3; j++) {
-        cells.add(Expanded(
-            child: j < items.length ? _statCard(items[j]) : const SizedBox()));
+        cells.add(
+          Expanded(
+            child: j < items.length ? _statCard(items[j]) : const SizedBox(),
+          ),
+        );
         if (j < i + 2) cells.add(const SizedBox(width: 6));
       }
-      rows.add(Padding(
-        padding: const EdgeInsets.only(bottom: 6),
-        child: Row(children: cells),
-      ));
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Row(children: cells),
+        ),
+      );
     }
     return Column(children: rows);
   }
@@ -1073,18 +1427,24 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       ),
       child: Column(
         children: [
-          Text(value,
-              style: const TextStyle(
-                  fontFamily: 'Cinzel',
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.accentGold)),
+          Text(
+            value,
+            style: const TextStyle(
+              fontFamily: 'Cinzel',
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: AppColors.accentGold,
+            ),
+          ),
           const SizedBox(height: 1),
-          Text(label,
-              style: const TextStyle(
-                  fontFamily: 'NotoSerifTC',
-                  fontSize: 9,
-                  color: AppColors.darkTextSecondary)),
+          Text(
+            label,
+            style: const TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 9,
+              color: AppColors.darkTextSecondary,
+            ),
+          ),
         ],
       ),
     );
@@ -1092,43 +1452,52 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
 
   Widget _abilityGrid(Map<String, int> scores, Map<String, int> mods) {
     Widget card(String code) => Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 2),
-            decoration: BoxDecoration(
-              color: AppColors.darkSurface1,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppColors.darkBorder2),
-            ),
-            child: Column(
-              children: [
-                Text(kAbilityCn[code]!,
-                    style: const TextStyle(
-                        fontFamily: 'NotoSerifTC',
-                        fontSize: 11,
-                        color: AppColors.darkTextSecondary)),
-                Text('${scores[code]}',
-                    style: const TextStyle(
-                        fontFamily: 'Cinzel',
-                        fontSize: 21,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.accentGold)),
-                Text(_sign(mods[code]!),
-                    style: const TextStyle(
-                        fontFamily: 'Cinzel',
-                        fontSize: 12,
-                        color: AppColors.darkTextPrimary)),
-              ],
-            ),
-          ),
-        );
-    Widget row(List<String> codes) => Row(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+        decoration: BoxDecoration(
+          color: AppColors.darkSurface1,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.darkBorder2),
+        ),
+        child: Column(
           children: [
-            for (var i = 0; i < codes.length; i++) ...[
-              card(codes[i]),
-              if (i < codes.length - 1) const SizedBox(width: 8),
-            ],
+            Text(
+              kAbilityCn[code]!,
+              style: const TextStyle(
+                fontFamily: 'NotoSerifTC',
+                fontSize: 11,
+                color: AppColors.darkTextSecondary,
+              ),
+            ),
+            Text(
+              '${scores[code]}',
+              style: const TextStyle(
+                fontFamily: 'Cinzel',
+                fontSize: 21,
+                fontWeight: FontWeight.w700,
+                color: AppColors.accentGold,
+              ),
+            ),
+            Text(
+              _sign(mods[code]!),
+              style: const TextStyle(
+                fontFamily: 'Cinzel',
+                fontSize: 12,
+                color: AppColors.darkTextPrimary,
+              ),
+            ),
           ],
-        );
+        ),
+      ),
+    );
+    Widget row(List<String> codes) => Row(
+      children: [
+        for (var i = 0; i < codes.length; i++) ...[
+          card(codes[i]),
+          if (i < codes.length - 1) const SizedBox(width: 8),
+        ],
+      ],
+    );
     return Column(
       children: [
         row(['STR', 'DEX', 'CON']),
@@ -1141,19 +1510,22 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
   Widget _checkGrid(List<(String, int, bool)> items) {
     final rows = <Widget>[];
     for (var i = 0; i < items.length; i += 2) {
-      rows.add(Padding(
-        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-        child: Row(
-          children: [
-            Expanded(child: _checkCell(items[i])),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+          child: Row(
+            children: [
+              Expanded(child: _checkCell(items[i])),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
                 child: i + 1 < items.length
                     ? _checkCell(items[i + 1])
-                    : const SizedBox()),
-          ],
+                    : const SizedBox(),
+              ),
+            ],
+          ),
         ),
-      ));
+      );
     }
     return Column(children: rows);
   }
@@ -1166,29 +1538,37 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         color: AppColors.darkSurface1,
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
-            color: prof ? AppColors.accentGold : AppColors.darkBorder2),
+          color: prof ? AppColors.accentGold : AppColors.darkBorder2,
+        ),
       ),
       child: Row(
         children: [
-          Icon(prof ? Icons.check_circle : Icons.circle_outlined,
-              size: 11,
-              color: prof ? AppColors.accentGold : AppColors.darkTextSecondary),
+          Icon(
+            prof ? Icons.check_circle : Icons.circle_outlined,
+            size: 11,
+            color: prof ? AppColors.accentGold : AppColors.darkTextSecondary,
+          ),
           const SizedBox(width: 6),
           Expanded(
-            child: Text(name,
-                style: TextStyle(
-                    fontFamily: 'NotoSerifTC',
-                    fontSize: 13,
-                    fontWeight: prof ? FontWeight.w600 : FontWeight.w400,
-                    color: AppColors.darkTextPrimary)),
-          ),
-          Text(mod >= 0 ? '+$mod' : '$mod',
+            child: Text(
+              name,
               style: TextStyle(
-                  fontFamily: 'Cinzel',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color:
-                      prof ? AppColors.accentGold : AppColors.darkTextSecondary)),
+                fontFamily: 'NotoSerifTC',
+                fontSize: 13,
+                fontWeight: prof ? FontWeight.w600 : FontWeight.w400,
+                color: AppColors.darkTextPrimary,
+              ),
+            ),
+          ),
+          Text(
+            mod >= 0 ? '+$mod' : '$mod',
+            style: TextStyle(
+              fontFamily: 'Cinzel',
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: prof ? AppColors.accentGold : AppColors.darkTextSecondary,
+            ),
+          ),
         ],
       ),
     );
@@ -1211,13 +1591,18 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                 onPressed: _back,
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.xl, vertical: AppSpacing.md),
+                    horizontal: AppSpacing.xl,
+                    vertical: AppSpacing.md,
+                  ),
                   side: const BorderSide(color: AppColors.darkBorder),
                 ),
-                child: const Text('上一步',
-                    style: TextStyle(
-                        fontFamily: 'NotoSerifTC',
-                        color: AppColors.darkTextSecondary)),
+                child: const Text(
+                  '上一步',
+                  style: TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    color: AppColors.darkTextSecondary,
+                  ),
+                ),
               ),
               const SizedBox(width: AppSpacing.md),
             ],
@@ -1229,11 +1614,14 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                   disabledBackgroundColor: AppColors.darkBorder2,
                   padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                 ),
-                child: Text(isLast ? '建立角色' : '下一步',
-                    style: const TextStyle(
-                        fontFamily: 'NotoSerifTC',
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1206))),
+                child: Text(
+                  isLast ? '建立角色' : '下一步',
+                  style: const TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1A1206),
+                  ),
+                ),
               ),
             ),
           ],
@@ -1249,35 +1637,44 @@ class _FieldLabel extends StatelessWidget {
   final String text;
   const _FieldLabel(this.text);
   @override
-  Widget build(BuildContext context) => Text(text,
-      style: const TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 9,
-          letterSpacing: 1,
-          color: AppColors.sectionLabel));
+  Widget build(BuildContext context) => Text(
+    text,
+    style: const TextStyle(
+      fontFamily: 'Inter',
+      fontSize: 9,
+      letterSpacing: 1,
+      color: AppColors.sectionLabel,
+    ),
+  );
 }
 
 class _SectionHeader extends StatelessWidget {
   final String text;
   const _SectionHeader(this.text);
   @override
-  Widget build(BuildContext context) => Text(text,
-      style: const TextStyle(
-          fontFamily: 'NotoSerifTC',
-          fontSize: 14,
-          fontWeight: FontWeight.w700,
-          color: AppColors.darkTextPrimary));
+  Widget build(BuildContext context) => Text(
+    text,
+    style: const TextStyle(
+      fontFamily: 'NotoSerifTC',
+      fontSize: 14,
+      fontWeight: FontWeight.w700,
+      color: AppColors.darkTextPrimary,
+    ),
+  );
 }
 
 class _SubLabel extends StatelessWidget {
   final String text;
   const _SubLabel(this.text);
   @override
-  Widget build(BuildContext context) => Text(text,
-      style: const TextStyle(
-          fontFamily: 'NotoSerifTC',
-          fontSize: 12,
-          color: AppColors.darkTextSecondary));
+  Widget build(BuildContext context) => Text(
+    text,
+    style: const TextStyle(
+      fontFamily: 'NotoSerifTC',
+      fontSize: 12,
+      color: AppColors.darkTextSecondary,
+    ),
+  );
 }
 
 class _Dropdown<T> extends StatelessWidget {
@@ -1305,11 +1702,15 @@ class _Dropdown<T> extends StatelessWidget {
           value: value,
           isExpanded: true,
           dropdownColor: AppColors.darkSurface1,
-          icon: const Icon(Icons.expand_more, color: AppColors.darkTextSecondary),
+          icon: const Icon(
+            Icons.expand_more,
+            color: AppColors.darkTextSecondary,
+          ),
           style: const TextStyle(
-              fontFamily: 'NotoSerifTC',
-              fontSize: 14,
-              color: AppColors.darkTextPrimary),
+            fontFamily: 'NotoSerifTC',
+            fontSize: 14,
+            color: AppColors.darkTextPrimary,
+          ),
           items: [
             for (final it in items)
               DropdownMenuItem(value: it, child: Text(label(it))),
@@ -1341,26 +1742,31 @@ class _OptionChips extends StatelessWidget {
             onTap: () => onSelect(o),
             child: Container(
               padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.sm,
+              ),
               decoration: BoxDecoration(
                 color: selected == o
                     ? AppColors.accentGold.withValues(alpha: 0.18)
                     : AppColors.darkSurface1,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: selected == o
-                        ? AppColors.accentGold
-                        : AppColors.darkBorder2),
+                  color: selected == o
+                      ? AppColors.accentGold
+                      : AppColors.darkBorder2,
+                ),
               ),
-              child: Text(o,
-                  style: TextStyle(
-                      fontFamily: 'NotoSerifTC',
-                      fontSize: 14,
-                      fontWeight:
-                          selected == o ? FontWeight.w700 : FontWeight.w400,
-                      color: selected == o
-                          ? AppColors.accentGold
-                          : AppColors.darkTextPrimary)),
+              child: Text(
+                o,
+                style: TextStyle(
+                  fontFamily: 'NotoSerifTC',
+                  fontSize: 14,
+                  fontWeight: selected == o ? FontWeight.w700 : FontWeight.w400,
+                  color: selected == o
+                      ? AppColors.accentGold
+                      : AppColors.darkTextPrimary,
+                ),
+              ),
             ),
           ),
       ],
@@ -1372,8 +1778,11 @@ class _DescCard extends StatelessWidget {
   final String title;
   final String body;
   final List<String> chips;
-  const _DescCard(
-      {required this.title, required this.body, required this.chips});
+  const _DescCard({
+    required this.title,
+    required this.body,
+    required this.chips,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1386,19 +1795,25 @@ class _DescCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: const TextStyle(
-                  fontFamily: 'NotoSerifTC',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.darkTextPrimary)),
+          Text(
+            title,
+            style: const TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: AppColors.darkTextPrimary,
+            ),
+          ),
           const SizedBox(height: AppSpacing.sm),
-          Text(body,
-              style: const TextStyle(
-                  fontFamily: 'NotoSerifTC',
-                  fontSize: 12,
-                  height: 1.5,
-                  color: AppColors.darkTextSecondary)),
+          Text(
+            body,
+            style: const TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 12,
+              height: 1.5,
+              color: AppColors.darkTextSecondary,
+            ),
+          ),
           const SizedBox(height: AppSpacing.md),
           Wrap(
             spacing: 6,
@@ -1407,16 +1822,21 @@ class _DescCard extends StatelessWidget {
               for (final c in chips)
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xs,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.darkSurface2,
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: Text(c,
-                      style: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 10,
-                          color: AppColors.accentGold)),
+                  child: Text(
+                    c,
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 10,
+                      color: AppColors.accentGold,
+                    ),
+                  ),
                 ),
             ],
           ),
@@ -1446,30 +1866,41 @@ class _SkillRow extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md, vertical: 9),
+            horizontal: AppSpacing.md,
+            vertical: 9,
+          ),
           decoration: BoxDecoration(
             color: AppColors.darkSurface1,
             borderRadius: BorderRadius.circular(8),
-            border:
-                Border.all(color: on ? AppColors.accentGold : AppColors.darkBorder2),
+            border: Border.all(
+              color: on ? AppColors.accentGold : AppColors.darkBorder2,
+            ),
           ),
           child: Row(
             children: [
-              Icon(on ? Icons.check_circle : Icons.circle_outlined,
-                  size: 16,
-                  color: on ? AppColors.accentGold : AppColors.darkTextSecondary),
+              Icon(
+                on ? Icons.check_circle : Icons.circle_outlined,
+                size: 16,
+                color: on ? AppColors.accentGold : AppColors.darkTextSecondary,
+              ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
-                child: Text(label,
-                    style: TextStyle(
-                        fontFamily: 'NotoSerifTC',
-                        fontSize: 13,
-                        fontWeight: on ? FontWeight.w600 : FontWeight.w400,
-                        color: AppColors.darkTextPrimary)),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 13,
+                    fontWeight: on ? FontWeight.w600 : FontWeight.w400,
+                    color: AppColors.darkTextPrimary,
+                  ),
+                ),
               ),
               if (locked)
-                const Icon(Icons.lock,
-                    size: 12, color: AppColors.darkTextSecondary),
+                const Icon(
+                  Icons.lock,
+                  size: 12,
+                  color: AppColors.darkTextSecondary,
+                ),
             ],
           ),
         ),
@@ -1484,8 +1915,10 @@ class _SaveTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 8),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: 8,
+      ),
       decoration: BoxDecoration(
         color: AppColors.accentGold.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(8),
@@ -1495,13 +1928,219 @@ class _SaveTag extends StatelessWidget {
         children: [
           const Icon(Icons.check_circle, size: 14, color: AppColors.accentGold),
           const SizedBox(width: AppSpacing.sm),
-          Text('$label 豁免',
-              style: const TextStyle(
-                  fontFamily: 'NotoSerifTC',
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.accentGold)),
+          Text(
+            '$label 豁免',
+            style: const TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.accentGold,
+            ),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+/// 法術學派單字元代碼 → 中文名。
+const _schoolCn = {
+  'A': '防護',
+  'C': '咒法',
+  'D': '預言',
+  'E': '惑控',
+  'V': '塑能',
+  'I': '幻術',
+  'N': '死靈',
+  'T': '變化',
+};
+
+/// 建角法術選擇列：勾選框選取、點列展開完整描述。
+class _SpellPickRow extends StatefulWidget {
+  final CatalogSpell spell;
+  final bool selected;
+  final bool disabled;
+  final VoidCallback onToggle;
+
+  const _SpellPickRow({
+    required this.spell,
+    required this.selected,
+    required this.disabled,
+    required this.onToggle,
+  });
+
+  @override
+  State<_SpellPickRow> createState() => _SpellPickRowState();
+}
+
+class _SpellPickRowState extends State<_SpellPickRow> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = widget.spell;
+    final on = widget.selected;
+    final badges = <String>[
+      if (_schoolCn[s.school] != null) _schoolCn[s.school]!,
+      if (s.concentration) '專注',
+      if (s.ritual) '儀式',
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Opacity(
+        opacity: widget.disabled ? 0.45 : 1,
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.darkSurface1,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: on ? AppColors.accentGold : AppColors.darkBorder2,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  // 勾選（獨立觸控目標 ≥ 48dp）
+                  GestureDetector(
+                    key: ValueKey('pick-${s.name}'),
+                    onTap: widget.disabled ? null : widget.onToggle,
+                    behavior: HitTestBehavior.opaque,
+                    child: SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: Icon(
+                        on ? Icons.check_circle : Icons.circle_outlined,
+                        size: 18,
+                        color: on
+                            ? AppColors.accentGold
+                            : AppColors.darkTextSecondary,
+                      ),
+                    ),
+                  ),
+                  // 其餘區域：展開/收合描述
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setState(() => _expanded = !_expanded),
+                      behavior: HitTestBehavior.opaque,
+                      child: SizedBox(
+                        height: 48,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text.rich(
+                                TextSpan(
+                                  text: s.name,
+                                  style: TextStyle(
+                                    fontFamily: 'NotoSerifTC',
+                                    fontSize: 13,
+                                    fontWeight: on
+                                        ? FontWeight.w600
+                                        : FontWeight.w400,
+                                    color: AppColors.darkTextPrimary,
+                                  ),
+                                  children: [
+                                    if ((s.engName ?? '').isNotEmpty)
+                                      TextSpan(
+                                        text: '  ${s.engName}',
+                                        style: const TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.darkTextSecondary,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            for (final b in badges) ...[
+                              Container(
+                                margin: const EdgeInsets.only(left: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.accentGold.withValues(
+                                    alpha: 0.13,
+                                  ),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  b,
+                                  style: const TextStyle(
+                                    fontFamily: 'NotoSerifTC',
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.accentGold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.sm,
+                              ),
+                              child: Icon(
+                                _expanded
+                                    ? Icons.expand_less
+                                    : Icons.expand_more,
+                                size: 16,
+                                color: AppColors.darkTextSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (_expanded)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    48,
+                    0,
+                    AppSpacing.lg,
+                    AppSpacing.md,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        [
+                          if (ftFormatCastingTime(s.castingTime).isNotEmpty)
+                            '施法時間 ${ftFormatCastingTime(s.castingTime)}',
+                          if (ftFormatRange(s.range).isNotEmpty)
+                            '射程 ${ftFormatRange(s.range)}',
+                          '成分 ${[if (s.compV) 'V', if (s.compS) 'S', if (s.compM != null) 'M'].join('·')}',
+                        ].join(' · '),
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 10,
+                          color: AppColors.darkTextSecondary,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      FtEntriesView(
+                        s.entries,
+                        style: const TextStyle(
+                          fontFamily: 'NotoSerifTC',
+                          fontSize: 12,
+                          height: 1.6,
+                          color: AppColors.darkTextLight,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -1526,21 +2165,26 @@ class _PortraitPlaceholder extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.person, size: 60, color: Color(0xFF6B582F)),
-          Text('?',
-              style: TextStyle(
-                  fontFamily: 'Cinzel',
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.accentGold)),
+          Text(
+            '?',
+            style: TextStyle(
+              fontFamily: 'Cinzel',
+              fontSize: 28,
+              fontWeight: FontWeight.w700,
+              color: AppColors.accentGold,
+            ),
+          ),
           SizedBox(height: 4),
-          Text('尚未上傳角色圖',
-              style: TextStyle(
-                  fontFamily: 'NotoSerifTC',
-                  fontSize: 10,
-                  color: AppColors.darkTextSecondary)),
+          Text(
+            '尚未上傳角色圖',
+            style: TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 10,
+              color: AppColors.darkTextSecondary,
+            ),
+          ),
         ],
       ),
     );
   }
 }
-

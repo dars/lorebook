@@ -63,18 +63,17 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
     final weapons = character.weapons;
     final cantrips = character.cantrips;
     final actionSpells = character.spells
-        .where((s) => s.level > 0 && s.prepared && s.castingTime == '1 action')
+        .where((s) =>
+            s.level > 0 && s.prepared && s.castKind == SpellCastKind.action)
         .toList();
     final isCaster = cantrips.isNotEmpty || actionSpells.isNotEmpty;
     final rings = actionSpells.map((s) => s.level).toSet().toList()..sort();
 
     final bonusSpells = character.spells
-        .where((s) =>
-            s.castingTime.contains('bonus') || s.castingTime.contains('附贈'))
+        .where((s) => s.castKind == SpellCastKind.bonus)
         .toList();
     final reactionSpells = character.spells
-        .where((s) =>
-            s.castingTime.contains('reaction') || s.castingTime.contains('反應'))
+        .where((s) => s.castKind == SpellCastKind.reaction)
         .toList();
 
     return Column(
