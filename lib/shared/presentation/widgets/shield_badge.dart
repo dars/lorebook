@@ -21,14 +21,17 @@ class ShieldBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final accentColor =
-        highlighted ? AppColors.success : theme.colorScheme.outline;
+    final accentColor = highlighted
+        ? AppColors.success
+        : theme.colorScheme.outline;
 
     return SizedBox(
       width: size,
       child: CustomPaint(
         painter: _ShieldPainter(
-          fillColor: theme.cardTheme.color ?? theme.colorScheme.surfaceContainerHighest,
+          fillColor:
+              theme.cardTheme.color ??
+              theme.colorScheme.surfaceContainerHighest,
           strokeColor: accentColor,
           highlighted: highlighted,
         ),

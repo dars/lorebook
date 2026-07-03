@@ -122,8 +122,9 @@ class _EntryCardState extends State<EntryCard> {
   Widget _header(ThemeData theme) {
     final scheme = theme.colorScheme;
     final valueColor = widget.valueColor ?? AppColors.goldDim;
-    final badgeBorder =
-        widget.emphasizeBadge ? AppColors.goldDim : scheme.outline;
+    final badgeBorder = widget.emphasizeBadge
+        ? AppColors.goldDim
+        : scheme.outline;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,

@@ -83,16 +83,18 @@ class _AbilityHexPainter extends CustomPainter {
     }
     dataPath.close();
     canvas.drawPath(
-        dataPath,
-        Paint()
-          ..style = PaintingStyle.fill
-          ..color = AppColors.accentGold.withValues(alpha: 0.30));
+      dataPath,
+      Paint()
+        ..style = PaintingStyle.fill
+        ..color = AppColors.accentGold.withValues(alpha: 0.30),
+    );
     canvas.drawPath(
-        dataPath,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.5
-          ..color = AppColors.accentGold);
+      dataPath,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5
+        ..color = AppColors.accentGold,
+    );
 
     for (var i = 0; i < 6; i++) {
       final on = highlights.contains(i);

@@ -20,8 +20,9 @@ class StatRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final modColor =
-        isProficient ? AppColors.accentGold : AppColors.darkTextSecondary;
+    final modColor = isProficient
+        ? AppColors.accentGold
+        : AppColors.darkTextSecondary;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
@@ -41,7 +42,9 @@ class StatRow extends StatelessWidget {
               height: 6,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isProficient ? AppColors.accentGold : AppColors.darkBorder,
+                color: isProficient
+                    ? AppColors.accentGold
+                    : AppColors.darkBorder,
               ),
             ),
             const SizedBox(width: 10),
@@ -103,10 +106,10 @@ class CompactStatRow extends StatelessWidget {
     final modColor = selected
         ? AppColors.accentGold
         : (isProficient ? AppColors.accentGold : AppColors.darkTextSecondary);
-    final borderColor =
-        selected ? AppColors.accentGold : AppColors.darkBorder;
-    final fillColor =
-        selected ? const Color(0x22C9A84C) : AppColors.darkSurface1;
+    final borderColor = selected ? AppColors.accentGold : AppColors.darkBorder;
+    final fillColor = selected
+        ? const Color(0x22C9A84C)
+        : AppColors.darkSurface1;
 
     return GestureDetector(
       onTap: onTap,
@@ -119,41 +122,41 @@ class CompactStatRow extends StatelessWidget {
           border: Border.all(color: borderColor, width: selected ? 1.5 : 1),
         ),
         child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  labelCN,
-                  style: TextStyle(
-                    fontFamily: 'NotoSerifTC',
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.darkTextPrimary,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    labelCN,
+                    style: TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.darkTextPrimary,
+                    ),
                   ),
-                ),
-                Text(
-                  labelEN,
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 10,
-                    color: AppColors.darkTextSecondary,
+                  Text(
+                    labelEN,
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 10,
+                      color: AppColors.darkTextSecondary,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Text(
-            modifier,
-            style: TextStyle(
-              fontFamily: 'Cinzel',
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: modColor,
+            Text(
+              modifier,
+              style: TextStyle(
+                fontFamily: 'Cinzel',
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: modColor,
+              ),
             ),
-          ),
-        ],
+          ],
         ),
       ),
     );
