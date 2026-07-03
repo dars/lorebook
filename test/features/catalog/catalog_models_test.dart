@@ -197,6 +197,22 @@ void main() {
       expect(s.savingThrow, isEmpty);
     });
 
+    test('comp_m 為物件（有價材料）時取 text', () {
+      final s = CatalogSpell.fromJson({
+        'id': 'm1',
+        'name': '尋獲魔寵',
+        'eng_name': 'Find Familiar',
+        'source': 'PHB',
+        'level': 1,
+        'comp_m': {
+          'text': '價值10gp的木炭、薰香和藥草，法術施放時被火盆的火焰消耗',
+          'cost': 1000,
+          'consume': true,
+        },
+      });
+      expect(s.compM, startsWith('價值10gp'));
+    });
+
     test('戲法（level 0）與無材料成分', () {
       final s = CatalogSpell.fromJson({
         'id': 'c1',

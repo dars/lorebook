@@ -12,6 +12,17 @@ library;
 
 String _s(Object? v) => v as String? ?? '';
 String? _sn(Object? v) => v as String?;
+
+/// 材料成分：可為字串、物件（`{text, cost, consume}`，有價材料）或
+/// bool（罕見）。統一取顯示文字。
+String? _compM(Object? v) {
+  if (v == null) return null;
+  if (v is String) return v;
+  if (v is Map) return v['text'] as String? ?? '';
+  if (v is bool) return v ? '' : null;
+  return '$v';
+}
+
 int _i(Object? v) => v as int? ?? 0;
 int? _in(Object? v) => v as int?;
 bool _b(Object? v) => v as bool? ?? false;
@@ -336,7 +347,7 @@ class CatalogSpell {
     srd: _b(json['srd']),
     compV: _b(json['comp_v']),
     compS: _b(json['comp_s']),
-    compM: _sn(json['comp_m']),
+    compM: _compM(json['comp_m']),
     castingTime: _list(json['casting_time']),
     range: _map(json['range']),
     duration: _list(json['duration']),
