@@ -102,7 +102,14 @@ final remoteCharactersProvider = FutureProvider<List<Character>>((ref) {
 /// 未選定角色（selectedCharacterId == null，current 為 mock fallback）
 /// 時不推送，避免把展示用 mock 寫上雲端。
 final characterSyncControllerProvider = Provider<void>((ref) {
-  final repo = ref.watch(characterSyncRepositoryProvider);
+  // 離線模式（--dart-define 未帶、Supabase 未初始化）：Supabase.instance
+  // 會直接 throw，此時不啟用同步，App 以純本機模式運作。
+  final CharacterSyncRepository repo;
+  try {
+    repo = ref.watch(characterSyncRepositoryProvider);
+  } catch (_) {
+    return;
+  }
   Timer? timer;
   Character? pending;
 
