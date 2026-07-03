@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/decorations.dart';
+import '../../../shared/domain/app_exception.dart';
 import '../data/character_sync_repository.dart';
 import '../domain/character.dart';
 import '../domain/character_providers.dart';
@@ -59,6 +60,7 @@ class CharacterSelectPage extends ConsumerWidget {
                         return _CharacterCard(
                           character: c,
                           onTap: () => onCharacterSelected(c.id),
+                          onLongPress: () => _confirmDelete(context, ref, c),
                         );
                       },
                     ),
@@ -94,11 +96,90 @@ class CharacterSelectPage extends ConsumerWidget {
   }
 }
 
+/// 刪除角色：長按觸發（見 openspec character-delete design D1/D2）。
+/// 已登入以雲端軟刪除為準，成功才移除本地，避免下次同步時「復活」。
+Future<void> _confirmDelete(
+  BuildContext context,
+  WidgetRef ref,
+  Character character,
+) {
+  return showDialog<void>(
+    context: context,
+    builder: (dialogContext) {
+      var busy = false;
+      return StatefulBuilder(
+        builder: (dialogContext, setDialogState) => AlertDialog(
+          title: const Text('刪除角色？'),
+          content: Text('將刪除「${character.name}」。此操作無法復原。'),
+          actions: [
+            TextButton(
+              onPressed: busy ? null : () => Navigator.pop(dialogContext),
+              child: const Text('取消'),
+            ),
+            TextButton(
+              onPressed: busy
+                  ? null
+                  : () async {
+                      setDialogState(() => busy = true);
+                      // 離線模式（Supabase 未初始化）取不到 repository：
+                      // 視為無雲端可同步，僅做本地刪除。
+                      CharacterSyncRepository? repo;
+                      try {
+                        repo = ref.read(characterSyncRepositoryProvider);
+                      } catch (_) {
+                        repo = null;
+                      }
+                      if (repo != null) {
+                        try {
+                          await repo.softDelete(character.id);
+                        } on AppException {
+                          if (!dialogContext.mounted) return;
+                          setDialogState(() => busy = false);
+                          ScaffoldMessenger.of(dialogContext).showSnackBar(
+                            const SnackBar(content: Text('刪除失敗，請稍後再試')),
+                          );
+                          return;
+                        }
+                      }
+                      // 先清選取再移除：避免清單變動觸發 fallback 角色
+                      // 被同步控制器誤推上雲。
+                      if (ref.read(selectedCharacterIdProvider) ==
+                          character.id) {
+                        ref.read(selectedCharacterIdProvider.notifier).state =
+                            null;
+                      }
+                      ref
+                          .read(characterListProvider.notifier)
+                          .remove(character.id);
+                      if (dialogContext.mounted) {
+                        Navigator.pop(dialogContext);
+                      }
+                    },
+              child: busy
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('刪除', style: TextStyle(color: AppColors.danger)),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 class _CharacterCard extends StatelessWidget {
   final Character character;
   final VoidCallback onTap;
+  final VoidCallback onLongPress;
 
-  const _CharacterCard({required this.character, required this.onTap});
+  const _CharacterCard({
+    required this.character,
+    required this.onTap,
+    required this.onLongPress,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +187,7 @@ class _CharacterCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: ParchmentCard(
         padding: AppSpacing.cardPadding,
         child: Row(
