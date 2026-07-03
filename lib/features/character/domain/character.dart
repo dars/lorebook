@@ -220,6 +220,16 @@ abstract class Character with _$Character {
     required String id,
     required String name,
     @Default('') String nameEn,
+
+    /// 角色圖公開 URL（含快取失效版本參數；'' = 未設定，顯示字首）。
+    @Default('') String portraitUrl,
+
+    /// 立繪取景：使用者縮放（1–4，1 = cover 基準）。
+    @Default(1.0) double portraitScale,
+
+    /// 立繪取景：視窗中心對準圖片的正規化位置（0–1）。
+    @Default(0.5) double portraitCenterX,
+    @Default(0.5) double portraitCenterY,
     @Default('') String species,
     @Default('') String speciesEn,
     @Default('') String className,

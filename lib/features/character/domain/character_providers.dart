@@ -73,6 +73,30 @@ class CurrentCharacterNotifier extends Notifier<Character> {
     );
   }
 
+  /// 設定/清空角色圖 URL（上傳/移除後呼叫；經 debounce 同步推送）。
+  /// 換圖時取景一併重置為預設（新圖套舊取景無意義）。
+  void setPortraitUrl(String url) {
+    state = state.copyWith(
+      portraitUrl: url,
+      portraitScale: 1.0,
+      portraitCenterX: 0.5,
+      portraitCenterY: 0.5,
+    );
+  }
+
+  /// 儲存立繪取景（縮放 + 正規化中心點；經 debounce 同步推送）。
+  void setPortraitTransform({
+    required double scale,
+    required double centerX,
+    required double centerY,
+  }) {
+    state = state.copyWith(
+      portraitScale: scale,
+      portraitCenterX: centerX,
+      portraitCenterY: centerY,
+    );
+  }
+
   void startConcentration(String name) {
     state = state.copyWith(concentrationSpell: name);
   }

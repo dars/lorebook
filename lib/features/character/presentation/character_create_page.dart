@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +14,7 @@ import '../../catalog/presentation/fivetools_renderer.dart';
 import '../domain/character.dart';
 import '../domain/character_creation_data.dart';
 import '../domain/character_providers.dart';
+import '../data/portrait_service.dart';
 import '../domain/spell_from_catalog.dart';
 
 /// 能力值產生方式。
@@ -40,6 +43,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
   ];
 
   int _step = 0;
+
+  /// 建角暫存的角色圖（建立後上傳；null = 未選）。
+  Uint8List? _portraitBytes;
 
   String _name = '';
   String _alignment = kAlignments.first;
@@ -273,7 +279,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     });
   }
 
-  void _create() {
+  Future<void> _create() async {
     final cls = _classOpt!;
     final sp = _species!;
     final bg = _background!;
@@ -314,7 +320,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       CharacterFeature(name: bg.originFeat, source: '背景：${bg.cn}'),
     ];
 
-    final character = Character(
+    var character = Character(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       name: _name.trim(),
       species: sp.cn,
@@ -355,6 +361,24 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       features: features,
       hitDieFaces: cls.hitDie,
     );
+
+    // 角色圖：建立時上傳（失敗不阻擋建角，可於傳記頁補傳）。
+    final portrait = _portraitBytes;
+    if (portrait != null) {
+      try {
+        final url = await ref
+            .read(portraitServiceProvider)
+            .upload(character.id, portrait);
+        character = character.copyWith(portraitUrl: url);
+      } catch (_) {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('角色圖上傳失敗，可稍後於傳記頁重試')));
+        }
+      }
+    }
+    if (!mounted) return;
 
     ref.read(characterListProvider.notifier).add(character);
     ref.read(selectedCharacterIdProvider.notifier).state = character.id;
@@ -445,7 +469,23 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const _PortraitPlaceholder(),
+        GestureDetector(
+          onTap: () async {
+            final bytes = await PortraitService.pick();
+            if (bytes != null) setState(() => _portraitBytes = bytes);
+          },
+          child: _portraitBytes == null
+              ? const _PortraitPlaceholder()
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.memory(
+                    _portraitBytes!,
+                    height: 180,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+        ),
         const SizedBox(height: AppSpacing.lg),
         const _FieldLabel('名稱'),
         const SizedBox(height: AppSpacing.xs),
@@ -1578,7 +1618,14 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         colors: [Color(0xFF33291A), Color(0xFF0C0A06)],
       ),
     ),
-    child: const Icon(Icons.person, size: 26, color: Color(0xFF6B582F)),
+    child: _portraitBytes == null
+        ? const Icon(Icons.person, size: 26, color: Color(0xFF6B582F))
+        : Image.memory(
+            _portraitBytes!,
+            width: 56,
+            height: 56,
+            fit: BoxFit.cover,
+          ),
   );
 
   Widget _statGrid(List<(String, String)> items) {

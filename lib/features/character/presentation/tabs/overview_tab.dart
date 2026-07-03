@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/decorations.dart';
+import '../../data/portrait_service.dart';
 import '../../domain/character.dart';
+import '../../domain/character_providers.dart';
+import '../widgets/portrait_transform.dart';
 import '../widgets/info_field.dart';
 
 class OverviewTab extends StatelessWidget {
@@ -38,12 +42,202 @@ class OverviewTab extends StatelessWidget {
   }
 }
 
-class _Hero extends StatelessWidget {
+class _Hero extends ConsumerStatefulWidget {
   final Character character;
   const _Hero({required this.character});
 
   @override
+  ConsumerState<_Hero> createState() => _HeroState();
+}
+
+class _HeroState extends ConsumerState<_Hero> {
+  bool _busy = false;
+
+  /// 立繪原始尺寸（取景計算需要；null = 尚未解析）。
+  Size? _imageSize;
+  String _resolvedUrl = '';
+
+  /// 取景調整模式（進入後以 InteractiveViewer 互動，完成才儲存）。
+  bool _adjusting = false;
+  bool _viewerInitPending = false;
+  PortraitTransform? _lastTransform;
+  Size? _lastFrame;
+  final _viewerController = TransformationController();
+
+  @override
+  void dispose() {
+    _viewerController.dispose();
+    super.dispose();
+  }
+
+  /// 解析圖片原始尺寸（URL 變更時重解析）。
+  void _resolveImageSize(String url) {
+    if (url.isEmpty || url == _resolvedUrl) return;
+    _resolvedUrl = url;
+    final stream = NetworkImage(url).resolve(const ImageConfiguration());
+    late final ImageStreamListener listener;
+    listener = ImageStreamListener((info, _) {
+      final size = Size(
+        info.image.width.toDouble(),
+        info.image.height.toDouble(),
+      );
+      stream.removeListener(listener);
+      // 快取命中時回呼會在 build 期間同步觸發，setState 一律延後到
+      // frame 結束，避免「setState during build」。
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() => _imageSize = size);
+      });
+    }, onError: (_, _) => stream.removeListener(listener));
+    stream.addListener(listener);
+  }
+
+  Future<void> _upload() async {
+    final bytes = await PortraitService.pick();
+    if (bytes == null) return;
+    setState(() => _busy = true);
+    try {
+      final url = await ref
+          .read(portraitServiceProvider)
+          .upload(widget.character.id, bytes);
+      ref.read(currentCharacterProvider.notifier).setPortraitUrl(url);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('上傳失敗（離線或未登入時無法上傳）')));
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _remove() async {
+    setState(() => _busy = true);
+    try {
+      await ref.read(portraitServiceProvider).remove(widget.character.id);
+      ref.read(currentCharacterProvider.notifier).setPortraitUrl('');
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('移除失敗（離線或未登入時無法移除）')));
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  /// 儲存取景（自 viewer 矩陣反解正規化值）並離開調整模式。
+  void _saveTransform() {
+    final t = _lastTransform;
+    final frame = _lastFrame;
+    if (t == null || frame == null) {
+      setState(() => _adjusting = false);
+      return;
+    }
+    final (scale, cx, cy) = portraitNormalize(
+      matrix: _viewerController.value,
+      frame: frame,
+      childWidth: t.childWidth,
+      childHeight: t.childHeight,
+    );
+    ref
+        .read(currentCharacterProvider.notifier)
+        .setPortraitTransform(scale: scale, centerX: cx, centerY: cy);
+    setState(() => _adjusting = false);
+  }
+
+  Widget _pillButton(String label, {bool filled = false, VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        decoration: BoxDecoration(
+          color: filled ? AppColors.accentGold : const Color(0x99000000),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: filled ? AppColors.accentGold : AppColors.darkBorder,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'NotoSerifTC',
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: filled ? const Color(0xFF1A1206) : AppColors.darkTextLight,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 已有圖：bottom sheet 提供更換/移除；無圖：直接選圖上傳。
+  void _onEdit() {
+    if (widget.character.portraitUrl.isEmpty) {
+      _upload();
+      return;
+    }
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.darkSurface1,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: const Text(
+                '更換角色圖',
+                style: TextStyle(fontFamily: 'NotoSerifTC'),
+              ),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                _upload();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.open_with),
+              title: const Text(
+                '調整圖片位置',
+                style: TextStyle(fontFamily: 'NotoSerifTC'),
+              ),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                setState(() {
+                  _adjusting = true;
+                  _viewerInitPending = true;
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.delete_outline,
+                color: AppColors.danger,
+              ),
+              title: const Text(
+                '移除角色圖',
+                style: TextStyle(
+                  fontFamily: 'NotoSerifTC',
+                  color: AppColors.danger,
+                ),
+              ),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                _remove();
+              },
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final character = widget.character;
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppSpacing.radiusCharacterHeader),
       child: Container(
@@ -59,71 +253,189 @@ class _Hero extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // 立繪佔位浮水印
-            Center(
-              child: Icon(
-                Icons.auto_awesome,
-                size: 120,
-                color: AppColors.accentGold.withValues(alpha: 0.06),
+            // 角色圖（立繪位）：套用持久化取景；無圖時為佔位浮水印。
+            if (character.portraitUrl.isNotEmpty)
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  _resolveImageSize(character.portraitUrl);
+                  final img = _imageSize;
+                  final frame = Size(
+                    constraints.maxWidth,
+                    constraints.maxHeight,
+                  );
+                  if (img == null) {
+                    // 尺寸未解析前先以 cover 顯示，避免閃空。
+                    return Image.network(
+                      character.portraitUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                    );
+                  }
+                  final t = portraitTransformFor(
+                    frame: frame,
+                    image: img,
+                    userScale: character.portraitScale,
+                    centerX: character.portraitCenterX,
+                    centerY: character.portraitCenterY,
+                  );
+                  final child = SizedBox(
+                    width: t.childWidth,
+                    height: t.childHeight,
+                    child: Image.network(
+                      character.portraitUrl,
+                      fit: BoxFit.fill,
+                      errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                    ),
+                  );
+                  if (_adjusting) {
+                    _lastTransform = t;
+                    _lastFrame = frame;
+                    if (_viewerInitPending) {
+                      _viewerInitPending = false;
+                      _viewerController.value = t.matrix;
+                    }
+                    return InteractiveViewer(
+                      transformationController: _viewerController,
+                      constrained: false,
+                      minScale: kPortraitMinScale,
+                      maxScale: kPortraitMaxScale,
+                      child: child,
+                    );
+                  }
+                  return ClipRect(
+                    child: OverflowBox(
+                      alignment: Alignment.topLeft,
+                      minWidth: 0,
+                      minHeight: 0,
+                      maxWidth: double.infinity,
+                      maxHeight: double.infinity,
+                      child: Transform(transform: t.matrix, child: child),
+                    ),
+                  );
+                },
+              )
+            else
+              Center(
+                child: Icon(
+                  Icons.auto_awesome,
+                  size: 120,
+                  color: AppColors.accentGold.withValues(alpha: 0.06),
+                ),
               ),
-            ),
-            // 底部漸層加深，確保文字可讀
-            const DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.center,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0x00000000), Color(0xCC000000)],
+            // 底部漸層加深，確保文字可讀（純顯示層，放行手勢給底下的
+            // InteractiveViewer）。
+            const IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.center,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0x00000000), Color(0xCC000000)],
+                  ),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.xl),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${character.className} ${character.classNameEn.toUpperCase()} · ${character.subclass}',
-                    style: const TextStyle(
-                      fontFamily: 'NotoSerifTC',
-                      fontSize: 13,
-                      letterSpacing: 2,
-                      color: AppColors.accentGold,
+            IgnorePointer(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.xl),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${character.className} ${character.classNameEn.toUpperCase()} · ${character.subclass}',
+                      style: const TextStyle(
+                        fontFamily: 'NotoSerifTC',
+                        fontSize: 13,
+                        letterSpacing: 2,
+                        color: AppColors.accentGold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    character.name,
-                    style: const TextStyle(
-                      fontFamily: 'NotoSerifTC',
-                      fontSize: 44,
-                      fontWeight: FontWeight.w700,
-                      height: 1.05,
-                      color: Colors.white,
+                    const SizedBox(height: 6),
+                    Text(
+                      character.name,
+                      style: const TextStyle(
+                        fontFamily: 'NotoSerifTC',
+                        fontSize: 44,
+                        fontWeight: FontWeight.w700,
+                        height: 1.05,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  Text(
-                    character.nameEn.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: 'Cinzel',
-                      fontSize: 16,
-                      letterSpacing: 8,
-                      color: Colors.white.withValues(alpha: 0.7),
+                    Text(
+                      character.nameEn.toUpperCase(),
+                      style: TextStyle(
+                        fontFamily: 'Cinzel',
+                        fontSize: 16,
+                        letterSpacing: 8,
+                        color: Colors.white.withValues(alpha: 0.7),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    '${character.background} · ${character.alignment} · ${character.deity}信徒',
-                    style: TextStyle(
-                      fontFamily: 'NotoSerifTC',
-                      fontSize: 14,
-                      color: Colors.white.withValues(alpha: 0.85),
+                    const SizedBox(height: 10),
+                    Text(
+                      '${character.background} · ${character.alignment} · ${character.deity}信徒',
+                      style: TextStyle(
+                        fontFamily: 'NotoSerifTC',
+                        fontSize: 14,
+                        color: Colors.white.withValues(alpha: 0.85),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
+            // 調整模式：取消 / 完成
+            if (_adjusting)
+              Positioned(
+                top: AppSpacing.md,
+                right: AppSpacing.md,
+                child: Row(
+                  children: [
+                    _pillButton(
+                      '取消',
+                      onTap: () {
+                        setState(() => _adjusting = false);
+                      },
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    _pillButton('完成', filled: true, onTap: _saveTransform),
+                  ],
+                ),
+              ),
+            // 編輯鈕（右上角）：上傳 / 更換 / 移除角色圖
+            if (!_adjusting)
+              Positioned(
+                top: AppSpacing.md,
+                right: AppSpacing.md,
+                child: _busy
+                    ? Container(
+                        width: 36,
+                        height: 36,
+                        padding: const EdgeInsets.all(9),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0x99000000),
+                        ),
+                        child: const CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : GestureDetector(
+                        onTap: _onEdit,
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(0x99000000),
+                            border: Border.all(color: AppColors.darkBorder),
+                          ),
+                          child: const Icon(
+                            Icons.photo_camera_outlined,
+                            size: 18,
+                            color: AppColors.darkTextLight,
+                          ),
+                        ),
+                      ),
+              ),
           ],
         ),
       ),

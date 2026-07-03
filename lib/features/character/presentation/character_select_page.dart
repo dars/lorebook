@@ -6,6 +6,7 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/decorations.dart';
 import '../../../shared/domain/app_exception.dart';
+import '../../../shared/presentation/widgets/character_avatar.dart';
 import '../data/character_sync_repository.dart';
 import '../domain/character.dart';
 import '../domain/character_providers.dart';
@@ -192,17 +193,15 @@ class _CharacterCard extends StatelessWidget {
         padding: AppSpacing.cardPadding,
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 28,
-              backgroundColor: AppColors.primary.withValues(alpha: 0.15),
-              child: Text(
-                character.name.characters.first,
-                style: const TextStyle(
-                  fontFamily: 'Cinzel',
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
-                ),
+            CharacterAvatar(
+              character: character,
+              size: 56,
+              background: AppColors.primary.withValues(alpha: 0.15),
+              initialStyle: const TextStyle(
+                fontFamily: 'Cinzel',
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(width: AppSpacing.lg),

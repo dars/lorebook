@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/theme/app_colors.dart';
+import 'widgets/character_avatar.dart';
 import '../../app/theme/app_spacing.dart';
 import '../../features/character/domain/character_providers.dart';
 
@@ -13,9 +14,7 @@ class CharacterHeader extends ConsumerWidget {
     final character = ref.watch(currentCharacterProvider);
 
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.darkSurface0,
-      ),
+      decoration: BoxDecoration(color: AppColors.darkSurface0),
       child: SafeArea(
         bottom: false,
         child: Column(
@@ -40,27 +39,16 @@ class CharacterHeader extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-                  Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.accentGold,
-                        width: 1.5,
-                      ),
-                      color: AppColors.darkSurface1,
-                    ),
-                    child: Center(
-                      child: Text(
-                        character.name.characters.first,
-                        style: TextStyle(
-                          fontFamily: 'Cinzel',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.darkTextPrimary,
-                        ),
-                      ),
+                  CharacterAvatar(
+                    character: character,
+                    size: 36,
+                    borderColor: AppColors.accentGold,
+                    borderWidth: 1.5,
+                    initialStyle: TextStyle(
+                      fontFamily: 'Cinzel',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.darkTextPrimary,
                     ),
                   ),
                   const SizedBox(width: 10),
