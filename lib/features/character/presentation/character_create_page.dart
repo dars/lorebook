@@ -296,7 +296,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     ];
 
     final perceptionMod = mods['WIS']! + (profSkills.contains('感知') ? pb : 0);
-    final maxHp = (cls.hitDie + mods['CON']!).clamp(1, 999);
+    final maxHp = level1MaxHp(cls, sp, mods);
 
     final caster = cls.spellAbility.isNotEmpty;
     final spellMod = caster ? mods[cls.spellAbility]! : 0;
@@ -320,7 +320,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       alignment: _alignment,
       creatureType: 'Humanoid',
       size: sp.size,
-      ac: 10 + mods['DEX']!,
+      ac: level1UnarmoredAc(cls, mods),
       maxHp: maxHp,
       currentHp: maxHp,
       speed: sp.speed,
@@ -1245,11 +1245,11 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     final profSkills = {..._classSkills, ...bg.skills};
     final perceptionMod = mods['WIS']! + (profSkills.contains('感知') ? pb : 0);
     final spellMod = caster ? mods[cls.spellAbility]! : 0;
-    final hp = (cls.hitDie + mods['CON']!).clamp(1, 999);
+    final hp = level1MaxHp(cls, sp, mods);
 
     final combat = <(String, String)>[
       ('HP', '$hp'),
-      ('AC', '${10 + mods['DEX']!}'),
+      ('AC', '${level1UnarmoredAc(cls, mods)}'),
       ('先攻', _sign(mods['DEX']!)),
       ('被動察覺', '${10 + perceptionMod}'),
       ('熟練', '+$pb'),

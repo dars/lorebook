@@ -77,6 +77,9 @@ class SpeciesOption {
   final String speed; // 如 '30ft'
   final String size; // 'Medium' / 'Small'
   final bool darkvision;
+
+  /// 每等級額外 HP（矮人堅韌 Dwarven Toughness = 1；其餘 0）。
+  final int hpPerLevel;
   final List<String> traits;
   final String description; // 佔位文案
   const SpeciesOption({
@@ -85,6 +88,7 @@ class SpeciesOption {
     this.speed = '30ft',
     this.size = 'Medium',
     this.darkvision = false,
+    this.hpPerLevel = 0,
     this.traits = const [],
     this.description = '',
   });
@@ -108,7 +112,8 @@ const kSpecies = <SpeciesOption>[
     cn: '矮人',
     en: 'Dwarf',
     darkvision: true,
-    traits: ['矮人韌性', '石之低語', '黑暗視覺 120'],
+    hpPerLevel: 1,
+    traits: ['矮人韌性', '矮人堅韌 +1HP/級', '石之低語', '黑暗視覺 120'],
     description: '〔敘述佔位〕堅毅耐勞的山地與地底民族，擅長工藝與抵抗毒素。（文案待補）',
   ),
   SpeciesOption(
@@ -168,6 +173,10 @@ class ClassOption {
 
   /// 1 級一環法術位數（2024；邪術師為契約法術位）。
   final int level1Slots;
+
+  /// 無甲防禦（Unarmored Defense）附加屬性代碼：
+  /// 野蠻人 'CON'、武僧 'WIS'；'' = 無（AC = 10 + 敏捷）。
+  final String unarmoredDefense;
   final String description; // 佔位文案
   const ClassOption({
     required this.cn,
@@ -181,11 +190,24 @@ class ClassOption {
     this.cantripsKnown = 0,
     this.preparedSpells = 0,
     this.level1Slots = 0,
+    this.unarmoredDefense = '',
     this.description = '',
   });
 
   bool get isCaster => spellAbility.isNotEmpty;
 }
+
+/// 1 級無甲 AC（2024）：10 + 敏捷 + 無甲防禦附加屬性（野蠻人體質、
+/// 武僧感知；其餘職業無附加）。[mods] 為能力代碼 → 調整值。
+int level1UnarmoredAc(ClassOption cls, Map<String, int> mods) =>
+    10 +
+    mods['DEX']! +
+    (cls.unarmoredDefense.isEmpty ? 0 : mods[cls.unarmoredDefense]!);
+
+/// 1 級最大 HP（2024）：生命骰最大值 + 體質調整值 + 種族每級加成
+/// （矮人堅韌），最低 1。
+int level1MaxHp(ClassOption cls, SpeciesOption sp, Map<String, int> mods) =>
+    (cls.hitDie + mods['CON']! + sp.hpPerLevel).clamp(1, 999);
 
 const _allSkillNames = [
   '體能',
@@ -213,6 +235,7 @@ const kClasses = <ClassOption>[
     cn: '野蠻人',
     en: 'Barbarian',
     hitDie: 12,
+    unarmoredDefense: 'CON',
     saves: ['STR', 'CON'],
     primaryAbilities: ['STR'],
     skillCount: 2,
@@ -275,6 +298,7 @@ const kClasses = <ClassOption>[
     cn: '武僧',
     en: 'Monk',
     hitDie: 8,
+    unarmoredDefense: 'WIS',
     saves: ['STR', 'DEX'],
     primaryAbilities: ['DEX', 'WIS'],
     skillCount: 2,
@@ -316,19 +340,7 @@ const kClasses = <ClassOption>[
     saves: ['DEX', 'INT'],
     primaryAbilities: ['DEX'],
     skillCount: 4,
-    skillChoices: [
-      '特技',
-      '體能',
-      '欺瞞',
-      '洞察',
-      '威嚇',
-      '調查',
-      '感知',
-      '表演',
-      '說服',
-      '巧手',
-      '隱匿',
-    ],
+    skillChoices: ['特技', '體能', '欺瞞', '洞察', '威嚇', '調查', '感知', '說服', '巧手', '隱匿'],
     description: '〔敘述佔位〕擅長潛行、技巧與偷襲的多面手。（文案待補）',
   ),
   ClassOption(
