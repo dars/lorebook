@@ -39,8 +39,9 @@ EntryCard weaponEntryCard(Weapon weapon, {required DndColors dnd}) {
     meta: '命中 $bonus',
     value: weapon.damage.isNotEmpty ? weapon.damage : null,
     valueColor: dnd.damage(weapon.damageType),
-    description:
-        weapon.properties.isNotEmpty ? weapon.properties.join(' · ') : null,
+    description: weapon.properties.isNotEmpty
+        ? weapon.properties.join(' · ')
+        : null,
     emphasizeBadge: true,
   );
 }

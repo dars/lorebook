@@ -52,11 +52,7 @@ class _Hero extends StatelessWidget {
           gradient: const LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF2E2418),
-              Color(0xFF1E160C),
-              Color(0xFF14110C),
-            ],
+            colors: [Color(0xFF2E2418), Color(0xFF1E160C), Color(0xFF14110C)],
           ),
           border: Border.all(color: AppColors.darkBorder, width: 1),
         ),
@@ -148,10 +144,7 @@ class _InfoGrid extends StatelessWidget {
           value: character.species,
           valueEn: character.speciesEn,
         ),
-        InfoField(
-          label: 'TYPE · 生物類型',
-          value: character.creatureType,
-        ),
+        InfoField(label: 'TYPE · 生物類型', value: character.creatureType),
       ],
       [
         InfoField(label: 'SIZE · 體型', value: character.size),
@@ -175,8 +168,9 @@ class _InfoGrid extends StatelessWidget {
       ],
     ];
 
-    final divider =
-        Theme.of(context).colorScheme.outline.withValues(alpha: 0.4);
+    final divider = Theme.of(
+      context,
+    ).colorScheme.outline.withValues(alpha: 0.4);
 
     return ParchmentCard(
       padding: const EdgeInsets.symmetric(
@@ -222,8 +216,12 @@ class _StatCards extends StatelessWidget {
         '熟練',
         Icons.verified_outlined,
       ),
-      _StatData('PERC', '${character.passivePerception}', '察覺',
-          Icons.visibility_outlined),
+      _StatData(
+        'PERC',
+        '${character.passivePerception}',
+        '察覺',
+        Icons.visibility_outlined,
+      ),
       _StatData('DC', '${character.spellDc}', '法術 DC', Icons.auto_awesome),
     ];
 

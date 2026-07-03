@@ -38,7 +38,11 @@ class AbilitiesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
-          AppSpacing.lg, 0, AppSpacing.lg, context.bottomNavClearance),
+        AppSpacing.lg,
+        0,
+        AppSpacing.lg,
+        context.bottomNavClearance,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -119,16 +123,18 @@ class _SavingThrows extends StatelessWidget {
 
     final rows = <Widget>[];
     for (var i = 0; i < entries.length; i += 2) {
-      rows.add(Padding(
-        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-        child: Row(
-          children: [
-            Expanded(child: _SaveCell(data: entries[i])),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(child: _SaveCell(data: entries[i + 1])),
-          ],
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+          child: Row(
+            children: [
+              Expanded(child: _SaveCell(data: entries[i])),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(child: _SaveCell(data: entries[i + 1])),
+            ],
+          ),
         ),
-      ));
+      );
     }
     return Column(children: rows);
   }
@@ -200,8 +206,9 @@ class _SkillsByAbility extends StatelessWidget {
     // 依能力分組，保留 _abilityOrder 的順序。
     final groups = <String, List<Skill>>{};
     for (final (code, _) in _abilityOrder) {
-      final list =
-          character.skills.where((s) => s.abilityType == code).toList();
+      final list = character.skills
+          .where((s) => s.abilityType == code)
+          .toList();
       if (list.isNotEmpty) groups[code] = list;
     }
 
@@ -284,9 +291,7 @@ class _SkillGroup extends StatelessWidget {
         const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Column(
-            children: [
-              for (final skill in skills) _SkillRow(skill: skill),
-            ],
+            children: [for (final skill in skills) _SkillRow(skill: skill)],
           ),
         ),
       ],
@@ -301,8 +306,9 @@ class _SkillRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final modText =
-        skill.modifier >= 0 ? '+${skill.modifier}' : '${skill.modifier}';
+    final modText = skill.modifier >= 0
+        ? '+${skill.modifier}'
+        : '${skill.modifier}';
     final accent = skill.proficient
         ? AppColors.accentGold
         : theme.colorScheme.onSurface.withValues(alpha: 0.3);

@@ -15,7 +15,11 @@ class BiographyTab extends StatelessWidget {
     final p = character.personality;
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
-          AppSpacing.lg, 0, AppSpacing.lg, context.bottomNavClearance),
+        AppSpacing.lg,
+        0,
+        AppSpacing.lg,
+        context.bottomNavClearance,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -104,8 +108,9 @@ class _About extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'NotoSerifTC',
                         fontSize: 13,
-                        color: theme.colorScheme.onSurface
-                            .withValues(alpha: 0.8),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.8,
+                        ),
                       ),
                     ),
                   ),
@@ -188,26 +193,29 @@ class _Features extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text.rich(
-                        TextSpan(children: [
-                          TextSpan(
-                            text: features[i].name,
-                            style: TextStyle(
-                              fontFamily: 'NotoSerifTC',
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.onSurface,
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: features[i].name,
+                              style: TextStyle(
+                                fontFamily: 'NotoSerifTC',
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: theme.colorScheme.onSurface,
+                              ),
                             ),
-                          ),
-                          TextSpan(
-                            text: '  ${features[i].nameEn}',
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 11,
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.45),
+                            TextSpan(
+                              text: '  ${features[i].nameEn}',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 11,
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.45,
+                                ),
+                              ),
                             ),
-                          ),
-                        ]),
+                          ],
+                        ),
                       ),
                       if (features[i].description.isNotEmpty) ...[
                         const SizedBox(height: 3),
@@ -217,8 +225,9 @@ class _Features extends StatelessWidget {
                             fontFamily: 'NotoSerifTC',
                             fontSize: 12,
                             height: 1.5,
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                         ),
                       ],

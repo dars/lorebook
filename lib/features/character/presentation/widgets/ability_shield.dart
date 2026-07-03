@@ -25,8 +25,9 @@ class AbilityShield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final accent =
-        highlighted ? AppColors.accentGold : theme.colorScheme.outline;
+    final accent = highlighted
+        ? AppColors.accentGold
+        : theme.colorScheme.outline;
     final fill = highlighted
         ? AppColors.accentGold.withValues(alpha: 0.08)
         : (theme.cardTheme.color ?? theme.colorScheme.surfaceContainerHighest);

@@ -18,7 +18,11 @@ class InventoryTab extends StatelessWidget {
 
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
-          AppSpacing.lg, 0, AppSpacing.lg, context.bottomNavClearance),
+        AppSpacing.lg,
+        0,
+        AppSpacing.lg,
+        context.bottomNavClearance,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,8 +45,7 @@ class InventoryTab extends StatelessWidget {
                     ),
                   const SizedBox(height: AppSpacing.md),
                 ],
-                const _SubLabel(
-                    icon: Icons.backpack_outlined, text: '裝備 GEAR'),
+                const _SubLabel(icon: Icons.backpack_outlined, text: '裝備 GEAR'),
                 const SizedBox(height: AppSpacing.sm),
                 ...character.equipment.map((e) => _EquipmentRow(item: e)),
               ],
@@ -73,7 +76,9 @@ class _Treasury extends StatelessWidget {
       child: Row(
         children: [
           for (final (label, amount, color) in coins)
-            Expanded(child: _Coin(label: label, amount: amount, color: color)),
+            Expanded(
+              child: _Coin(label: label, amount: amount, color: color),
+            ),
         ],
       ),
     );
@@ -174,26 +179,29 @@ class _EquipmentRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text.rich(
-                    TextSpan(children: [
-                      TextSpan(
-                        text: item.name,
-                        style: TextStyle(
-                          fontFamily: 'NotoSerifTC',
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.onSurface,
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: item.name,
+                          style: TextStyle(
+                            fontFamily: 'NotoSerifTC',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurface,
+                          ),
                         ),
-                      ),
-                      TextSpan(
-                        text: '  ${item.nameEn}',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 11,
-                          color:
-                              theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                        TextSpan(
+                          text: '  ${item.nameEn}',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 11,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.45,
+                            ),
+                          ),
                         ),
-                      ),
-                    ]),
+                      ],
+                    ),
                   ),
                   if (item.description.isNotEmpty) ...[
                     const SizedBox(height: 2),
@@ -202,8 +210,9 @@ class _EquipmentRow extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'NotoSerifTC',
                         fontSize: 11,
-                        color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
                       ),
                     ),
                   ],

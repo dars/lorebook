@@ -18,7 +18,11 @@ class SpellsTab extends StatelessWidget {
 
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
-          AppSpacing.lg, 0, AppSpacing.lg, context.bottomNavClearance),
+        AppSpacing.lg,
+        0,
+        AppSpacing.lg,
+        context.bottomNavClearance,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -54,11 +58,11 @@ class _SpellcastingCard extends StatelessWidget {
   const _SpellcastingCard({required this.character});
 
   String _abilityCn(String code) => switch (code) {
-        'INT' => '智力',
-        'WIS' => '感知',
-        'CHA' => '魅力',
-        _ => code,
-      };
+    'INT' => '智力',
+    'WIS' => '感知',
+    'CHA' => '魅力',
+    _ => code,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -223,7 +227,12 @@ class _Spellbook extends StatelessWidget {
           for (final spell in spells.where((s) => s.level == level))
             Padding(
               padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-              child: spellEntryCard(spell, badge: '$level', dnd: dnd, emphasize: true),
+              child: spellEntryCard(
+                spell,
+                badge: '$level',
+                dnd: dnd,
+                emphasize: true,
+              ),
             ),
         ],
       ],
@@ -239,8 +248,10 @@ class _LevelLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding:
-          const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: 3,
+      ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSpacing.xs),
         border: Border.all(color: theme.colorScheme.outline),
