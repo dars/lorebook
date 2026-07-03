@@ -238,10 +238,21 @@ class _HeroState extends ConsumerState<_Hero> {
   @override
   Widget build(BuildContext context) {
     final character = widget.character;
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: kPortraitMaxWidth),
+        child: AspectRatio(
+          aspectRatio: kPortraitAspectRatio,
+          child: _heroCard(character),
+        ),
+      ),
+    );
+  }
+
+  Widget _heroCard(Character character) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppSpacing.radiusCharacterHeader),
       child: Container(
-        height: 320,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             begin: Alignment.topCenter,

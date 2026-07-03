@@ -36,6 +36,13 @@ class PortraitTransform {
 const kPortraitMinScale = 1.0;
 const kPortraitMaxScale = 4.0;
 
+/// 立繪框比例（寬:高 = 4:5，直式）。總覽 hero 與建角選圖區塊共用，
+/// 比例一致才能讓取景「所調即所得」跨頁面/裝置一致。
+const kPortraitAspectRatio = 4 / 5;
+
+/// 立繪框在寬版面的寬度上限（medium/expanded 不讓 4:5 高度爆掉）。
+const kPortraitMaxWidth = 420.0;
+
 /// 由持久化的 (userScale, centerX, centerY) 計算顯示變換。
 PortraitTransform portraitTransformFor({
   required Size frame,

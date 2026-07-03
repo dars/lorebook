@@ -15,6 +15,7 @@ import '../domain/character.dart';
 import '../domain/character_creation_data.dart';
 import '../domain/character_providers.dart';
 import '../data/portrait_service.dart';
+import 'widgets/portrait_transform.dart';
 import '../domain/spell_from_catalog.dart';
 
 /// 能力值產生方式。
@@ -469,22 +470,26 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        GestureDetector(
-          onTap: () async {
-            final bytes = await PortraitService.pick();
-            if (bytes != null) setState(() => _portraitBytes = bytes);
-          },
-          child: _portraitBytes == null
-              ? const _PortraitPlaceholder()
-              : ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.memory(
-                    _portraitBytes!,
-                    height: 180,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+        // 與總覽 hero 同比例（4:5），預覽即最終立繪框的裁切。
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 240),
+            child: AspectRatio(
+              aspectRatio: kPortraitAspectRatio,
+              child: GestureDetector(
+                onTap: () async {
+                  final bytes = await PortraitService.pick();
+                  if (bytes != null) setState(() => _portraitBytes = bytes);
+                },
+                child: _portraitBytes == null
+                    ? const _PortraitPlaceholder()
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.memory(_portraitBytes!, fit: BoxFit.cover),
+                      ),
+              ),
+            ),
+          ),
         ),
         const SizedBox(height: AppSpacing.lg),
         const _FieldLabel('名稱'),
@@ -2386,7 +2391,6 @@ class _PortraitPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 180,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.darkBorder2),
