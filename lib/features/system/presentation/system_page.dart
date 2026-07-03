@@ -87,9 +87,7 @@ class SystemPage extends ConsumerWidget {
                   ],
                   selected: {currentMode},
                   onSelectionChanged: (modes) {
-                    ref
-                        .read(themeModeProvider.notifier)
-                        .setMode(modes.first);
+                    ref.read(themeModeProvider.notifier).setMode(modes.first);
                   },
                 ),
               ],
@@ -105,10 +103,7 @@ class SystemPage extends ConsumerWidget {
               children: [
                 Text('帳號', style: theme.textTheme.titleSmall),
                 const SizedBox(height: AppSpacing.md),
-                Text(
-                  _currentEmail,
-                  style: theme.textTheme.bodyMedium,
-                ),
+                Text(_currentEmail, style: theme.textTheme.bodyMedium),
                 const SizedBox(height: AppSpacing.lg),
                 SizedBox(
                   width: double.infinity,
@@ -140,10 +135,7 @@ class SystemPage extends ConsumerWidget {
               children: [
                 Text('關於', style: theme.textTheme.titleSmall),
                 const SizedBox(height: AppSpacing.md),
-                Text(
-                  'Lorebook v0.1.0',
-                  style: theme.textTheme.bodyMedium,
-                ),
+                Text('Lorebook v0.1.0', style: theme.textTheme.bodyMedium),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   'D&D 5.5e (2024) 角色卡管理工具',

@@ -13,9 +13,10 @@ class JournalPage extends ConsumerWidget {
 
   void _openEditor(BuildContext context, {JournalEntry? entry}) {
     // 用 root navigator 全螢幕推進（覆蓋角色頁首與底欄）。
-    Navigator.of(context, rootNavigator: true).push(
-      MaterialPageRoute(builder: (_) => JournalEditorPage(entry: entry)),
-    );
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).push(MaterialPageRoute(builder: (_) => JournalEditorPage(entry: entry)));
   }
 
   @override
@@ -129,16 +130,20 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.menu_book_outlined,
-                size: 48, color: AppColors.accentGold),
+            Icon(
+              Icons.menu_book_outlined,
+              size: 48,
+              color: AppColors.accentGold,
+            ),
             const SizedBox(height: AppSpacing.md),
             Text('尚未建立任何日誌', style: theme.textTheme.titleSmall),
             const SizedBox(height: AppSpacing.xs),
             Text(
               '點右下角「+」開始記錄你的冒險',
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: AppColors.textSecondary),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
           ],
         ),

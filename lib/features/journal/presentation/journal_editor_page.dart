@@ -19,8 +19,9 @@ class JournalEditorPage extends ConsumerStatefulWidget {
 }
 
 class _JournalEditorPageState extends ConsumerState<JournalEditorPage> {
-  late final TextEditingController _content =
-      TextEditingController(text: _initialText());
+  late final TextEditingController _content = TextEditingController(
+    text: _initialText(),
+  );
 
   String _initialText() {
     final e = widget.entry;

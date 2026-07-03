@@ -4,8 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const _key = 'theme_mode';
 
-final themeModeProvider =
-    StateNotifierProvider<ThemeModeNotifier, ThemeMode>((ref) {
+final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((
+  ref,
+) {
   return ThemeModeNotifier();
 });
 

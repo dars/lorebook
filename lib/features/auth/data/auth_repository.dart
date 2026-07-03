@@ -24,10 +24,7 @@ class AuthRepository {
 
   Future<AuthResponse> signUpWithEmail(String email, String password) async {
     try {
-      return await _client.auth.signUp(
-        email: email,
-        password: password,
-      );
+      return await _client.auth.signUp(email: email, password: password);
     } on AuthApiException catch (e) {
       throw AuthException(e.message);
     } catch (e) {
