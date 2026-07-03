@@ -47,8 +47,12 @@ _專案初始化後在此補充架構說明。_
 
 ### 版型適配原則
 
-- 手機與平板使用同一份 codebase，透過 `LayoutBuilder` 或螢幕寬度判斷 breakpoint 切換版型
-- 平板版型 breakpoint：寬度 ≥ 600dp
+- 手機與平板使用同一份 codebase，以 `shared/presentation/responsive_layout.dart` 的 `ResponsiveLayout` 依**可用寬度**（非裝置種類）切換版型
+- 三段式寬度級距（對齊 Material 3 window size class）：
+  - **compact**（< 600dp，手機）：單欄 + 底部 Tab Bar
+  - **medium**（600–840dp，iPad 直向）：排列沿用手機單欄、內容置中限寬；導覽為 NavigationRail
+  - **expanded**（≥ 840dp，iPad 橫向）：可用多欄排列（如 Decision 頁三欄）
+- 拆分原則：優先同檔內以參數/私有 layout widget 切換排列，資料與狀態保持一份；只有互動流程本身不同時才分頁面檔案
 
 ### 資料夾結構慣例（待確認後調整）
 

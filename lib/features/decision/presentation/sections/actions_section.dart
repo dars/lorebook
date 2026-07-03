@@ -33,7 +33,17 @@ const _otherActions = <_OtherAction>[
 /// （與狀態/移動同階）。「動作」section 內再分 攻擊 / 施法 / 其他（可收合），
 /// 施法內再分 戲法 / 各環。
 class ActionsSection extends ConsumerStatefulWidget {
-  const ActionsSection({super.key});
+  /// 平板多欄排列用的部分渲染旗標（預設全開 = 單欄行為）。
+  final bool showAction;
+  final bool showBonus;
+  final bool showReaction;
+
+  const ActionsSection({
+    super.key,
+    this.showAction = true,
+    this.showBonus = true,
+    this.showReaction = true,
+  });
 
   @override
   ConsumerState<ActionsSection> createState() => _ActionsSectionState();
@@ -82,148 +92,151 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // ── 動作 ──
-        CollapsibleSection(
-          title: 'ACTION 動作',
-          summary: ['攻擊', if (isCaster) '施法', '其他'].join('・'),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _category(
-                key: 'cat.attack',
-                label: '攻擊',
-                count: '${weapons.length} 項',
-                children: [
-                  for (final w in weapons)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: weaponEntryCard(w, dnd: dnd),
-                    ),
-                ],
-              ),
-              if (isCaster)
+        if (widget.showAction)
+          CollapsibleSection(
+            title: 'ACTION 動作',
+            summary: ['攻擊', if (isCaster) '施法', '其他'].join('・'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 _category(
-                  key: 'cat.cast',
-                  label: '施法',
-                  count: _castCount(cantrips, actionSpells, rings),
+                  key: 'cat.attack',
+                  label: '攻擊',
+                  count: '${weapons.length} 項',
                   children: [
-                    if (cantrips.isNotEmpty)
-                      _ringGroup(
-                        key: 'ring.cantrip',
-                        label: '戲法',
-                        count: '${cantrips.length}',
-                        children: [
-                          for (final s in cantrips)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 6),
-                              child: spellEntryCard(s, badge: '戲', dnd: dnd),
-                            ),
-                        ],
-                      ),
-                    for (final ring in rings)
-                      _ringGroup(
-                        key: 'ring.$ring',
-                        label: '$ring環',
-                        count:
-                            '${actionSpells.where((s) => s.level == ring).length}',
-                        children: [
-                          for (final s in actionSpells.where(
-                            (x) => x.level == ring,
-                          ))
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 6),
-                              child: spellEntryCard(
-                                s,
-                                badge: '$ring',
-                                dnd: dnd,
-                                emphasize: true,
-                              ),
-                            ),
-                        ],
+                    for (final w in weapons)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: weaponEntryCard(w, dnd: dnd),
                       ),
                   ],
                 ),
-              _category(
-                key: 'cat.other',
-                label: '其他',
-                count: '${_otherActions.length} 項',
-                children: [
-                  for (final o in _otherActions)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: EntryCard(
-                        badge: '動',
-                        title: o.cn,
-                        subtitle: o.en,
-                        value: o.effect,
-                        valueColor: AppColors.darkTextLight,
-                        description: o.desc,
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ),
-        ),
-
-        // ── 附贈動作 ──
-        CollapsibleSection(
-          title: 'BONUS ACTION 附贈動作',
-          summary: bonusSpells.isEmpty
-              ? '無可用'
-              : bonusSpells.map((s) => s.name).join('・'),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: bonusSpells.isEmpty
-                ? [
-                    const EntryCard(
-                      badge: '贈',
-                      title: '無附贈動作',
-                      subtitle: 'No Bonus Actions',
-                    ),
-                  ]
-                : [
-                    for (final s in bonusSpells)
+                if (isCaster)
+                  _category(
+                    key: 'cat.cast',
+                    label: '施法',
+                    count: _castCount(cantrips, actionSpells, rings),
+                    children: [
+                      if (cantrips.isNotEmpty)
+                        _ringGroup(
+                          key: 'ring.cantrip',
+                          label: '戲法',
+                          count: '${cantrips.length}',
+                          children: [
+                            for (final s in cantrips)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 6),
+                                child: spellEntryCard(s, badge: '戲', dnd: dnd),
+                              ),
+                          ],
+                        ),
+                      for (final ring in rings)
+                        _ringGroup(
+                          key: 'ring.$ring',
+                          label: '$ring環',
+                          count:
+                              '${actionSpells.where((s) => s.level == ring).length}',
+                          children: [
+                            for (final s in actionSpells.where(
+                              (x) => x.level == ring,
+                            ))
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 6),
+                                child: spellEntryCard(
+                                  s,
+                                  badge: '$ring',
+                                  dnd: dnd,
+                                  emphasize: true,
+                                ),
+                              ),
+                          ],
+                        ),
+                    ],
+                  ),
+                _category(
+                  key: 'cat.other',
+                  label: '其他',
+                  count: '${_otherActions.length} 項',
+                  children: [
+                    for (final o in _otherActions)
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: spellEntryCard(
-                          s,
-                          badge: '贈',
-                          dnd: dnd,
-                          emphasize: true,
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: EntryCard(
+                          badge: '動',
+                          title: o.cn,
+                          subtitle: o.en,
+                          value: o.effect,
+                          valueColor: AppColors.darkTextLight,
+                          description: o.desc,
                         ),
                       ),
                   ],
+                ),
+              ],
+            ),
           ),
-        ),
+
+        // ── 附贈動作 ──
+        if (widget.showBonus)
+          CollapsibleSection(
+            title: 'BONUS ACTION 附贈動作',
+            summary: bonusSpells.isEmpty
+                ? '無可用'
+                : bonusSpells.map((s) => s.name).join('・'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: bonusSpells.isEmpty
+                  ? [
+                      const EntryCard(
+                        badge: '贈',
+                        title: '無附贈動作',
+                        subtitle: 'No Bonus Actions',
+                      ),
+                    ]
+                  : [
+                      for (final s in bonusSpells)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: spellEntryCard(
+                            s,
+                            badge: '贈',
+                            dnd: dnd,
+                            emphasize: true,
+                          ),
+                        ),
+                    ],
+            ),
+          ),
 
         // ── 反應 ──
-        CollapsibleSection(
-          title: 'REACTION 反應',
-          summary: [...reactionSpells.map((s) => s.name), '機會攻擊'].join('・'),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (final s in reactionSpells)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: spellEntryCard(
-                    s,
-                    badge: '盾',
-                    dnd: dnd,
-                    emphasize: true,
+        if (widget.showReaction)
+          CollapsibleSection(
+            title: 'REACTION 反應',
+            summary: [...reactionSpells.map((s) => s.name), '機會攻擊'].join('・'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final s in reactionSpells)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: spellEntryCard(
+                      s,
+                      badge: '盾',
+                      dnd: dnd,
+                      emphasize: true,
+                    ),
                   ),
+                EntryCard(
+                  badge: '攻',
+                  title: '機會攻擊',
+                  subtitle: 'Opportunity Attack',
+                  value: '1 次攻擊',
+                  valueColor: AppColors.darkTextLight,
+                  description: '當敵人離開你的觸及範圍時，你可用反應對其進行一次近戰攻擊。',
                 ),
-              EntryCard(
-                badge: '攻',
-                title: '機會攻擊',
-                subtitle: 'Opportunity Attack',
-                value: '1 次攻擊',
-                valueColor: AppColors.darkTextLight,
-                description: '當敵人離開你的觸及範圍時，你可用反應對其進行一次近戰攻擊。',
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
       ],
     );
   }
