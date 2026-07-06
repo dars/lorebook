@@ -7,12 +7,14 @@ import 'package:go_router/go_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/decorations.dart';
+import '../../../shared/presentation/responsive_layout.dart';
 import '../../../shared/presentation/widgets/ability_hex_chart.dart';
 import '../../catalog/data/catalog_repository.dart';
 import '../../catalog/domain/catalog_models.dart';
 import '../../catalog/presentation/fivetools_renderer.dart';
 import '../domain/character.dart';
 import '../domain/character_creation_data.dart';
+import '../domain/character_math.dart';
 import '../domain/character_providers.dart';
 import '../data/portrait_service.dart';
 import 'widgets/portrait_transform.dart';
@@ -68,7 +70,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
 
   final Set<String> _classSkills = {};
 
-  /// 種族技能特性的已選技能（人類任選 1、精靈鷹眼三選一）。
+  /// 種族技能特性的已選技能（人類任選 1、精靈敏銳感官三選一）。
   final Set<String> _speciesSkills = {};
 
   /// 所選體型（多體型種族如人類；null = 種族預設）。
@@ -341,8 +343,8 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       initiative: mods['DEX']!,
       proficiencyBonus: pb,
       passivePerception: 10 + perceptionMod,
-      spellDc: caster ? 8 + pb + spellMod : 0,
-      spellAttack: caster ? pb + spellMod : 0,
+      spellDc: caster ? spellSaveDcFor(pb, spellMod) : 0,
+      spellAttack: caster ? spellAttackFor(pb, spellMod) : 0,
       spellcastingAbility: cls.spellAbility,
       abilityScores: AbilityScores(
         str: ab('STR'),
@@ -614,6 +616,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           selected: _background?.cn,
           onSelect: (cn) => setState(() {
             _background = kBackgrounds.firstWhere((b) => b.cn == cn);
+            // 背景固定技能與既有選擇衝突時，清掉重複的（不可重複熟練）。
+            _classSkills.removeWhere(_background!.skills.contains);
+            _speciesSkills.removeWhere(_background!.skills.contains);
             _resetAbilities();
           }),
         ),
@@ -1213,20 +1218,27 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     final cls = _classOpt!;
     final bg = _background!;
     final sp = _species!;
-    // 職業/背景已取得的熟練（種族區重複選擇時加註記）。
-    final owned = {..._classSkills, ...bg.skills};
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _SectionHeader('技能熟練'),
-        const SizedBox(height: AppSpacing.sm),
-        _SubLabel('職業（選 ${cls.skillCount}）'),
-        const SizedBox(height: AppSpacing.sm),
-        for (final name in cls.skillChoices)
-          _SkillRow(
-            label: '$name ${skillByName(name).nameEn}',
+    final bgOwned = bg.skills.toSet();
+
+    // 已由其他來源取得的技能不得重複選（2024：重複熟練須改選其他）。
+    final classPicker = <Widget>[
+      _SubLabel('職業（選 ${cls.skillCount}）'),
+      const SizedBox(height: AppSpacing.sm),
+      for (final name in cls.skillChoices)
+        () {
+          final fromBg = bgOwned.contains(name);
+          final fromSpecies = _speciesSkills.contains(name);
+          return _SkillRow(
+            label:
+                '$name ${skillByName(name).nameEn}'
+                '${fromBg
+                    ? '（背景已有）'
+                    : fromSpecies
+                    ? '（種族已選）'
+                    : ''}',
             selected: _classSkills.contains(name),
             locked: false,
+            disabled: fromBg || fromSpecies,
             onTap: () => setState(() {
               if (_classSkills.contains(name)) {
                 _classSkills.remove(name);
@@ -1234,18 +1246,27 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                 _classSkills.add(name);
               }
             }),
-          ),
-        if (sp.skillPickCount > 0) ...[
-          const SizedBox(height: AppSpacing.md),
-          _SubLabel('種族 ${sp.cn}（選 ${sp.skillPickCount}）'),
-          const SizedBox(height: AppSpacing.sm),
-          for (final name in sp.skillPickFrom)
-            _SkillRow(
+          );
+        }(),
+      if (sp.skillPickCount > 0) ...[
+        const SizedBox(height: AppSpacing.md),
+        _SubLabel('種族 ${sp.cn}（選 ${sp.skillPickCount}）'),
+        const SizedBox(height: AppSpacing.sm),
+        for (final name in sp.skillPickFrom)
+          () {
+            final fromBg = bgOwned.contains(name);
+            final fromClass = _classSkills.contains(name);
+            return _SkillRow(
               label:
                   '$name ${skillByName(name).nameEn}'
-                  '${owned.contains(name) ? '（已具熟練）' : ''}',
+                  '${fromBg
+                      ? '（背景已有）'
+                      : fromClass
+                      ? '（職業已選）'
+                      : ''}',
               selected: _speciesSkills.contains(name),
               locked: false,
+              disabled: fromBg || fromClass,
               onTap: () => setState(() {
                 if (_speciesSkills.contains(name)) {
                   _speciesSkills.remove(name);
@@ -1253,31 +1274,78 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                   _speciesSkills.add(name);
                 }
               }),
-            ),
-        ],
-        const SizedBox(height: AppSpacing.md),
-        _SubLabel('背景 ${bg.cn}（自動）'),
-        const SizedBox(height: AppSpacing.sm),
-        for (final name in bg.skills)
-          _SkillRow(
-            label: '$name ${skillByName(name).nameEn}',
-            selected: true,
-            locked: true,
-            onTap: null,
-          ),
-        const SizedBox(height: AppSpacing.lg),
-        _SectionHeader('豁免熟練'),
-        const SizedBox(height: AppSpacing.sm),
-        _SubLabel('職業（自動）'),
-        const SizedBox(height: AppSpacing.sm),
-        Row(
-          children: [
-            for (final s in cls.saves) ...[
-              Expanded(child: _SaveTag(label: kAbilityCn[s]!)),
-              if (s != cls.saves.last) const SizedBox(width: AppSpacing.sm),
-            ],
-          ],
+            );
+          }(),
+      ],
+    ];
+    final bgBlock = <Widget>[
+      _SubLabel('背景 ${bg.cn}（自動）'),
+      const SizedBox(height: AppSpacing.sm),
+      for (final name in bg.skills)
+        _SkillRow(
+          label: '$name ${skillByName(name).nameEn}',
+          selected: true,
+          locked: true,
+          onTap: null,
         ),
+    ];
+    final savesBlock = <Widget>[
+      _SectionHeader('豁免熟練'),
+      const SizedBox(height: AppSpacing.sm),
+      _SubLabel('職業（自動）'),
+      const SizedBox(height: AppSpacing.sm),
+      Row(
+        children: [
+          for (final s in cls.saves) ...[
+            Expanded(child: _SaveTag(label: kAbilityCn[s]!)),
+            if (s != cls.saves.last) const SizedBox(width: AppSpacing.sm),
+          ],
+        ],
+      ),
+    ];
+
+    // 平板（≥600dp）：左欄為技能選擇，右欄上下為背景與豁免，縮短頁面長度。
+    if (ResponsiveLayout.isTablet(context)) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _SectionHeader('技能熟練'),
+                const SizedBox(height: AppSpacing.sm),
+                ...classPicker,
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.lg),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _SectionHeader('背景熟練'),
+                const SizedBox(height: AppSpacing.sm),
+                ...bgBlock,
+                const SizedBox(height: AppSpacing.lg),
+                ...savesBlock,
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SectionHeader('技能熟練'),
+        const SizedBox(height: AppSpacing.sm),
+        ...classPicker,
+        const SizedBox(height: AppSpacing.md),
+        ...bgBlock,
+        const SizedBox(height: AppSpacing.lg),
+        ...savesBlock,
       ],
     );
   }
@@ -1485,8 +1553,8 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       ('先攻', _sign(mods['DEX']!)),
       ('被動察覺', '${10 + perceptionMod}'),
       ('熟練', '+$pb'),
-      if (caster) ('施法DC', '${8 + pb + spellMod}'),
-      if (caster) ('施法命中', _sign(pb + spellMod)),
+      if (caster) ('施法DC', '${spellSaveDcFor(pb, spellMod)}'),
+      if (caster) ('施法命中', _sign(spellAttackFor(pb, spellMod))),
     ];
 
     final saves = [
@@ -2089,20 +2157,26 @@ class _SkillRow extends StatelessWidget {
   final String label;
   final bool selected;
   final bool locked;
+
+  /// 已由其他來源取得而不可選（半透明、不可點）。
+  final bool disabled;
   final VoidCallback? onTap;
   const _SkillRow({
     required this.label,
     required this.selected,
     required this.locked,
     required this.onTap,
+    this.disabled = false,
   });
   @override
   Widget build(BuildContext context) {
     final on = selected || locked;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: GestureDetector(
-        onTap: onTap,
+      child: Opacity(
+        opacity: disabled ? 0.45 : 1,
+        child: GestureDetector(
+          onTap: disabled ? null : onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
@@ -2142,6 +2216,7 @@ class _SkillRow extends StatelessWidget {
                 ),
             ],
           ),
+        ),
         ),
       ),
     );
