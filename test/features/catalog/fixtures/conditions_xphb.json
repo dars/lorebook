@@ -1,0 +1,713 @@
+[
+ {
+  "data": {
+   "ENG_name": "Blinded",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有目盲狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "你看不見，且自動失敗任何需要視覺的能力檢定。"
+       ],
+       "name": "無法視物",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "對你的{@action Attack|XPHB|攻擊}檢定具有{@variantrule Advantage|XPHB|優勢}，而你的攻擊檢定具有{@variantrule Disadvantage|XPHB|劣勢}。"
+       ],
+       "name": "攻擊受影響",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "目盲",
+   "page": 361,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Blinded",
+  "id": "01e0dcb0-fee8-4b78-bd63-121a6a7e5f32",
+  "kind": "condition",
+  "name": "目盲",
+  "page": 361,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Charmed",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有魅惑狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "你不能攻擊魅惑你的物件，也不能以造成傷害的能力或{@variantrule Magical Effect|XPHB|魔法效應}以其為目標。"
+       ],
+       "name": "無法傷害魅惑者",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "魅惑你的物件對與你進行社互動動的任何能力檢定具有{@variantrule Advantage|XPHB|優勢}。"
+       ],
+       "name": "社交優勢",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "魅惑",
+   "page": 361,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Charmed",
+  "id": "c72cd7bb-b749-441d-91d8-ce57bbdf4548",
+  "kind": "condition",
+  "name": "魅惑",
+  "page": 361,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Deafened",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有耳聾狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "你聽不見，且自動失敗任何需要聽覺的能力檢定。"
+       ],
+       "name": "無法聽聞",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "耳聾",
+   "page": 365,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Deafened",
+  "id": "02375fe2-eb86-4e0f-96ce-f8caff2de9b2",
+  "kind": "condition",
+  "name": "耳聾",
+  "page": 365,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Exhaustion",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有力竭狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "此狀態可累計。每次受到力竭時，你獲得 1 級力竭等級。當力竭等級達到 6 級時，你死亡。"
+       ],
+       "name": "力竭等級",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "當你進行 d20 檢定時，擲骰結果須減去你力竭等級 2 倍的數值。"
+       ],
+       "name": "d20 檢定受影響",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你的{@variantrule Speed|XPHB|速度}減少等同於你力竭等級 5 倍的呎數。"
+       ],
+       "name": "速度降低",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "完成一次{@variantrule Long Rest|XPHB|長休}可移除你 1 級力竭等級。當你的力竭等級降至 0 時，此狀態結束。"
+       ],
+       "name": "移除力竭等級",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "力竭",
+   "page": 365,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Exhaustion",
+  "id": "dacf5b4b-5e66-4d2c-a339-9e41d4944acc",
+  "kind": "condition",
+  "name": "力竭",
+  "page": 365,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Frightened",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有恐懼狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "當恐懼來源位於你視線內時，你的能力檢定與攻擊檢定具有{@variantrule Disadvantage|XPHB|劣勢}。"
+       ],
+       "name": "能力檢定與攻擊受影響",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你不能自願移動靠近恐懼來源。"
+       ],
+       "name": "無法接近",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "恐懼",
+   "page": 367,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Frightened",
+  "id": "804c2cce-0e55-4cc9-a263-248974acfad9",
+  "kind": "condition",
+  "name": "恐懼",
+  "page": 367,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Grappled",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有被擒抱狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "你的{@variantrule Speed|XPHB|速度}為 0 且無法增加。"
+       ],
+       "name": "速度歸 0",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你對擒抱者以外任何目標的攻擊檢定具有{@variantrule Disadvantage|XPHB|劣勢}。"
+       ],
+       "name": "攻擊受影響",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "擒抱者移動時可以拖曳或攜帶你，但除非你是微型體型、或比它小兩個以上體型級距，否則它每移動 1 呎須額外花費 1 呎移動力。"
+       ],
+       "name": "可被拖行",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "被擒抱",
+   "page": 367,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Grappled",
+  "id": "1603b830-a17b-429e-b50d-6e6e20ec98ef",
+  "kind": "condition",
+  "name": "被擒抱",
+  "page": 367,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Incapacitated",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有失能狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "你不能採取任何{@variantrule Action|XPHB|動作}、{@variantrule Bonus Action|XPHB|附贈動作}或{@variantrule Reaction|XPHB|反應}。"
+       ],
+       "name": "無法行動",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你的{@status Concentration|XPHB|專注}被打斷。"
+       ],
+       "name": "專注中斷",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你不能說話。"
+       ],
+       "name": "無法言語",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "若你在擲{@variantrule Initiative|XPHB|先攻}時處於失能狀態，該擲骰具有{@variantrule Disadvantage|XPHB|劣勢}。"
+       ],
+       "name": "措手不及",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "失能",
+   "page": 369,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Incapacitated",
+  "id": "b7e91c19-5769-406d-8a90-80b099fa2dc6",
+  "kind": "condition",
+  "name": "失能",
+  "page": 369,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Invisible",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有隱形狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "若你在擲{@variantrule Initiative|XPHB|先攻}時處於隱形狀態，該擲骰具有{@variantrule Advantage|XPHB|優勢}。"
+       ],
+       "name": "奇襲",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "任何需要看見目標的效應皆對你無效，除非該效應的創造者能以某種方式看見你。你穿戴與攜帶的任何裝備也一併隱蔽。"
+       ],
+       "name": "隱蔽",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "對你的{@action Attack|XPHB|攻擊}檢定具有{@variantrule Disadvantage|XPHB|劣勢}，而你的攻擊檢定具有{@variantrule Advantage|XPHB|優勢}。若某個生物能以某種方式看見你，你對該生物不獲得此利益。"
+       ],
+       "name": "攻擊受影響",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "隱形",
+   "page": 370,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Invisible",
+  "id": "89c99d0e-5978-4792-ac4d-f94a7efa88ad",
+  "kind": "condition",
+  "name": "隱形",
+  "page": 370,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Paralyzed",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有麻痺狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "你具有{@condition Incapacitated|XPHB|失能}狀態。"
+       ],
+       "name": "失能",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你的{@variantrule Speed|XPHB|速度}為 0 且無法增加。"
+       ],
+       "name": "速度歸 0",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你自動失敗力量與敏捷{@variantrule Saving Throw|XPHB|豁免檢定}。"
+       ],
+       "name": "豁免檢定受影響",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "對你的{@action Attack|XPHB|攻擊}檢定具有{@variantrule Advantage|XPHB|優勢}。"
+       ],
+       "name": "攻擊受影響",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "若攻擊者位於你 5 呎內，任何命中你的攻擊檢定皆為{@variantrule Critical Hit|XPHB|重擊}。"
+       ],
+       "name": "自動重擊",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "麻痺",
+   "page": 371,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Paralyzed",
+  "id": "798cf694-a924-431e-b6e4-20fee0007bcf",
+  "kind": "condition",
+  "name": "麻痺",
+  "page": 371,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Petrified",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有石化狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "你連同身上穿戴與攜帶的非魔法物品一起，變形為某種堅固的無生命物質（通常是石頭）。你的重量增加為原本的十倍，且停止老化。"
+       ],
+       "name": "化為無生命物質",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你具有{@condition Incapacitated|XPHB|失能}狀態。"
+       ],
+       "name": "失能",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你的{@variantrule Speed|XPHB|速度}為 0 且無法增加。"
+       ],
+       "name": "速度歸 0",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "對你的{@action Attack|XPHB|攻擊}檢定具有{@variantrule Advantage|XPHB|優勢}。"
+       ],
+       "name": "攻擊受影響",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你自動失敗力量與敏捷{@variantrule Saving Throw|XPHB|豁免檢定}。"
+       ],
+       "name": "豁免檢定受影響",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你對所有傷害具有{@variantrule Resistance|XPHB|抗性}。"
+       ],
+       "name": "傷害抗性",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你對{@condition Poisoned|XPHB|中毒}狀態具有{@variantrule Immunity|XPHB|免疫}。"
+       ],
+       "name": "毒素免疫",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "石化",
+   "page": 372,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Petrified",
+  "id": "348173eb-40e3-49de-a018-c9023268d644",
+  "kind": "condition",
+  "name": "石化",
+  "page": 372,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Poisoned",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有中毒狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "你的攻擊檢定與能力檢定具有{@variantrule Disadvantage|XPHB|劣勢}。"
+       ],
+       "name": "能力檢定與攻擊受影響",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "中毒",
+   "page": 372,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Poisoned",
+  "id": "f5d1d631-cbfe-43aa-8e48-41cab0130bd3",
+  "kind": "condition",
+  "name": "中毒",
+  "page": 372,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Prone",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有倒地狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "你僅能以{@variantrule Crawling|XPHB|爬行}方式移動，或花費等同你{@variantrule Speed|XPHB|速度}一半（向下取整）的移動力起身，藉此結束此狀態。若你的{@variantrule Speed|XPHB|速度}為 0，你無法起身。"
+       ],
+       "name": "移動受限",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你的攻擊檢定具有{@variantrule Disadvantage|XPHB|劣勢}。若攻擊者位於你 5 呎內，其對你的攻擊檢定具有{@variantrule Advantage|XPHB|優勢}；否則該攻擊檢定具有{@variantrule Disadvantage|XPHB|劣勢}。"
+       ],
+       "name": "攻擊受影響",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "倒地",
+   "page": 372,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Prone",
+  "id": "a1bead5b-76ea-4d61-876f-2664a6fd7a51",
+  "kind": "condition",
+  "name": "倒地",
+  "page": 372,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Restrained",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有束縛狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "你的{@variantrule Speed|XPHB|速度}為 0 且無法增加。"
+       ],
+       "name": "速度歸 0",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "對你的{@action Attack|XPHB|攻擊}檢定具有{@variantrule Advantage|XPHB|優勢}，而你的攻擊檢定具有{@variantrule Disadvantage|XPHB|劣勢}。"
+       ],
+       "name": "攻擊受影響",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你的敏捷{@variantrule Saving Throw|XPHB|豁免檢定}具有{@variantrule Disadvantage|XPHB|劣勢}。"
+       ],
+       "name": "豁免檢定受影響",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "束縛",
+   "page": 373,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Restrained",
+  "id": "adda9f62-6c70-4671-962b-0e8fa0149a09",
+  "kind": "condition",
+  "name": "束縛",
+  "page": 373,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Stunned",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有震懾狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "你具有{@condition Incapacitated|XPHB|失能}狀態。"
+       ],
+       "name": "失能",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你自動失敗力量與敏捷{@variantrule Saving Throw|XPHB|豁免檢定}。"
+       ],
+       "name": "豁免檢定受影響",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "對你的{@action Attack|XPHB|攻擊}檢定具有{@variantrule Advantage|XPHB|優勢}。"
+       ],
+       "name": "攻擊受影響",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "震懾",
+   "page": 376,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Stunned",
+  "id": "d3541e33-2c7a-4f39-9fbb-067eac1ed54f",
+  "kind": "condition",
+  "name": "震懾",
+  "page": 376,
+  "source": "XPHB",
+  "srd": false
+ },
+ {
+  "data": {
+   "ENG_name": "Unconscious",
+   "basicRules2024": true,
+   "entries": [
+    "當你具有昏迷狀態時，你受到以下效應影響。",
+    {
+     "entries": [
+      {
+       "entries": [
+        "你具有{@condition Incapacitated|XPHB|失能}與{@condition Prone|XPHB|倒地}狀態，且掉落所有手中持握的東西。此狀態結束時，你仍維持{@condition Prone|XPHB|倒地}狀態。"
+       ],
+       "name": "不省人事",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你的{@variantrule Speed|XPHB|速度}為 0 且無法增加。"
+       ],
+       "name": "速度歸 0",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "對你的{@action Attack|XPHB|攻擊}檢定具有{@variantrule Advantage|XPHB|優勢}。"
+       ],
+       "name": "攻擊受影響",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你自動失敗力量與敏捷{@variantrule Saving Throw|XPHB|豁免檢定}。"
+       ],
+       "name": "豁免檢定受影響",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "若攻擊者位於你 5 呎內，任何命中你的攻擊檢定皆為{@variantrule Critical Hit|XPHB|重擊}。"
+       ],
+       "name": "自動重擊",
+       "type": "entries"
+      },
+      {
+       "entries": [
+        "你無法感知周遭環境。"
+       ],
+       "name": "無法感知",
+       "type": "entries"
+      }
+     ],
+     "type": "entries"
+    }
+   ],
+   "name": "昏迷",
+   "page": 376,
+   "source": "XPHB",
+   "srd52": true
+  },
+  "eng_name": "Unconscious",
+  "id": "ae6d691c-0410-440e-ba4f-97b4368c7561",
+  "kind": "condition",
+  "name": "昏迷",
+  "page": 376,
+  "source": "XPHB",
+  "srd": false
+ }
+]

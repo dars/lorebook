@@ -26,7 +26,7 @@ void main() {
   group('level1MaxHp', () {
     test('一般種族 = 骰面 + 體質', () {
       expect(level1MaxHp(_cls('法師'), _sp('人類'), mods), 6 + 3);
-      expect(level1MaxHp(_cls('野蠻人'), _sp('半獸人'), mods), 12 + 3);
+      expect(level1MaxHp(_cls('野蠻人'), _sp('獸人'), mods), 12 + 3);
     });
 
     test('矮人堅韌每級 +1', () {
@@ -47,7 +47,7 @@ void main() {
       expect(human.effectiveSizeChoices, ['Medium', 'Small']);
     });
 
-    test('精靈：鷹眼自洞察/感知/求生擇一', () {
+    test('精靈：敏銳感官自洞察/感知/求生擇一', () {
       final elf = _sp('精靈');
       expect(elf.skillPickCount, 1);
       expect(elf.skillPickFrom, ['洞察', '感知', '求生']);
@@ -64,5 +64,20 @@ void main() {
     final rogue = _cls('盜賊');
     expect(rogue.skillChoices, hasLength(10));
     expect(rogue.skillChoices, isNot(contains('表演')));
+  });
+
+  group('XPHB 全清單（2024）', () {
+    test('種族 10 個、職業 12 個、背景 16 個', () {
+      expect(kSpecies, hasLength(10));
+      expect(kClasses, hasLength(12));
+      expect(kBackgrounds, hasLength(16));
+    });
+
+    test('新增背景抽查：農夫（力/體/感、馴獸+自然、堅韌）', () {
+      final farmer = kBackgrounds.firstWhere((b) => b.cn == '農夫');
+      expect(farmer.abilities, ['STR', 'CON', 'WIS']);
+      expect(farmer.skills, ['馴獸', '自然']);
+      expect(farmer.originFeat, '堅韌');
+    });
   });
 }

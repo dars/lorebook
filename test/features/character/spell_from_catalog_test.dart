@@ -98,7 +98,7 @@ void main() {
         'id': '7fde298d-f501-4a0d-9d71-459f55692d4b',
         'name': '畢格比之掌',
         'eng_name': "Bigby's Hand",
-        'source': 'PHB',
+        'source': 'XPHB',
         'page': 218,
         'level': 5,
         'school': 'V',

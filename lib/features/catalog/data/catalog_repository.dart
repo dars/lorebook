@@ -5,10 +5,11 @@ import '../../../shared/data/supabase_client.dart';
 import '../../../shared/domain/app_exception.dart';
 import '../domain/catalog_models.dart';
 
-/// 目前開放的書源代碼（PHB = 2014 年版玩家手冊）。
+/// 目前開放的書源代碼（XPHB = 2024 修訂版玩家手冊）。
 ///
-/// 資料庫尚未收錄 2024 版（XPHB）；引入後改此常數或於建構時注入。
-const kCatalogSource = 'PHB';
+/// 規則核心統一為 2024 5r；回滾至 2014 版改回 'PHB' 即可
+/// （內容庫保留 PHB 資料列），測試可於建構時注入替換。
+const kCatalogSource = 'XPHB';
 
 /// 5etools 內容資料庫的唯讀目錄（designs/SUPABASE.md）。
 ///

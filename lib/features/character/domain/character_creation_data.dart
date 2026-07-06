@@ -4,6 +4,8 @@
 /// `重點提示` 由機制欄位於 UI 端生成，不存於此。
 library;
 
+export 'character_math.dart' show abilityModifier;
+
 /// 六大能力代碼順序（六角圖、陣列指派皆依此）。
 const kAbilityOrder = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
 
@@ -35,9 +37,6 @@ const kAlignments = [
   '中立邪惡',
   '混亂邪惡',
 ];
-
-/// 能力調整值（向下取整，負值亦正確）。
-int abilityModifier(int score) => ((score - 10) / 2).floor();
 
 /// 技能定義（中英 + 對應能力）。
 class SkillDef {
@@ -117,7 +116,7 @@ const kSpecies = <SpeciesOption>[
     skillPickCount: 1,
     skillPickFrom: _allSkillNames,
     sizeChoices: ['Medium', 'Small'],
-    traits: ['多才', '技能熟練 選1', '起源專長'],
+    traits: ['足智多謀 長休得英雄激勵', '多才多藝 技能選1', '天賦異稟 起源專長'],
     description: '〔敘述佔位〕適應力極強、分布最廣的種族，靠才智與韌性立足於各地。（文案待補）',
   ),
   SpeciesOption(
@@ -126,7 +125,7 @@ const kSpecies = <SpeciesOption>[
     darkvision: true,
     skillPickCount: 1,
     skillPickFrom: ['洞察', '感知', '求生'],
-    traits: ['仙靈血脈', '鷹眼 擇一熟練', '漫遊冥思'],
+    traits: ['精靈血系 卓爾/高等/木精靈', '妖精血統', '敏銳感官 擇一熟練', '出神'],
     description: '〔敘述佔位〕優雅長壽、與魔法和自然親近的種族，感官敏銳。（文案待補）',
   ),
   SpeciesOption(
@@ -134,35 +133,36 @@ const kSpecies = <SpeciesOption>[
     en: 'Dwarf',
     darkvision: true,
     hpPerLevel: 1,
-    traits: ['矮人韌性', '矮人堅韌 +1HP/級', '石之低語', '黑暗視覺 120'],
+    traits: ['矮人韌性 毒抗', '矮人堅毅 +1HP/級', '石工直覺 震顫感知', '黑暗視覺 120'],
     description: '〔敘述佔位〕堅毅耐勞的山地與地底民族，擅長工藝與抵抗毒素。（文案待補）',
   ),
   SpeciesOption(
     cn: '半身人',
     en: 'Halfling',
     size: 'Small',
-    traits: ['幸運', '勇敢', '敏捷靈活', '天生隱匿'],
+    traits: ['幸運', '勇毅', '半身人的靈巧', '天生隱匿'],
     description: '〔敘述佔位〕樂天知足的小個子，天生幸運、臨危不亂。（文案待補）',
   ),
   SpeciesOption(
     cn: '龍裔',
     en: 'Dragonborn',
     darkvision: true,
-    traits: ['龍息武器', '傷害抗性', '黑暗視覺'],
+    traits: ['龍族血統', '吐息武器', '傷害抗性', '龍族飛行 Lv5', '黑暗視覺'],
     description: '〔敘述佔位〕承襲巨龍血脈的戰士種族，可吐出龍息。（文案待補）',
   ),
   SpeciesOption(
-    cn: '半獸人',
+    cn: '獸人',
     en: 'Orc',
     darkvision: true,
-    traits: ['不屈毅力', '兇猛衝鋒', '黑暗視覺 120'],
-    description: '〔敘述佔位〕強壯而堅韌的戰鬥種族，擁有衝鋒爆發力與瀕死不倒的韌性。（文案待補）',
+    traits: ['腎上腺素爆發', '不屈毅力', '黑暗視覺 120'],
+    description: '〔敘述佔位〕強壯而堅韌的戰鬥種族，衝勁十足且瀕死不倒。（文案待補）',
   ),
   SpeciesOption(
     cn: '提夫林',
     en: 'Tiefling',
     darkvision: true,
-    traits: ['地獄抗性', '魔法傳承', '黑暗視覺'],
+    sizeChoices: ['Medium', 'Small'],
+    traits: ['魔裔傳承 深淵/冥府/煉獄', '異界威儀 奇術', '黑暗視覺'],
     description: '〔敘述佔位〕帶有異界血脈的種族，天生掌握些許法術。（文案待補）',
   ),
   SpeciesOption(
@@ -170,8 +170,23 @@ const kSpecies = <SpeciesOption>[
     en: 'Gnome',
     size: 'Small',
     darkvision: true,
-    traits: ['侏儒狡詐', '黑暗視覺'],
+    traits: ['侏儒狡黠 心智豁免優勢', '侏儒血系 森林/岩石', '黑暗視覺'],
     description: '〔敘述佔位〕好奇心旺盛、心智抗性強的小個子發明家。（文案待補）',
+  ),
+  SpeciesOption(
+    cn: '歌利亞',
+    en: 'Goliath',
+    speed: '35ft',
+    traits: ['巨人血統 六選一', '巨大形體 Lv5', '魁梧體格'],
+    description: '〔敘述佔位〕承襲巨人血脈的高大山民，健步如飛、力能扛鼎。（文案待補）',
+  ),
+  SpeciesOption(
+    cn: '阿斯莫',
+    en: 'Aasimar',
+    darkvision: true,
+    sizeChoices: ['Medium', 'Small'],
+    traits: ['天界抗性 死靈/光耀', '治癒之手', '光明使者 光亮術', '天界顯聖 Lv3'],
+    description: '〔敘述佔位〕身負天界血脈的凡人，體內流淌療癒與光輝之力。（文案待補）',
   ),
 ];
 
@@ -490,5 +505,69 @@ const kBackgrounds = <BackgroundOption>[
     skills: ['歷史', '說服'],
     originFeat: '技藝精湛',
     description: '〔敘述佔位〕出身名門的貴族，談吐得體、人脈廣闊。（文案待補）',
+  ),
+  BackgroundOption(
+    cn: '工匠',
+    en: 'Artisan',
+    abilities: ['STR', 'DEX', 'INT'],
+    skills: ['調查', '說服'],
+    originFeat: '工藝師',
+    description: '〔敘述佔位〕以雙手謀生的手藝人，識貨也懂談生意。（文案待補）',
+  ),
+  BackgroundOption(
+    cn: '江湖騙子',
+    en: 'Charlatan',
+    abilities: ['DEX', 'CON', 'CHA'],
+    skills: ['欺瞞', '巧手'],
+    originFeat: '技藝精湛',
+    description: '〔敘述佔位〕靠口才與騙術過活的老手，總有辦法脫身。（文案待補）',
+  ),
+  BackgroundOption(
+    cn: '藝人',
+    en: 'Entertainer',
+    abilities: ['STR', 'DEX', 'CHA'],
+    skills: ['特技', '表演'],
+    originFeat: '樂手',
+    description: '〔敘述佔位〕巡演四方的表演者，舞台就是家。（文案待補）',
+  ),
+  BackgroundOption(
+    cn: '農夫',
+    en: 'Farmer',
+    abilities: ['STR', 'CON', 'WIS'],
+    skills: ['馴獸', '自然'],
+    originFeat: '堅韌',
+    description: '〔敘述佔位〕與土地為伍的耕作者，吃苦耐勞、體格結實。（文案待補）',
+  ),
+  BackgroundOption(
+    cn: '隱士',
+    en: 'Hermit',
+    abilities: ['CON', 'WIS', 'CHA'],
+    skills: ['醫藥', '宗教'],
+    originFeat: '醫者',
+    description: '〔敘述佔位〕離群索居的修行者，於孤寂中領悟療癒之道。（文案待補）',
+  ),
+  BackgroundOption(
+    cn: '商人',
+    en: 'Merchant',
+    abilities: ['CON', 'INT', 'CHA'],
+    skills: ['馴獸', '說服'],
+    originFeat: '幸運',
+    description: '〔敘述佔位〕走南闖北的生意人，精於算計也善結人緣。（文案待補）',
+  ),
+  BackgroundOption(
+    cn: '抄書吏',
+    en: 'Scribe',
+    abilities: ['DEX', 'INT', 'WIS'],
+    skills: ['調查', '感知'],
+    originFeat: '技藝精湛',
+    description: '〔敘述佔位〕伏案筆耕的書記，眼尖心細、一字不漏。（文案待補）',
+  ),
+  BackgroundOption(
+    cn: '流浪者',
+    en: 'Wayfarer',
+    abilities: ['DEX', 'WIS', 'CHA'],
+    skills: ['洞察', '隱匿'],
+    originFeat: '幸運',
+    description: '〔敘述佔位〕在街頭巷尾討生活的浪人，眼明手快、識人心。（文案待補）',
   ),
 ];

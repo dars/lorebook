@@ -6,11 +6,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lorebook/features/catalog/domain/catalog_models.dart';
 import 'package:lorebook/features/catalog/presentation/fivetools_renderer.dart';
 
-/// 對「全部 15 種 PHB 狀態」的真實資料做渲染煙霧測試。
-/// fixture 為 Supabase `entries` kind=condition source=PHB 的完整快照。
+/// 對「全部 15 種 XPHB（2024）狀態」的真實資料做渲染煙霧測試。
+/// fixture 為 Supabase `entries` kind=condition source=XPHB 的完整快照。
 void main() {
   final raw = File(
-    'test/features/catalog/fixtures/conditions_phb.json',
+    'test/features/catalog/fixtures/conditions_xphb.json',
   ).readAsStringSync();
   final rows = (jsonDecode(raw) as List).cast<Map<String, dynamic>>();
 
