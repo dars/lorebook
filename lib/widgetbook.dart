@@ -26,10 +26,7 @@ class WidgetbookApp extends StatelessWidget {
           ],
           initialTheme: WidgetbookTheme(name: 'Dark', data: AppTheme.dark),
         ),
-        ViewportAddon([
-          IosViewports.iPhone13,
-          IosViewports.iPadPro11Inches,
-        ]),
+        ViewportAddon([IosViewports.iPhone13, IosViewports.iPadPro11Inches]),
         TextScaleAddon(),
         AlignmentAddon(),
       ],

@@ -122,17 +122,16 @@ class SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final match = RegExp(r'^([A-Za-z0-9·_\s]+?)\s+([一-鿿].*)$').firstMatch(title);
+    final match = RegExp(
+      r'^([A-Za-z0-9·_\s]+?)\s+([一-鿿].*)$',
+    ).firstMatch(title);
     final enLabel = match?.group(1) ?? title;
     final cnLabel = match?.group(2);
     const labelColor = AppColors.sectionLabel;
     final lineColor = AppColors.darkBorder2;
 
     return Padding(
-      padding: const EdgeInsets.only(
-        top: AppSpacing.lg,
-        bottom: AppSpacing.sm,
-      ),
+      padding: const EdgeInsets.only(top: AppSpacing.lg, bottom: AppSpacing.sm),
       child: Row(
         children: [
           if (icon != null) ...[
@@ -162,12 +161,7 @@ class SectionTitle extends StatelessWidget {
             ),
           ],
           const SizedBox(width: 6),
-          Expanded(
-            child: Container(
-              height: 1,
-              color: lineColor,
-            ),
-          ),
+          Expanded(child: Container(height: 1, color: lineColor)),
         ],
       ),
     );
@@ -201,8 +195,9 @@ class _CollapsibleSectionState extends State<CollapsibleSection> {
 
   @override
   Widget build(BuildContext context) {
-    final match =
-        RegExp(r'^([A-Za-z0-9·_\s]+?)\s+([一-鿿].*)$').firstMatch(widget.title);
+    final match = RegExp(
+      r'^([A-Za-z0-9·_\s]+?)\s+([一-鿿].*)$',
+    ).firstMatch(widget.title);
     final enLabel = match?.group(1) ?? widget.title;
     final cnLabel = match?.group(2);
     const labelColor = AppColors.sectionLabel;
@@ -278,19 +273,12 @@ class ParchmentCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
 
-  const ParchmentCard({
-    super.key,
-    required this.child,
-    this.padding,
-  });
+  const ParchmentCard({super.key, required this.child, this.padding});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: padding ?? AppSpacing.cardPadding,
-        child: child,
-      ),
+      child: Padding(padding: padding ?? AppSpacing.cardPadding, child: child),
     );
   }
 }

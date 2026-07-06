@@ -48,21 +48,24 @@ class DndColors extends ThemeExtension<DndColors> {
 
   /// 依傷害類型字串（中英皆可）取得顏色，未知則回傳 [neutral]。
   Color damage(String type) => switch (type.toLowerCase().trim()) {
-        'fire' || '火' || '火焰' => fire,
-        'cold' || '冰' || '寒冰' || '冰霜' => cold,
-        'lightning' || '閃電' || '電' => lightning,
-        'thunder' || '雷鳴' || '轟雷' => thunder,
-        'acid' || '強酸' || '酸' => acid,
-        'poison' || '毒素' || '毒' => poison,
-        'necrotic' || '黯蝕' || '死靈' => necrotic,
-        'radiant' || '光耀' || '神聖' => radiant,
-        'psychic' || '心靈' || '精神' => psychic,
-        'force' || '力場' => force,
-        'bludgeoning' || 'piercing' || 'slashing' ||
-        '鈍擊' || '穿刺' || '揮砍' =>
-          physical,
-        _ => neutral,
-      };
+    'fire' || '火' || '火焰' => fire,
+    'cold' || '冰' || '寒冰' || '冰霜' => cold,
+    'lightning' || '閃電' || '電' => lightning,
+    'thunder' || '雷鳴' || '轟雷' => thunder,
+    'acid' || '強酸' || '酸' => acid,
+    'poison' || '毒素' || '毒' => poison,
+    'necrotic' || '黯蝕' || '死靈' => necrotic,
+    'radiant' || '光耀' || '神聖' => radiant,
+    'psychic' || '心靈' || '精神' => psychic,
+    'force' || '力場' => force,
+    'bludgeoning' ||
+    'piercing' ||
+    'slashing' ||
+    '鈍擊' ||
+    '穿刺' ||
+    '揮砍' => physical,
+    _ => neutral,
+  };
 
   @override
   DndColors copyWith({

@@ -55,30 +55,30 @@ abstract final class AppColors {
   // Color scheme constructors
   // ──────────────────────────────────────────
   static ColorScheme get lightScheme => const ColorScheme(
-        brightness: Brightness.light,
-        primary: primary,
-        onPrimary: Colors.white,
-        secondary: accentGold,
-        onSecondary: textPrimary,
-        error: danger,
-        onError: Colors.white,
-        surface: surface0,
-        onSurface: textPrimary,
-        surfaceContainerHighest: surface1,
-        outline: border,
-      );
+    brightness: Brightness.light,
+    primary: primary,
+    onPrimary: Colors.white,
+    secondary: accentGold,
+    onSecondary: textPrimary,
+    error: danger,
+    onError: Colors.white,
+    surface: surface0,
+    onSurface: textPrimary,
+    surfaceContainerHighest: surface1,
+    outline: border,
+  );
 
   static ColorScheme get darkScheme => const ColorScheme(
-        brightness: Brightness.dark,
-        primary: accentGold,
-        onPrimary: darkSurface0,
-        secondary: primary,
-        onSecondary: darkTextPrimary,
-        error: danger,
-        onError: Colors.white,
-        surface: darkSurface0,
-        onSurface: darkTextPrimary,
-        surfaceContainerHighest: darkSurface1,
-        outline: darkBorder,
-      );
+    brightness: Brightness.dark,
+    primary: accentGold,
+    onPrimary: darkSurface0,
+    secondary: primary,
+    onSecondary: darkTextPrimary,
+    error: danger,
+    onError: Colors.white,
+    surface: darkSurface0,
+    onSurface: darkTextPrimary,
+    surfaceContainerHighest: darkSurface1,
+    outline: darkBorder,
+  );
 }

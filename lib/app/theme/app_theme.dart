@@ -7,22 +7,22 @@ import 'dnd_colors.dart';
 
 abstract final class AppTheme {
   static ThemeData get light => _build(
-        colorScheme: AppColors.lightScheme,
-        surface0: AppColors.surface0,
-        surface1: AppColors.surface1,
-        borderColor: AppColors.border,
-        textPrimary: AppColors.textPrimary,
-        textSecondary: AppColors.textSecondary,
-      );
+    colorScheme: AppColors.lightScheme,
+    surface0: AppColors.surface0,
+    surface1: AppColors.surface1,
+    borderColor: AppColors.border,
+    textPrimary: AppColors.textPrimary,
+    textSecondary: AppColors.textSecondary,
+  );
 
   static ThemeData get dark => _build(
-        colorScheme: AppColors.darkScheme,
-        surface0: AppColors.darkSurface0,
-        surface1: AppColors.darkSurface1,
-        borderColor: AppColors.darkBorder,
-        textPrimary: AppColors.darkTextPrimary,
-        textSecondary: AppColors.darkTextSecondary,
-      );
+    colorScheme: AppColors.darkScheme,
+    surface0: AppColors.darkSurface0,
+    surface1: AppColors.darkSurface1,
+    borderColor: AppColors.darkBorder,
+    textPrimary: AppColors.darkTextPrimary,
+    textSecondary: AppColors.darkTextSecondary,
+  );
 
   static ThemeData _build({
     required ColorScheme colorScheme,
