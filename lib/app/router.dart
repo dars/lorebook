@@ -9,6 +9,7 @@ import '../features/auth/presentation/login_page.dart';
 import '../features/auth/presentation/register_page.dart';
 import '../features/character/domain/character_providers.dart';
 import '../features/character/presentation/character_create_page.dart';
+import '../features/character/presentation/character_level_up_page.dart';
 import '../features/character/presentation/character_page.dart';
 import '../features/character/presentation/character_select_page.dart';
 import '../features/decision/presentation/decision_page.dart';
@@ -30,8 +31,9 @@ bool get _isSupabaseInitialized {
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authNotifier =
-      _isSupabaseInitialized ? _AuthNotifier() : ChangeNotifier();
+  final authNotifier = _isSupabaseInitialized
+      ? _AuthNotifier()
+      : ChangeNotifier();
 
   return GoRouter(
     refreshListenable: authNotifier,
@@ -87,32 +89,34 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/character-create',
         builder: (context, state) => const CharacterCreatePage(),
       ),
+      GoRoute(
+        path: '/character-level-up',
+        builder: (context, state) => CharacterLevelUpPage(
+          subclassOnly: state.uri.queryParameters['mode'] == 'subclass',
+        ),
+      ),
       ShellRoute(
         builder: (context, state, child) => AppScaffold(child: child),
         routes: [
           GoRoute(
             path: '/main/decision',
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: DecisionPage(),
-            ),
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: DecisionPage()),
           ),
           GoRoute(
             path: '/main/character',
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: CharacterPage(),
-            ),
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: CharacterPage()),
           ),
           GoRoute(
             path: '/main/journal',
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: JournalPage(),
-            ),
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: JournalPage()),
           ),
           GoRoute(
             path: '/main/system',
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: SystemPage(),
-            ),
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: SystemPage()),
           ),
         ],
       ),

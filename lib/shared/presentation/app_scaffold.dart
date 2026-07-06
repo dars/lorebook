@@ -24,8 +24,9 @@ class AppScaffold extends StatelessWidget {
     final destination = appDestinations[index];
 
     // 角色情境頁顯示角色頭；全域 / 系統頁顯示純標題頁首。
+    // LEVEL 徽章僅在角色頁可點擊觸發升級（其他頁純顯示，避免誤觸）。
     final header = destination.characterScoped
-        ? const CharacterHeader()
+        ? CharacterHeader(levelUpEnabled: destination.path == '/main/character')
         : PageHeader(title: destination.label);
 
     return ResponsiveLayout(

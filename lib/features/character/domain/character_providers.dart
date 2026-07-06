@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'character.dart';
+import 'level_up.dart' as level_up;
 
 /// 當前角色的可變狀態。提供 HP / 臨時 HP / 異常狀態 / 力竭 / 專注 的編輯動作。
 ///
@@ -173,6 +174,26 @@ class CurrentCharacterNotifier extends Notifier<Character> {
   void useHitDie() {
     if (state.hitDiceRemaining <= 0) return;
     state = state.copyWith(hitDiceUsed: state.hitDiceUsed + 1);
+  }
+
+  // ── 升級 ──
+
+  /// 套用升級結果（wizard 完成時一次 commit；經既有 debounce 同步推送，
+  /// 未登入僅存本地）。
+  void applyLevelUp(
+    level_up.LevelUpPlan plan,
+    level_up.LevelUpChoices choices,
+  ) {
+    state = level_up.applyLevelUp(state, plan, choices);
+  }
+
+  /// 補選子職（Lv3+ 先前離線跳過）：寫入子職與自 Lv3 起累積的子職特性。
+  void setSubclass(String cn, String en, List<CharacterFeature> features) {
+    state = state.copyWith(
+      subclass: cn,
+      subclassEn: en,
+      features: [...state.features, ...features],
+    );
   }
 
   // ── 冒險日誌 ──
