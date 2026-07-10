@@ -8,10 +8,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../features/auth/presentation/login_page.dart';
 import '../features/auth/presentation/register_page.dart';
 import '../features/character/domain/character_providers.dart';
+import '../features/character/domain/custom_background.dart';
 import '../features/character/presentation/character_create_page.dart';
 import '../features/character/presentation/character_level_up_page.dart';
 import '../features/character/presentation/character_page.dart';
 import '../features/character/presentation/character_select_page.dart';
+import '../features/character/presentation/custom_background_edit_page.dart';
 import '../features/decision/presentation/decision_page.dart';
 import '../features/journal/presentation/journal_page.dart';
 import '../features/system/presentation/system_page.dart';
@@ -47,13 +49,19 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isAuthRoute = state.matchedLocation.startsWith('/auth');
       final isCharSelect = state.matchedLocation == '/character-select';
       final isCreate = state.matchedLocation == '/character-create';
+      // 建角流程可開自訂背景編輯頁，此時可能尚未選定角色。
+      final isBgEdit = state.matchedLocation == '/custom-background-edit';
       final selectedChar = ref.read(selectedCharacterIdProvider);
 
       if (!isLoggedIn && !isAuthRoute) return '/auth/login';
       if (isLoggedIn && isAuthRoute) {
         return selectedChar != null ? '/main/decision' : '/character-select';
       }
-      if (isLoggedIn && !isCharSelect && !isCreate && selectedChar == null) {
+      if (isLoggedIn &&
+          !isCharSelect &&
+          !isCreate &&
+          !isBgEdit &&
+          selectedChar == null) {
         if (!state.matchedLocation.startsWith('/auth')) {
           return '/character-select';
         }
@@ -88,6 +96,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/character-create',
         builder: (context, state) => const CharacterCreatePage(),
+      ),
+      GoRoute(
+        path: '/custom-background-edit',
+        builder: (context, state) => CustomBackgroundEditPage(
+          initial: state.extra as CustomBackground?,
+        ),
       ),
       GoRoute(
         path: '/character-level-up',

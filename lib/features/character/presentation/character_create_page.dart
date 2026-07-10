@@ -12,10 +12,13 @@ import '../../../shared/presentation/widgets/ability_hex_chart.dart';
 import '../../catalog/data/catalog_repository.dart';
 import '../../catalog/domain/catalog_models.dart';
 import '../../catalog/presentation/fivetools_renderer.dart';
+import '../../../shared/domain/app_exception.dart';
 import '../domain/character.dart';
 import '../domain/character_creation_data.dart';
 import '../domain/character_math.dart';
 import '../domain/character_providers.dart';
+import '../domain/custom_background.dart';
+import '../data/custom_background_repository.dart';
 import '../data/portrait_service.dart';
 import 'widgets/portrait_transform.dart';
 import '../domain/spell_from_catalog.dart';
@@ -55,6 +58,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
   SpeciesOption? _species;
   ClassOption? _classOpt;
   BackgroundOption? _background;
+
+  /// 選中的自訂背景 id（null = 內建背景）。
+  String? _backgroundCustomId;
 
   /// 能力代碼 → 基礎分數（null = 未指派）。各方式共用。
   final Map<String, int?> _base = {for (final a in kAbilityOrder) a: null};
@@ -607,25 +613,85 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
 
   // ── 步驟三：背景 ──
 
+  /// 內建 + 自訂背景的合併選項（label 唯一：自訂項帶「（自訂）」後綴，
+  /// 同名再附序號）。
+  List<({String label, BackgroundOption opt, CustomBackground? custom})>
+  _backgroundEntries(List<CustomBackground> customs) {
+    final entries =
+        <({String label, BackgroundOption opt, CustomBackground? custom})>[
+          for (final b in kBackgrounds) (label: b.cn, opt: b, custom: null),
+        ];
+    for (final c in customs) {
+      var label = '${c.name}（自訂）';
+      var n = 2;
+      while (entries.any((e) => e.label == label)) {
+        label = '${c.name}（自訂 $n）';
+        n++;
+      }
+      entries.add((label: label, opt: c.toBackgroundOption(), custom: c));
+    }
+    return entries;
+  }
+
+  void _selectBackground(BackgroundOption opt, {String? customId}) {
+    _background = opt;
+    _backgroundCustomId = customId;
+    // 背景固定技能與既有選擇衝突時，清掉重複的（不可重複熟練）。
+    _classSkills.removeWhere(_background!.skills.contains);
+    _speciesSkills.removeWhere(_background!.skills.contains);
+    _resetAbilities();
+  }
+
   Widget _backgroundStep() {
+    final customsAsync = ref.watch(customBackgroundsProvider);
+    final customs = customsAsync.valueOrNull ?? const <CustomBackground>[];
+    final entries = _backgroundEntries(customs);
+    final selectedLabel = _backgroundCustomId != null
+        ? entries
+              .where((e) => e.custom?.id == _backgroundCustomId)
+              .map((e) => e.label)
+              .firstOrNull
+        : _background?.cn;
+    final selectedCustom = _backgroundCustomId == null
+        ? null
+        : customs.where((c) => c.id == _backgroundCustomId).firstOrNull;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _OptionChips(
-          options: [for (final b in kBackgrounds) b.cn],
-          selected: _background?.cn,
-          onSelect: (cn) => setState(() {
-            _background = kBackgrounds.firstWhere((b) => b.cn == cn);
-            // 背景固定技能與既有選擇衝突時，清掉重複的（不可重複熟練）。
-            _classSkills.removeWhere(_background!.skills.contains);
-            _speciesSkills.removeWhere(_background!.skills.contains);
-            _resetAbilities();
+          options: [for (final e in entries) e.label],
+          selected: selectedLabel,
+          onSelect: (label) => setState(() {
+            final e = entries.firstWhere((e) => e.label == label);
+            _selectBackground(e.opt, customId: e.custom?.id);
           }),
         ),
+        const SizedBox(height: AppSpacing.sm),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            onPressed: () => context.push('/custom-background-edit'),
+            icon: const Icon(Icons.add, size: 18),
+            label: const Text('自訂背景'),
+          ),
+        ),
+        if (customsAsync.hasError)
+          const Padding(
+            padding: EdgeInsets.only(top: AppSpacing.sm),
+            child: Text(
+              '自訂背景離線不可用（僅顯示內建背景）',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 12,
+                color: AppColors.darkTextSecondary,
+              ),
+            ),
+          ),
         if (_background != null) ...[
           const SizedBox(height: AppSpacing.lg),
           _DescCard(
-            title: '${_background!.cn} ${_background!.en}',
+            title: '${_background!.cn} ${_background!.en}'.trim(),
             body: _background!.description,
             chips: [
               '能力 ${_background!.abilities.map((s) => kAbilityCn[s]).join('/')}',
@@ -633,9 +699,78 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
               '專長 ${_background!.originFeat}',
             ],
           ),
+          if (selectedCustom != null)
+            Row(
+              children: [
+                TextButton.icon(
+                  onPressed: () => _editCustomBackground(selectedCustom),
+                  icon: const Icon(Icons.edit_outlined, size: 18),
+                  label: const Text('編輯'),
+                ),
+                TextButton.icon(
+                  onPressed: () => _deleteCustomBackground(selectedCustom),
+                  icon: const Icon(Icons.delete_outline, size: 18),
+                  label: const Text('刪除'),
+                ),
+              ],
+            ),
         ],
       ],
     );
+  }
+
+  Future<void> _editCustomBackground(CustomBackground c) async {
+    await context.push('/custom-background-edit', extra: c);
+    if (!mounted) return;
+    final updated = ref
+        .read(customBackgroundsProvider)
+        .valueOrNull
+        ?.where((x) => x.id == c.id)
+        .firstOrNull;
+    if (updated != null && _backgroundCustomId == c.id) {
+      setState(
+        () => _selectBackground(
+          updated.toBackgroundOption(),
+          customId: updated.id,
+        ),
+      );
+    }
+  }
+
+  Future<void> _deleteCustomBackground(CustomBackground c) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('刪除自訂背景'),
+        content: Text('確定刪除「${c.name}」？已用它建立的角色不受影響。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('取消'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('刪除'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    try {
+      await ref.read(customBackgroundsProvider.notifier).delete(c.id);
+      if (_backgroundCustomId == c.id) {
+        setState(() {
+          _background = null;
+          _backgroundCustomId = null;
+        });
+      }
+    } on AppException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
+      }
+    }
   }
 
   // ── 步驟四：能力值 ──
