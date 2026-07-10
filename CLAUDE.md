@@ -7,6 +7,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Lorebook — 支援 iOS / Android 的 Flutter App，同時適配手機與平板版型。  
 核心功能為 D&D 5.5e（2024 版規則）跑團角色卡，附帶世界觀筆記功能。
 
+### 內容範圍政策（content-scope）
+
+- 一切規則內容以 **D&D 2024（5r）** 為基準
+- 規則內容**僅**來自 **SRD 5.2（CC-BY-4.0）** 或使用者自訂資料；不收錄任何非 SRD 的官方出版內容
+- **不涵蓋**怪物、官方劇本/劇情
+- Product Identity 名稱（如 Bigby's、Tasha's）一律使用 SRD 官方改名（如 Arcane Hand）
+- 玩家自產內容（角色卡、個人筆記、Campaign 共用筆記）不受此限——排除的是官方出版內容，非使用者內容
+- 內容庫匯入管線依上游 `srd52` 標記過濾，重匯不會回灌非 SRD 內容
+
 ## 常用指令
 
 ```bash

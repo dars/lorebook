@@ -153,8 +153,8 @@ void main() {
     test('解析攤平欄位與 5etools 原始結構', () {
       final s = CatalogSpell.fromJson({
         'id': '7fde298d-f501-4a0d-9d71-459f55692d4b',
-        'name': '畢格比之掌',
-        'eng_name': "Bigby's Hand",
+        'name': '奧法之掌',
+        'eng_name': "Arcane Hand",
         'source': 'XPHB',
         'page': 218,
         'level': 5,

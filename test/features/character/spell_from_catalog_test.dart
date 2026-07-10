@@ -92,12 +92,12 @@ void main() {
   });
 
   group('spellFromCatalog', () {
-    test('以真實 v_spells 資料列映射（畢格比之掌）', () {
-      // fixture 取自實際 v_spells 資料列（source=PHB）。
+    test('以真實 v_spells 資料列映射（奧法之掌）', () {
+      // fixture 取自實際 v_spells 資料列（source=XPHB，SRD 定名）。
       final catalog = CatalogSpell.fromJson({
         'id': '7fde298d-f501-4a0d-9d71-459f55692d4b',
-        'name': '畢格比之掌',
-        'eng_name': "Bigby's Hand",
+        'name': '奧法之掌',
+        'eng_name': "Arcane Hand",
         'source': 'XPHB',
         'page': 218,
         'level': 5,
@@ -124,8 +124,8 @@ void main() {
         'entries': ['你在射程內創造出一個{@dice 1d4}的力場手掌。'],
       });
       final spell = spellFromCatalog(catalog);
-      expect(spell.name, '畢格比之掌');
-      expect(spell.nameEn, "Bigby's Hand");
+      expect(spell.name, '奧法之掌');
+      expect(spell.nameEn, "Arcane Hand");
       expect(spell.level, 5);
       expect(spell.concentration, isTrue);
       expect(spell.prepared, isTrue);

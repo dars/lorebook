@@ -66,18 +66,24 @@ void main() {
     expect(rogue.skillChoices, isNot(contains('表演')));
   });
 
-  group('XPHB 全清單（2024）', () {
-    test('種族 10 個、職業 12 個、背景 16 個', () {
-      expect(kSpecies, hasLength(10));
+  group('SRD 5.2 全清單（2024）', () {
+    test('種族 9 個、職業 12 個、背景 4 個', () {
+      expect(kSpecies, hasLength(9));
       expect(kClasses, hasLength(12));
-      expect(kBackgrounds, hasLength(16));
+      expect(kBackgrounds, hasLength(4));
     });
 
-    test('新增背景抽查：農夫（力/體/感、馴獸+自然、堅韌）', () {
-      final farmer = kBackgrounds.firstWhere((b) => b.cn == '農夫');
-      expect(farmer.abilities, ['STR', 'CON', 'WIS']);
-      expect(farmer.skills, ['馴獸', '自然']);
-      expect(farmer.originFeat, '堅韌');
+    test('種族與背景僅含 SRD 5.2 選項', () {
+      expect(kSpecies.map((s) => s.en), isNot(contains('Aasimar')));
+      expect(kBackgrounds.map((b) => b.en).toSet(),
+          {'Acolyte', 'Criminal', 'Sage', 'Soldier'});
+    });
+
+    test('背景起源專長均在 SRD 範圍（無斷鏈）', () {
+      const srdOriginFeats = {'野蠻打擊', '法術新手（法師）', '法術新手（牧師）', '警覺'};
+      for (final b in kBackgrounds) {
+        expect(srdOriginFeats, contains(b.originFeat));
+      }
     });
   });
 }

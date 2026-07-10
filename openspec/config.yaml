@@ -3,6 +3,13 @@ schema: spec-driven
 context: |
   # Lorebook — D&D 5.5e (2024) 角色卡 App
 
+  ## 內容範圍政策（content-scope）
+  - 一切規則內容以 D&D 2024（5r）為基準
+  - 規則內容僅來自 SRD 5.2（CC-BY-4.0）或使用者自訂資料；不收錄非 SRD 官方出版內容
+  - 不涵蓋怪物、官方劇本/劇情；Product Identity 名稱一律用 SRD 改名
+  - 玩家自產內容（角色卡、筆記、Campaign 共用筆記）不受限——排除的是官方出版內容
+  - 新功能若引用內容庫，設計時以 SRD 5.2 覆蓋範圍為準（子職每職業 1、背景 4、專長 17 等）
+
   ## Tech Stack
   - Flutter（iOS + Android，同一份 codebase）
   - Dart

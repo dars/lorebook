@@ -7,8 +7,8 @@ import '../domain/catalog_models.dart';
 
 /// 目前開放的書源代碼（XPHB = 2024 修訂版玩家手冊）。
 ///
-/// 規則核心統一為 2024 5r；回滾至 2014 版改回 'PHB' 即可
-/// （內容庫保留 PHB 資料列），測試可於建構時注入替換。
+/// 規則核心統一為 2024 5r；內容庫僅含該書源中屬 SRD 5.2
+/// （CC-BY-4.0）的資料列，測試可於建構時注入替換書源。
 const kCatalogSource = 'XPHB';
 
 /// 5etools 內容資料庫的唯讀目錄（designs/SUPABASE.md）。

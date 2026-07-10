@@ -141,6 +141,21 @@ class SystemPage extends ConsumerWidget {
                   'D&D 5.5e (2024) 角色卡管理工具',
                   style: theme.textTheme.bodySmall,
                 ),
+                const SizedBox(height: AppSpacing.lg),
+                Text('授權聲明', style: theme.textTheme.titleSmall),
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  '本作品收錄之遊戲規則內容取自 System Reference Document 5.2'
+                  '（"SRD 5.2"），著作權為 Wizards of the Coast LLC 所有，'
+                  '依 Creative Commons Attribution 4.0 International License'
+                  '（CC-BY-4.0）授權使用。\n\n'
+                  'This work includes material from the System Reference '
+                  'Document 5.2 ("SRD 5.2") by Wizards of the Coast LLC, '
+                  'licensed under the Creative Commons Attribution 4.0 '
+                  'International License '
+                  '(https://creativecommons.org/licenses/by/4.0/legalcode).',
+                  style: theme.textTheme.bodySmall,
+                ),
               ],
             ),
           ),
