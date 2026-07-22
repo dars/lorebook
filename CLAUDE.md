@@ -84,10 +84,10 @@ lib/
 角色卡涵蓋的主要資料域：
 - **基本資訊**：名稱、種族（Species）、背景（Background）、職業（Class）、等級、陣營
 - **能力值**：STR / DEX / CON / INT / WIS / CHA（含修正值、豁免骰）
-- **戰鬥數值**：AC、HP（最大值/當前/臨時）、速度、先攻、熟練加值
+- **戰鬥數值**：AC（由裝備狀態推導，見 `derived_stats.dart`：無甲/無甲防禦/法師護甲/護甲公式＋盾牌）、HP（最大值/當前/臨時）、速度、先攻、熟練加值
 - **技能**：各技能熟練度標記與修正值
-- **武器與攻擊**
+- **武器與攻擊**：攻擊列由裝備中武器（`Equipment` itemType=weapon 且 equipped）＋固定徒手攻擊推導；靜態 `weapons` 清單已退場（讀入舊資料時一次性轉換）
 - **法術**：法術位、已知法術清單（按環數分類）
-- **裝備與金幣**
+- **裝備與金幣**：`Equipment` 為二維分類（itemType：weapon/armor/gear/consumable × source：catalog/custom）＋數量、任務旗標（quest）、成交價（priceCp，cp 計）、武器/護甲機制欄位；購買扣款走 `currency_math.dart` 分層扣款
 - **特性與專長**（Traits / Feats）
 - **筆記欄位**（外觀、性格、背景故事等）

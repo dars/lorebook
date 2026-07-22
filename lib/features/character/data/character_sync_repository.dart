@@ -34,8 +34,11 @@ class CharacterSyncRepository {
           .isFilter('deleted_at', null)
           .order('updated_at', ascending: false);
       return [
+        // 舊版靜態 weapons 清單在讀入時一次性轉為 equipment 武器條目。
         for (final r in rows)
-          Character.fromJson((r['data'] as Map).cast<String, dynamic>()),
+          migrateLegacyWeapons(
+            Character.fromJson((r['data'] as Map).cast<String, dynamic>()),
+          ),
       ];
     } on PostgrestException catch (e) {
       throw DataException('讀取雲端角色失敗：${e.message}');

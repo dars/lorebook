@@ -98,6 +98,8 @@ abstract class SpellSlots with _$SpellSlots {
       _$SpellSlotsFromJson(json);
 }
 
+/// 舊版靜態武器模型。已退場：攻擊列改由 equipment（itemType=weapon 且
+/// equipped）推導；此類別僅為讀入舊 JSON 後轉換（[migrateLegacyWeapons]）保留。
 @freezed
 abstract class Weapon with _$Weapon {
   const factory Weapon({
@@ -112,18 +114,91 @@ abstract class Weapon with _$Weapon {
   factory Weapon.fromJson(Map<String, dynamic> json) => _$WeaponFromJson(json);
 }
 
+/// 物品類型：決定行為（可裝備、可消耗）。
+enum ItemType { weapon, armor, gear, consumable }
+
+/// 物品來源：決定資料怎麼來（內容庫目錄 vs 玩家自訂）。
+enum ItemSource { catalog, custom }
+
+/// 護甲類別：AC 公式與「著甲」判定依此；盾牌以 armor + shield 表達。
+enum ArmorCategory { none, light, medium, heavy, shield }
+
 @freezed
 abstract class Equipment with _$Equipment {
   const factory Equipment({
     required String name,
     @Default('') String nameEn,
+
+    /// 顯示用副標（如「輕武器」「奧術法器」）；行為判斷一律看 [itemType]。
     @Default('') String type,
     @Default('') String description,
     @Default(false) bool equipped,
+    @Default(ItemType.gear) ItemType itemType,
+    @Default(ItemSource.custom) ItemSource source,
+    @Default(1) int quantity,
+
+    /// 任務物品旗標（玩家自行標記）：刪除需確認、消耗歸零保留、販售排除。
+    @Default(false) bool quest,
+
+    /// 實際成交價（cp 計）；直接取得記錄目錄標價。0 = 無價格資訊。
+    @Default(0) int priceCp,
+
+    /// source=catalog 時的目錄鍵（engName），供詳情回查。
+    @Default('') String catalogRef,
+
+    /// 武器機制（itemType=weapon；選填，缺值時攻擊列僅顯示名稱）。
+    @Default('') String damage,
+    @Default('') String damageType,
+    @Default(false) bool finesse,
+
+    /// 武器屬性標籤（thrown (20/60)、versatile (1d8)…）；顯示用，
+    /// finesse 另有獨立欄位參與推導。
+    @Default(<String>[]) List<String> properties,
+
+    /// 護甲機制（itemType=armor）：AC 公式參數。
+    @Default(ArmorCategory.none) ArmorCategory armorCategory,
+    @Default(0) int acBase,
   }) = _Equipment;
 
   factory Equipment.fromJson(Map<String, dynamic> json) =>
       _$EquipmentFromJson(json);
+}
+
+/// 舊版靜態 `weapons` 清單一次性轉換為 equipment 武器條目（equipped）。
+/// 名稱含「×N」視為數量；傷害字串去掉尾端調整值（推導時再加屬性調整）。
+Character migrateLegacyWeapons(Character c) {
+  if (c.weapons.isEmpty) return c;
+  if (c.equipment.any((e) => e.itemType == ItemType.weapon)) {
+    return c.copyWith(weapons: const []);
+  }
+  final converted = c.weapons.map((w) {
+    var name = w.name;
+    var nameEn = w.nameEn;
+    var quantity = 1;
+    final m = RegExp(r'^(.*?)\s*×(\d+)$').firstMatch(name);
+    if (m != null) {
+      name = m.group(1)!.trim();
+      quantity = int.parse(m.group(2)!);
+    }
+    final mEn = RegExp(r'^(.*?)\s*×\d+$').firstMatch(nameEn);
+    if (mEn != null) nameEn = mEn.group(1)!.trim();
+    final dice = w.damage.replaceAll(RegExp(r'[+-]\d+$'), '');
+    return Equipment(
+      name: name,
+      nameEn: nameEn,
+      itemType: ItemType.weapon,
+      equipped: true,
+      quantity: quantity,
+      damage: dice,
+      damageType: w.damageType,
+      finesse: w.properties.any((p) => p.toLowerCase().contains('finesse')),
+      properties: w.properties,
+    );
+  });
+  return c.copyWith(
+    weapons: const [],
+    equipment: [...converted, ...c.equipment],
+  );
 }
 
 @freezed
@@ -257,6 +332,9 @@ abstract class Character with _$Character {
     @Default(0) int spellAttack,
     @Default('') String spellcastingAbility,
     String? concentrationSpell,
+
+    /// 法師護甲生效中（輕量開關；著甲時自動關閉，見 equipment-effects 規格）。
+    @Default(false) bool mageArmorActive,
     required AbilityScores abilityScores,
     @Default(<Skill>[]) List<Skill> skills,
     @Default(<Spell>[]) List<Spell> spells,
@@ -520,25 +598,31 @@ abstract class Character with _$Character {
         SpellSlots(level: 1, total: 4, used: 0),
         SpellSlots(level: 2, total: 2, used: 0),
       ],
-      weapons: [
-        Weapon(
+      equipment: [
+        Equipment(
           name: '長棍',
           nameEn: 'Quarterstaff',
-          attackBonus: 4,
+          type: 'simple weapon',
+          itemType: ItemType.weapon,
+          equipped: true,
           damage: '1d6',
           damageType: 'bludgeoning',
           properties: ['versatile (1d8)'],
+          priceCp: 20,
         ),
-        Weapon(
-          name: '匕首 ×2',
-          nameEn: 'Dagger ×2',
-          attackBonus: 3,
-          damage: '1d4+1',
+        Equipment(
+          name: '匕首',
+          nameEn: 'Dagger',
+          type: 'simple weapon',
+          itemType: ItemType.weapon,
+          equipped: true,
+          quantity: 2,
+          damage: '1d4',
           damageType: 'piercing',
+          finesse: true,
           properties: ['finesse', 'light', 'thrown (20/60)'],
+          priceCp: 200,
         ),
-      ],
-      equipment: [
         Equipment(
           name: '水晶球',
           nameEn: 'Crystal Orb',
@@ -558,7 +642,6 @@ abstract class Character with _$Character {
           nameEn: "Scholar's Pack",
           type: 'pack',
           description: '含背包、書本、墨水、筆等',
-          equipped: true,
         ),
       ],
       currency: Currency(gp: 25, sp: 8, cp: 14),
@@ -706,24 +789,6 @@ abstract class Character with _$Character {
         ),
         Skill(name: '隱匿', nameEn: 'Stealth', abilityType: 'DEX', modifier: 2),
       ],
-      weapons: [
-        Weapon(
-          name: '巨斧',
-          nameEn: 'Greataxe',
-          attackBonus: 6,
-          damage: '1d12',
-          damageType: 'slashing',
-          properties: ['heavy', 'two-handed'],
-        ),
-        Weapon(
-          name: '標槍 ×3',
-          nameEn: 'Javelin ×3',
-          attackBonus: 6,
-          damage: '1d6',
-          damageType: 'piercing',
-          properties: ['thrown (30/120)'],
-        ),
-      ],
       resources: [
         ClassResource(
           name: '狂暴',
@@ -736,17 +801,42 @@ abstract class Character with _$Character {
       ],
       equipment: [
         Equipment(
+          name: '巨斧',
+          nameEn: 'Greataxe',
+          type: 'martial weapon',
+          itemType: ItemType.weapon,
+          equipped: true,
+          damage: '1d12',
+          damageType: 'slashing',
+          properties: ['heavy', 'two-handed'],
+          priceCp: 3000,
+        ),
+        Equipment(
+          name: '標槍',
+          nameEn: 'Javelin',
+          type: 'simple weapon',
+          itemType: ItemType.weapon,
+          equipped: true,
+          quantity: 3,
+          damage: '1d6',
+          damageType: 'piercing',
+          properties: ['thrown (30/120)'],
+          priceCp: 50,
+        ),
+        Equipment(
           name: '探索者背包',
           nameEn: "Explorer's Pack",
           type: 'pack',
           description: '含背包、睡袋、糧食、繩索等',
-          equipped: true,
         ),
         Equipment(
           name: '治療藥水',
           nameEn: 'Potion of Healing',
           type: 'potion',
+          itemType: ItemType.consumable,
+          quantity: 2,
           description: '飲用回復 2d4+2 HP',
+          priceCp: 5000,
         ),
       ],
       currency: Currency(gp: 15, sp: 5, cp: 0),

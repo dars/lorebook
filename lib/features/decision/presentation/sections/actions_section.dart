@@ -7,6 +7,7 @@ import '../../../../app/theme/dnd_colors.dart';
 import '../../../../app/theme/surface_colors.dart';
 import '../../../../features/character/domain/character.dart';
 import '../../../../features/character/domain/character_providers.dart';
+import '../../../../features/character/domain/derived_stats.dart';
 import '../../../../features/character/presentation/widgets/spell_entry.dart';
 import '../../../../shared/presentation/widgets/entry_card.dart';
 
@@ -72,7 +73,8 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
     final dnd = Theme.of(context).extension<DndColors>()!;
     final surfaces = Theme.of(context).extension<SurfaceColors>()!;
 
-    final weapons = character.weapons;
+    // 攻擊列＝裝備中武器＋固定徒手攻擊（equipment-effects 規格）。
+    final attacks = attackEntries(character);
     final cantrips = character.cantrips;
     final actionSpells = character.spells
         .where(
@@ -104,12 +106,12 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
                 _category(
                   key: 'cat.attack',
                   label: '攻擊',
-                  count: '${weapons.length} 項',
+                  count: '${attacks.length} 項',
                   children: [
-                    for (final w in weapons)
+                    for (final a in attacks)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8),
-                        child: weaponEntryCard(w, dnd: dnd),
+                        child: attackEntryCard(a, dnd: dnd),
                       ),
                   ],
                 ),

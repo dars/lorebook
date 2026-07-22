@@ -11,6 +11,7 @@ import '../../../../features/catalog/domain/catalog_models.dart';
 import '../../../../features/catalog/presentation/fivetools_renderer.dart';
 import '../../../../features/character/domain/character.dart';
 import '../../../../features/character/domain/character_providers.dart';
+import '../../../../features/character/domain/derived_stats.dart';
 import '../../domain/conditions_catalog.dart';
 
 class StatusSection extends ConsumerWidget {
@@ -855,88 +856,164 @@ class _AcShield extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // AC 為唯讀，直接從 provider 取。
+    // AC 由裝備狀態推導（equipment-effects）；點按可看依據／切換法師護甲。
     return Consumer(
       builder: (context, ref, _) {
-        final value = ref.watch(currentCharacterProvider.select((c) => c.ac));
+        final character = ref.watch(currentCharacterProvider);
+        final acResult = computeAc(character);
+        final value = acResult.value;
         final isDark = Theme.of(context).brightness == Brightness.dark;
         final surfaces = Theme.of(context).extension<SurfaceColors>()!;
-        return SizedBox(
-          width: 96,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.shield_outlined,
-                    size: 14,
-                    color: const Color(0xFFC8A86B),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    'AC',
-                    style: TextStyle(
-                      fontFamily: 'Cinzel',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1.5,
+        return InkWell(
+          onTap: () => _showAcSheet(context, ref),
+          borderRadius: BorderRadius.circular(8),
+          child: SizedBox(
+            width: 96,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.shield_outlined,
+                      size: 14,
                       color: const Color(0xFFC8A86B),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              SizedBox(
-                width: 80,
-                height: 86,
-                child: CustomPaint(
-                  painter: _ShieldPainter(
-                    fillTop: isDark
-                        ? const Color(0xFF3A2E1E)
-                        : surfaces.surface2,
-                    fillBottom: isDark
-                        ? const Color(0xFF1E1710)
-                        : surfaces.surface0,
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: ShaderMask(
-                        shaderCallback: (bounds) => const LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [Color(0xFFF0D080), Color(0xFFC8963C)],
-                        ).createShader(bounds),
-                        child: Text(
-                          '$value',
-                          style: const TextStyle(
-                            fontFamily: 'Cinzel',
-                            fontSize: 34,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                    const SizedBox(width: 4),
+                    Text(
+                      'AC',
+                      style: TextStyle(
+                        fontFamily: 'Cinzel',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.5,
+                        color: const Color(0xFFC8A86B),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                SizedBox(
+                  width: 80,
+                  height: 86,
+                  child: CustomPaint(
+                    painter: _ShieldPainter(
+                      fillTop: isDark
+                          ? const Color(0xFF3A2E1E)
+                          : surfaces.surface2,
+                      fillBottom: isDark
+                          ? const Color(0xFF1E1710)
+                          : surfaces.surface0,
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [Color(0xFFF0D080), Color(0xFFC8963C)],
+                          ).createShader(bounds),
+                          child: Text(
+                            '$value',
+                            style: const TextStyle(
+                              fontFamily: 'Cinzel',
+                              fontSize: 34,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                '無甲・敏捷',
-                style: TextStyle(
-                  fontFamily: 'NotoSerifTC',
-                  fontSize: 11,
-                  letterSpacing: 0.5,
-                  color: const Color(0xFFA08050),
+                const SizedBox(height: 6),
+                Text(
+                  acResult.label,
+                  style: TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 11,
+                    letterSpacing: 0.5,
+                    color: const Color(0xFFA08050),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+
+  /// AC 依據明細＋法師護甲開關（僅法術清單含 Mage Armor 者顯示開關）。
+  void _showAcSheet(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Theme.of(context).extension<SurfaceColors>()!.surface1,
+      showDragHandle: true,
+      builder: (context) => Consumer(
+        builder: (context, ref, _) {
+          final character = ref.watch(currentCharacterProvider);
+          final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+          final acResult = computeAc(character);
+          return SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
+                  child: Text(
+                    'AC ${acResult.value}・${acResult.label}',
+                    style: const TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'AC 由裝備狀態自動推導：護甲/盾牌請至角色頁物品欄切換裝備。',
+                    style: TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 11,
+                      color: surfaces.textSecondary,
+                    ),
+                  ),
+                ),
+                if (knowsMageArmor(character))
+                  SwitchListTile(
+                    value: character.mageArmorActive,
+                    onChanged: wearingArmor(character)
+                        ? null // 著甲中不可施放（2024 規則）
+                        : (v) => ref
+                              .read(currentCharacterProvider.notifier)
+                              .setMageArmor(v),
+                    title: const Text(
+                      '法師護甲 Mage Armor',
+                      style: TextStyle(fontFamily: 'NotoSerifTC', fontSize: 14),
+                    ),
+                    subtitle: Text(
+                      wearingArmor(character)
+                          ? '著甲中無法施放'
+                          : '基礎 AC 13 + 敏捷（著甲時自動結束）',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: surfaces.textSecondary,
+                      ),
+                    ),
+                    activeThumbColor: AppColors.accentGold,
+                  ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

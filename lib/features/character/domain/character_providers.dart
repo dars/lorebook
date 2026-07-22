@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'character.dart';
+import 'currency_math.dart';
 import 'level_up.dart' as level_up;
 
 /// 當前角色的可變狀態。提供 HP / 臨時 HP / 異常狀態 / 力竭 / 專注 的編輯動作。
@@ -214,6 +215,119 @@ class CurrentCharacterNotifier extends Notifier<Character> {
       subclassEn: en,
       features: [...state.features, ...features],
     );
+  }
+
+  // ── 物品欄 ──
+
+  /// 同目錄鍵物品的堆疊位置（僅目錄來源、非任務物品參與堆疊）。
+  int _stackIndex(Equipment item) {
+    if (item.source != ItemSource.catalog || item.catalogRef.isEmpty) {
+      return -1;
+    }
+    return state.equipment.indexWhere(
+      (e) =>
+          e.source == ItemSource.catalog &&
+          e.catalogRef == item.catalogRef &&
+          e.itemType == item.itemType &&
+          !e.quest &&
+          !item.quest,
+    );
+  }
+
+  /// 新增物品（目錄挑選或自訂輸入皆走此）；目錄物品已持有時堆疊數量。
+  void addItem(Equipment item) {
+    final i = _stackIndex(item);
+    if (i >= 0) {
+      final list = [...state.equipment];
+      list[i] = list[i].copyWith(
+        quantity: list[i].quantity + item.quantity,
+        priceCp: item.priceCp > 0 ? item.priceCp : list[i].priceCp,
+      );
+      state = state.copyWith(equipment: list);
+      return;
+    }
+    state = state.copyWith(equipment: [...state.equipment, item]);
+  }
+
+  /// 以值相等取代第一個符合的物品。
+  void updateItem(Equipment old, Equipment updated) {
+    final list = [...state.equipment];
+    final i = list.indexOf(old);
+    if (i < 0) return;
+    list[i] = updated;
+    state = state.copyWith(equipment: list);
+  }
+
+  /// 移除物品；回傳其原始位置供復原（找不到回傳 null）。
+  int? removeItem(Equipment item) {
+    final i = state.equipment.indexOf(item);
+    if (i < 0) return null;
+    final list = [...state.equipment]..removeAt(i);
+    state = state.copyWith(equipment: list);
+    return i;
+  }
+
+  /// 復原移除的物品（SnackBar undo）。
+  void restoreItem(Equipment item, int index) {
+    final list = [...state.equipment];
+    list.insert(index.clamp(0, list.length), item);
+    state = state.copyWith(equipment: list);
+  }
+
+  /// 使用消耗品：數量 −1；歸零時非任務物品自清單移除（回傳被移除的
+  /// 條目與位置供 undo），任務物品保留為 0。
+  (Equipment, int)? useConsumable(Equipment item) {
+    final i = state.equipment.indexOf(item);
+    if (i < 0 || item.quantity <= 0) return null;
+    final next = item.copyWith(quantity: item.quantity - 1);
+    if (next.quantity == 0 && !item.quest) {
+      final list = [...state.equipment]..removeAt(i);
+      state = state.copyWith(equipment: list);
+      return (item, i);
+    }
+    final list = [...state.equipment];
+    list[i] = next;
+    state = state.copyWith(equipment: list);
+    return null;
+  }
+
+  /// 切換裝備狀態（武器/護甲）。裝上非盾牌護甲時，依 2024 規則法師護甲
+  /// 提前結束（自動關閉，卸甲不自動恢復）。
+  void toggleEquipped(Equipment item) {
+    final i = state.equipment.indexOf(item);
+    if (i < 0) return;
+    final next = item.copyWith(equipped: !item.equipped);
+    final list = [...state.equipment];
+    list[i] = next;
+    final donsArmor =
+        next.equipped &&
+        next.itemType == ItemType.armor &&
+        next.armorCategory != ArmorCategory.shield;
+    state = state.copyWith(
+      equipment: list,
+      mageArmorActive: donsArmor ? false : state.mageArmorActive,
+    );
+  }
+
+  /// 購買：扣款總額＝成交單價×數量，分層扣款成功即入欄
+  /// （priceCp 記成交單價；同目錄物品堆疊數量）；不足額回傳結果不變更。
+  PayResult purchaseItem(
+    Equipment item, {
+    required int unitPriceCp,
+    int quantity = 1,
+  }) {
+    final result = payFrom(state.currency, unitPriceCp * quantity);
+    if (result.ok) {
+      state = state.copyWith(currency: result.remaining);
+      addItem(item.copyWith(priceCp: unitPriceCp, quantity: quantity));
+    }
+    return result;
+  }
+
+  /// 法師護甲開關（僅法術清單含 Mage Armor 的角色可見；著甲時由
+  /// [toggleEquipped] 自動關閉）。
+  void setMageArmor(bool active) {
+    state = state.copyWith(mageArmorActive: active);
   }
 
   // ── 基本資訊（限扮演資訊；物種/背景/職業等創角決定項不在此改） ──

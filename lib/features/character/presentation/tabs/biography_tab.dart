@@ -7,6 +7,7 @@ import '../../../../app/theme/decorations.dart';
 import '../../../../app/theme/surface_colors.dart';
 import '../../domain/character.dart';
 import '../../domain/character_providers.dart';
+import '../../domain/derived_stats.dart';
 import '../widgets/editor_sheet.dart';
 
 class BiographyTab extends ConsumerWidget {
@@ -68,10 +69,7 @@ class BiographyTab extends ConsumerWidget {
           ),
           CollapsibleSection(
             title: 'FEATURES & TRAITS 特長',
-            child: _Features(
-              features: character.features,
-              languages: character.languages,
-            ),
+            child: _Features(character: character),
           ),
         ],
       ),
@@ -361,13 +359,14 @@ class _TraitRow extends StatelessWidget {
 }
 
 class _Features extends StatelessWidget {
-  final List<CharacterFeature> features;
-  final List<String> languages;
-  const _Features({required this.features, required this.languages});
+  final Character character;
+  const _Features({required this.character});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final features = character.features;
+    final languages = character.languages;
     return ParchmentCard(
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
@@ -387,30 +386,64 @@ class _Features extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: features[i].name,
-                              style: TextStyle(
-                                fontFamily: 'NotoSerifTC',
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: theme.colorScheme.onSurface,
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: features[i].name,
+                                    style: TextStyle(
+                                      fontFamily: 'NotoSerifTC',
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: theme.colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: '  ${features[i].nameEn}',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 11,
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.45),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            TextSpan(
-                              text: '  ${features[i].nameEn}',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 11,
-                                color: theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.45,
+                          ),
+                          // 著甲條件不滿足 → 失效提示（不隱藏、不刪除）
+                          if (featureArmorViolation(character, features[i])
+                              case final violation?) ...[
+                            const SizedBox(width: 6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 1,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                  color: AppColors.danger.withValues(
+                                    alpha: 0.6,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                violation,
+                                style: TextStyle(
+                                  fontFamily: 'NotoSerifTC',
+                                  fontSize: 9,
+                                  color: AppColors.danger.withValues(
+                                    alpha: 0.9,
+                                  ),
                                 ),
                               ),
                             ),
                           ],
-                        ),
+                        ],
                       ),
                       if (features[i].description.isNotEmpty) ...[
                         const SizedBox(height: 3),
