@@ -2604,34 +2604,34 @@ class _PortraitPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: surfaces.border2),
-        gradient: const RadialGradient(
-          radius: 0.9,
-          colors: [Color(0xFF33291A), Color(0xFF0C0A06)],
-        ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          const Icon(Icons.person, size: 60, color: Color(0xFF6B582F)),
-          const Text(
-            '?',
-            style: TextStyle(
-              fontFamily: 'Cinzel',
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-              color: AppColors.accentGold,
-            ),
+          Image.asset(
+            'assets/images/unknown.jpg',
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.medium,
           ),
-          const SizedBox(height: 4),
-          Text(
-            '尚未上傳角色圖',
-            style: TextStyle(
-              fontFamily: 'NotoSerifTC',
-              fontSize: 10,
-              color: surfaces.textSecondary,
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              color: const Color(0x99000000),
+              child: const Text(
+                '尚未上傳角色圖',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'NotoSerifTC',
+                  fontSize: 11,
+                  color: Color(0xFFC9B48A),
+                ),
+              ),
             ),
           ),
         ],

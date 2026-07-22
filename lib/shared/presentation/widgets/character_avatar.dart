@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../app/theme/surface_colors.dart';
 import '../../../features/character/domain/character.dart';
 
-/// 角色頭像：有角色圖顯示圖（載入失敗回退字首），無圖顯示姓氏字首。
-/// 各顯示點（頁首、角色選擇卡、確認頁）共用，樣式參數化。
+/// 角色頭像：有角色圖顯示圖；無圖或載入失敗顯示「未知人像」佔位圖
+/// （assets/images/unknown.jpg，黑霧金瞳）。各顯示點共用，樣式參數化。
 class CharacterAvatar extends StatelessWidget {
   final Character character;
   final double size;
@@ -26,18 +26,14 @@ class CharacterAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final surfaces = Theme.of(context).extension<SurfaceColors>()!;
-    final initial = Center(
-      child: Text(
-        character.name.isEmpty ? '?' : character.name.characters.first,
-        style:
-            initialStyle ??
-            TextStyle(
-              fontFamily: 'Cinzel',
-              fontSize: size * 0.45,
-              fontWeight: FontWeight.w700,
-              color: surfaces.textPrimary,
-            ),
-      ),
+    final placeholder = Image.asset(
+      'assets/images/unknown.jpg',
+      width: size,
+      height: size,
+      fit: BoxFit.cover,
+      // 圖高於寬，取上緣偏中（眼睛落在圓框內）
+      alignment: const Alignment(0, -0.4),
+      filterQuality: FilterQuality.medium,
     );
 
     return Container(
@@ -52,13 +48,13 @@ class CharacterAvatar extends StatelessWidget {
             : Border.all(color: borderColor!, width: borderWidth),
       ),
       child: character.portraitUrl.isEmpty
-          ? initial
+          ? placeholder
           : Image.network(
               character.portraitUrl,
               width: size,
               height: size,
               fit: BoxFit.cover,
-              errorBuilder: (_, _, _) => initial,
+              errorBuilder: (_, _, _) => placeholder,
             ),
     );
   }

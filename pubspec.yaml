@@ -57,6 +57,7 @@ flutter:
         - asset: assets/fonts/NotoSerifTC-Variable.ttf
   assets:
     - shorebird.yaml
+    - assets/images/
     - assets/images/coins/
 
 flutter_launcher_icons:

@@ -334,12 +334,10 @@ class _HeroState extends ConsumerState<_Hero> {
                 },
               )
             else
-              Center(
-                child: Icon(
-                  Icons.auto_awesome,
-                  size: 120,
-                  color: AppColors.accentGold.withValues(alpha: 0.06),
-                ),
+              Image.asset(
+                'assets/images/unknown.jpg',
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.medium,
               ),
             // 底部漸層加深，確保文字可讀（純顯示層，放行手勢給底下的
             // InteractiveViewer）。
