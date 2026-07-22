@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
+import '../../../app/theme/surface_colors.dart';
 import '../../../app/theme/decorations.dart';
 import '../../../shared/domain/app_exception.dart';
 import '../../../shared/presentation/widgets/character_avatar.dart';
@@ -46,7 +47,18 @@ class CharacterSelectPage extends ConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.xxl),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    '點選進入角色卡・長按可刪除角色',
+                    style: TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 12,
+                      color: Theme.of(
+                        context,
+                      ).extension<SurfaceColors>()!.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
                   if (isSyncing) ...[
                     const LinearProgressIndicator(minHeight: 2),
                     const SizedBox(height: AppSpacing.md),
