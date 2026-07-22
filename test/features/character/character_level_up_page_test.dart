@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lorebook/app/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -70,7 +71,7 @@ Future<void> _pumpLevelUpPage(
   await tester.pumpWidget(
     UncontrolledProviderScope(
       container: container,
-      child: MaterialApp.router(routerConfig: router),
+      child: MaterialApp.router(theme: AppTheme.dark, routerConfig: router),
     ),
   );
   await tester.pumpAndSettle();

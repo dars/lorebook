@@ -75,8 +75,12 @@ void main() {
 
     test('種族與背景僅含 SRD 5.2 選項', () {
       expect(kSpecies.map((s) => s.en), isNot(contains('Aasimar')));
-      expect(kBackgrounds.map((b) => b.en).toSet(),
-          {'Acolyte', 'Criminal', 'Sage', 'Soldier'});
+      expect(kBackgrounds.map((b) => b.en).toSet(), {
+        'Acolyte',
+        'Criminal',
+        'Sage',
+        'Soldier',
+      });
     });
 
     test('背景起源專長均在 SRD 範圍（無斷鏈）', () {

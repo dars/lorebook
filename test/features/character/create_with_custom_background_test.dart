@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lorebook/app/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -26,8 +27,7 @@ class _FakeCustomBgs extends CustomBackgroundsNotifier {
 
 class _ErrorCustomBgs extends CustomBackgroundsNotifier {
   @override
-  Future<List<CustomBackground>> build() async =>
-      throw Exception('offline');
+  Future<List<CustomBackground>> build() async => throw Exception('offline');
 }
 
 Future<ProviderContainer> _pump(
@@ -62,7 +62,7 @@ Future<ProviderContainer> _pump(
   await tester.pumpWidget(
     UncontrolledProviderScope(
       container: container,
-      child: MaterialApp.router(routerConfig: router),
+      child: MaterialApp.router(theme: AppTheme.dark, routerConfig: router),
     ),
   );
   await tester.pumpAndSettle();
@@ -134,12 +134,11 @@ void main() {
     final created = container.read(characterListProvider).last;
     expect(created.background, '獵人'); // 快照為自訂名稱（無後綴）
     expect(created.backgroundEn, ''); // 自訂背景無英文名
-    expect(created.skills.where((s) => s.proficient).map((s) => s.name),
-        containsAll(['隱匿', '求生', '體能', '威嚇']));
     expect(
-      created.features.map((f) => f.source),
-      contains('背景：獵人'),
+      created.skills.where((s) => s.proficient).map((s) => s.name),
+      containsAll(['隱匿', '求生', '體能', '威嚇']),
     );
+    expect(created.features.map((f) => f.source), contains('背景：獵人'));
   });
 
   testWidgets('離線降級：僅內建背景 + 提示，不阻擋建角', (tester) async {

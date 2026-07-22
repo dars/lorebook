@@ -99,9 +99,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/custom-background-edit',
-        builder: (context, state) => CustomBackgroundEditPage(
-          initial: state.extra as CustomBackground?,
-        ),
+        builder: (context, state) =>
+            CustomBackgroundEditPage(initial: state.extra as CustomBackground?),
       ),
       GoRoute(
         path: '/character-level-up',

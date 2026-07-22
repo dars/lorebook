@@ -84,10 +84,10 @@ final customBackgroundRepositoryProvider = Provider<CustomBackgroundRepository>(
 /// 依賴 auth 狀態：登入/登出都會重新抓取；未登入/離線時為
 /// AsyncError，由建角背景步驟降級（僅顯示內建背景）。CRUD 後
 /// 就地更新，不重新請求。
-final customBackgroundsProvider = AsyncNotifierProvider<
-    CustomBackgroundsNotifier, List<CustomBackground>>(
-  CustomBackgroundsNotifier.new,
-);
+final customBackgroundsProvider =
+    AsyncNotifierProvider<CustomBackgroundsNotifier, List<CustomBackground>>(
+      CustomBackgroundsNotifier.new,
+    );
 
 class CustomBackgroundsNotifier extends AsyncNotifier<List<CustomBackground>> {
   @override

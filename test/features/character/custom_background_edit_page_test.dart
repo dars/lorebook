@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lorebook/app/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -14,11 +15,13 @@ class _FakeRepo extends CustomBackgroundRepository {
   // 關閉 token auto-refresh，避免週期 Timer 觸發 widget test 的
   // pending-timer 檢查。
   _FakeRepo()
-      : super(SupabaseClient(
+    : super(
+        SupabaseClient(
           'http://localhost',
           'k',
           authOptions: const AuthClientOptions(autoRefreshToken: false),
-        ));
+        ),
+      );
 
   @override
   Future<List<CustomBackground>> fetchAll() async => [];
@@ -49,10 +52,8 @@ void main() {
     );
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          customBackgroundRepositoryProvider.overrideWithValue(repo),
-        ],
-        child: MaterialApp.router(routerConfig: router),
+        overrides: [customBackgroundRepositoryProvider.overrideWithValue(repo)],
+        child: MaterialApp.router(theme: AppTheme.dark, routerConfig: router),
       ),
     );
     router.push('/edit');
@@ -136,10 +137,8 @@ void main() {
     );
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          customBackgroundRepositoryProvider.overrideWithValue(repo),
-        ],
-        child: MaterialApp.router(routerConfig: router),
+        overrides: [customBackgroundRepositoryProvider.overrideWithValue(repo)],
+        child: MaterialApp.router(theme: AppTheme.dark, routerConfig: router),
       ),
     );
     router.push('/edit', extra: existing);

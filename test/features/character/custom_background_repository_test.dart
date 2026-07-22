@@ -28,8 +28,12 @@ void main() {
       'test-key',
       httpClient: MockClient((req) async {
         requests.add(req);
-        return http.Response('[]', 200,
-            headers: {'content-type': 'application/json'}, request: req);
+        return http.Response(
+          '[]',
+          200,
+          headers: {'content-type': 'application/json'},
+          request: req,
+        );
       }),
     );
     final repo = CustomBackgroundRepository(client);
@@ -54,34 +58,41 @@ void main() {
         'test-key',
         httpClient: MockClient((req) async {
           requests.add(req);
-          return http.Response('[]', 200,
-              headers: {'content-type': 'application/json'}, request: req);
+          return http.Response(
+            '[]',
+            200,
+            headers: {'content-type': 'application/json'},
+            request: req,
+          );
         }),
       );
       // 以未過期的持久化 session 恢復登入狀態（不觸發網路 refresh）。
       // access_token 需為含 exp claim 的合法 JWT 結構（expiresAt 由此解出）。
       final expiresAt =
           DateTime.now().add(const Duration(hours: 1)).millisecondsSinceEpoch ~/
-              1000;
+          1000;
       String b64(Map<String, dynamic> m) =>
           base64Url.encode(utf8.encode(jsonEncode(m))).replaceAll('=', '');
-      final jwt = '${b64({'alg': 'none', 'typ': 'JWT'})}'
+      final jwt =
+          '${b64({'alg': 'none', 'typ': 'JWT'})}'
           '.${b64({'sub': 'user-1', 'exp': expiresAt, 'role': 'authenticated'})}'
           '.sig';
-      await client.auth.recoverSession(jsonEncode({
-        'access_token': jwt,
-        'refresh_token': 'refresh',
-        'token_type': 'bearer',
-        'expires_in': 3600,
-        'expires_at': expiresAt,
-        'user': {
-          'id': 'user-1',
-          'aud': 'authenticated',
-          'app_metadata': <String, dynamic>{},
-          'user_metadata': <String, dynamic>{},
-          'created_at': '2026-01-01T00:00:00Z',
-        },
-      }));
+      await client.auth.recoverSession(
+        jsonEncode({
+          'access_token': jwt,
+          'refresh_token': 'refresh',
+          'token_type': 'bearer',
+          'expires_in': 3600,
+          'expires_at': expiresAt,
+          'user': {
+            'id': 'user-1',
+            'aud': 'authenticated',
+            'app_metadata': <String, dynamic>{},
+            'user_metadata': <String, dynamic>{},
+            'created_at': '2026-01-01T00:00:00Z',
+          },
+        }),
+      );
       repo = CustomBackgroundRepository(client);
     });
 
