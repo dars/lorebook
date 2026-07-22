@@ -216,6 +216,39 @@ class CurrentCharacterNotifier extends Notifier<Character> {
     );
   }
 
+  // ── 基本資訊（限扮演資訊；物種/背景/職業等創角決定項不在此改） ──
+
+  /// 更新名稱、陣營與信仰。名稱不可為空（空字串時保留原名）。
+  void updateBasicInfo({
+    required String name,
+    required String nameEn,
+    required String alignment,
+    required String alignmentEn,
+    required String deity,
+    required String deityEn,
+  }) {
+    state = state.copyWith(
+      name: name.trim().isEmpty ? state.name : name.trim(),
+      nameEn: nameEn.trim(),
+      alignment: alignment,
+      alignmentEn: alignmentEn,
+      deity: deity.trim(),
+      deityEn: deityEn.trim(),
+    );
+  }
+
+  // ── 傳記（玩家自產內容） ──
+
+  /// 更新「其人其事」：背景故事與性格標籤。
+  void updateAbout({required String backstory, required List<String> tags}) {
+    state = state.copyWith(backstory: backstory, personalityTags: tags);
+  }
+
+  /// 更新性格四欄（特質/理念/羈絆/缺陷）。
+  void updatePersonality(Personality personality) {
+    state = state.copyWith(personality: personality);
+  }
+
   // ── 冒險日誌 ──
 
   void addJournalEntry(String title, String body) {

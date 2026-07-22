@@ -183,6 +183,9 @@ class CollapsibleSection extends StatefulWidget {
   /// 避免與上層（如 CharacterHeader）的間距疊加後顯得過大。
   final bool isFirst;
 
+  /// 標題列最右端的動作元件（如編輯鈕）；自帶點擊時不會觸發收合。
+  final Widget? trailing;
+
   const CollapsibleSection({
     super.key,
     required this.title,
@@ -190,6 +193,7 @@ class CollapsibleSection extends StatefulWidget {
     this.initiallyExpanded = true,
     this.summary,
     this.isFirst = false,
+    this.trailing,
   });
 
   @override
@@ -266,6 +270,10 @@ class _CollapsibleSectionState extends State<CollapsibleSection> {
                   ),
                 const SizedBox(width: 6),
                 Expanded(child: Container(height: 1, color: lineColor)),
+                if (widget.trailing != null) ...[
+                  const SizedBox(width: 6),
+                  widget.trailing!,
+                ],
               ],
             ),
           ),

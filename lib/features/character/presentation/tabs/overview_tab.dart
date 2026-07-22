@@ -8,6 +8,7 @@ import '../../../../app/theme/surface_colors.dart';
 import '../../data/portrait_service.dart';
 import '../../domain/character.dart';
 import '../../domain/character_providers.dart';
+import '../widgets/editor_sheet.dart';
 import '../widgets/portrait_transform.dart';
 import '../widgets/info_field.dart';
 
@@ -31,6 +32,9 @@ class OverviewTab extends StatelessWidget {
           _Hero(character: character),
           CollapsibleSection(
             title: 'BASIC 基本資訊',
+            trailing: SectionEditIcon(
+              onTap: () => _showBasicInfoEditor(context, character),
+            ),
             child: _InfoGrid(character: character),
           ),
           CollapsibleSection(
@@ -604,6 +608,179 @@ class _StatCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────── 基本資訊編輯
+//
+// 僅開放扮演資訊（名稱/陣營/信仰）；物種、生物類型、體型、背景為創角決定的
+// 規則資料，維持唯讀。陣營依「開軌道選單不開自由填空」原則採九陣營選單。
+
+const _alignments = [
+  ('守序善良', 'Lawful Good'),
+  ('中立善良', 'Neutral Good'),
+  ('混亂善良', 'Chaotic Good'),
+  ('守序中立', 'Lawful Neutral'),
+  ('絕對中立', 'True Neutral'),
+  ('混亂中立', 'Chaotic Neutral'),
+  ('守序邪惡', 'Lawful Evil'),
+  ('中立邪惡', 'Neutral Evil'),
+  ('混亂邪惡', 'Chaotic Evil'),
+];
+
+void _showBasicInfoEditor(BuildContext context, Character character) {
+  showModalBottomSheet<void>(
+    context: context,
+    useRootNavigator: true,
+    isScrollControlled: true,
+    backgroundColor: Theme.of(context).extension<SurfaceColors>()!.surface1,
+    showDragHandle: true,
+    builder: (context) => _BasicInfoEditorSheet(character: character),
+  );
+}
+
+class _BasicInfoEditorSheet extends ConsumerStatefulWidget {
+  final Character character;
+  const _BasicInfoEditorSheet({required this.character});
+
+  @override
+  ConsumerState<_BasicInfoEditorSheet> createState() =>
+      _BasicInfoEditorSheetState();
+}
+
+class _BasicInfoEditorSheetState extends ConsumerState<_BasicInfoEditorSheet> {
+  late final _name = TextEditingController(text: widget.character.name);
+  late final _nameEn = TextEditingController(text: widget.character.nameEn);
+  late final _deity = TextEditingController(text: widget.character.deity);
+  late final _deityEn = TextEditingController(text: widget.character.deityEn);
+  late String _alignment = widget.character.alignment;
+  late String _alignmentEn = widget.character.alignmentEn;
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _nameEn.dispose();
+    _deity.dispose();
+    _deityEn.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    ref
+        .read(currentCharacterProvider.notifier)
+        .updateBasicInfo(
+          name: _name.text,
+          nameEn: _nameEn.text,
+          alignment: _alignment,
+          alignmentEn: _alignmentEn,
+          deity: _deity.text,
+          deityEn: _deityEn.text,
+        );
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+    return EditorSheetScaffold(
+      title: '編輯基本資訊',
+      onSave: _save,
+      fields: [
+        const EditorFieldLabel('名稱'),
+        TextField(
+          controller: _name,
+          style: const TextStyle(fontFamily: 'NotoSerifTC', fontSize: 14),
+          decoration: const InputDecoration(hintText: '角色名稱'),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        const EditorFieldLabel('英文名'),
+        TextField(
+          controller: _nameEn,
+          style: const TextStyle(fontFamily: 'Inter', fontSize: 14),
+          decoration: const InputDecoration(hintText: 'Character name'),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        const EditorFieldLabel('陣營'),
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: [
+            for (final (cn, en) in _alignments)
+              _AlignmentChip(
+                label: cn,
+                selected: _alignment == cn,
+                onTap: () => setState(() {
+                  _alignment = cn;
+                  _alignmentEn = en;
+                }),
+              ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.md),
+        const EditorFieldLabel('信仰'),
+        TextField(
+          controller: _deity,
+          style: const TextStyle(fontFamily: 'NotoSerifTC', fontSize: 14),
+          decoration: const InputDecoration(hintText: '信奉的神祇（可留空）'),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        const EditorFieldLabel('信仰英文名'),
+        TextField(
+          controller: _deityEn,
+          style: const TextStyle(fontFamily: 'Inter', fontSize: 14),
+          decoration: const InputDecoration(hintText: 'Deity（可留空）'),
+        ),
+        // 提醒唯讀範圍，避免找不到其他欄位的困惑。
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          '物種、生物類型、體型、背景由創角決定，不在此修改。',
+          style: TextStyle(
+            fontFamily: 'NotoSerifTC',
+            fontSize: 11,
+            color: surfaces.textSecondary,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AlignmentChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  const _AlignmentChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSpacing.radiusChip),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+        decoration: BoxDecoration(
+          color: selected ? surfaces.surface2 : surfaces.surface0,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusChip),
+          border: Border.all(
+            color: selected ? AppColors.accentGold : surfaces.border,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'NotoSerifTC',
+            fontSize: 12,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+            color: selected ? surfaces.textPrimary : surfaces.textLight,
+          ),
+        ),
       ),
     );
   }
