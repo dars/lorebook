@@ -393,3 +393,85 @@ class CatalogEntry {
     data: _map(json['data']),
   );
 }
+
+/// 裝備目錄（`v_items` view；item-catalog 規格）。
+///
+/// 機制欄位：武器帶傷害骰/傷害類型/屬性標籤；護甲帶 AC 公式參數
+/// （ac_base + armor_category，Dex 加成規則由類別決定）。價格一律
+/// `price_cp` 整數（cp 計），App 端不解析幣別字串。
+class CatalogItem {
+  final String id;
+  final String name;
+  final String? engName;
+  final String source;
+
+  /// 類別：weapon / armor / gear / tool。
+  final String category;
+
+  /// 子分類（分組瀏覽用：簡易近戰/軍用遠程/輕甲/光源…）。
+  final String subcategory;
+  final int priceCp;
+  final String weight;
+  final bool srd;
+
+  /// 武器機制。
+  final String damageDice;
+  final String damageType;
+  final List<String> properties;
+
+  /// 護甲機制：light / medium / heavy / shield（非護甲為空）。
+  final String armorCategory;
+  final int acBase;
+
+  /// 武器精通（2024）：如 'Topple'（已去書源後綴）。
+  final List<String> mastery;
+
+  /// 5etools 原始規則文字結構（renderer 解析）。
+  final List<dynamic> entries;
+
+  const CatalogItem({
+    required this.id,
+    required this.name,
+    this.engName,
+    required this.source,
+    this.category = '',
+    this.subcategory = '',
+    this.priceCp = 0,
+    this.weight = '',
+    this.srd = false,
+    this.damageDice = '',
+    this.damageType = '',
+    this.properties = const [],
+    this.armorCategory = '',
+    this.acBase = 0,
+    this.mastery = const [],
+    this.entries = const [],
+  });
+
+  bool get isWeapon => category == 'weapon';
+  bool get isArmor => category == 'armor';
+  bool get finesse =>
+      properties.any((p) => p.toLowerCase().contains('finesse'));
+
+  factory CatalogItem.fromJson(Map<String, dynamic> json) => CatalogItem(
+    id: _s(json['id']),
+    name: _s(json['name']),
+    engName: _sn(json['eng_name']),
+    source: _s(json['source']),
+    category: _s(json['category']),
+    subcategory: _s(json['subcategory']),
+    priceCp: _i(json['price_cp']),
+    weight: json['weight']?.toString() ?? '',
+    srd: _b(json['srd']),
+    damageDice: _s(json['damage_dice']),
+    damageType: _s(json['damage_type']),
+    properties: _strList(json['properties']),
+    armorCategory: _s(json['armor_category']),
+    acBase: _i(json['ac_base']),
+    mastery: [
+      for (final m in _list(json['mastery']))
+        if (m is String) m.split('|').first,
+    ],
+    entries: _list(json['entries']),
+  );
+}

@@ -123,6 +123,17 @@ class CatalogRepository {
         return q.order('level', ascending: true).order('name');
       });
 
+  /// 裝備目錄（`v_items` view；item-catalog 規格）。
+  ///
+  /// [category] 過濾類別（weapon / armor / gear / tool）。資料未匯入時
+  /// 回傳空清單（呼叫端據此降級隱藏目錄入口）。
+  Future<List<CatalogItem>> fetchItems({String? category}) =>
+      _list('裝備目錄', CatalogItem.fromJson, () {
+        var q = _client.from('v_items').select().eq('source', source);
+        if (category != null) q = q.eq('category', category);
+        return q.order('name', ascending: true);
+      });
+
   /// 長尾通用內容（`entries`），以 [kind] 判別：
   /// condition / language / deity / optionalfeature / action /
   /// variantrule / disease…
@@ -190,3 +201,13 @@ final spellCatalogProvider =
 final entryCatalogProvider = FutureProvider.family<List<CatalogEntry>, String>(
   (ref, kind) => ref.watch(catalogRepositoryProvider).fetchEntries(kind),
 );
+
+/// 裝備目錄（全類別一次取回；items 未匯入或查詢失敗時回傳空清單，
+/// 呼叫端據此降級隱藏「從目錄挑選」入口——inventory-items 規格）。
+final itemCatalogProvider = FutureProvider<List<CatalogItem>>((ref) async {
+  try {
+    return await ref.watch(catalogRepositoryProvider).fetchItems();
+  } catch (_) {
+    return const [];
+  }
+});
