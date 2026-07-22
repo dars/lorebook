@@ -60,21 +60,19 @@ class InventoryTab extends StatelessWidget {
   }
 }
 
-/// 五種幣別的視覺／文字規格；財富卡與計算機共用同一份定義，避免顏色/順序分岔。
+/// 五種幣別的視覺／文字規格；財富卡與計算機共用同一份定義，避免圖示/順序分岔。
+/// 圖示裁自 designs/images/coin.PNG（鐵砧=銅、彎月=銀、琥珀寶石=琥珀金、
+/// 太陽=金、八芒星=鉑金）。
 class _CoinSpec {
   final String code; // PP/GP/EP/SP/CP
   final String label; // 中文簡稱
-  final Color highlight;
-  final Color base;
-  final Color shadow;
+  final String asset;
   final int Function(Currency) read;
 
   const _CoinSpec({
     required this.code,
     required this.label,
-    required this.highlight,
-    required this.base,
-    required this.shadow,
+    required this.asset,
     required this.read,
   });
 }
@@ -83,44 +81,42 @@ const _coinSpecs = [
   _CoinSpec(
     code: 'PP',
     label: '鉑金',
-    highlight: Color(0xFFF5F5FA),
-    base: Color(0xFFD8D8E0),
-    shadow: Color(0xFF9A9AA8),
+    asset: 'assets/images/coins/coin_pp.png',
     read: _readPp,
   ),
   _CoinSpec(
     code: 'GP',
     label: '金幣',
-    highlight: Color(0xFFF6DD8C),
-    base: Color(0xFFD4AF37),
-    shadow: Color(0xFF8B6E2A),
+    asset: 'assets/images/coins/coin_gp.png',
     read: _readGp,
   ),
   _CoinSpec(
     code: 'EP',
     label: '琥珀金',
-    highlight: Color(0xFFE0D19C),
-    base: Color(0xFFB9A96B),
-    shadow: Color(0xFF7C6E40),
+    asset: 'assets/images/coins/coin_ep.png',
     read: _readEp,
   ),
   _CoinSpec(
     code: 'SP',
     label: '銀幣',
-    highlight: Color(0xFFEDEFF3),
-    base: Color(0xFFB8BCC2),
-    shadow: Color(0xFF74787F),
+    asset: 'assets/images/coins/coin_sp.png',
     read: _readSp,
   ),
   _CoinSpec(
     code: 'CP',
     label: '銅幣',
-    highlight: Color(0xFFE3A874),
-    base: Color(0xFFB87333),
-    shadow: Color(0xFF6E4419),
+    asset: 'assets/images/coins/coin_cp.png',
     read: _readCp,
   ),
 ];
+
+/// 幣別小圖（統一走這裡，尺寸由呼叫端指定）。
+Widget _coinImage(_CoinSpec spec, double size) => Image.asset(
+  spec.asset,
+  width: size,
+  height: size,
+  filterQuality: FilterQuality.medium,
+);
 
 int _readPp(Currency c) => c.pp;
 int _readGp(Currency c) => c.gp;
@@ -166,11 +162,7 @@ class _Coin extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
-          width: 32,
-          height: 32,
-          child: CustomPaint(painter: _CoinPainter(spec)),
-        ),
+        _coinImage(spec, 32),
         const SizedBox(height: 6),
         Text(
           '$amount',
@@ -193,61 +185,6 @@ class _Coin extends StatelessWidget {
       ],
     );
   }
-}
-
-/// 立體硬幣：斜射高光 + 金屬漸層 + 壓花緣圈，質感依幣別（鉑/金/琥珀/銀/銅）區分。
-class _CoinPainter extends CustomPainter {
-  final _CoinSpec spec;
-  const _CoinPainter(this.spec);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = size.center(Offset.zero);
-    final radius = size.width / 2;
-
-    // 投影
-    canvas.drawCircle(
-      center.translate(0, 1.2),
-      radius,
-      Paint()
-        ..color = Colors.black.withValues(alpha: 0.35)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2),
-    );
-
-    // 幣面漸層
-    final facePaint = Paint()
-      ..shader = RadialGradient(
-        center: const Alignment(-0.35, -0.4),
-        radius: 0.9,
-        colors: [spec.highlight, spec.base, spec.shadow],
-        stops: const [0.0, 0.55, 1.0],
-      ).createShader(Rect.fromCircle(center: center, radius: radius));
-    canvas.drawCircle(center, radius, facePaint);
-
-    // 邊緣描邊
-    canvas.drawCircle(
-      center,
-      radius - 0.75,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5
-        ..color = spec.shadow.withValues(alpha: 0.9),
-    );
-
-    // 內緣壓花圈（模擬鑄幣滾邊）
-    canvas.drawCircle(
-      center,
-      radius * 0.72,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1
-        ..color = spec.shadow.withValues(alpha: 0.55),
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant _CoinPainter oldDelegate) =>
-      oldDelegate.spec.code != spec.code;
 }
 
 // ─────────────────────────────────────────── 財富計算機
@@ -562,11 +499,7 @@ class _InlineTerm extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 3),
-          SizedBox(
-            width: 18,
-            height: 18,
-            child: CustomPaint(painter: _CoinPainter(spec)),
-          ),
+          _coinImage(spec, 18),
         ],
       ),
     );
@@ -601,11 +534,7 @@ class _CurrencyPickButton extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
-                width: 20,
-                height: 20,
-                child: CustomPaint(painter: _CoinPainter(spec)),
-              ),
+              _coinImage(spec, 20),
               const SizedBox(height: 4),
               Text(
                 spec.label,
