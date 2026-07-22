@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthException;
 
@@ -9,28 +10,11 @@ class AuthRepository {
 
   AuthRepository(this._client);
 
-  Future<AuthResponse> signInWithEmail(String email, String password) async {
-    try {
-      return await _client.auth.signInWithPassword(
-        email: email,
-        password: password,
-      );
-    } on AuthApiException catch (e) {
-      throw AuthException(e.message);
-    } catch (e) {
-      throw AuthException('登入失敗：$e');
-    }
-  }
-
-  Future<AuthResponse> signUpWithEmail(String email, String password) async {
-    try {
-      return await _client.auth.signUp(email: email, password: password);
-    } on AuthApiException catch (e) {
-      throw AuthException(e.message);
-    } catch (e) {
-      throw AuthException('註冊失敗：$e');
-    }
-  }
+  // web 回到當前 origin（需列於 Supabase Auth 的 Redirect URLs）；
+  // 行動端用自訂 scheme 跳回 App。
+  static final String _oauthRedirect = kIsWeb
+      ? Uri.base.origin
+      : 'dev.code4soul.lorebook://login-callback/';
 
   Future<void> signOut() async {
     try {
@@ -46,7 +30,7 @@ class AuthRepository {
     try {
       return await _client.auth.signInWithOAuth(
         OAuthProvider.google,
-        redirectTo: 'dev.code4soul.lorebook://login-callback/',
+        redirectTo: _oauthRedirect,
       );
     } on AuthApiException catch (e) {
       throw AuthException(e.message);
@@ -59,7 +43,7 @@ class AuthRepository {
     try {
       return await _client.auth.signInWithOAuth(
         OAuthProvider.apple,
-        redirectTo: 'dev.code4soul.lorebook://login-callback/',
+        redirectTo: _oauthRedirect,
       );
     } on AuthApiException catch (e) {
       throw AuthException(e.message);

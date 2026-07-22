@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../app/theme/surface_colors.dart';
 import '../../../features/character/domain/character.dart';
+import 'portrait_image.dart';
 
 /// 角色頭像：有角色圖顯示圖；無圖或載入失敗顯示「未知人像」佔位圖
 /// （assets/images/unknown.jpg，黑霧金瞳）。各顯示點共用，樣式參數化。
@@ -49,8 +50,8 @@ class CharacterAvatar extends StatelessWidget {
       ),
       child: character.portraitUrl.isEmpty
           ? placeholder
-          : Image.network(
-              character.portraitUrl,
+          : Image(
+              image: portraitImageProvider(character.portraitUrl),
               width: size,
               height: size,
               fit: BoxFit.cover,

@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../features/auth/domain/guest_mode.dart';
 import '../features/auth/presentation/login_page.dart';
-import '../features/auth/presentation/register_page.dart';
 import '../features/character/domain/character_providers.dart';
 import '../features/character/domain/custom_background.dart';
 import '../features/character/presentation/character_create_page.dart';
@@ -44,8 +44,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (!_isSupabaseInitialized) return null;
 
       final devBypass = ref.read(devBypassAuthProvider);
+      final guest = ref.read(guestModeProvider);
       final session = Supabase.instance.client.auth.currentSession;
-      final isLoggedIn = session != null || devBypass;
+      final isLoggedIn = session != null || devBypass || guest;
       final isAuthRoute = state.matchedLocation.startsWith('/auth');
       final isCharSelect = state.matchedLocation == '/character-select';
       final isCreate = state.matchedLocation == '/character-create';
@@ -73,10 +74,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/auth/login',
         builder: (context, state) => const LoginPage(),
-      ),
-      GoRoute(
-        path: '/auth/register',
-        builder: (context, state) => const RegisterPage(),
       ),
       GoRoute(
         path: '/character-select',

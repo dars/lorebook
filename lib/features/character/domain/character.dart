@@ -377,9 +377,9 @@ abstract class Character with _$Character {
 
   static Character mock() {
     return const Character(
-      id: 'mock-devlin-001',
-      name: '戴夫林',
-      nameEn: 'Devlin',
+      id: 'mock-cedric-001',
+      name: '賽德里克',
+      nameEn: 'Cedric',
       species: '人類',
       speciesEn: 'Human',
       className: '法師',

@@ -5,6 +5,8 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/decorations.dart';
 import '../../../../app/theme/surface_colors.dart';
+import '../../../../shared/presentation/widgets/portrait_image.dart';
+import '../../../auth/domain/guest_mode.dart';
 import '../../data/portrait_service.dart';
 import '../../domain/character.dart';
 import '../../domain/character_providers.dart';
@@ -79,7 +81,9 @@ class _HeroState extends ConsumerState<_Hero> {
   void _resolveImageSize(String url) {
     if (url.isEmpty || url == _resolvedUrl) return;
     _resolvedUrl = url;
-    final stream = NetworkImage(url).resolve(const ImageConfiguration());
+    final stream = portraitImageProvider(
+      url,
+    ).resolve(const ImageConfiguration());
     late final ImageStreamListener listener;
     listener = ImageStreamListener((info, _) {
       final size = Size(
@@ -180,7 +184,14 @@ class _HeroState extends ConsumerState<_Hero> {
   }
 
   /// 已有圖：bottom sheet 提供更換/移除；無圖：直接選圖上傳。
+  /// 試玩模式：上傳需登入（Storage），直接提醒不進流程。
   void _onEdit() {
+    if (ref.read(guestModeProvider)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('試玩模式不提供上傳角色圖，登入後即可自訂')),
+      );
+      return;
+    }
     if (widget.character.portraitUrl.isEmpty) {
       _upload();
       return;
@@ -284,8 +295,8 @@ class _HeroState extends ConsumerState<_Hero> {
                   );
                   if (img == null) {
                     // 尺寸未解析前先以 cover 顯示，避免閃空。
-                    return Image.network(
-                      character.portraitUrl,
+                    return Image(
+                      image: portraitImageProvider(character.portraitUrl),
                       fit: BoxFit.cover,
                       errorBuilder: (_, _, _) => const SizedBox.shrink(),
                     );
@@ -300,8 +311,8 @@ class _HeroState extends ConsumerState<_Hero> {
                   final child = SizedBox(
                     width: t.childWidth,
                     height: t.childHeight,
-                    child: Image.network(
-                      character.portraitUrl,
+                    child: Image(
+                      image: portraitImageProvider(character.portraitUrl),
                       fit: BoxFit.fill,
                       errorBuilder: (_, _, _) => const SizedBox.shrink(),
                     ),

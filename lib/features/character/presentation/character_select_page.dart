@@ -8,6 +8,7 @@ import '../../../app/theme/surface_colors.dart';
 import '../../../app/theme/decorations.dart';
 import '../../../shared/domain/app_exception.dart';
 import '../../../shared/presentation/widgets/character_avatar.dart';
+import '../../auth/domain/guest_mode.dart';
 import '../data/character_sync_repository.dart';
 import '../domain/character.dart';
 import '../domain/character_providers.dart';
@@ -27,7 +28,9 @@ class CharacterSelectPage extends ConsumerWidget {
       }
     });
     final characters = ref.watch(characterListProvider);
-    final isSyncing = ref.watch(remoteCharactersProvider).isLoading;
+    final isGuest = ref.watch(guestModeProvider);
+    final isSyncing =
+        !isGuest && ref.watch(remoteCharactersProvider).isLoading;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -49,7 +52,7 @@ class CharacterSelectPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    '點選進入角色卡・長按可刪除角色',
+                    isGuest ? '試玩模式・資料僅保存在本機，登入後才會雲端同步' : '點選進入角色卡・長按可刪除角色',
                     style: TextStyle(
                       fontFamily: 'NotoSerifTC',
                       fontSize: 12,
@@ -73,7 +76,14 @@ class CharacterSelectPage extends ConsumerWidget {
                         return _CharacterCard(
                           character: c,
                           onTap: () => onCharacterSelected(c.id),
-                          onLongPress: () => _confirmDelete(context, ref, c),
+                          // 試玩模式不開放刪除：避免訪客把範例角色刪光。
+                          onLongPress: isGuest
+                              ? () => ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('試玩模式無法刪除角色'),
+                                  ),
+                                )
+                              : () => _confirmDelete(context, ref, c),
                         );
                       },
                     ),
@@ -99,6 +109,16 @@ class CharacterSelectPage extends ConsumerWidget {
                       ),
                     ),
                   ),
+                  if (isGuest)
+                    TextButton(
+                      onPressed: () {
+                        ref.read(guestModeProvider.notifier).state = false;
+                        ref.read(selectedCharacterIdProvider.notifier).state =
+                            null;
+                        context.go('/auth/login');
+                      },
+                      child: const Text('離開試玩，前往登入'),
+                    ),
                 ],
               ),
             ),

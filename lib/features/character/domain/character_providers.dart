@@ -411,6 +411,8 @@ class CharacterListNotifier extends StateNotifier<List<Character>> {
     final now = DateTime(2026, 6, 24, 21, 30);
     return [
       Character.mock().copyWith(
+        // 內建範例立繪（訪客試玩用；打包資產，見 portrait_image.dart）。
+        portraitUrl: 'assets/images/demo_character.jpg',
         journalEntries: [
           JournalEntry(
             id: 'j1',

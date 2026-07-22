@@ -54,3 +54,4 @@ app.*.map.json
 
 # Supabase CLI link artifacts
 supabase/.temp/
+.wrangler/

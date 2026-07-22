@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../shared/domain/app_exception.dart';
 import '../data/auth_repository.dart';
+import '../domain/guest_mode.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -15,28 +16,12 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   bool _isLoading = false;
-  bool _obscurePassword = true;
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _signInWithEmail() async {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
+  Future<void> _signIn(Future<void> Function(AuthRepository) action) async {
     setState(() => _isLoading = true);
     try {
-      final repo = ref.read(authRepositoryProvider);
-      await repo.signInWithEmail(
-        _emailController.text.trim(),
-        _passwordController.text,
-      );
+      await action(ref.read(authRepositoryProvider));
       // 成功後 router 的 refreshListenable 會依 session 自動導向。
     } on AuthException catch (e) {
       if (mounted) {
@@ -47,59 +32,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
-  }
-
-  Future<void> _signInWithGoogle() async {
-    setState(() => _isLoading = true);
-    try {
-      final repo = ref.read(authRepositoryProvider);
-      await repo.signInWithGoogle();
-    } on AuthException catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(e.message)));
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _signInWithApple() async {
-    setState(() => _isLoading = true);
-    try {
-      final repo = ref.read(authRepositoryProvider);
-      await repo.signInWithApple();
-    } on AuthException catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(e.message)));
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  String? _validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return '請輸入電子信箱';
-    }
-    final emailRegex = RegExp(r'^[\w\-.+]+@[\w\-]+\.[\w\-.]+$');
-    if (!emailRegex.hasMatch(value.trim())) {
-      return '請輸入有效的電子信箱格式';
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return '請輸入密碼';
-    }
-    if (value.length < 6) {
-      return '密碼至少需要 6 個字元';
-    }
-    return null;
   }
 
   @override
@@ -117,6 +49,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(height: AppSpacing.xxxxl),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Image.asset(
+                      'assets/images/app_icon.png',
+                      width: 96,
+                      height: 96,
+                      filterQuality: FilterQuality.medium,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
                   Text(
                     'LOREBOOK',
                     style: theme.textTheme.headlineLarge?.copyWith(
@@ -131,86 +73,51 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   Card(
                     child: Padding(
                       padding: AppSpacing.cardPadding,
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            TextFormField(
-                              key: const Key('login-email'),
-                              controller: _emailController,
-                              decoration: const InputDecoration(
-                                labelText: '電子信箱',
-                                prefixIcon: Icon(Icons.email_outlined),
-                              ),
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              autocorrect: false,
-                              validator: _validateEmail,
-                            ),
-                            const SizedBox(height: AppSpacing.lg),
-                            TextFormField(
-                              key: const Key('login-password'),
-                              controller: _passwordController,
-                              decoration: InputDecoration(
-                                labelText: '密碼',
-                                prefixIcon: const Icon(Icons.lock_outline),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _obscurePassword
-                                        ? Icons.visibility_off_outlined
-                                        : Icons.visibility_outlined,
-                                  ),
-                                  onPressed: () => setState(
-                                    () => _obscurePassword = !_obscurePassword,
-                                  ),
-                                ),
-                              ),
-                              obscureText: _obscurePassword,
-                              textInputAction: TextInputAction.done,
-                              onFieldSubmitted: (_) => _signInWithEmail(),
-                              validator: _validatePassword,
-                            ),
-                            const SizedBox(height: AppSpacing.xxl),
-                            ElevatedButton(
-                              onPressed: _isLoading ? null : _signInWithEmail,
-                              child: _isLoading
-                                  ? const SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : const Text('登入'),
-                            ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ElevatedButton.icon(
+                            key: const Key('login-google'),
+                            onPressed: _isLoading
+                                ? null
+                                : () => _signIn((r) => r.signInWithGoogle()),
+                            icon: _isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Icon(Icons.g_mobiledata, size: 24),
+                            label: const Text('以 Google 登入'),
+                          ),
+                          if (!kIsWeb &&
+                              defaultTargetPlatform == TargetPlatform.iOS) ...[
                             const SizedBox(height: AppSpacing.lg),
                             OutlinedButton.icon(
-                              onPressed: _isLoading ? null : _signInWithGoogle,
-                              icon: const Icon(Icons.g_mobiledata, size: 24),
-                              label: const Text('以 Google 登入'),
+                              key: const Key('login-apple'),
+                              onPressed: _isLoading
+                                  ? null
+                                  : () => _signIn((r) => r.signInWithApple()),
+                              icon: const Icon(Icons.apple, size: 24),
+                              label: const Text('以 Apple 登入'),
                             ),
-                            if (!kIsWeb &&
-                                defaultTargetPlatform ==
-                                    TargetPlatform.iOS) ...[
-                              const SizedBox(height: AppSpacing.sm),
-                              OutlinedButton.icon(
-                                onPressed: _isLoading ? null : _signInWithApple,
-                                icon: const Icon(Icons.apple, size: 24),
-                                label: const Text('以 Apple 登入'),
-                              ),
-                            ],
                           ],
-                        ),
+                        ],
                       ),
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.xxl),
+                  const SizedBox(height: AppSpacing.xl),
                   TextButton(
+                    key: const Key('login-guest'),
                     onPressed: _isLoading
                         ? null
-                        : () => context.push('/register'),
-                    child: const Text('還沒有帳號？註冊'),
+                        : () {
+                            ref.read(guestModeProvider.notifier).state = true;
+                            context.go('/character-select');
+                          },
+                    child: const Text('先試玩範例角色（免登入）'),
                   ),
                   const SizedBox(height: AppSpacing.xxxxl),
                 ],
