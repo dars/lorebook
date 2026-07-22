@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
@@ -726,6 +727,36 @@ class _BasicInfoEditorSheetState extends ConsumerState<_BasicInfoEditorSheet> {
                 }),
               ),
           ],
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        // 陣營參考測驗（另開瀏覽器/新分頁）。
+        InkWell(
+          onTap: () => launchUrl(
+            Uri.parse('https://alignment-compass.vercel.app/'),
+            mode: LaunchMode.externalApplication,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.open_in_new,
+                  size: 13,
+                  color: AppColors.accentGold,
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  '不確定選哪個？做個陣營羅盤測驗',
+                  style: TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 12,
+                    color: AppColors.accentGold,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         const SizedBox(height: AppSpacing.md),
         const EditorFieldLabel('信仰'),
