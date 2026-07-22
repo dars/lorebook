@@ -170,8 +170,8 @@ class _RightInfo extends StatelessWidget {
             recover,
             style: TextStyle(
               fontFamily: 'Inter',
-              fontSize: 8,
-              letterSpacing: 1,
+              fontSize: 10,
+              letterSpacing: 0.5,
               color: AppColors.sectionLabel,
             ),
           ),

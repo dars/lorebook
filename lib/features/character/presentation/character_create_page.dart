@@ -2255,9 +2255,9 @@ class _DescCard extends StatelessWidget {
             body,
             style: TextStyle(
               fontFamily: 'NotoSerifTC',
-              fontSize: 12,
+              fontSize: 13,
               height: 1.5,
-              color: surfaces.textSecondary,
+              color: surfaces.textLight,
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -2581,7 +2581,7 @@ class _SpellPickRowState extends State<_SpellPickRow> {
                         s.entries,
                         style: TextStyle(
                           fontFamily: 'NotoSerifTC',
-                          fontSize: 12,
+                          fontSize: 13,
                           height: 1.6,
                           color: surfaces.textLight,
                         ),

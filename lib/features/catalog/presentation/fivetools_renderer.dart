@@ -107,14 +107,24 @@ class FtEntriesView extends StatelessWidget {
       final w = _block(context, e);
       if (w != null) children.add(w);
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (var i = 0; i < children.length; i++) ...[
-          if (i > 0) const SizedBox(height: 8),
-          children[i],
+    // 規則全文是全 app 最長篇幅的閱讀場景：明確設定閱讀基準
+    // （14pt・行高 1.7），不依賴外層 DefaultTextStyle（多為 12pt 標籤級）。
+    // 呼叫端傳入的 style 仍可覆寫。
+    return DefaultTextStyle.merge(
+      style: const TextStyle(
+        fontFamily: 'NotoSerifTC',
+        fontSize: 14,
+        height: 1.7,
+      ).merge(style),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var i = 0; i < children.length; i++) ...[
+            if (i > 0) const SizedBox(height: 8),
+            children[i],
+          ],
         ],
-      ],
+      ),
     );
   }
 

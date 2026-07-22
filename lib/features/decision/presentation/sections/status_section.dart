@@ -336,7 +336,7 @@ class _ConcentrationColumn extends StatelessWidget {
                 subLabel!,
                 style: TextStyle(
                   fontFamily: 'Inter',
-                  fontSize: 9,
+                  fontSize: 10,
                   color: surfaces.textSecondary,
                 ),
               ),
@@ -345,8 +345,8 @@ class _ConcentrationColumn extends StatelessWidget {
                 '點按取消',
                 style: TextStyle(
                   fontFamily: 'NotoSerifTC',
-                  fontSize: 9,
-                  color: surfaces.textSecondary.withValues(alpha: 0.7),
+                  fontSize: 11,
+                  color: surfaces.textSecondary.withValues(alpha: 0.8),
                 ),
               ),
             ] else

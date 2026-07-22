@@ -1326,9 +1326,9 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
           '確認後一次套用並重算衍生數值；已用法術位不會恢復（升級不是休息）。',
           style: TextStyle(
             fontFamily: 'NotoSerifTC',
-            fontSize: 11,
+            fontSize: 13,
             height: 1.5,
-            color: surfaces.textSecondary,
+            color: surfaces.textLight,
           ),
         ),
       ],
@@ -1651,7 +1651,7 @@ class _SpellPickRowState extends State<_SpellPickRow> {
                   desc,
                   style: TextStyle(
                     fontFamily: 'NotoSerifTC',
-                    fontSize: 11,
+                    fontSize: 13,
                     height: 1.5,
                     color: surfaces.textLight,
                   ),

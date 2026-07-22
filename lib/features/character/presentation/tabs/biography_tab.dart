@@ -451,10 +451,10 @@ class _Features extends StatelessWidget {
                           features[i].description,
                           style: TextStyle(
                             fontFamily: 'NotoSerifTC',
-                            fontSize: 12,
+                            fontSize: 13,
                             height: 1.5,
                             color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.6,
+                              alpha: 0.7,
                             ),
                           ),
                         ),
