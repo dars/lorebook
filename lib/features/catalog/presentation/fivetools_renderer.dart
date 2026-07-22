@@ -116,14 +116,17 @@ class FtEntriesView extends StatelessWidget {
         fontSize: 14,
         height: 1.7,
       ).merge(style),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (var i = 0; i < children.length; i++) ...[
-            if (i > 0) const SizedBox(height: 8),
-            children[i],
+      // 規則文本可反白複製（web 使用者常需貼到聊天室）。
+      child: SelectionArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var i = 0; i < children.length; i++) ...[
+              if (i > 0) const SizedBox(height: 8),
+              children[i],
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

@@ -1,44 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lorebook — D&D 跑團角色卡與世界觀筆記。支援 2024 版規則、裝備與法術管理、冒險歷程記錄。">
+  <meta name="theme-color" content="#14110C">
+
+  <!-- Open Graph / 分享預覽卡 -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Lorebook — D&D 跑團角色卡">
+  <meta property="og:description" content="建立與管理你的 D&D 角色：能力值、裝備、法術、冒險筆記，一本收齊。免登入即可試玩範例角色。">
+  <meta property="og:url" content="https://lorebook.code4soul.dev/">
+  <meta property="og:image" content="https://lorebook.code4soul.dev/icons/Icon-512.png">
+  <meta name="twitter:card" content="summary">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="lorebook">
+  <meta name="apple-mobile-web-app-title" content="Lorebook">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>lorebook</title>
+  <title>Lorebook — D&D 跑團角色卡</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Required by transitive dep `passkeys` (via supabase_flutter) for WebAuthn support -->
-  <script
-    src="https://github.com/corbado/flutter-passkeys/releases/download/2.4.0/bundle.js"
-    type="application/javascript"
-  ></script>
+  <!-- passkeys（supabase_flutter 轉依賴）：自託管，避免外連 GitHub 阻塞首載 -->
+  <script src="passkeys_bundle.js" defer></script>
+
+  <style>
+    /* 啟動畫面：Flutter 首幀前的純 CSS 佔位，深色羊皮紙氛圍 */
+    #boot-splash {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      background: #14110C;
+      z-index: 9999;
+      transition: opacity .35s ease-out;
+    }
+    #boot-splash img {
+      width: 96px;
+      height: 96px;
+      border-radius: 22px;
+    }
+    #boot-splash .ring {
+      width: 28px;
+      height: 28px;
+      border: 3px solid rgba(201, 168, 76, .25);
+      border-top-color: #C9A84C;
+      border-radius: 50%;
+      animation: boot-spin 1s linear infinite;
+    }
+    #boot-splash .word {
+      color: #C9A84C;
+      font: 600 14px/1 Georgia, 'Times New Roman', serif;
+      letter-spacing: .35em;
+      margin-right: -.35em; /* 抵銷末字 letter-spacing，視覺置中 */
+    }
+    @keyframes boot-spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
+  <div id="boot-splash">
+    <img src="icons/Icon-192.png" alt="">
+    <div class="word">LOREBOOK</div>
+    <div class="ring"></div>
+  </div>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var el = document.getElementById('boot-splash');
+      if (!el) return;
+      el.style.opacity = '0';
+      setTimeout(function () { el.remove(); }, 400);
+    });
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

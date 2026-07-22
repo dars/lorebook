@@ -1,12 +1,12 @@
 {
-    "name": "lorebook",
-    "short_name": "lorebook",
+    "name": "Lorebook — D&D 跑團角色卡",
+    "short_name": "Lorebook",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#F9F5EC",
-    "theme_color": "#F9F5EC",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#14110C",
+    "theme_color": "#14110C",
+    "description": "D&D 跑團角色卡與世界觀筆記：能力值、裝備、法術、冒險歷程，一本收齊。",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {

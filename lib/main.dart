@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app.dart';
@@ -10,6 +11,10 @@ const _supabaseUrl = String.fromEnvironment('SUPABASE_URL');
 const _supabaseKey = String.fromEnvironment('SUPABASE_ANON_KEY');
 
 void main() {
+  // web 用 path URL（/main/decision 而非 /#/main/decision）；
+  // 部署端需 SPA fallback（web/_redirects）。非 web 為 no-op。
+  usePathUrlStrategy();
+
   // 即使在 release，也把錯誤畫到螢幕上（白畫面 → 可見錯誤訊息，便於診斷）。
   ErrorWidget.builder = (details) => _ErrorScreen(
     message: details.exceptionAsString(),
@@ -35,6 +40,12 @@ void main() {
       runApp(const ProviderScope(child: LorebookApp()));
     },
     (error, stack) {
+      // OAuth 回跳的 Auth 例外（如 PKCE code verifier 遺失：跨 origin 回跳、
+      // storage 被清）屬可恢復狀況：留在登入頁重登即可，不得蓋掉整個 App。
+      if (error is AuthException) {
+        debugPrint('忽略 Auth 例外（可重新登入恢復）：$error');
+        return;
+      }
       // 啟動期的未捕捉例外：以可見錯誤畫面取代白畫面。
       runApp(_ErrorScreen(message: '$error', detail: '$stack', root: true));
     },
