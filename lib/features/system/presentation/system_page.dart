@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/decorations.dart';
+import '../../auth/domain/guest_mode.dart';
 import '../../character/domain/character_providers.dart';
 import 'theme_provider.dart';
 
@@ -103,23 +104,41 @@ class SystemPage extends ConsumerWidget {
               children: [
                 Text('帳號', style: theme.textTheme.titleSmall),
                 const SizedBox(height: AppSpacing.md),
-                Text(_currentEmail, style: theme.textTheme.bodyMedium),
+                Text(
+                  ref.watch(guestModeProvider) ? '試玩模式（未登入）' : _currentEmail,
+                  style: theme.textTheme.bodyMedium,
+                ),
                 const SizedBox(height: AppSpacing.lg),
                 SizedBox(
                   width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () async {
-                      try {
-                        await Supabase.instance.client.auth.signOut();
-                      } catch (_) {}
-                    },
-                    icon: const Icon(Icons.logout),
-                    label: const Text('登出'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.danger,
-                      side: const BorderSide(color: AppColors.danger),
-                    ),
-                  ),
+                  child: ref.watch(guestModeProvider)
+                      // 試玩模式沒有 session 可登出：明確清旗標與選角再回登入頁，
+                      // 避免殘留 guest 狀態讓 router 誤判仍在試玩。
+                      ? OutlinedButton.icon(
+                          onPressed: () {
+                            ref.read(guestModeProvider.notifier).state = false;
+                            ref
+                                    .read(selectedCharacterIdProvider.notifier)
+                                    .state =
+                                null;
+                            context.go('/auth/login');
+                          },
+                          icon: const Icon(Icons.logout),
+                          label: const Text('離開試玩'),
+                        )
+                      : OutlinedButton.icon(
+                          onPressed: () async {
+                            try {
+                              await Supabase.instance.client.auth.signOut();
+                            } catch (_) {}
+                          },
+                          icon: const Icon(Icons.logout),
+                          label: const Text('登出'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.danger,
+                            side: const BorderSide(color: AppColors.danger),
+                          ),
+                        ),
                 ),
               ],
             ),

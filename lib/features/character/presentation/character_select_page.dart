@@ -67,48 +67,64 @@ class CharacterSelectPage extends ConsumerWidget {
                     const SizedBox(height: AppSpacing.md),
                   ],
                   Expanded(
-                    child: ListView.separated(
-                      itemCount: characters.length,
-                      separatorBuilder: (_, _) =>
-                          const SizedBox(height: AppSpacing.md),
-                      itemBuilder: (context, index) {
-                        final c = characters[index];
-                        return _CharacterCard(
-                          character: c,
-                          onTap: () => onCharacterSelected(c.id),
-                          // 試玩模式不開放刪除：避免訪客把範例角色刪光。
-                          onLongPress: isGuest
-                              ? () => ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('試玩模式無法刪除角色'),
-                                  ),
-                                )
-                              : () => _confirmDelete(context, ref, c),
-                        );
-                      },
-                    ),
+                    // 已登入且雲端清單抓取中：先不渲染本機清單，
+                    // 避免 seed 範例角色閃現一下才被 replaceAll 清掉。
+                    child: isSyncing
+                        ? const SizedBox.shrink()
+                        : characters.isEmpty
+                        ? _EmptyState(
+                            onCreate: () => context.push('/character-create'),
+                          )
+                        : ListView.separated(
+                            itemCount: characters.length,
+                            separatorBuilder: (_, _) =>
+                                const SizedBox(height: AppSpacing.md),
+                            itemBuilder: (context, index) {
+                              final c = characters[index];
+                              return _CharacterCard(
+                                character: c,
+                                onTap: () => onCharacterSelected(c.id),
+                                // 試玩模式不開放刪除：避免訪客把範例角色刪光。
+                                onLongPress: isGuest
+                                    ? () =>
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('試玩模式無法刪除角色'),
+                                            ),
+                                          )
+                                    : () => _confirmDelete(context, ref, c),
+                              );
+                            },
+                          ),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: () => context.push('/character-create'),
-                      icon: const Icon(Icons.add, color: AppColors.accentGold),
-                      label: Text(
-                        '新增角色',
-                        style: theme.textTheme.titleSmall?.copyWith(
+                  // 空清單時 CTA 在空狀態裡，底部按鈕收起避免重複。
+                  if (isSyncing || characters.isNotEmpty)
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () => context.push('/character-create'),
+                        icon: const Icon(
+                          Icons.add,
                           color: AppColors.accentGold,
-                          fontWeight: FontWeight.w600,
                         ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: AppSpacing.lg,
+                        label: Text(
+                          '新增角色',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: AppColors.accentGold,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                        side: const BorderSide(color: AppColors.accentGold),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.lg,
+                          ),
+                          side: const BorderSide(color: AppColors.accentGold),
+                        ),
                       ),
                     ),
-                  ),
                   if (isGuest)
                     TextButton(
                       onPressed: () {
@@ -201,6 +217,74 @@ Future<void> _confirmDelete(
       );
     },
   );
+}
+
+/// 沒有任何角色時的引導：直接把「建立角色」做成主要動作。
+class _EmptyState extends StatelessWidget {
+  final VoidCallback onCreate;
+
+  const _EmptyState({required this.onCreate});
+
+  @override
+  Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ClipOval(
+            child: Image.asset(
+              'assets/images/unknown.jpg',
+              width: 88,
+              height: 88,
+              fit: BoxFit.cover,
+              alignment: const Alignment(0, -0.4),
+              filterQuality: FilterQuality.medium,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          Text(
+            '還沒有角色',
+            style: TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: surfaces.textPrimary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            '建立第一個冒險者，開始你的旅程',
+            style: TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 13,
+              color: surfaces.textLight,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          FilledButton.icon(
+            onPressed: onCreate,
+            icon: const Icon(Icons.add, color: Color(0xFF1A1206)),
+            label: const Text(
+              '建立角色',
+              style: TextStyle(
+                fontFamily: 'NotoSerifTC',
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF1A1206),
+              ),
+            ),
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.accentGold,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.xxl,
+                vertical: AppSpacing.md,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _CharacterCard extends StatelessWidget {
