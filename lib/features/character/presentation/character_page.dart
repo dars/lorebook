@@ -29,6 +29,27 @@ class _CharacterPageState extends ConsumerState<CharacterPage> {
 
   int _index = 0;
   int _detailIndex = 0;
+  late final PageController _pageController = PageController(
+    initialPage: _index,
+  );
+  late final PageController _detailPageController = PageController(
+    initialPage: _detailIndex,
+  );
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _detailPageController.dispose();
+    super.dispose();
+  }
+
+  void _animateTo(PageController controller, int i) {
+    controller.animateToPage(
+      i,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeOutCubic,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +67,6 @@ class _CharacterPageState extends ConsumerState<CharacterPage> {
 
   Widget _tabbedColumn() {
     final character = ref.watch(currentCharacterProvider);
-    final tab = switch (_index) {
-      0 => OverviewTab(character: character),
-      1 => AbilitiesTab(character: character),
-      2 => SpellsTab(character: character),
-      3 => InventoryTab(character: character),
-      _ => BiographyTab(character: character),
-    };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -60,21 +74,27 @@ class _CharacterPageState extends ConsumerState<CharacterPage> {
         CharacterTabBar(
           tabs: _tabs,
           currentIndex: _index,
-          onChanged: (i) => setState(() => _index = i),
+          onChanged: (i) => _animateTo(_pageController, i),
         ),
-        Expanded(child: tab),
+        Expanded(
+          child: PageView(
+            controller: _pageController,
+            onPageChanged: (i) => setState(() => _index = i),
+            children: [
+              OverviewTab(character: character),
+              AbilitiesTab(character: character),
+              SpellsTab(character: character),
+              InventoryTab(character: character),
+              BiographyTab(character: character),
+            ],
+          ),
+        ),
       ],
     );
   }
 
   Widget _twoColumn() {
     final character = ref.watch(currentCharacterProvider);
-    final detail = switch (_detailIndex) {
-      0 => AbilitiesTab(character: character),
-      1 => SpellsTab(character: character),
-      2 => InventoryTab(character: character),
-      _ => BiographyTab(character: character),
-    };
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,9 +111,20 @@ class _CharacterPageState extends ConsumerState<CharacterPage> {
               CharacterTabBar(
                 tabs: _detailTabs,
                 currentIndex: _detailIndex,
-                onChanged: (i) => setState(() => _detailIndex = i),
+                onChanged: (i) => _animateTo(_detailPageController, i),
               ),
-              Expanded(child: detail),
+              Expanded(
+                child: PageView(
+                  controller: _detailPageController,
+                  onPageChanged: (i) => setState(() => _detailIndex = i),
+                  children: [
+                    AbilitiesTab(character: character),
+                    SpellsTab(character: character),
+                    InventoryTab(character: character),
+                    BiographyTab(character: character),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

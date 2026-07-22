@@ -1,8 +1,11 @@
+import 'dart:ui' show lerpDouble;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/decorations.dart';
+import '../../../../app/theme/surface_colors.dart';
 import '../../../../features/character/domain/character.dart';
 import '../../../../features/character/domain/character_providers.dart';
 import '../../../../shared/presentation/widgets/ability_card.dart';
@@ -16,19 +19,61 @@ class ChecksSection extends ConsumerStatefulWidget {
 
 class _ChecksSectionState extends ConsumerState<ChecksSection> {
   int _tabIndex = 0;
+  late final PageController _pageController = PageController();
+
+  /// 各 tab 內容的實際高度（由 [_page] 量測回報）；PageView 的高度在滑動中
+  /// 依 page 進度於兩頁高度間插值，內容高度不同的 tab 才能共用 PageView，
+  /// 保持與角色頁一致的「跟手」滑動手感。
+  final List<double> _heights = [0, 0, 0];
 
   /// 目前選取的檢定項目；null 代表尚未選取（banner 顯示空白）。
   _Selection? _selected;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void _select(_Selection sel) {
     setState(() => _selected = _selected?.id == sel.id ? null : sel);
   }
 
   void _switchTab(int index) {
-    setState(() {
-      _tabIndex = index;
-      _selected = null; // 切換分頁時清除選取
-    });
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  double get _viewportHeight {
+    if (_pageController.hasClients &&
+        _pageController.position.hasContentDimensions) {
+      final page = _pageController.page ?? _tabIndex.toDouble();
+      final lo = page.floor().clamp(0, _heights.length - 1);
+      final hi = page.ceil().clamp(0, _heights.length - 1);
+      return lerpDouble(_heights[lo], _heights[hi], page - lo)!;
+    }
+    return _heights[_tabIndex];
+  }
+
+  /// PageView 子頁包裝：OverflowBox 解除高度限制讓內容以固有高度排版，
+  /// 並回報實際高度供 [_viewportHeight] 插值。
+  Widget _page(int index, Widget child) {
+    return OverflowBox(
+      minHeight: 0,
+      maxHeight: double.infinity,
+      alignment: Alignment.topCenter,
+      child: _SizeReportingWidget(
+        onSizeChange: (size) {
+          if (_heights[index] != size.height) {
+            setState(() => _heights[index] = size.height);
+          }
+        },
+        child: child,
+      ),
+    );
   }
 
   @override
@@ -53,16 +98,33 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
           const SizedBox(height: 10),
           _buildTabs(),
           const SizedBox(height: 10),
-          if (_tabIndex == 0) _buildAbilityGrid(abilities),
-          if (_tabIndex == 1)
-            _buildSavesGrid(abilities, character.proficiencyBonus),
-          if (_tabIndex == 2) _buildSkillsView(character, abilities),
+          AnimatedBuilder(
+            animation: _pageController,
+            builder: (context, child) =>
+                SizedBox(height: _viewportHeight, child: child),
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (i) => setState(() {
+                _tabIndex = i;
+                _selected = null; // 切換分頁時清除選取
+              }),
+              children: [
+                _page(0, _buildAbilityGrid(abilities)),
+                _page(
+                  1,
+                  _buildSavesGrid(abilities, character.proficiencyBonus),
+                ),
+                _page(2, _buildSkillsView(character, abilities)),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildTabs() {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final tabs = ['能力', '豁免', '技能'];
     return Row(
       children: tabs.asMap().entries.map((entry) {
@@ -87,13 +149,13 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
                           : FontWeight.normal,
                       color: isActive
                           ? AppColors.accentGold
-                          : AppColors.darkTextSecondary,
+                          : surfaces.textSecondary,
                     ),
                   ),
                 ),
                 Container(
                   height: 2,
-                  color: isActive ? AppColors.accentGold : AppColors.darkBorder,
+                  color: isActive ? AppColors.accentGold : surfaces.border,
                 ),
               ],
             ),
@@ -105,20 +167,24 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
 
   Widget _buildModifierBanner(_Selection? sel) {
     final active = sel != null;
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       height: 60,
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFF2E2010), Color(0xFF1A1005)],
+          colors: isDark
+              ? const [Color(0xFF2E2010), Color(0xFF1A1005)]
+              : [surfaces.surface2, surfaces.surface1],
         ),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: active ? AppColors.goldDim : AppColors.darkBorder,
+          color: active ? AppColors.goldDim : surfaces.border,
           width: 1,
         ),
         boxShadow: active
@@ -136,12 +202,13 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
   }
 
   Widget _bannerEmpty() {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Row(
       children: [
         Icon(
           Icons.touch_app_outlined,
           size: 18,
-          color: AppColors.darkTextSecondary.withValues(alpha: 0.6),
+          color: surfaces.textSecondary.withValues(alpha: 0.6),
         ),
         const SizedBox(width: 10),
         Expanded(
@@ -150,7 +217,7 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
             style: TextStyle(
               fontFamily: 'NotoSerifTC',
               fontSize: 13,
-              color: AppColors.darkTextSecondary.withValues(alpha: 0.7),
+              color: surfaces.textSecondary.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -159,6 +226,7 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
   }
 
   Widget _bannerActive(_Selection sel) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -172,7 +240,7 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
               style: TextStyle(
                 fontFamily: 'NotoSerifTC',
                 fontSize: 11,
-                color: AppColors.darkTextSecondary,
+                color: surfaces.textSecondary,
               ),
             ),
             const SizedBox(height: 2),
@@ -287,6 +355,7 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
     Character character,
     List<(String, String, String, AbilityScore)> abilities,
   ) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final abilityOrder = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
     final abilityMap = {for (final a in abilities) a.$3: a};
 
@@ -321,7 +390,7 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
                       fontFamily: 'Inter',
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.darkTextSecondary,
+                      color: surfaces.textSecondary,
                     ),
                   ),
                 ],
@@ -373,6 +442,36 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
   }
 
   String _fmt(int mod) => mod >= 0 ? '+$mod' : '$mod';
+}
+
+/// 排版後回報自身尺寸（供變高度 PageView 量測各頁內容高度）。
+class _SizeReportingWidget extends StatefulWidget {
+  final Widget child;
+  final ValueChanged<Size> onSizeChange;
+
+  const _SizeReportingWidget({required this.child, required this.onSizeChange});
+
+  @override
+  State<_SizeReportingWidget> createState() => _SizeReportingWidgetState();
+}
+
+class _SizeReportingWidgetState extends State<_SizeReportingWidget> {
+  Size? _oldSize;
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _notifySize());
+    return widget.child;
+  }
+
+  void _notifySize() {
+    if (!mounted) return;
+    final size = context.size;
+    if (size != null && size != _oldSize) {
+      _oldSize = size;
+      widget.onSizeChange(size);
+    }
+  }
 }
 
 /// 目前選取的檢定項目（能力 / 豁免 / 技能共用）。
