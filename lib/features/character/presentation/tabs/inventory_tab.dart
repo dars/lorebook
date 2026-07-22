@@ -4,20 +4,35 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/decorations.dart';
-import '../../../../app/theme/dnd_colors.dart';
 import '../../../../app/theme/surface_colors.dart';
+import '../../../catalog/data/catalog_repository.dart';
 import '../../domain/character.dart';
 import '../../domain/character_providers.dart';
-import '../widgets/spell_entry.dart';
+import '../widgets/editor_sheet.dart';
+import '../widgets/item_catalog_picker.dart';
+import '../widgets/item_editor_sheet.dart';
 
-class InventoryTab extends StatelessWidget {
+class InventoryTab extends ConsumerWidget {
   final Character character;
 
   const InventoryTab({super.key, required this.character});
 
   @override
-  Widget build(BuildContext context) {
-    final dnd = Theme.of(context).extension<DndColors>()!;
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 進物品頁即預抓目錄（watch 觸發查詢）；點「新增」時才能正確判斷
+    // 目錄是否可用（ref.read 不會觸發初次載入，會永遠判空）。
+    final hasCatalog =
+        (ref.watch(itemCatalogProvider).valueOrNull ?? const []).isNotEmpty;
+    final equipped = [
+      for (final e in character.equipment)
+        if (e.equipped &&
+            (e.itemType == ItemType.weapon || e.itemType == ItemType.armor))
+          e,
+    ];
+    final carried = [
+      for (final e in character.equipment)
+        if (!equipped.contains(e)) e,
+    ];
 
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
@@ -35,26 +50,349 @@ class InventoryTab extends StatelessWidget {
           ),
           CollapsibleSection(
             title: 'EQUIPMENT 裝備',
+            trailing: SectionEditIcon(
+              onTap: () => _showAddItemSheet(context, hasCatalog: hasCatalog),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (character.weapons.isNotEmpty) ...[
-                  const _SubLabel(icon: Icons.gavel, text: '武器 WEAPONS'),
-                  const SizedBox(height: AppSpacing.sm),
-                  for (final w in character.weapons)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                      child: weaponEntryCard(w, dnd: dnd),
+                if (character.equipment.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.md,
                     ),
-                  const SizedBox(height: AppSpacing.md),
+                    child: Text(
+                      '物品欄是空的，點右上角新增',
+                      style: TextStyle(
+                        fontFamily: 'NotoSerifTC',
+                        fontSize: 12,
+                        color: Theme.of(
+                          context,
+                        ).extension<SurfaceColors>()!.textSecondary,
+                      ),
+                    ),
+                  ),
+                if (equipped.isNotEmpty) ...[
+                  const _SubLabel(
+                    icon: Icons.shield_outlined,
+                    text: '已裝備 EQUIPPED',
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  for (final e in equipped) _dismissibleRow(context, ref, e),
                 ],
-                const _SubLabel(icon: Icons.backpack_outlined, text: '裝備 GEAR'),
-                const SizedBox(height: AppSpacing.sm),
-                ...character.equipment.map((e) => _EquipmentRow(item: e)),
+                if (carried.isNotEmpty) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  const _SubLabel(
+                    icon: Icons.backpack_outlined,
+                    text: '攜帶中 CARRIED',
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  for (final e in carried) _dismissibleRow(context, ref, e),
+                ],
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// 新增入口：目錄挑選（items 目錄非空時）／自訂輸入 對等雙選項。
+  void _showAddItemSheet(BuildContext context, {required bool hasCatalog}) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Theme.of(context).extension<SurfaceColors>()!.surface1,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (hasCatalog)
+              ListTile(
+                leading: const Icon(Icons.menu_book_outlined),
+                title: const Text(
+                  '從目錄挑選',
+                  style: TextStyle(fontFamily: 'NotoSerifTC'),
+                ),
+                subtitle: const Text(
+                  'SRD 裝備目錄：瀏覽、購買或直接取得',
+                  style: TextStyle(fontSize: 11),
+                ),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  showItemCatalogPicker(context);
+                },
+              ),
+            ListTile(
+              leading: const Icon(Icons.edit_outlined),
+              title: const Text(
+                '自訂物品',
+                style: TextStyle(fontFamily: 'NotoSerifTC'),
+              ),
+              subtitle: const Text(
+                'DM 發的寶物、任務物品等自由輸入',
+                style: TextStyle(fontSize: 11),
+              ),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                showItemEditor(context);
+              },
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 左滑刪除（任務物品加強警示）＋點按編輯。
+  Widget _dismissibleRow(BuildContext context, WidgetRef ref, Equipment e) {
+    Future<bool> confirmDelete() async {
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(e.quest ? '刪除任務物品？' : '刪除物品？'),
+          content: Text(
+            e.quest
+                ? '「${e.name}」被標記為任務物品，可能與劇情相關。確定要刪除嗎？'
+                : '「${e.name}」將自物品欄移除。',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('取消'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: TextButton.styleFrom(foregroundColor: AppColors.danger),
+              child: const Text('刪除'),
+            ),
+          ],
+        ),
+      );
+      return ok == true;
+    }
+
+    return Dismissible(
+      key: ObjectKey(e),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+        margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+        decoration: BoxDecoration(
+          color: AppColors.danger,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
+        ),
+        child: const Icon(Icons.delete_outline, color: Colors.white),
+      ),
+      confirmDismiss: (_) => confirmDelete(),
+      onDismissed: (_) {
+        final notifier = ref.read(currentCharacterProvider.notifier);
+        final index = notifier.removeItem(e);
+        if (index != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('已刪除「${e.name}」'),
+              action: SnackBarAction(
+                label: '復原',
+                onPressed: () => notifier.restoreItem(e, index),
+              ),
+            ),
+          );
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+        child: _ItemRow(
+          item: e,
+          onTap: () => showItemEditor(context, existing: e),
+          onToggleEquip: () =>
+              ref.read(currentCharacterProvider.notifier).toggleEquipped(e),
+          onUse: () {
+            final removed = ref
+                .read(currentCharacterProvider.notifier)
+                .useConsumable(e);
+            if (removed != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('「${e.name}」已用罄'),
+                  action: SnackBarAction(
+                    label: '復原',
+                    onPressed: () => ref
+                        .read(currentCharacterProvider.notifier)
+                        .restoreItem(removed.$1, removed.$2),
+                  ),
+                ),
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+}
+
+/// 物品列：類型圖示＋名稱（×數量）＋任務徽章＋類型標籤；
+/// 武器/護甲帶裝備切換、消耗品帶「使用」。
+class _ItemRow extends StatelessWidget {
+  final Equipment item;
+  final VoidCallback onTap;
+  final VoidCallback onToggleEquip;
+  final VoidCallback onUse;
+
+  const _ItemRow({
+    required this.item,
+    required this.onTap,
+    required this.onToggleEquip,
+    required this.onUse,
+  });
+
+  IconData get _typeIcon => switch (item.itemType) {
+    ItemType.weapon => Icons.gavel,
+    ItemType.armor =>
+      item.armorCategory == ArmorCategory.shield
+          ? Icons.shield
+          : Icons.checkroom,
+    ItemType.consumable => Icons.science_outlined,
+    ItemType.gear => Icons.inventory_2_outlined,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final surfaces = theme.extension<SurfaceColors>()!;
+    final equippable =
+        item.itemType == ItemType.weapon || item.itemType == ItemType.armor;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: ParchmentCard(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              _typeIcon,
+              size: 18,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: item.quantity > 1
+                                    ? '${item.name} ×${item.quantity}'
+                                    : item.name,
+                                style: TextStyle(
+                                  fontFamily: 'NotoSerifTC',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: theme.colorScheme.onSurface,
+                                ),
+                              ),
+                              if (item.nameEn.isNotEmpty)
+                                TextSpan(
+                                  text: '  ${item.nameEn}',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 11,
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.45),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      if (item.quest) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 1,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: AppColors.accentGold),
+                          ),
+                          child: Text(
+                            '任務',
+                            style: TextStyle(
+                              fontFamily: 'NotoSerifTC',
+                              fontSize: 9,
+                              color: surfaces.accent,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  if (item.type.isNotEmpty ||
+                      item.damage.isNotEmpty ||
+                      item.description.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      [
+                        if (item.type.isNotEmpty) item.type,
+                        if (item.damage.isNotEmpty)
+                          '${item.damage} ${item.damageType}'.trim(),
+                        if (item.description.isNotEmpty) item.description,
+                      ].join('・'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: 'NotoSerifTC',
+                        fontSize: 11,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            if (item.itemType == ItemType.consumable)
+              TextButton(
+                onPressed: item.quantity > 0 ? onUse : null,
+                style: TextButton.styleFrom(
+                  minimumSize: const Size(48, 48),
+                  foregroundColor: surfaces.accent,
+                ),
+                child: const Text(
+                  '使用',
+                  style: TextStyle(fontFamily: 'NotoSerifTC', fontSize: 13),
+                ),
+              ),
+            if (equippable)
+              IconButton(
+                onPressed: onToggleEquip,
+                tooltip: item.equipped ? '卸下' : '裝備',
+                iconSize: 20,
+                icon: Icon(
+                  item.equipped
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_unchecked,
+                  color: item.equipped
+                      ? AppColors.accentGold
+                      : surfaces.textSecondary,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -187,7 +525,7 @@ class _Coin extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────── 財富計算機
+// ─────────────────────────────────────────── 資產計算機
 //
 // 操作順序：按 +/- 選符號 → 按數字輸入金額 → 按幣別完成一筆，數字接著繼續打
 // 下一筆（如「1金10銅」：輸入 1、點金、輸入 10、點銅）→ 按確定一次套用全部
@@ -239,7 +577,21 @@ class _CurrencyCalculatorSheetState
     setState(() => _digits += d);
   }
 
-  void _tapSign(String s) => setState(() => _sign = s);
+  /// 輸入中：切換當前輸入的符號；無輸入中數字：直接翻轉最後一筆已完成
+  /// 項目的正負（點完幣別後仍可隨時改加/減）。
+  void _tapSign(String s) {
+    setState(() {
+      if (_digits.isEmpty && _terms.isNotEmpty) {
+        final last = _terms.last;
+        _terms[_terms.length - 1] = _CurrencyTerm(
+          sign: s,
+          amount: last.amount,
+          code: last.code,
+        );
+      }
+      _sign = s;
+    });
+  }
 
   void _tapBackspace() {
     setState(() {
@@ -304,15 +656,13 @@ class _CurrencyCalculatorSheetState
   bool _showSignAt(int index) =>
       index == 0 || _terms[index].sign != _terms[index - 1].sign;
 
-  bool get _showPendingSign => _terms.isEmpty || _sign != _terms.last.sign;
-
   @override
   Widget build(BuildContext context) {
     final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final specByCode = {for (final s in _coinSpecs) s.code: s};
-    final pendingText = _digits.isEmpty
-        ? ''
-        : (_showPendingSign ? '$_sign$_digits' : _digits);
+    // 進行中的輸入永遠帶符號（按 +/- 切換立即可見）；
+    // 已完成筆數才做「同號不重複標」壓縮。
+    final pendingText = _digits.isEmpty ? '' : '$_sign$_digits';
 
     return SafeArea(
       child: Padding(
@@ -322,7 +672,7 @@ class _CurrencyCalculatorSheetState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '財富計算機',
+              '資產計算機',
               style: TextStyle(
                 fontFamily: 'NotoSerifTC',
                 fontSize: 16,
@@ -697,79 +1047,6 @@ class _SubLabel extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _EquipmentRow extends StatelessWidget {
-  final Equipment item;
-  const _EquipmentRow({required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: ParchmentCard(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Row(
-          children: [
-            Icon(
-              Icons.inventory_2_outlined,
-              size: 18,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: item.name,
-                          style: TextStyle(
-                            fontFamily: 'NotoSerifTC',
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '  ${item.nameEn}',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 11,
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.45,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (item.description.isNotEmpty) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      item.description,
-                      style: TextStyle(
-                        fontFamily: 'NotoSerifTC',
-                        fontSize: 11,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.5,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            if (item.equipped)
-              const Icon(Icons.check, size: 16, color: AppColors.success),
-          ],
-        ),
-      ),
     );
   }
 }
