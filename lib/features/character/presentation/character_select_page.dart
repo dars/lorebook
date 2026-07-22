@@ -21,11 +21,13 @@ class CharacterSelectPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 雲端清單抓成功 → 取代本地清單；失敗（離線/未登入）→ 維持本地資料。
+    // 注意：只接受本輪的 AsyncData。AsyncLoading/AsyncError 經
+    // copyWithPrevious 會帶著「登出前」的舊清單，若用 valueOrNull
+    // 會在試玩模式把帳號角色漏回本地清單。
     ref.listen(remoteCharactersProvider, (_, next) {
-      final remote = next.valueOrNull;
-      if (remote != null) {
-        ref.read(characterListProvider.notifier).replaceAll(remote);
-      }
+      if (ref.read(guestModeProvider)) return;
+      if (next is! AsyncData<List<Character>>) return;
+      ref.read(characterListProvider.notifier).replaceAll(next.value);
     });
     final characters = ref.watch(characterListProvider);
     final isGuest = ref.watch(guestModeProvider);

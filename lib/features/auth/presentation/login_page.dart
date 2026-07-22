@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_spacing.dart';
 import '../../../shared/domain/app_exception.dart';
+import '../../character/domain/character_providers.dart';
 import '../data/auth_repository.dart';
 import '../domain/guest_mode.dart';
 
@@ -114,6 +115,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     onPressed: _isLoading
                         ? null
                         : () {
+                            // 試玩一律從內建範例出發：清掉先前登入殘留的
+                            // 帳號角色清單與選角。
+                            ref
+                                .read(characterListProvider.notifier)
+                                .resetToSeed();
+                            ref
+                                    .read(selectedCharacterIdProvider.notifier)
+                                    .state =
+                                null;
                             ref.read(guestModeProvider.notifier).state = true;
                             context.go('/character-select');
                           },

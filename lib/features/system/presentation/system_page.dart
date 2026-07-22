@@ -10,6 +10,35 @@ import '../../auth/domain/guest_mode.dart';
 import '../../character/domain/character_providers.dart';
 import 'theme_provider.dart';
 
+/// 登出確認：確認後才登出並清掉記憶體中的帳號角色
+/// （清單回 seed、清選角），避免登出後從試玩模式看到帳號資料殘留。
+Future<void> _confirmSignOut(BuildContext context, WidgetRef ref) {
+  return showDialog<void>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('登出？'),
+      content: const Text('角色資料已同步在雲端，下次登入會自動取回。'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext),
+          child: const Text('取消'),
+        ),
+        TextButton(
+          onPressed: () async {
+            Navigator.pop(dialogContext);
+            try {
+              await Supabase.instance.client.auth.signOut();
+            } catch (_) {}
+            ref.read(selectedCharacterIdProvider.notifier).state = null;
+            ref.read(characterListProvider.notifier).resetToSeed();
+          },
+          child: const Text('登出', style: TextStyle(color: AppColors.danger)),
+        ),
+      ],
+    ),
+  );
+}
+
 String get _currentEmail {
   try {
     return Supabase.instance.client.auth.currentUser?.email ?? '未登入';
@@ -127,11 +156,7 @@ class SystemPage extends ConsumerWidget {
                           label: const Text('離開試玩'),
                         )
                       : OutlinedButton.icon(
-                          onPressed: () async {
-                            try {
-                              await Supabase.instance.client.auth.signOut();
-                            } catch (_) {}
-                          },
+                          onPressed: () => _confirmSignOut(context, ref),
                           icon: const Icon(Icons.logout),
                           label: const Text('登出'),
                           style: OutlinedButton.styleFrom(

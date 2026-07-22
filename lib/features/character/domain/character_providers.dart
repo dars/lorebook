@@ -442,6 +442,10 @@ class CharacterListNotifier extends StateNotifier<List<Character>> {
   /// 以雲端清單取代整份本地清單（登入後同步用）。
   void replaceAll(List<Character> list) => state = list;
 
+  /// 回到內建範例清單：登出／進入試玩模式時呼叫，
+  /// 清掉登入期間 replaceAll 進來的帳號角色（記憶體殘留）。
+  void resetToSeed() => state = _seed();
+
   /// 以 id 取代清單中該角色；不存在則新增（切換時保留編輯用）。
   void upsert(Character c) {
     final i = state.indexWhere((e) => e.id == c.id);
