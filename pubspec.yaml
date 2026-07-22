@@ -23,6 +23,8 @@ dependencies:
   widgetbook: ^3.23.0
   widgetbook_annotation: ^3.11.0
   image_picker: ^1.2.3
+  web: ^1.1.0 # A2HS 引導：standalone display-mode 偵測（僅 web 編譯使用）
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
