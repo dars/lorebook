@@ -11,6 +11,7 @@ import '../../domain/character.dart';
 import '../../domain/character_providers.dart';
 import '../../domain/currency_math.dart';
 import 'coin_display.dart';
+import '../../../../shared/analytics/analytics.dart';
 
 /// 從內容庫裝備目錄挑選物品（item-catalog 規格；版面依 designs.pen
 /// 「裝備目錄挑選 iPad(改版)」）：等寬 segmented 分類（固定寬度不抖動）、
@@ -945,6 +946,7 @@ class _DetailPaneState extends ConsumerState<_DetailPane> {
   }
 
   void _acquireFree() {
+    trackEvent('item_acquired', {'item': item.engName});
     ref
         .read(currentCharacterProvider.notifier)
         .addItem(_toEquipment(item).copyWith(quantity: _qty));
@@ -968,6 +970,7 @@ class _DetailPaneState extends ConsumerState<_DetailPane> {
       );
       return;
     }
+    trackEvent('item_purchased', {'item': item.engName});
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

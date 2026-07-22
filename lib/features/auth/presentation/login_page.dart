@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_spacing.dart';
+import '../../../shared/analytics/analytics.dart';
 import '../../../shared/domain/app_exception.dart';
 import '../../character/domain/character_providers.dart';
 import '../data/auth_repository.dart';
@@ -81,7 +82,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             key: const Key('login-google'),
                             onPressed: _isLoading
                                 ? null
-                                : () => _signIn((r) => r.signInWithGoogle()),
+                                : () {
+                                    trackEvent('login_click', {
+                                      'method': 'google',
+                                    });
+                                    _signIn((r) => r.signInWithGoogle());
+                                  },
                             icon: _isLoading
                                 ? const SizedBox(
                                     height: 20,
@@ -100,7 +106,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               key: const Key('login-apple'),
                               onPressed: _isLoading
                                   ? null
-                                  : () => _signIn((r) => r.signInWithApple()),
+                                  : () {
+                                      trackEvent('login_click', {
+                                        'method': 'apple',
+                                      });
+                                      _signIn((r) => r.signInWithApple());
+                                    },
                               icon: const Icon(Icons.apple, size: 24),
                               label: const Text('以 Apple 登入'),
                             ),
@@ -115,6 +126,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     onPressed: _isLoading
                         ? null
                         : () {
+                            trackEvent('guest_mode_start');
                             // 試玩一律從內建範例出發：清掉先前登入殘留的
                             // 帳號角色清單與選角。
                             ref

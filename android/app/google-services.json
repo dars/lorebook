@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "681104665809",
+    "project_id": "lorebook-503208",
+    "storage_bucket": "lorebook-503208.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:681104665809:android:8571fd81fca28e82c729f0",
+        "android_client_info": {
+          "package_name": "dev.code4soul.lorebook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "681104665809-mk0pu6o7bc4ekjh8lu1lb4gcu87cvu1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBo4tewZYECbfdMokjCHk3kXJ8n6wglUEg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "681104665809-mk0pu6o7bc4ekjh8lu1lb4gcu87cvu1j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

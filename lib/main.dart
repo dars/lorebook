@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app.dart';
+import 'firebase_options.dart';
 
 const _supabaseUrl = String.fromEnvironment('SUPABASE_URL');
 const _supabaseKey = String.fromEnvironment('SUPABASE_ANON_KEY');
@@ -24,6 +26,15 @@ void main() {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      // Firebase（Analytics 用）：初始化失敗不阻擋啟動，只是不送統計。
+      try {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+      } catch (e) {
+        debugPrint('Firebase 初始化失敗，停用分析：$e');
+      }
 
       if (_supabaseUrl.isNotEmpty && _supabaseKey.isNotEmpty) {
         // 初始化失敗（網路/金鑰/首次啟動…）不應阻擋 App 啟動，否則整頁白畫面。

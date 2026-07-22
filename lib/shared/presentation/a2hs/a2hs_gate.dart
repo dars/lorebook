@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/surface_colors.dart';
+import '../../analytics/analytics.dart';
 import 'a2hs_platform_stub.dart'
     if (dart.library.js_interop) 'a2hs_platform_web.dart';
 
@@ -46,6 +47,7 @@ class _A2hsGateState extends State<A2hsGate> {
   }
 
   Future<void> _dismiss({required bool forever}) async {
+    trackEvent('a2hs_dismissed', {'forever': forever});
     setState(() => _visible = false);
     if (forever) {
       final prefs = await SharedPreferences.getInstance();

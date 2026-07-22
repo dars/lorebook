@@ -25,6 +25,8 @@ dependencies:
   image_picker: ^1.2.3
   web: ^1.1.0 # A2HS 引導：standalone display-mode 偵測（僅 web 編譯使用）
   url_launcher: ^6.3.1
+  firebase_core: ^4.12.1
+  firebase_analytics: ^12.4.5
 
 dev_dependencies:
   flutter_test:

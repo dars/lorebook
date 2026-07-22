@@ -5,6 +5,7 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/surface_colors.dart';
 import '../../character/domain/character.dart';
 import '../../character/domain/character_providers.dart';
+import '../../../shared/analytics/analytics.dart';
 
 /// 日誌「新增/編輯」格式化日期。
 String fmtJournalDate(DateTime d) =>
@@ -124,6 +125,7 @@ class _JournalEditorSheetState extends ConsumerState<_JournalEditorSheet> {
     final notifier = ref.read(currentCharacterProvider.notifier);
     if (widget.entry == null) {
       notifier.addJournalEntry(displayTitle, body);
+      trackEvent('journal_created');
     } else {
       notifier.updateJournalEntry(widget.entry!.id, displayTitle, body);
     }

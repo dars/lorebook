@@ -15,6 +15,7 @@ import '../domain/character_math.dart';
 import '../domain/character_providers.dart';
 import '../domain/level_up.dart';
 import '../domain/spell_from_catalog.dart';
+import '../../../shared/analytics/analytics.dart';
 
 /// 引導式升級流程（D&D 2024，單職業、一次一級）。
 ///
@@ -228,6 +229,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
       ]);
     } else {
       notifier.applyLevelUp(_plan!, _choices());
+      trackEvent('level_up_completed', {'level': _base.level + 1});
     }
     if (context.canPop()) {
       context.pop();

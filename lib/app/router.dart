@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../features/auth/domain/guest_mode.dart';
 import '../features/auth/presentation/login_page.dart';
+import '../shared/analytics/analytics.dart';
 import '../features/character/domain/character_providers.dart';
 import '../features/character/domain/custom_background.dart';
 import '../features/character/presentation/character_create_page.dart';
@@ -37,7 +38,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ? _AuthNotifier()
       : ChangeNotifier();
 
-  return GoRouter(
+  final router = GoRouter(
     refreshListenable: authNotifier,
     initialLocation: '/main/decision',
     redirect: (context, state) {
@@ -132,6 +133,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ],
   );
+
+  // 畫面瀏覽追蹤：路徑變更即上報（Analytics 未啟用時為 no-op）。
+  String? lastTrackedPath;
+  router.routerDelegate.addListener(() {
+    final path = router.routerDelegate.currentConfiguration.uri.path;
+    if (path == lastTrackedPath) return;
+    lastTrackedPath = path;
+    trackScreen(path);
+  });
+
+  return router;
 });
 
 class _AuthNotifier extends ChangeNotifier {

@@ -23,6 +23,7 @@ import '../data/custom_background_repository.dart';
 import '../data/portrait_service.dart';
 import 'widgets/portrait_transform.dart';
 import '../domain/spell_from_catalog.dart';
+import '../../../shared/analytics/analytics.dart';
 
 /// 能力值產生方式。
 enum _AbilityMethod { array, buy, roll }
@@ -395,6 +396,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
 
     ref.read(characterListProvider.notifier).add(character);
     ref.read(selectedCharacterIdProvider.notifier).state = character.id;
+    trackEvent('character_created', {'class': character.classNameEn});
     context.go('/main/decision');
   }
 
