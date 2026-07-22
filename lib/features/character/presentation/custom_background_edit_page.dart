@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
+import '../../../app/theme/surface_colors.dart';
 import '../../../shared/domain/app_exception.dart';
 import '../data/custom_background_repository.dart';
 import '../domain/character_creation_data.dart';
@@ -69,7 +70,8 @@ class _CustomBackgroundEditPageState
   Future<void> _save() async {
     setState(() => _saving = true);
     final b = CustomBackground(
-      id: widget.initial?.id ??
+      id:
+          widget.initial?.id ??
           DateTime.now().microsecondsSinceEpoch.toString(),
       name: _trimmedName,
       abilities: _abilities.toList(),
@@ -92,10 +94,11 @@ class _CustomBackgroundEditPageState
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Scaffold(
-      backgroundColor: AppColors.darkSurface0,
+      backgroundColor: surfaces.surface0,
       appBar: AppBar(
-        backgroundColor: AppColors.darkSurface0,
+        backgroundColor: surfaces.surface0,
         title: Text(
           widget.initial == null ? '自訂背景' : '編輯自訂背景',
           style: const TextStyle(
@@ -128,8 +131,7 @@ class _CustomBackgroundEditPageState
                           maxLength: 20,
                           decoration: InputDecoration(
                             hintText: '例：獵人',
-                            errorText:
-                                _name.text.isEmpty ? null : _nameError,
+                            errorText: _name.text.isEmpty ? null : _nameError,
                           ),
                           onChanged: (_) => setState(() {}),
                         ),
@@ -245,9 +247,11 @@ class _MultiChips extends StatelessWidget {
       children: [
         for (final o in options)
           _chip(
+            context,
             o.text,
             selected: selected.contains(o.value),
-            enabled: selected.contains(o.value) ||
+            enabled:
+                selected.contains(o.value) ||
                 selected.length < max ||
                 replaceOnMax,
             onTap: () {
@@ -266,11 +270,13 @@ class _MultiChips extends StatelessWidget {
   }
 
   Widget _chip(
+    BuildContext context,
     String text, {
     required bool selected,
     required bool enabled,
     required VoidCallback onTap,
   }) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return GestureDetector(
       onTap: enabled ? onTap : null,
       child: Container(
@@ -281,10 +287,10 @@ class _MultiChips extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected
               ? AppColors.accentGold.withValues(alpha: 0.18)
-              : AppColors.darkSurface1,
+              : surfaces.surface1,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: selected ? AppColors.accentGold : AppColors.darkBorder2,
+            color: selected ? AppColors.accentGold : surfaces.border2,
           ),
         ),
         child: Text(
@@ -296,8 +302,8 @@ class _MultiChips extends StatelessWidget {
             color: selected
                 ? AppColors.accentGold
                 : enabled
-                    ? AppColors.darkTextPrimary
-                    : AppColors.darkTextPrimary.withValues(alpha: 0.35),
+                ? surfaces.textPrimary
+                : surfaces.textPrimary.withValues(alpha: 0.35),
           ),
         ),
       ),

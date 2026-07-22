@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/decorations.dart';
+import '../../../../app/theme/surface_colors.dart';
 import '../../../../features/character/domain/character_providers.dart';
 
 class MovementSection extends ConsumerWidget {
@@ -61,9 +62,8 @@ class _MovementStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final numColor = dim
-        ? AppColors.darkTextSecondary
-        : AppColors.darkTextPrimary;
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+    final numColor = dim ? surfaces.textSecondary : surfaces.textPrimary;
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -71,7 +71,7 @@ class _MovementStat extends StatelessWidget {
         Icon(
           icon,
           size: 16,
-          color: dim ? AppColors.darkTextSecondary : AppColors.accentGold,
+          color: dim ? surfaces.textSecondary : AppColors.accentGold,
         ),
         const SizedBox(width: 6),
         Text(
@@ -79,7 +79,7 @@ class _MovementStat extends StatelessWidget {
           style: TextStyle(
             fontFamily: 'NotoSerifTC',
             fontSize: 11,
-            color: AppColors.darkTextLight,
+            color: surfaces.textLight,
           ),
         ),
         const SizedBox(width: 5),
@@ -99,7 +99,7 @@ class _MovementStat extends StatelessWidget {
             fontFamily: 'Inter',
             fontSize: 9,
             fontWeight: FontWeight.w600,
-            color: AppColors.darkTextSecondary,
+            color: surfaces.textSecondary,
           ),
         ),
         const SizedBox(width: 5),

@@ -4,6 +4,7 @@ import 'app_colors.dart';
 import 'app_spacing.dart';
 import 'app_text_styles.dart';
 import 'dnd_colors.dart';
+import 'surface_colors.dart';
 
 abstract final class AppTheme {
   static ThemeData get light => _build(
@@ -38,7 +39,10 @@ abstract final class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: surface0,
-      extensions: [isDark ? DndColors.dark : DndColors.light],
+      extensions: [
+        isDark ? DndColors.dark : DndColors.light,
+        isDark ? SurfaceColors.dark : SurfaceColors.light,
+      ],
       textTheme: TextTheme(
         headlineLarge: AppTextStyles.h1.copyWith(color: textPrimary),
         headlineMedium: AppTextStyles.h2.copyWith(color: textPrimary),
@@ -68,12 +72,8 @@ abstract final class AppTheme {
         thickness: AppSpacing.borderWidth,
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.brightness == Brightness.dark
-            ? AppColors.darkSurface1
-            : AppColors.primary,
-        foregroundColor: colorScheme.brightness == Brightness.dark
-            ? AppColors.darkTextPrimary
-            : Colors.white,
+        backgroundColor: isDark ? surface1 : AppColors.primary,
+        foregroundColor: isDark ? textPrimary : Colors.white,
         elevation: 0,
         centerTitle: true,
       ),

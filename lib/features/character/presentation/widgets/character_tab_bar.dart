@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
+import '../../../../app/theme/surface_colors.dart';
 
 /// 角色頁上方的水平分頁列（總覽 / 屬性 / 法術 / 物品 / 傳記）。
 class CharacterTabBar extends StatelessWidget {
@@ -53,6 +54,7 @@ class _TabPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -72,7 +74,7 @@ class _TabPill extends StatelessWidget {
                   fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                   color: selected
                       ? AppColors.accentGold
-                      : AppColors.darkTextSecondary,
+                      : surfaces.textSecondary,
                 ),
               ),
             ),

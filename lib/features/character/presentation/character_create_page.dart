@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/decorations.dart';
+import '../../../app/theme/surface_colors.dart';
 import '../../../shared/presentation/responsive_layout.dart';
 import '../../../shared/presentation/widgets/ability_hex_chart.dart';
 import '../../catalog/data/catalog_repository.dart';
@@ -36,6 +37,9 @@ class CharacterCreatePage extends ConsumerStatefulWidget {
 }
 
 class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
+  /// 依主題（淺色/深色）切換的表面／邊框／文字色票，供建角流程內各步驟共用。
+  SurfaceColors get _surfaces => Theme.of(context).extension<SurfaceColors>()!;
+
   /// 步驟清單依職業動態決定：施法職業多一步「法術」（7 步），
   /// 非施法職業維持 6 步。
   List<String> get _steps => [
@@ -397,9 +401,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkSurface0,
+      backgroundColor: _surfaces.surface0,
       appBar: AppBar(
-        backgroundColor: AppColors.darkSurface0,
+        backgroundColor: _surfaces.surface0,
         title: const Text(
           '新增角色',
           style: TextStyle(
@@ -504,17 +508,17 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         const SizedBox(height: AppSpacing.xs),
         TextField(
           onChanged: (v) => setState(() => _name = v),
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'NotoSerifTC',
-            color: AppColors.darkTextPrimary,
+            color: _surfaces.textPrimary,
           ),
           decoration: InputDecoration(
             hintText: '輸入角色名稱',
             filled: true,
-            fillColor: AppColors.darkSurface1,
+            fillColor: _surfaces.surface1,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.darkBorder2),
+              borderSide: BorderSide(color: _surfaces.border2),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -677,14 +681,14 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           ),
         ),
         if (customsAsync.hasError)
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: AppSpacing.sm),
             child: Text(
               '自訂背景離線不可用（僅顯示內建背景）',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 12,
-                color: AppColors.darkTextSecondary,
+                color: _surfaces.textSecondary,
               ),
             ),
           ),
@@ -808,12 +812,12 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                 decoration: BoxDecoration(
                   color: _method == e.key
                       ? AppColors.accentGold
-                      : AppColors.darkSurface1,
+                      : _surfaces.surface1,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: _method == e.key
                         ? AppColors.accentGold
-                        : AppColors.darkBorder2,
+                        : _surfaces.border2,
                   ),
                 ),
                 child: Text(
@@ -826,7 +830,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                         : FontWeight.w400,
                     color: _method == e.key
                         ? const Color(0xFF1A1206)
-                        : AppColors.darkTextSecondary,
+                        : _surfaces.textSecondary,
                   ),
                 ),
               ),
@@ -855,10 +859,10 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         Expanded(
           child: Text(
             '剩餘可分配 ${_pool.length}／6',
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'NotoSerifTC',
               fontSize: 12,
-              color: AppColors.darkTextSecondary,
+              color: _surfaces.textSecondary,
             ),
           ),
         ),
@@ -875,12 +879,12 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
   List<Widget> _buyBody() => [
     Row(
       children: [
-        const Text(
+        Text(
           '剩餘點數',
           style: TextStyle(
             fontFamily: 'NotoSerifTC',
             fontSize: 12,
-            color: AppColors.darkTextSecondary,
+            color: _surfaces.textSecondary,
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
@@ -890,7 +894,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
             child: LinearProgressIndicator(
               value: _pointsSpent / kPointBuyBudget,
               minHeight: 8,
-              backgroundColor: AppColors.darkSurface2,
+              backgroundColor: _surfaces.surface2,
               valueColor: const AlwaysStoppedAnimation(AppColors.accentGold),
             ),
           ),
@@ -919,23 +923,23 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     const SizedBox(height: AppSpacing.md),
     for (final code in kAbilityOrder) _abilityRowFrame(code, _buyControl(code)),
     const SizedBox(height: AppSpacing.sm),
-    const Text(
+    Text(
       '六項由 8 起，花點數買高（最高 15，可重複）',
       style: TextStyle(
         fontFamily: 'NotoSerifTC',
         fontSize: 11,
-        color: AppColors.darkTextSecondary,
+        color: _surfaces.textSecondary,
       ),
     ),
   ];
 
   List<Widget> _rollBody() => [
-    const Text(
+    Text(
       '自行擲 4d6 去最低 ×6，將結果填入（App 不代擲）',
       style: TextStyle(
         fontFamily: 'NotoSerifTC',
         fontSize: 11,
-        color: AppColors.darkTextSecondary,
+        color: _surfaces.textSecondary,
       ),
     ),
     const SizedBox(height: AppSpacing.md),
@@ -975,11 +979,11 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
             width: 40,
             child: Text(
               kAbilityCn[code]!,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'NotoSerifTC',
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.darkTextPrimary,
+                color: _surfaces.textPrimary,
               ),
             ),
           ),
@@ -1038,34 +1042,34 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       width: 90,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: _surfaces.surface1,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: _surfaces.border2),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           value: _base[code],
           isExpanded: true,
           isDense: true,
-          hint: const Text(
+          hint: Text(
             '—',
             style: TextStyle(
               fontFamily: 'Cinzel',
               fontSize: 16,
-              color: AppColors.darkTextSecondary,
+              color: _surfaces.textSecondary,
             ),
           ),
-          dropdownColor: AppColors.darkSurface1,
-          icon: const Icon(
+          dropdownColor: _surfaces.surface1,
+          icon: Icon(
             Icons.expand_more,
             size: 18,
-            color: AppColors.darkTextSecondary,
+            color: _surfaces.textSecondary,
           ),
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Cinzel',
             fontSize: 16,
             fontWeight: FontWeight.w700,
-            color: AppColors.darkTextPrimary,
+            color: _surfaces.textPrimary,
           ),
           selectedItemBuilder: (c) => [
             for (final v in kStandardArray)
@@ -1077,10 +1081,10 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                 value: v,
                 child: Text(
                   _arrayLabel(code, v),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'NotoSerifTC',
                     fontSize: 13,
-                    color: AppColors.darkTextPrimary,
+                    color: _surfaces.textPrimary,
                   ),
                 ),
               ),
@@ -1096,26 +1100,26 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       width: 96,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: _surfaces.surface1,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: _surfaces.border2),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           value: _base[code],
           isExpanded: true,
           isDense: true,
-          dropdownColor: AppColors.darkSurface1,
-          icon: const Icon(
+          dropdownColor: _surfaces.surface1,
+          icon: Icon(
             Icons.expand_more,
             size: 18,
-            color: AppColors.darkTextSecondary,
+            color: _surfaces.textSecondary,
           ),
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Cinzel',
             fontSize: 16,
             fontWeight: FontWeight.w700,
-            color: AppColors.darkTextPrimary,
+            color: _surfaces.textPrimary,
           ),
           selectedItemBuilder: (c) => [
             for (var v = 8; v <= 15; v++)
@@ -1132,8 +1136,8 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                     fontFamily: 'NotoSerifTC',
                     fontSize: 13,
                     color: _buyAffordable(code, v)
-                        ? AppColors.darkTextPrimary
-                        : AppColors.darkTextSecondary.withValues(alpha: 0.4),
+                        ? _surfaces.textPrimary
+                        : _surfaces.textSecondary.withValues(alpha: 0.4),
                   ),
                 ),
               ),
@@ -1152,20 +1156,20 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         initialValue: _base[code]?.toString() ?? '',
         keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Cinzel',
           fontSize: 16,
           fontWeight: FontWeight.w700,
-          color: AppColors.darkTextPrimary,
+          color: _surfaces.textPrimary,
         ),
         decoration: InputDecoration(
           isDense: true,
           contentPadding: const EdgeInsets.symmetric(vertical: 8),
           filled: true,
-          fillColor: AppColors.darkSurface1,
+          fillColor: _surfaces.surface1,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: AppColors.darkBorder2),
+            borderSide: BorderSide(color: _surfaces.border2),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -1184,9 +1188,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: _surfaces.surface1,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: _surfaces.border2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1202,11 +1206,11 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
               Expanded(
                 child: Text(
                   '背景加值 · ${bg.cn}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'NotoSerifTC',
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.darkTextLight,
+                    color: _surfaces.textLight,
                   ),
                 ),
               ),
@@ -1248,10 +1252,10 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           ] else
             Text(
               '三屬性各 +1：${bg.abilities.map((a) => kAbilityCn[a]).join('、')}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'NotoSerifTC',
                 fontSize: 12,
-                color: AppColors.darkTextLight,
+                color: _surfaces.textLight,
               ),
             ),
         ],
@@ -1268,7 +1272,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           color: selected ? AppColors.accentGold : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: selected ? AppColors.accentGold : AppColors.darkBorder2,
+            color: selected ? AppColors.accentGold : _surfaces.border2,
           ),
         ),
         child: Text(
@@ -1277,9 +1281,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
             fontFamily: 'Inter',
             fontSize: 11,
             fontWeight: FontWeight.w700,
-            color: selected
-                ? const Color(0xFF1A1206)
-                : AppColors.darkTextSecondary,
+            color: selected ? const Color(0xFF1A1206) : _surfaces.textSecondary,
           ),
         ),
       ),
@@ -1317,12 +1319,12 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                 decoration: BoxDecoration(
                   color: selected == a
                       ? AppColors.accentGold.withValues(alpha: 0.18)
-                      : AppColors.darkSurface2,
+                      : _surfaces.surface2,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: selected == a
                         ? AppColors.accentGold
-                        : AppColors.darkBorder2,
+                        : _surfaces.border2,
                   ),
                 ),
                 child: Text(
@@ -1335,7 +1337,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                         : FontWeight.w400,
                     color: selected == a
                         ? AppColors.accentGold
-                        : AppColors.darkTextPrimary,
+                        : _surfaces.textPrimary,
                   ),
                 ),
               ),
@@ -1506,11 +1508,11 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
             const SizedBox(width: AppSpacing.sm),
             Text(
               '${cls.cn} · 施法屬性 ${kAbilityCn[cls.spellAbility]}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'NotoSerifTC',
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.darkTextLight,
+                color: _surfaces.textLight,
               ),
             ),
           ],
@@ -1607,35 +1609,31 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: _surfaces.surface1,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: _surfaces.border2),
       ),
       child: Column(
         children: [
-          const Icon(
-            Icons.cloud_off,
-            size: 28,
-            color: AppColors.darkTextSecondary,
-          ),
+          Icon(Icons.cloud_off, size: 28, color: _surfaces.textSecondary),
           const SizedBox(height: AppSpacing.sm),
-          const Text(
+          Text(
             '內容庫離線',
             style: TextStyle(
               fontFamily: 'NotoSerifTC',
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: AppColors.darkTextPrimary,
+              color: _surfaces.textPrimary,
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
-          const Text(
+          Text(
             '目前無法載入法術清單。可先完成建角，之後再補選法術。',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'NotoSerifTC',
               fontSize: 12,
-              color: AppColors.darkTextSecondary,
+              color: _surfaces.textSecondary,
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -1722,20 +1720,20 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                 children: [
                   Text(
                     _name.trim().isEmpty ? '（未命名）' : _name.trim(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'NotoSerifTC',
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.darkTextPrimary,
+                      color: _surfaces.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     '${sp.cn} · ${cls.cn} 1 · ${bg.cn} · $_alignment',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'NotoSerifTC',
                       fontSize: 11,
-                      color: AppColors.darkTextSecondary,
+                      color: _surfaces.textSecondary,
                     ),
                   ),
                 ],
@@ -1798,9 +1796,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
               vertical: AppSpacing.xs,
             ),
             decoration: BoxDecoration(
-              color: AppColors.darkSurface2,
+              color: _surfaces.surface2,
               borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: AppColors.darkBorder2),
+              border: Border.all(color: _surfaces.border2),
             ),
             child: Text(
               (s.engName ?? '').isEmpty ? s.name : '${s.name} ${s.engName}',
@@ -1863,9 +1861,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 2),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: _surfaces.surface1,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: _surfaces.border2),
       ),
       child: Column(
         children: [
@@ -1881,10 +1879,10 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           const SizedBox(height: 1),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'NotoSerifTC',
               fontSize: 9,
-              color: AppColors.darkTextSecondary,
+              color: _surfaces.textSecondary,
             ),
           ),
         ],
@@ -1897,18 +1895,18 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 2),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface1,
+          color: _surfaces.surface1,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.darkBorder2),
+          border: Border.all(color: _surfaces.border2),
         ),
         child: Column(
           children: [
             Text(
               kAbilityCn[code]!,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'NotoSerifTC',
                 fontSize: 11,
-                color: AppColors.darkTextSecondary,
+                color: _surfaces.textSecondary,
               ),
             ),
             Text(
@@ -1922,10 +1920,10 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
             ),
             Text(
               _sign(mods[code]!),
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Cinzel',
                 fontSize: 12,
-                color: AppColors.darkTextPrimary,
+                color: _surfaces.textPrimary,
               ),
             ),
           ],
@@ -1977,10 +1975,10 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: _surfaces.surface1,
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
-          color: prof ? AppColors.accentGold : AppColors.darkBorder2,
+          color: prof ? AppColors.accentGold : _surfaces.border2,
         ),
       ),
       child: Row(
@@ -1988,7 +1986,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           Icon(
             prof ? Icons.check_circle : Icons.circle_outlined,
             size: 11,
-            color: prof ? AppColors.accentGold : AppColors.darkTextSecondary,
+            color: prof ? AppColors.accentGold : _surfaces.textSecondary,
           ),
           const SizedBox(width: 6),
           Expanded(
@@ -1998,7 +1996,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                 fontFamily: 'NotoSerifTC',
                 fontSize: 13,
                 fontWeight: prof ? FontWeight.w600 : FontWeight.w400,
-                color: AppColors.darkTextPrimary,
+                color: _surfaces.textPrimary,
               ),
             ),
           ),
@@ -2008,7 +2006,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
               fontFamily: 'Cinzel',
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: prof ? AppColors.accentGold : AppColors.darkTextSecondary,
+              color: prof ? AppColors.accentGold : _surfaces.textSecondary,
             ),
           ),
         ],
@@ -2036,13 +2034,13 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                     horizontal: AppSpacing.xl,
                     vertical: AppSpacing.md,
                   ),
-                  side: const BorderSide(color: AppColors.darkBorder),
+                  side: BorderSide(color: _surfaces.border),
                 ),
-                child: const Text(
+                child: Text(
                   '上一步',
                   style: TextStyle(
                     fontFamily: 'NotoSerifTC',
-                    color: AppColors.darkTextSecondary,
+                    color: _surfaces.textSecondary,
                   ),
                 ),
               ),
@@ -2053,7 +2051,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
                 onPressed: _canNext ? _next : null,
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.accentGold,
-                  disabledBackgroundColor: AppColors.darkBorder2,
+                  disabledBackgroundColor: _surfaces.border2,
                   padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                 ),
                 child: Text(
@@ -2094,29 +2092,35 @@ class _SectionHeader extends StatelessWidget {
   final String text;
   const _SectionHeader(this.text);
   @override
-  Widget build(BuildContext context) => Text(
-    text,
-    style: const TextStyle(
-      fontFamily: 'NotoSerifTC',
-      fontSize: 14,
-      fontWeight: FontWeight.w700,
-      color: AppColors.darkTextPrimary,
-    ),
-  );
+  Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+    return Text(
+      text,
+      style: TextStyle(
+        fontFamily: 'NotoSerifTC',
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+        color: surfaces.textPrimary,
+      ),
+    );
+  }
 }
 
 class _SubLabel extends StatelessWidget {
   final String text;
   const _SubLabel(this.text);
   @override
-  Widget build(BuildContext context) => Text(
-    text,
-    style: const TextStyle(
-      fontFamily: 'NotoSerifTC',
-      fontSize: 12,
-      color: AppColors.darkTextSecondary,
-    ),
-  );
+  Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+    return Text(
+      text,
+      style: TextStyle(
+        fontFamily: 'NotoSerifTC',
+        fontSize: 12,
+        color: surfaces.textSecondary,
+      ),
+    );
+  }
 }
 
 class _Dropdown<T> extends StatelessWidget {
@@ -2132,26 +2136,24 @@ class _Dropdown<T> extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: surfaces.surface1,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: surfaces.border2),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(
           value: value,
           isExpanded: true,
-          dropdownColor: AppColors.darkSurface1,
-          icon: const Icon(
-            Icons.expand_more,
-            color: AppColors.darkTextSecondary,
-          ),
-          style: const TextStyle(
+          dropdownColor: surfaces.surface1,
+          icon: Icon(Icons.expand_more, color: surfaces.textSecondary),
+          style: TextStyle(
             fontFamily: 'NotoSerifTC',
             fontSize: 14,
-            color: AppColors.darkTextPrimary,
+            color: surfaces.textPrimary,
           ),
           items: [
             for (final it in items)
@@ -2175,6 +2177,7 @@ class _OptionChips extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Wrap(
       spacing: AppSpacing.sm,
       runSpacing: AppSpacing.sm,
@@ -2190,12 +2193,12 @@ class _OptionChips extends StatelessWidget {
               decoration: BoxDecoration(
                 color: selected == o
                     ? AppColors.accentGold.withValues(alpha: 0.18)
-                    : AppColors.darkSurface1,
+                    : surfaces.surface1,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: selected == o
                       ? AppColors.accentGold
-                      : AppColors.darkBorder2,
+                      : surfaces.border2,
                 ),
               ),
               child: Text(
@@ -2206,7 +2209,7 @@ class _OptionChips extends StatelessWidget {
                   fontWeight: selected == o ? FontWeight.w700 : FontWeight.w400,
                   color: selected == o
                       ? AppColors.accentGold
-                      : AppColors.darkTextPrimary,
+                      : surfaces.textPrimary,
                 ),
               ),
             ),
@@ -2227,33 +2230,34 @@ class _DescCard extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: surfaces.surface1,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: surfaces.border2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'NotoSerifTC',
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.darkTextPrimary,
+              color: surfaces.textPrimary,
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
             body,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'NotoSerifTC',
               fontSize: 12,
               height: 1.5,
-              color: AppColors.darkTextSecondary,
+              color: surfaces.textSecondary,
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -2268,7 +2272,7 @@ class _DescCard extends StatelessWidget {
                     vertical: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.darkSurface2,
+                    color: surfaces.surface2,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
@@ -2305,6 +2309,7 @@ class _SkillRow extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final on = selected || locked;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -2312,46 +2317,42 @@ class _SkillRow extends StatelessWidget {
         opacity: disabled ? 0.45 : 1,
         child: GestureDetector(
           onTap: disabled ? null : onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: 9,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.darkSurface1,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: on ? AppColors.accentGold : AppColors.darkBorder2,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: 9,
             ),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                on ? Icons.check_circle : Icons.circle_outlined,
-                size: 16,
-                color: on ? AppColors.accentGold : AppColors.darkTextSecondary,
+            decoration: BoxDecoration(
+              color: surfaces.surface1,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: on ? AppColors.accentGold : surfaces.border2,
               ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontFamily: 'NotoSerifTC',
-                    fontSize: 13,
-                    fontWeight: on ? FontWeight.w600 : FontWeight.w400,
-                    color: AppColors.darkTextPrimary,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  on ? Icons.check_circle : Icons.circle_outlined,
+                  size: 16,
+                  color: on ? AppColors.accentGold : surfaces.textSecondary,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 13,
+                      fontWeight: on ? FontWeight.w600 : FontWeight.w400,
+                      color: surfaces.textPrimary,
+                    ),
                   ),
                 ),
-              ),
-              if (locked)
-                const Icon(
-                  Icons.lock,
-                  size: 12,
-                  color: AppColors.darkTextSecondary,
-                ),
-            ],
+                if (locked)
+                  Icon(Icons.lock, size: 12, color: surfaces.textSecondary),
+              ],
+            ),
           ),
-        ),
         ),
       ),
     );
@@ -2427,6 +2428,7 @@ class _SpellPickRowState extends State<_SpellPickRow> {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final s = widget.spell;
     final on = widget.selected;
     final badges = <String>[
@@ -2441,10 +2443,10 @@ class _SpellPickRowState extends State<_SpellPickRow> {
         opacity: widget.disabled ? 0.45 : 1,
         child: Container(
           decoration: BoxDecoration(
-            color: AppColors.darkSurface1,
+            color: surfaces.surface1,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: on ? AppColors.accentGold : AppColors.darkBorder2,
+              color: on ? AppColors.accentGold : surfaces.border2,
             ),
           ),
           child: Column(
@@ -2465,7 +2467,7 @@ class _SpellPickRowState extends State<_SpellPickRow> {
                         size: 18,
                         color: on
                             ? AppColors.accentGold
-                            : AppColors.darkTextSecondary,
+                            : surfaces.textSecondary,
                       ),
                     ),
                   ),
@@ -2488,17 +2490,17 @@ class _SpellPickRowState extends State<_SpellPickRow> {
                                     fontWeight: on
                                         ? FontWeight.w600
                                         : FontWeight.w400,
-                                    color: AppColors.darkTextPrimary,
+                                    color: surfaces.textPrimary,
                                   ),
                                   children: [
                                     if ((s.engName ?? '').isNotEmpty)
                                       TextSpan(
                                         text: '  ${s.engName}',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontFamily: 'Inter',
                                           fontSize: 10,
                                           fontWeight: FontWeight.w400,
-                                          color: AppColors.darkTextSecondary,
+                                          color: surfaces.textSecondary,
                                         ),
                                       ),
                                   ],
@@ -2539,7 +2541,7 @@ class _SpellPickRowState extends State<_SpellPickRow> {
                                     ? Icons.expand_less
                                     : Icons.expand_more,
                                 size: 16,
-                                color: AppColors.darkTextSecondary,
+                                color: surfaces.textSecondary,
                               ),
                             ),
                           ],
@@ -2568,20 +2570,20 @@ class _SpellPickRowState extends State<_SpellPickRow> {
                             '射程 ${ftFormatRange(s.range)}',
                           '成分 ${[if (s.compV) 'V', if (s.compS) 'S', if (s.compM != null) 'M'].join('·')}',
                         ].join(' · '),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 10,
-                          color: AppColors.darkTextSecondary,
+                          color: surfaces.textSecondary,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       FtEntriesView(
                         s.entries,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'NotoSerifTC',
                           fontSize: 12,
                           height: 1.6,
-                          color: AppColors.darkTextLight,
+                          color: surfaces.textLight,
                         ),
                       ),
                     ],
@@ -2600,20 +2602,21 @@ class _PortraitPlaceholder extends StatelessWidget {
   const _PortraitPlaceholder();
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: surfaces.border2),
         gradient: const RadialGradient(
           radius: 0.9,
           colors: [Color(0xFF33291A), Color(0xFF0C0A06)],
         ),
       ),
-      child: const Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.person, size: 60, color: Color(0xFF6B582F)),
-          Text(
+          const Icon(Icons.person, size: 60, color: Color(0xFF6B582F)),
+          const Text(
             '?',
             style: TextStyle(
               fontFamily: 'Cinzel',
@@ -2622,13 +2625,13 @@ class _PortraitPlaceholder extends StatelessWidget {
               color: AppColors.accentGold,
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             '尚未上傳角色圖',
             style: TextStyle(
               fontFamily: 'NotoSerifTC',
               fontSize: 10,
-              color: AppColors.darkTextSecondary,
+              color: surfaces.textSecondary,
             ),
           ),
         ],

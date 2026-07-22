@@ -17,12 +17,22 @@ abstract final class AppColors {
   static const textPrimary = Color(0xFF1E1E1E);
   static const textSecondary = Color(0xFF8B8680);
 
+  /// 介於 textPrimary 與 textSecondary 之間的暖色調文字，對應 darkTextLight
+  /// 的角色（建角/升級精靈等描述文字，比 textSecondary 顯眼但不搶過標題）。
+  static const textLight = Color(0xFF6B5D46);
+
   // ──────────────────────────────────────────
   // Surfaces — light theme (parchment)
   // ──────────────────────────────────────────
   static const surface0 = Color(0xFFFAF7F2);
   static const surface1 = Color(0xFFF3EFE6);
+
+  /// 對應 darkSurface2：選取/啟用狀態的底色，比 surface1 更深一階。
+  static const surface2 = Color(0xFFEEE6D2);
   static const border = Color(0xFFE0D9C7);
+
+  /// 對應 darkBorder2：比主要邊框更淡的次要邊框／分隔線。
+  static const border2 = Color(0xFFE8E0CC);
 
   // ──────────────────────────────────────────
   // Surfaces — dark theme (designs.pen tokens)

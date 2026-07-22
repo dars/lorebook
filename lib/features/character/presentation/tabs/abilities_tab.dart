@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/decorations.dart';
+import '../../../../app/theme/surface_colors.dart';
 import '../../domain/character.dart';
 import '../widgets/ability_shield.dart';
 
@@ -156,7 +157,7 @@ class _SaveCell extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: theme.extension<SurfaceColors>()!.surface1,
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
           color: prof ? AppColors.accentGold : theme.colorScheme.outline,

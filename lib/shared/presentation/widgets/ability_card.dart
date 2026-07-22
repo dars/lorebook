@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/surface_colors.dart';
 
 class StatRow extends StatelessWidget {
   final String labelCN;
@@ -20,16 +21,17 @@ class StatRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final modColor = isProficient
         ? AppColors.accentGold
-        : AppColors.darkTextSecondary;
+        : surfaces.textSecondary;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: surfaces.surface1,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: AppColors.darkBorder, width: 1),
+        border: Border.all(color: surfaces.border, width: 1),
       ),
       child: Row(
         children: [
@@ -42,9 +44,7 @@ class StatRow extends StatelessWidget {
               height: 6,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isProficient
-                    ? AppColors.accentGold
-                    : AppColors.darkBorder,
+                color: isProficient ? AppColors.accentGold : surfaces.border,
               ),
             ),
             const SizedBox(width: 10),
@@ -55,7 +55,7 @@ class StatRow extends StatelessWidget {
               fontFamily: 'NotoSerifTC',
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: AppColors.darkTextPrimary,
+              color: surfaces.textPrimary,
             ),
           ),
           const SizedBox(width: 6),
@@ -64,7 +64,7 @@ class StatRow extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 11,
-              color: AppColors.darkTextSecondary,
+              color: surfaces.textSecondary,
             ),
           ),
           const Spacer(),
@@ -103,13 +103,12 @@ class CompactStatRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final modColor = selected
         ? AppColors.accentGold
-        : (isProficient ? AppColors.accentGold : AppColors.darkTextSecondary);
-    final borderColor = selected ? AppColors.accentGold : AppColors.darkBorder;
-    final fillColor = selected
-        ? const Color(0x22C9A84C)
-        : AppColors.darkSurface1;
+        : (isProficient ? AppColors.accentGold : surfaces.textSecondary);
+    final borderColor = selected ? AppColors.accentGold : surfaces.border;
+    final fillColor = selected ? const Color(0x22C9A84C) : surfaces.surface1;
 
     return GestureDetector(
       onTap: onTap,
@@ -133,7 +132,7 @@ class CompactStatRow extends StatelessWidget {
                       fontFamily: 'NotoSerifTC',
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.darkTextPrimary,
+                      color: surfaces.textPrimary,
                     ),
                   ),
                   Text(
@@ -141,7 +140,7 @@ class CompactStatRow extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 10,
-                      color: AppColors.darkTextSecondary,
+                      color: surfaces.textSecondary,
                     ),
                   ),
                 ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/surface_colors.dart';
 import '../../../features/character/domain/character.dart';
 
 /// 角色頭像：有角色圖顯示圖（載入失敗回退字首），無圖顯示姓氏字首。
@@ -25,6 +25,7 @@ class CharacterAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final initial = Center(
       child: Text(
         character.name.isEmpty ? '?' : character.name.characters.first,
@@ -34,7 +35,7 @@ class CharacterAvatar extends StatelessWidget {
               fontFamily: 'Cinzel',
               fontSize: size * 0.45,
               fontWeight: FontWeight.w700,
-              color: AppColors.darkTextPrimary,
+              color: surfaces.textPrimary,
             ),
       ),
     );
@@ -45,7 +46,7 @@ class CharacterAvatar extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: background ?? AppColors.darkSurface1,
+        color: background ?? surfaces.surface1,
         border: borderColor == null
             ? null
             : Border.all(color: borderColor!, width: borderWidth),

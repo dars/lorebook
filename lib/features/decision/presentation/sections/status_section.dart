@@ -5,6 +5,7 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/decorations.dart';
 import '../../../../app/theme/dnd_colors.dart';
+import '../../../../app/theme/surface_colors.dart';
 import '../../../../features/catalog/data/catalog_repository.dart';
 import '../../../../features/catalog/domain/catalog_models.dart';
 import '../../../../features/catalog/presentation/fivetools_renderer.dart';
@@ -23,6 +24,7 @@ class StatusSection extends ConsumerWidget {
 
     return CollapsibleSection(
       title: 'STATUS 狀態',
+      isFirst: true,
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.md),
@@ -102,7 +104,8 @@ class _HpColumn extends StatelessWidget {
         ? 0.0
         : (character.currentHp / character.maxHp).clamp(0.0, 1.0);
     final dying = character.currentHp == 0;
-    final tempColor = Theme.of(context).extension<DndColors>()!.tempHp;
+    final dnd = Theme.of(context).extension<DndColors>()!;
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -118,7 +121,7 @@ class _HpColumn extends StatelessWidget {
                 fontFamily: 'Inter',
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
-                color: AppColors.accentGold,
+                color: surfaces.accent,
               ),
             ),
           ],
@@ -135,7 +138,7 @@ class _HpColumn extends StatelessWidget {
                 fontFamily: 'Cinzel',
                 fontSize: 30,
                 fontWeight: FontWeight.w700,
-                color: dying ? AppColors.danger : AppColors.darkTextPrimary,
+                color: dying ? AppColors.danger : surfaces.textPrimary,
               ),
             ),
             Text(
@@ -143,13 +146,13 @@ class _HpColumn extends StatelessWidget {
               style: TextStyle(
                 fontFamily: 'Cinzel',
                 fontSize: 14,
-                color: AppColors.darkTextSecondary,
+                color: surfaces.textSecondary,
               ),
             ),
             const SizedBox(width: 6),
             _TempHpShield(
               value: character.tempHp,
-              color: tempColor,
+              color: dnd.tempHp,
               onTap: onTapShield,
             ),
           ],
@@ -168,7 +171,7 @@ class _HpColumn extends StatelessWidget {
                 if (ratio < 1.0)
                   Expanded(
                     flex: ((1 - ratio) * 100).round(),
-                    child: Container(color: AppColors.hpBarBg),
+                    child: Container(color: dnd.hpBarBg),
                   ),
               ],
             ),
@@ -248,6 +251,7 @@ class _HpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return InkWell(
       onTap: onPressed,
       borderRadius: BorderRadius.circular(6),
@@ -255,10 +259,10 @@ class _HpButton extends StatelessWidget {
         width: 44,
         height: 32,
         decoration: BoxDecoration(
-          color: AppColors.darkBorder,
+          color: surfaces.border,
           borderRadius: BorderRadius.circular(6),
         ),
-        child: Icon(icon, size: 16, color: AppColors.darkTextPrimary),
+        child: Icon(icon, size: 16, color: surfaces.textPrimary),
       ),
     );
   }
@@ -274,6 +278,7 @@ class _ConcentrationColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final spellName = character.concentrationSpell;
     final active = spellName != null && spellName.isNotEmpty;
 
@@ -300,11 +305,7 @@ class _ConcentrationColumn extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.auto_fix_high,
-                  size: 12,
-                  color: AppColors.accentGold,
-                ),
+                Icon(Icons.auto_fix_high, size: 12, color: surfaces.accent),
                 const SizedBox(width: 4),
                 Text(
                   '專注',
@@ -312,7 +313,7 @@ class _ConcentrationColumn extends StatelessWidget {
                     fontFamily: 'NotoSerifTC',
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.darkTextSecondary,
+                    color: surfaces.textSecondary,
                   ),
                 ),
               ],
@@ -326,7 +327,7 @@ class _ConcentrationColumn extends StatelessWidget {
                   fontFamily: 'NotoSerifTC',
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.darkTextPrimary,
+                  color: surfaces.textPrimary,
                 ),
               ),
               const SizedBox(height: 2),
@@ -335,7 +336,7 @@ class _ConcentrationColumn extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 9,
-                  color: AppColors.darkTextSecondary,
+                  color: surfaces.textSecondary,
                 ),
               ),
               const SizedBox(height: 6),
@@ -344,7 +345,7 @@ class _ConcentrationColumn extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: 'NotoSerifTC',
                   fontSize: 9,
-                  color: AppColors.darkTextSecondary.withValues(alpha: 0.7),
+                  color: surfaces.textSecondary.withValues(alpha: 0.7),
                 ),
               ),
             ] else
@@ -353,7 +354,7 @@ class _ConcentrationColumn extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: 'NotoSerifTC',
                   fontSize: 13,
-                  color: AppColors.darkTextSecondary.withValues(alpha: 0.6),
+                  color: surfaces.textSecondary.withValues(alpha: 0.6),
                 ),
               ),
           ],
@@ -378,6 +379,7 @@ class _ConditionsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final hasAny =
         character.conditions.isNotEmpty || character.exhaustionLevel > 0;
 
@@ -415,7 +417,7 @@ class _ConditionsRow extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: 'NotoSerifTC',
                   fontSize: 11,
-                  color: AppColors.darkTextSecondary,
+                  color: surfaces.textSecondary,
                 ),
               )
             else
@@ -458,6 +460,7 @@ class _ConditionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -475,18 +478,14 @@ class _ConditionChip extends StatelessWidget {
               style: TextStyle(
                 fontFamily: 'NotoSerifTC',
                 fontSize: 11,
-                color: AppColors.darkTextPrimary,
+                color: surfaces.textPrimary,
               ),
             ),
             const SizedBox(width: 2),
             GestureDetector(
               onTap: onRemove,
               behavior: HitTestBehavior.opaque,
-              child: Icon(
-                Icons.close,
-                size: 14,
-                color: AppColors.darkTextSecondary,
-              ),
+              child: Icon(Icons.close, size: 14, color: surfaces.textSecondary),
             ),
           ],
         ),
@@ -516,7 +515,12 @@ void _showTempHpDialog(BuildContext context, WidgetRef ref, int current) {
           const SizedBox(height: 8),
           Text(
             '臨時 HP 不疊加：輸入值會取代既有值（輸入 0 清空）。',
-            style: TextStyle(fontSize: 11, color: AppColors.darkTextSecondary),
+            style: TextStyle(
+              fontSize: 11,
+              color: Theme.of(
+                context,
+              ).extension<SurfaceColors>()!.textSecondary,
+            ),
           ),
         ],
       ),
@@ -580,69 +584,74 @@ void _showConcentrationSheet(BuildContext context, WidgetRef ref) {
 
   showModalBottomSheet<void>(
     context: context,
-    backgroundColor: AppColors.darkSurface1,
+    backgroundColor: Theme.of(context).extension<SurfaceColors>()!.surface1,
     showDragHandle: true,
-    builder: (context) => SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(20, 4, 20, 8),
-            child: Text(
-              '選擇專注法術',
-              style: TextStyle(
-                fontFamily: 'NotoSerifTC',
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          if (items.isEmpty)
-            Padding(
-              padding: const EdgeInsets.all(20),
+    builder: (context) {
+      final textSecondary = Theme.of(
+        context,
+      ).extension<SurfaceColors>()!.textSecondary;
+      return SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 4, 20, 8),
               child: Text(
-                '沒有需要專注的法術',
-                style: TextStyle(color: AppColors.darkTextSecondary),
-              ),
-            )
-          else
-            Flexible(
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  for (final s in items)
-                    ListTile(
-                      title: Text(
-                        s.name,
-                        style: const TextStyle(fontFamily: 'NotoSerifTC'),
-                      ),
-                      subtitle: s.nameEn.isNotEmpty ? Text(s.nameEn) : null,
-                      trailing: Text(
-                        '${s.level}環',
-                        style: TextStyle(color: AppColors.darkTextSecondary),
-                      ),
-                      onTap: () {
-                        ref
-                            .read(currentCharacterProvider.notifier)
-                            .startConcentration(s.name);
-                        Navigator.pop(context);
-                      },
-                    ),
-                ],
+                '選擇專注法術',
+                style: TextStyle(
+                  fontFamily: 'NotoSerifTC',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-          const SizedBox(height: 8),
-        ],
-      ),
-    ),
+            if (items.isEmpty)
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  '沒有需要專注的法術',
+                  style: TextStyle(color: textSecondary),
+                ),
+              )
+            else
+              Flexible(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    for (final s in items)
+                      ListTile(
+                        title: Text(
+                          s.name,
+                          style: const TextStyle(fontFamily: 'NotoSerifTC'),
+                        ),
+                        subtitle: s.nameEn.isNotEmpty ? Text(s.nameEn) : null,
+                        trailing: Text(
+                          '${s.level}環',
+                          style: TextStyle(color: textSecondary),
+                        ),
+                        onTap: () {
+                          ref
+                              .read(currentCharacterProvider.notifier)
+                              .startConcentration(s.name);
+                          Navigator.pop(context);
+                        },
+                      ),
+                  ],
+                ),
+              ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      );
+    },
   );
 }
 
 void _showConditionsSheet(BuildContext context, WidgetRef ref) {
   showModalBottomSheet<void>(
     context: context,
-    backgroundColor: AppColors.darkSurface1,
+    backgroundColor: Theme.of(context).extension<SurfaceColors>()!.surface1,
     isScrollControlled: true,
     showDragHandle: true,
     builder: (context) => Consumer(
@@ -699,7 +708,9 @@ void _showConditionsSheet(BuildContext context, WidgetRef ref) {
                             c.effect,
                             style: TextStyle(
                               fontSize: 11,
-                              color: AppColors.darkTextSecondary,
+                              color: Theme.of(
+                                context,
+                              ).extension<SurfaceColors>()!.textSecondary,
                             ),
                           ),
                           controlAffinity: ListTileControlAffinity.leading,
@@ -738,7 +749,10 @@ class _ExhaustionTile extends StatelessWidget {
       ),
       subtitle: Text(
         info.effect,
-        style: TextStyle(fontSize: 11, color: AppColors.darkTextSecondary),
+        style: TextStyle(
+          fontSize: 11,
+          color: Theme.of(context).extension<SurfaceColors>()!.textSecondary,
+        ),
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -812,7 +826,9 @@ void _showEffectDialog(BuildContext context, String name) {
                       '內容庫離線，僅顯示摘要。',
                       style: TextStyle(
                         fontSize: 11,
-                        color: AppColors.darkTextSecondary,
+                        color: Theme.of(
+                          context,
+                        ).extension<SurfaceColors>()!.textSecondary,
                       ),
                     ),
                   ],
@@ -843,6 +859,8 @@ class _AcShield extends StatelessWidget {
     return Consumer(
       builder: (context, ref, _) {
         final value = ref.watch(currentCharacterProvider.select((c) => c.ac));
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        final surfaces = Theme.of(context).extension<SurfaceColors>()!;
         return SizedBox(
           width: 96,
           child: Column(
@@ -874,7 +892,14 @@ class _AcShield extends StatelessWidget {
                 width: 80,
                 height: 86,
                 child: CustomPaint(
-                  painter: _ShieldPainter(),
+                  painter: _ShieldPainter(
+                    fillTop: isDark
+                        ? const Color(0xFF3A2E1E)
+                        : surfaces.surface2,
+                    fillBottom: isDark
+                        ? const Color(0xFF1E1710)
+                        : surfaces.surface0,
+                  ),
                   child: Center(
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 6),
@@ -917,6 +942,11 @@ class _AcShield extends StatelessWidget {
 }
 
 class _ShieldPainter extends CustomPainter {
+  final Color fillTop;
+  final Color fillBottom;
+
+  const _ShieldPainter({required this.fillTop, required this.fillBottom});
+
   @override
   void paint(Canvas canvas, Size size) {
     final sx = size.width / 140;
@@ -939,10 +969,10 @@ class _ShieldPainter extends CustomPainter {
     );
 
     final fillPaint = Paint()
-      ..shader = const LinearGradient(
+      ..shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [Color(0xFF3A2E1E), Color(0xFF1E1710)],
+        colors: [fillTop, fillBottom],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
     canvas.drawPath(outerPath, fillPaint);
 
@@ -959,5 +989,6 @@ class _ShieldPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _ShieldPainter oldDelegate) =>
+      oldDelegate.fillTop != fillTop || oldDelegate.fillBottom != fillBottom;
 }

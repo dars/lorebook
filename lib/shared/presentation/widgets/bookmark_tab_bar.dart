@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/surface_colors.dart';
 import '../app_destinations.dart';
 
 class BookmarkTabBar extends StatelessWidget {
@@ -15,15 +16,16 @@ class BookmarkTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            AppColors.darkSurface0.withValues(alpha: 0),
-            AppColors.darkSurface0.withValues(alpha: 1),
-            AppColors.darkSurface0,
+            surfaces.surface0.withValues(alpha: 0),
+            surfaces.surface0.withValues(alpha: 1),
+            surfaces.surface0,
           ],
           stops: const [0.0, 0.4, 1.0],
         ),
@@ -35,9 +37,9 @@ class BookmarkTabBar extends StatelessWidget {
           child: Container(
             height: 60,
             decoration: BoxDecoration(
-              color: const Color(0xCC2A1F0E),
+              color: surfaces.surface1.withValues(alpha: 0.8),
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: AppColors.darkBorder, width: 1),
+              border: Border.all(color: surfaces.border, width: 1),
               boxShadow: const [
                 BoxShadow(
                   color: Color(0x80000000),
@@ -84,7 +86,8 @@ class _FloatingTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = selected ? AppColors.accentGold : AppColors.darkTextSecondary;
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+    final color = selected ? AppColors.accentGold : surfaces.textSecondary;
 
     return Container(
       height: 48,

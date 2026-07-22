@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/surface_colors.dart';
 
 /// 金色 pip（點狀）資源顯示，供法術位與離散型職業資源共用。
 ///
@@ -44,14 +45,15 @@ class _Pip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Container(
       width: 16,
       height: 16,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: filled ? AppColors.accentGold : const Color(0xFF2E2616),
+        color: filled ? AppColors.accentGold : surfaces.surface2,
         border: Border.all(
-          color: filled ? const Color(0xFFE0C56A) : AppColors.darkBorder,
+          color: filled ? const Color(0xFFE0C56A) : surfaces.border,
           width: 1,
         ),
       ),

@@ -30,6 +30,9 @@ class DndColors extends ThemeExtension<DndColors> {
   /// 臨時 HP / 護盾的冷色（藍/青），與綠色 HP、金色主題區隔。
   final Color tempHp;
 
+  /// HP 條「未填滿」段的底色。
+  final Color hpBarBg;
+
   const DndColors({
     required this.fire,
     required this.cold,
@@ -44,6 +47,7 @@ class DndColors extends ThemeExtension<DndColors> {
     required this.physical,
     required this.neutral,
     required this.tempHp,
+    required this.hpBarBg,
   });
 
   /// 依傷害類型字串（中英皆可）取得顏色，未知則回傳 [neutral]。
@@ -82,6 +86,7 @@ class DndColors extends ThemeExtension<DndColors> {
     Color? physical,
     Color? neutral,
     Color? tempHp,
+    Color? hpBarBg,
   }) {
     return DndColors(
       fire: fire ?? this.fire,
@@ -97,6 +102,7 @@ class DndColors extends ThemeExtension<DndColors> {
       physical: physical ?? this.physical,
       neutral: neutral ?? this.neutral,
       tempHp: tempHp ?? this.tempHp,
+      hpBarBg: hpBarBg ?? this.hpBarBg,
     );
   }
 
@@ -117,6 +123,7 @@ class DndColors extends ThemeExtension<DndColors> {
       physical: Color.lerp(physical, other.physical, t)!,
       neutral: Color.lerp(neutral, other.neutral, t)!,
       tempHp: Color.lerp(tempHp, other.tempHp, t)!,
+      hpBarBg: Color.lerp(hpBarBg, other.hpBarBg, t)!,
     );
   }
 
@@ -135,6 +142,7 @@ class DndColors extends ThemeExtension<DndColors> {
     physical: Color(0xFFC9A84C),
     neutral: Color(0xFFC9A84C),
     tempHp: Color(0xFF6FB0D4),
+    hpBarBg: Color(0xFF5B3B3B),
   );
 
   /// 淺色主題配色（較深、適合羊皮紙底）。
@@ -152,5 +160,6 @@ class DndColors extends ThemeExtension<DndColors> {
     physical: Color(0xFF6B4E3E),
     neutral: Color(0xFF6B4E3E),
     tempHp: Color(0xFF2F6FB0),
+    hpBarBg: Color(0xFFE7D3CC),
   );
 }

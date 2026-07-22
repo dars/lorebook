@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/decorations.dart';
+import '../../../../app/theme/surface_colors.dart';
 import '../../../../features/character/domain/character.dart';
 import '../../../../features/character/domain/character_providers.dart';
 import '../../../../shared/presentation/widgets/gold_pips.dart';
@@ -79,6 +80,7 @@ class _SubHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Row(
       children: [
         Text(
@@ -96,7 +98,7 @@ class _SubHeader extends StatelessWidget {
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 10,
-            color: AppColors.darkTextSecondary,
+            color: surfaces.textSecondary,
           ),
         ),
       ],
@@ -112,6 +114,7 @@ class _Label extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return SizedBox(
       width: 88,
       child: Column(
@@ -123,7 +126,7 @@ class _Label extends StatelessWidget {
               fontFamily: 'NotoSerifTC',
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: AppColors.darkTextPrimary,
+              color: surfaces.textPrimary,
             ),
           ),
           if (en.isNotEmpty)
@@ -132,7 +135,7 @@ class _Label extends StatelessWidget {
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 9,
-                color: AppColors.darkTextSecondary,
+                color: surfaces.textSecondary,
               ),
             ),
         ],
@@ -148,6 +151,7 @@ class _RightInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -158,7 +162,7 @@ class _RightInfo extends StatelessWidget {
               fontFamily: 'Cinzel',
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: AppColors.darkTextSecondary,
+              color: surfaces.textSecondary,
             ),
           ),
         if (recover.isNotEmpty)
@@ -218,6 +222,7 @@ class _ResourceRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final r = resource;
     final recover = _recoverLabel(r.recovery);
 
@@ -260,7 +265,7 @@ class _ResourceRow extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'NotoSerifTC',
                         fontSize: 12,
-                        color: AppColors.darkTextSecondary,
+                        color: surfaces.textSecondary,
                       ),
                     ),
                   ],
@@ -291,7 +296,7 @@ class _ResourceRow extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Cinzel',
                       fontSize: 14,
-                      color: AppColors.darkTextSecondary,
+                      color: surfaces.textSecondary,
                     ),
                   ),
                   const SizedBox(width: 6),

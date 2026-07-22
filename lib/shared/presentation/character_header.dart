@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/theme/app_colors.dart';
 import 'widgets/character_avatar.dart';
 import '../../app/theme/app_spacing.dart';
+import '../../app/theme/surface_colors.dart';
 import '../../features/catalog/data/catalog_repository.dart';
 import '../../features/character/domain/character.dart';
 import '../../features/character/domain/character_providers.dart';
@@ -18,9 +19,10 @@ class CharacterHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final character = ref.watch(currentCharacterProvider);
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
 
     return Container(
-      decoration: BoxDecoration(color: AppColors.darkSurface0),
+      decoration: BoxDecoration(color: surfaces.surface0),
       child: SafeArea(
         bottom: false,
         child: Column(
@@ -54,7 +56,7 @@ class CharacterHeader extends ConsumerWidget {
                       fontFamily: 'Cinzel',
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.darkTextPrimary,
+                      color: surfaces.textPrimary,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -69,7 +71,7 @@ class CharacterHeader extends ConsumerWidget {
                             fontFamily: 'Cinzel',
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.darkTextPrimary,
+                            color: surfaces.textPrimary,
                           ),
                         ),
                         Text(
@@ -77,13 +79,13 @@ class CharacterHeader extends ConsumerWidget {
                           style: TextStyle(
                             fontFamily: 'NotoSerifTC',
                             fontSize: 11,
-                            color: AppColors.darkTextSecondary,
+                            color: surfaces.textSecondary,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  _levelBadge(context, character),
+                  _levelBadge(context, character, surfaces),
                 ],
               ),
             ),
@@ -93,7 +95,11 @@ class CharacterHeader extends ConsumerWidget {
     );
   }
 
-  Widget _levelBadge(BuildContext context, Character character) {
+  Widget _levelBadge(
+    BuildContext context,
+    Character character,
+    SurfaceColors surfaces,
+  ) {
     final badge = Column(
       children: [
         Text(
@@ -103,7 +109,7 @@ class CharacterHeader extends ConsumerWidget {
             fontSize: 9,
             fontWeight: FontWeight.w600,
             letterSpacing: 1,
-            color: AppColors.darkTextSecondary,
+            color: surfaces.textSecondary,
           ),
         ),
         Text(
@@ -112,7 +118,7 @@ class CharacterHeader extends ConsumerWidget {
             fontFamily: 'Cinzel',
             fontSize: 28,
             fontWeight: FontWeight.w700,
-            color: AppColors.darkTextPrimary,
+            color: surfaces.textPrimary,
           ),
         ),
       ],
@@ -147,15 +153,16 @@ class CharacterHeader extends ConsumerWidget {
           // 補選子職入口：內容庫可用（已載入）才顯示。
           final catalogReady =
               maybeSubclass && ref.watch(classCatalogProvider).hasValue;
+          final surfaces = Theme.of(context).extension<SurfaceColors>()!;
           return AlertDialog(
-            backgroundColor: AppColors.darkSurface1,
-            title: const Text(
+            backgroundColor: surfaces.surface1,
+            title: Text(
               '調升等級',
               style: TextStyle(
                 fontFamily: 'NotoSerifTC',
                 fontSize: 17,
                 fontWeight: FontWeight.w700,
-                color: AppColors.darkTextPrimary,
+                color: surfaces.textPrimary,
               ),
             ),
             content: Column(
@@ -164,19 +171,19 @@ class CharacterHeader extends ConsumerWidget {
               children: [
                 Text(
                   '要將${character.name}調升至 Lv ${character.level + 1} 嗎？',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'NotoSerifTC',
                     fontSize: 13,
-                    color: AppColors.darkTextLight,
+                    color: surfaces.textLight,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
-                const Text(
+                Text(
                   '將進入引導式升級流程，完成前不會變更角色。',
                   style: TextStyle(
                     fontFamily: 'NotoSerifTC',
                     fontSize: 11,
-                    color: AppColors.darkTextSecondary,
+                    color: surfaces.textSecondary,
                   ),
                 ),
                 if (catalogReady) ...[
@@ -202,7 +209,7 @@ class CharacterHeader extends ConsumerWidget {
                       ),
                     ),
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: AppColors.darkBorder),
+                      side: BorderSide(color: surfaces.border),
                     ),
                   ),
                 ],
@@ -211,11 +218,11 @@ class CharacterHeader extends ConsumerWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop(),
-                child: const Text(
+                child: Text(
                   '取消',
                   style: TextStyle(
                     fontFamily: 'NotoSerifTC',
-                    color: AppColors.darkTextSecondary,
+                    color: surfaces.textSecondary,
                   ),
                 ),
               ),

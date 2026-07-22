@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/surface_colors.dart';
 
 /// 六角能力雷達圖。
 ///
@@ -22,6 +23,7 @@ class AbilityHexChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Center(
       child: SizedBox(
         width: 220,
@@ -31,6 +33,8 @@ class AbilityHexChart extends StatelessWidget {
             values: values,
             highlights: highlights,
             labels: labels,
+            gridColor: surfaces.border2,
+            labelColor: surfaces.textSecondary,
           ),
         ),
       ),
@@ -42,11 +46,15 @@ class _AbilityHexPainter extends CustomPainter {
   final List<double> values;
   final Set<int> highlights;
   final List<String> labels;
+  final Color gridColor;
+  final Color labelColor;
 
   _AbilityHexPainter({
     required this.values,
     required this.highlights,
     required this.labels,
+    required this.gridColor,
+    required this.labelColor,
   });
 
   @override
@@ -62,7 +70,7 @@ class _AbilityHexPainter extends CustomPainter {
     final grid = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1
-      ..color = AppColors.darkBorder2;
+      ..color = gridColor;
     for (final ring in [0.4, 0.7, 1.0]) {
       final path = Path();
       for (var i = 0; i < 6; i++) {
@@ -105,7 +113,7 @@ class _AbilityHexPainter extends CustomPainter {
             fontFamily: 'NotoSerifTC',
             fontSize: 12,
             fontWeight: on ? FontWeight.w700 : FontWeight.w400,
-            color: on ? AppColors.accentGold : AppColors.darkTextSecondary,
+            color: on ? AppColors.accentGold : labelColor,
           ),
         ),
         textDirection: TextDirection.ltr,
@@ -117,5 +125,8 @@ class _AbilityHexPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_AbilityHexPainter old) =>
-      old.values != values || old.highlights != highlights;
+      old.values != values ||
+      old.highlights != highlights ||
+      old.gridColor != gridColor ||
+      old.labelColor != labelColor;
 }

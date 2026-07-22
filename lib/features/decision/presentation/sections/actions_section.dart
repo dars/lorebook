@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/decorations.dart';
 import '../../../../app/theme/dnd_colors.dart';
+import '../../../../app/theme/surface_colors.dart';
 import '../../../../features/character/domain/character.dart';
 import '../../../../features/character/domain/character_providers.dart';
 import '../../../../features/character/presentation/widgets/spell_entry.dart';
@@ -69,6 +70,7 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
   Widget build(BuildContext context) {
     final character = ref.watch(currentCharacterProvider);
     final dnd = Theme.of(context).extension<DndColors>()!;
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
 
     final weapons = character.weapons;
     final cantrips = character.cantrips;
@@ -166,7 +168,7 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
                           title: o.cn,
                           subtitle: o.en,
                           value: o.effect,
-                          valueColor: AppColors.darkTextLight,
+                          valueColor: surfaces.textLight,
                           description: o.desc,
                         ),
                       ),
@@ -231,7 +233,7 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
                   title: '機會攻擊',
                   subtitle: 'Opportunity Attack',
                   value: '1 次攻擊',
-                  valueColor: AppColors.darkTextLight,
+                  valueColor: surfaces.textLight,
                   description: '當敵人離開你的觸及範圍時，你可用反應對其進行一次近戰攻擊。',
                 ),
               ],
@@ -262,6 +264,7 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
     required List<Widget> children,
   }) {
     final collapsed = _isCollapsed(key);
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Padding(
       padding: const EdgeInsets.only(left: 14),
       child: Column(
@@ -297,7 +300,7 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 10,
-                        color: AppColors.darkTextSecondary,
+                        color: surfaces.textSecondary,
                       ),
                     ),
                   ),
@@ -326,6 +329,7 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
     required List<Widget> children,
   }) {
     final expanded = _expandedRings.contains(key);
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -338,7 +342,7 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
                 Icon(
                   expanded ? Icons.expand_more : Icons.chevron_right,
                   size: 14,
-                  color: AppColors.darkTextSecondary,
+                  color: surfaces.textSecondary,
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -348,7 +352,7 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1,
-                    color: AppColors.darkTextSecondary,
+                    color: surfaces.textSecondary,
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -357,7 +361,7 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 10,
-                    color: AppColors.darkTextSecondary.withValues(alpha: 0.6),
+                    color: surfaces.textSecondary.withValues(alpha: 0.6),
                   ),
                 ),
               ],

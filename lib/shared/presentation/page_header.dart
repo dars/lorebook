@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
 import '../../app/theme/app_spacing.dart';
+import '../../app/theme/surface_colors.dart';
 
 /// 全域 / 系統頁使用的輕量標題列（例如「設定」）。
 ///
@@ -15,8 +16,9 @@ class PageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Container(
-      color: AppColors.darkSurface0,
+      color: surfaces.surface0,
       child: SafeArea(
         bottom: false,
         child: Column(
@@ -48,11 +50,11 @@ class PageHeader extends StatelessWidget {
                       children: [
                         Text(
                           title,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: 'Cinzel',
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.darkTextPrimary,
+                            color: surfaces.textPrimary,
                           ),
                         ),
                         if (subtitle != null)

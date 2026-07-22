@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
 import 'app_spacing.dart';
+import 'surface_colors.dart';
 
 class CardCornerDecoration extends StatelessWidget {
   final Widget child;
@@ -128,7 +129,7 @@ class SectionTitle extends StatelessWidget {
     final enLabel = match?.group(1) ?? title;
     final cnLabel = match?.group(2);
     const labelColor = AppColors.sectionLabel;
-    final lineColor = AppColors.darkBorder2;
+    final lineColor = Theme.of(context).extension<SurfaceColors>()!.border2;
 
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.lg, bottom: AppSpacing.sm),
@@ -178,12 +179,17 @@ class CollapsibleSection extends StatefulWidget {
   /// 收合時於標題列顯示的摘要（如「攻擊・施法・其他」）；null 則不顯示。
   final String? summary;
 
+  /// 頁面/欄位中的第一個 section 時設為 true，省略標題上緣間距，
+  /// 避免與上層（如 CharacterHeader）的間距疊加後顯得過大。
+  final bool isFirst;
+
   const CollapsibleSection({
     super.key,
     required this.title,
     required this.child,
     this.initiallyExpanded = true,
     this.summary,
+    this.isFirst = false,
   });
 
   @override
@@ -201,7 +207,8 @@ class _CollapsibleSectionState extends State<CollapsibleSection> {
     final enLabel = match?.group(1) ?? widget.title;
     final cnLabel = match?.group(2);
     const labelColor = AppColors.sectionLabel;
-    final lineColor = AppColors.darkBorder2;
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+    final lineColor = surfaces.border2;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,8 +216,8 @@ class _CollapsibleSectionState extends State<CollapsibleSection> {
         InkWell(
           onTap: () => setState(() => _expanded = !_expanded),
           child: Padding(
-            padding: const EdgeInsets.only(
-              top: AppSpacing.md,
+            padding: EdgeInsets.only(
+              top: widget.isFirst ? 0 : AppSpacing.md,
               bottom: AppSpacing.sm,
             ),
             child: Row(
@@ -218,28 +225,28 @@ class _CollapsibleSectionState extends State<CollapsibleSection> {
                 Icon(
                   _expanded ? Icons.expand_more : Icons.chevron_right,
                   size: 17,
-                  color: AppColors.accentGold,
+                  color: surfaces.accent,
                 ),
                 const SizedBox(width: 6),
                 Text(
                   enLabel,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 2,
-                    color: AppColors.accentGold,
+                    color: surfaces.accent,
                   ),
                 ),
                 if (cnLabel != null) ...[
                   const SizedBox(width: 6),
                   Text(
                     cnLabel,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'NotoSerifTC',
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.darkTextPrimary,
+                      color: surfaces.textPrimary,
                     ),
                   ),
                 ],

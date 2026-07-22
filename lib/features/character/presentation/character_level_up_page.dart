@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
+import '../../../app/theme/surface_colors.dart';
 import '../../catalog/data/catalog_repository.dart';
 import '../../catalog/domain/catalog_models.dart';
 import '../../catalog/domain/fivetools_text.dart';
@@ -253,12 +254,13 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     _warmUpCatalog();
     final title = widget.subclassOnly ? '補選子職' : '升級等級';
     return Scaffold(
-      backgroundColor: AppColors.darkSurface0,
+      backgroundColor: surfaces.surface0,
       appBar: AppBar(
-        backgroundColor: AppColors.darkSurface0,
+        backgroundColor: surfaces.surface0,
         title: Text(
           title,
           style: const TextStyle(
@@ -335,6 +337,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   }
 
   Widget _buildBottomBar() {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final isLast = _step == _steps.length - 1;
     final label = widget.subclassOnly
         ? '完成補選'
@@ -355,13 +358,13 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
                     horizontal: AppSpacing.xl,
                     vertical: AppSpacing.md,
                   ),
-                  side: const BorderSide(color: AppColors.darkBorder),
+                  side: BorderSide(color: surfaces.border),
                 ),
-                child: const Text(
+                child: Text(
                   '上一步',
                   style: TextStyle(
                     fontFamily: 'NotoSerifTC',
-                    color: AppColors.darkTextSecondary,
+                    color: surfaces.textSecondary,
                   ),
                 ),
               ),
@@ -374,7 +377,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
                     : null,
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.accentGold,
-                  disabledBackgroundColor: AppColors.darkBorder2,
+                  disabledBackgroundColor: surfaces.border2,
                   padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                 ),
                 child: Text(
@@ -402,6 +405,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   // ── 步驟：生命值 ──
 
   Widget _hpStep() {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final plan = _plan!;
     final conMod = _base.abilityScores.con.modifier;
     final roll = _useAverage ? plan.averageHp : _roll;
@@ -417,10 +421,10 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
         Text(
           '${_base.className} · 生命骰 1d${plan.hitDieFaces} · 體質調整 ${_sign(conMod)}'
           '${plan.speciesHpPerLevel > 0 ? ' · 種族 +${plan.speciesHpPerLevel}' : ''}',
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'NotoSerifTC',
             fontSize: 12,
-            color: AppColors.darkTextSecondary,
+            color: surfaces.textSecondary,
           ),
         ),
         const SizedBox(height: AppSpacing.lg),
@@ -447,11 +451,11 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Cinzel',
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: AppColors.darkTextPrimary,
+                color: surfaces.textPrimary,
               ),
               decoration: const InputDecoration(hintText: '—', isDense: true),
               onChanged: (_) => setState(() {}),
@@ -465,19 +469,19 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
             vertical: AppSpacing.md,
           ),
           decoration: BoxDecoration(
-            color: AppColors.darkSurface1,
+            color: surfaces.surface1,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.darkBorder2),
+            border: Border.all(color: surfaces.border2),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 '最大生命值',
                 style: TextStyle(
                   fontFamily: 'NotoSerifTC',
                   fontSize: 13,
-                  color: AppColors.darkTextLight,
+                  color: surfaces.textLight,
                 ),
               ),
               Text(
@@ -506,6 +510,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
     Widget? child,
     required VoidCallback onTap,
   }) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
@@ -514,10 +519,10 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
         decoration: BoxDecoration(
           color: selected
               ? AppColors.accentGold.withValues(alpha: 0.09)
-              : AppColors.darkSurface1,
+              : surfaces.surface1,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: selected ? AppColors.accentGold : AppColors.darkBorder2,
+            color: selected ? AppColors.accentGold : surfaces.border2,
           ),
         ),
         child: Row(
@@ -527,9 +532,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
                   ? Icons.radio_button_checked
                   : Icons.radio_button_unchecked,
               size: 18,
-              color: selected
-                  ? AppColors.accentGold
-                  : AppColors.darkTextSecondary,
+              color: selected ? AppColors.accentGold : surfaces.textSecondary,
             ),
             const SizedBox(width: AppSpacing.md),
             Expanded(
@@ -543,17 +546,17 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
                       fontSize: 13,
                       fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
                       color: selected
-                          ? AppColors.darkTextPrimary
-                          : AppColors.darkTextLight,
+                          ? surfaces.textPrimary
+                          : surfaces.textLight,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'NotoSerifTC',
                       fontSize: 11,
-                      color: AppColors.darkTextSecondary,
+                      color: surfaces.textSecondary,
                     ),
                   ),
                 ],
@@ -577,23 +580,24 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   }
 
   Widget _lvBanner(LevelUpPlan plan) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: surfaces.surface1,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: surfaces.border2),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             'LV ${_base.level}',
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cinzel',
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: AppColors.darkTextSecondary,
+              color: surfaces.textSecondary,
             ),
           ),
           const Padding(
@@ -663,6 +667,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   }
 
   Widget _subclassRow(CatalogSubclass s) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final selected = _subclass?.id == s.id;
     return InkWell(
       onTap: () => setState(() => _subclass = s),
@@ -675,10 +680,10 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
         decoration: BoxDecoration(
           color: selected
               ? AppColors.accentGold.withValues(alpha: 0.09)
-              : AppColors.darkSurface1,
+              : surfaces.surface1,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: selected ? AppColors.accentGold : AppColors.darkBorder2,
+            color: selected ? AppColors.accentGold : surfaces.border2,
           ),
         ),
         child: Row(
@@ -688,9 +693,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
                   ? Icons.radio_button_checked
                   : Icons.radio_button_unchecked,
               size: 16,
-              color: selected
-                  ? AppColors.accentGold
-                  : AppColors.darkTextSecondary,
+              color: selected ? AppColors.accentGold : surfaces.textSecondary,
             ),
             const SizedBox(width: AppSpacing.md),
             Expanded(
@@ -700,19 +703,17 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
                   fontFamily: 'NotoSerifTC',
                   fontSize: 13,
                   fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
-                  color: selected
-                      ? AppColors.darkTextPrimary
-                      : AppColors.darkTextLight,
+                  color: selected ? surfaces.textPrimary : surfaces.textLight,
                 ),
               ),
             ),
             if (s.engName != null)
               Text(
                 s.engName!,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 10,
-                  color: AppColors.darkTextSecondary,
+                  color: surfaces.textSecondary,
                 ),
               ),
           ],
@@ -722,13 +723,14 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   }
 
   Widget _subclassDescPanel(int maxLevel) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final feats = _subclassFeatures(maxLevel);
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: surfaces.surface1,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: surfaces.border2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -758,7 +760,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
                     decoration: BoxDecoration(
                       color: AppColors.accentGold.withValues(alpha: 0.09),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.darkBorder),
+                      border: Border.all(color: surfaces.border),
                     ),
                     child: Text(
                       'LV${f.level} · ${f.name}',
@@ -780,6 +782,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   // ── 步驟：能力值（ASI） ──
 
   Widget _asiStep() {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -810,12 +813,12 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
           const SizedBox(height: AppSpacing.xs),
         ],
         const SizedBox(height: AppSpacing.sm),
-        const Text(
+        Text(
           '能力值上限 20；已達上限的屬性不可再選。',
           style: TextStyle(
             fontFamily: 'NotoSerifTC',
             fontSize: 11,
-            color: AppColors.darkTextSecondary,
+            color: surfaces.textSecondary,
           ),
         ),
       ],
@@ -823,6 +826,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   }
 
   Widget _asiModePill(String label, bool selected, VoidCallback onTap) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
@@ -832,10 +836,10 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
         decoration: BoxDecoration(
           color: selected
               ? AppColors.accentGold.withValues(alpha: 0.13)
-              : AppColors.darkSurface1,
+              : surfaces.surface1,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: selected ? AppColors.accentGold : AppColors.darkBorder2,
+            color: selected ? AppColors.accentGold : surfaces.border2,
           ),
         ),
         child: Text(
@@ -844,9 +848,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
             fontFamily: 'NotoSerifTC',
             fontSize: 12,
             fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
-            color: selected
-                ? AppColors.accentGold
-                : AppColors.darkTextSecondary,
+            color: selected ? AppColors.accentGold : surfaces.textSecondary,
           ),
         ),
       ),
@@ -863,6 +865,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   };
 
   Widget _asiRow(String code) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final score = _score(code);
     final bump = _asiPlus2 ? 2 : 1;
     final capped = score + bump > 20;
@@ -891,10 +894,10 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
           decoration: BoxDecoration(
             color: selected
                 ? AppColors.accentGold.withValues(alpha: 0.09)
-                : AppColors.darkSurface1,
+                : surfaces.surface1,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: selected ? AppColors.accentGold : AppColors.darkBorder2,
+              color: selected ? AppColors.accentGold : surfaces.border2,
             ),
           ),
           child: Row(
@@ -906,9 +909,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
                   fontFamily: 'NotoSerifTC',
                   fontSize: 13,
                   fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
-                  color: selected
-                      ? AppColors.darkTextPrimary
-                      : AppColors.darkTextLight,
+                  color: selected ? surfaces.textPrimary : surfaces.textLight,
                 ),
               ),
               if (selected)
@@ -916,11 +917,11 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
                   children: [
                     Text(
                       '$score',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Cinzel',
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.darkTextSecondary,
+                        color: surfaces.textSecondary,
                       ),
                     ),
                     const Padding(
@@ -947,22 +948,22 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
                   children: [
                     Text(
                       '$score',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Cinzel',
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.darkTextLight,
+                        color: surfaces.textLight,
                       ),
                     ),
                     if (capped)
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(left: 6),
                         child: Text(
                           '已達上限',
                           style: TextStyle(
                             fontFamily: 'NotoSerifTC',
                             fontSize: 10,
-                            color: AppColors.darkTextSecondary,
+                            color: surfaces.textSecondary,
                           ),
                         ),
                       ),
@@ -978,6 +979,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   // ── 步驟：特性 ──
 
   Widget _featureStep() {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final plan = _plan!;
     final async = _featuresAsync;
     if (_catalogOffline || (async?.hasError ?? false)) {
@@ -999,7 +1001,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
           (f, '子職 · ${_subclass!.name}'),
     ];
     if (feats.isEmpty) {
-      return const Padding(
+      return Padding(
         padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
         child: Text(
           '本級沒有新特性。',
@@ -1007,7 +1009,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
           style: TextStyle(
             fontFamily: 'NotoSerifTC',
             fontSize: 13,
-            color: AppColors.darkTextSecondary,
+            color: surfaces.textSecondary,
           ),
         ),
       );
@@ -1027,6 +1029,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   }
 
   Widget _featureCard(CatalogClassFeature f, String source) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final choice = isChoiceFeature(f.engName ?? '');
     final desc = ftFlattenEntries(
       (f.data['entries'] as List<dynamic>?) ?? const [],
@@ -1034,9 +1037,9 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: surfaces.surface1,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: surfaces.border2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1046,11 +1049,11 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
               Expanded(
                 child: Text(
                   f.engName == null ? f.name : '${f.name} ${f.engName}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'NotoSerifTC',
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.darkTextPrimary,
+                    color: surfaces.textPrimary,
                   ),
                 ),
               ),
@@ -1070,11 +1073,11 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
               desc,
               maxLines: 6,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'NotoSerifTC',
                 fontSize: 12,
                 height: 1.5,
-                color: AppColors.darkTextLight,
+                color: surfaces.textLight,
               ),
             ),
           ],
@@ -1082,10 +1085,10 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
             const SizedBox(height: AppSpacing.sm),
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.touch_app_outlined,
                   size: 13,
-                  color: AppColors.darkTextSecondary,
+                  color: surfaces.textSecondary,
                 ),
                 const SizedBox(width: 4),
                 Expanded(
@@ -1094,7 +1097,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
                     style: TextStyle(
                       fontFamily: 'NotoSerifTC',
                       fontSize: 11,
-                      color: AppColors.darkTextSecondary.withValues(alpha: 0.9),
+                      color: surfaces.textSecondary.withValues(alpha: 0.9),
                     ),
                   ),
                 ),
@@ -1126,6 +1129,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   }
 
   Widget _spellStep() {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final plan = _plan!;
     if (_spellStepOffline) {
       return _offlineCard(
@@ -1153,11 +1157,11 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
             const SizedBox(width: AppSpacing.sm),
             Text(
               '${_base.className} · 施法屬性 ${kAbilityCn[_base.spellcastingAbility]}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'NotoSerifTC',
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.darkTextLight,
+                color: surfaces.textLight,
               ),
             ),
           ],
@@ -1255,6 +1259,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   // ── 步驟：確認 ──
 
   Widget _confirmStep() {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final plan = _plan!;
     final choices = _choices();
     final next = applyLevelUp(_base, plan, choices);
@@ -1317,13 +1322,13 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
             ),
         ],
         const SizedBox(height: AppSpacing.lg),
-        const Text(
+        Text(
           '確認後一次套用並重算衍生數值；已用法術位不會恢復（升級不是休息）。',
           style: TextStyle(
             fontFamily: 'NotoSerifTC',
             fontSize: 11,
             height: 1.5,
-            color: AppColors.darkTextSecondary,
+            color: surfaces.textSecondary,
           ),
         ),
       ],
@@ -1331,6 +1336,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   }
 
   Widget _diffRow(String label, String before, String after) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final changed = before != after;
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.xs),
@@ -1339,19 +1345,19 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
         vertical: AppSpacing.sm + 2,
       ),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: surfaces.surface1,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: surfaces.border2),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'NotoSerifTC',
               fontSize: 12,
-              color: AppColors.darkTextLight,
+              color: surfaces.textLight,
             ),
           ),
           if (changed)
@@ -1359,11 +1365,11 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
               children: [
                 Text(
                   before,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Cinzel',
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.darkTextSecondary,
+                    color: surfaces.textSecondary,
                   ),
                 ),
                 const Padding(
@@ -1390,20 +1396,20 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
               children: [
                 Text(
                   before,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Cinzel',
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.darkTextLight,
+                    color: surfaces.textLight,
                   ),
                 ),
                 const SizedBox(width: 6),
-                const Text(
+                Text(
                   '不變',
                   style: TextStyle(
                     fontFamily: 'NotoSerifTC',
                     fontSize: 10,
-                    color: AppColors.darkTextSecondary,
+                    color: surfaces.textSecondary,
                   ),
                 ),
               ],
@@ -1414,6 +1420,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
   }
 
   Widget _gainRow(IconData icon, String label, String value) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.xs),
       padding: const EdgeInsets.symmetric(
@@ -1423,7 +1430,7 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
       decoration: BoxDecoration(
         color: AppColors.accentGold.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: surfaces.border2),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1432,21 +1439,21 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
           const SizedBox(width: AppSpacing.sm),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'NotoSerifTC',
               fontSize: 12,
-              color: AppColors.darkTextSecondary,
+              color: surfaces.textSecondary,
             ),
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'NotoSerifTC',
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: AppColors.darkTextPrimary,
+                color: surfaces.textPrimary,
               ),
             ),
           ),
@@ -1484,38 +1491,35 @@ class _CharacterLevelUpPageState extends ConsumerState<CharacterLevelUpPage> {
     required String message,
     required VoidCallback onRetry,
   }) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface1,
+        color: surfaces.surface1,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.darkBorder2),
+        border: Border.all(color: surfaces.border2),
       ),
       child: Column(
         children: [
-          const Icon(
-            Icons.cloud_off,
-            size: 28,
-            color: AppColors.darkTextSecondary,
-          ),
+          Icon(Icons.cloud_off, size: 28, color: surfaces.textSecondary),
           const SizedBox(height: AppSpacing.sm),
-          const Text(
+          Text(
             '內容庫離線',
             style: TextStyle(
               fontFamily: 'NotoSerifTC',
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: AppColors.darkTextPrimary,
+              color: surfaces.textPrimary,
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
             message,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'NotoSerifTC',
               fontSize: 12,
-              color: AppColors.darkTextSecondary,
+              color: surfaces.textSecondary,
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -1568,6 +1572,7 @@ class _SpellPickRowState extends State<_SpellPickRow> {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     final s = widget.spell;
     final desc = ftFlattenEntries(s.entries);
     return Opacity(
@@ -1577,12 +1582,10 @@ class _SpellPickRowState extends State<_SpellPickRow> {
         decoration: BoxDecoration(
           color: widget.selected
               ? AppColors.accentGold.withValues(alpha: 0.09)
-              : AppColors.darkSurface1,
+              : surfaces.surface1,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: widget.selected
-                ? AppColors.accentGold
-                : AppColors.darkBorder2,
+            color: widget.selected ? AppColors.accentGold : surfaces.border2,
           ),
         ),
         child: Column(
@@ -1604,7 +1607,7 @@ class _SpellPickRowState extends State<_SpellPickRow> {
                       size: 17,
                       color: widget.selected
                           ? AppColors.accentGold
-                          : AppColors.darkTextSecondary,
+                          : surfaces.textSecondary,
                     ),
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
@@ -1617,8 +1620,8 @@ class _SpellPickRowState extends State<_SpellPickRow> {
                               ? FontWeight.w700
                               : FontWeight.w400,
                           color: widget.selected
-                              ? AppColors.darkTextPrimary
-                              : AppColors.darkTextLight,
+                              ? surfaces.textPrimary
+                              : surfaces.textLight,
                         ),
                       ),
                     ),
@@ -1628,7 +1631,7 @@ class _SpellPickRowState extends State<_SpellPickRow> {
                         icon: Icon(
                           _expanded ? Icons.expand_less : Icons.expand_more,
                           size: 17,
-                          color: AppColors.darkTextSecondary,
+                          color: surfaces.textSecondary,
                         ),
                         onPressed: () => setState(() => _expanded = !_expanded),
                       ),
@@ -1646,11 +1649,11 @@ class _SpellPickRowState extends State<_SpellPickRow> {
                 ),
                 child: Text(
                   desc,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'NotoSerifTC',
                     fontSize: 11,
                     height: 1.5,
-                    color: AppColors.darkTextLight,
+                    color: surfaces.textLight,
                   ),
                 ),
               ),

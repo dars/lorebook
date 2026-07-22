@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/decorations.dart';
+import '../../../../app/theme/surface_colors.dart';
 import '../../../../features/character/domain/character_providers.dart';
 import '../../../../shared/presentation/widgets/entry_card.dart';
 
@@ -70,7 +71,7 @@ class RestSection extends ConsumerWidget {
   void _showShortRest(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppColors.darkSurface1,
+      backgroundColor: Theme.of(context).extension<SurfaceColors>()!.surface1,
       showDragHandle: true,
       isScrollControlled: true,
       builder: (context) => Consumer(
@@ -162,6 +163,7 @@ class _HitDiceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final canUse = remaining > 0;
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -182,7 +184,7 @@ class _HitDiceTile extends StatelessWidget {
                   fontFamily: 'NotoSerifTC',
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.darkTextPrimary,
+                  color: surfaces.textPrimary,
                 ),
               ),
               Text(
@@ -190,7 +192,7 @@ class _HitDiceTile extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 10,
-                  color: AppColors.darkTextSecondary,
+                  color: surfaces.textSecondary,
                 ),
               ),
             ],
@@ -221,6 +223,7 @@ class _RestButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return Card(
       child: InkWell(
         onTap: onTap,
@@ -237,7 +240,7 @@ class _RestButton extends StatelessWidget {
                   fontFamily: 'NotoSerifTC',
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.darkTextPrimary,
+                  color: surfaces.textPrimary,
                 ),
               ),
               Text(
@@ -245,7 +248,7 @@ class _RestButton extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: 'NotoSerifTC',
                   fontSize: 10,
-                  color: AppColors.darkTextSecondary,
+                  color: surfaces.textSecondary,
                 ),
               ),
             ],

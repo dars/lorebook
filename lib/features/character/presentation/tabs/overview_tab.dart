@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/decorations.dart';
+import '../../../../app/theme/surface_colors.dart';
 import '../../data/portrait_service.dart';
 import '../../domain/character.dart';
 import '../../domain/character_providers.dart';
@@ -147,6 +148,8 @@ class _HeroState extends ConsumerState<_Hero> {
     setState(() => _adjusting = false);
   }
 
+  // 未選取樣式疊在角色立繪的固定半透明黑底上（不論 App 主題），前景色需固定
+  // 保持對比，不能跟著淺色主題變暗——otherwise 淺色模式下文字會讀不清楚。
   Widget _pillButton(String label, {bool filled = false, VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
@@ -180,7 +183,7 @@ class _HeroState extends ConsumerState<_Hero> {
     }
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppColors.darkSurface1,
+      backgroundColor: Theme.of(context).extension<SurfaceColors>()!.surface1,
       showDragHandle: true,
       builder: (sheetContext) => SafeArea(
         child: Column(
@@ -250,6 +253,7 @@ class _HeroState extends ConsumerState<_Hero> {
   }
 
   Widget _heroCard(Character character) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppSpacing.radiusCharacterHeader),
       child: Container(
@@ -259,7 +263,7 @@ class _HeroState extends ConsumerState<_Hero> {
             end: Alignment.bottomCenter,
             colors: [Color(0xFF2E2418), Color(0xFF1E160C), Color(0xFF14110C)],
           ),
-          border: Border.all(color: AppColors.darkBorder, width: 1),
+          border: Border.all(color: surfaces.border, width: 1),
         ),
         child: Stack(
           fit: StackFit.expand,
@@ -437,6 +441,7 @@ class _HeroState extends ConsumerState<_Hero> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: const Color(0x99000000),
+                            // 同上：固定半透明黑底疊在立繪上，前景色不隨主題變。
                             border: Border.all(color: AppColors.darkBorder),
                           ),
                           child: const Icon(
