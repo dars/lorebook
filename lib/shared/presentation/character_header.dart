@@ -126,13 +126,49 @@ class CharacterHeader extends ConsumerWidget {
 
     if (!levelUpEnabled) return badge;
 
-    // 觸控目標 ≥ 48dp（padding 撐大熱區，視覺尺寸不變）。
+    // 可升級（角色頁）時以金框膠囊＋上箭頭標示可互動；
+    // 行動頁等維持無框純顯示，兩者自然區分。觸控目標 ≥ 48dp。
     return InkWell(
       onTap: () => _onLevelTap(context, character),
       borderRadius: BorderRadius.circular(10),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-        child: badge,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: AppColors.accentGold.withValues(alpha: 0.55),
+          ),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'LEVEL',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1,
+                    color: surfaces.textSecondary,
+                  ),
+                ),
+                const SizedBox(width: 3),
+                Icon(Icons.arrow_circle_up, size: 12, color: surfaces.accent),
+              ],
+            ),
+            Text(
+              '${character.level}',
+              style: TextStyle(
+                fontFamily: 'Cinzel',
+                fontSize: 26,
+                fontWeight: FontWeight.w700,
+                color: surfaces.textPrimary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
