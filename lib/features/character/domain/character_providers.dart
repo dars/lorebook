@@ -74,6 +74,26 @@ class CurrentCharacterNotifier extends Notifier<Character> {
     );
   }
 
+  /// 以增減量調整財富（計算機批次套用，各幣別各自夾在 ≥0）。
+  void adjustCurrency({
+    int pp = 0,
+    int gp = 0,
+    int ep = 0,
+    int sp = 0,
+    int cp = 0,
+  }) {
+    final c = state.currency;
+    state = state.copyWith(
+      currency: c.copyWith(
+        pp: (c.pp + pp).clamp(0, 999999999),
+        gp: (c.gp + gp).clamp(0, 999999999),
+        ep: (c.ep + ep).clamp(0, 999999999),
+        sp: (c.sp + sp).clamp(0, 999999999),
+        cp: (c.cp + cp).clamp(0, 999999999),
+      ),
+    );
+  }
+
   /// 設定/清空角色圖 URL（上傳/移除後呼叫；經 debounce 同步推送）。
   /// 換圖時取景一併重置為預設（新圖套舊取景無意義）。
   void setPortraitUrl(String url) {
