@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme/app_spacing.dart';
 import '../../../shared/presentation/responsive_layout.dart';
+import '../domain/character.dart';
 import '../domain/character_providers.dart';
 import 'tabs/abilities_tab.dart';
 import 'tabs/biography_tab.dart';
@@ -22,11 +23,6 @@ class CharacterPage extends ConsumerStatefulWidget {
 }
 
 class _CharacterPageState extends ConsumerState<CharacterPage> {
-  static const _tabs = ['總覽', '屬性', '法術', '物品', '傳記'];
-
-  /// expanded 右欄的四 tab（總覽常駐左欄）。
-  static const _detailTabs = ['屬性', '法術', '物品', '傳記'];
-
   int _index = 0;
   int _detailIndex = 0;
   late final PageController _pageController = PageController(
@@ -51,6 +47,25 @@ class _CharacterPageState extends ConsumerState<CharacterPage> {
     );
   }
 
+  /// 法術 tab 顯示條件：不只看職業——種族天生法術或手動加入的
+  /// 法術/法術位也要能看到。
+  bool _showSpells(Character c) =>
+      c.spellcastingAbility.isNotEmpty ||
+      c.cantrips.isNotEmpty ||
+      c.spells.isNotEmpty ||
+      c.spellSlots.isNotEmpty;
+
+  /// tab 數量因角色（施法與否）而異；切換角色後 index 可能越界，
+  /// 夾回最後一頁（移除法術 tab 時最後一頁仍是傳記，內容不跳動）。
+  int _clampIndex(int index, int length, PageController controller) {
+    if (index < length) return index;
+    final clamped = length - 1;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && controller.hasClients) controller.jumpToPage(clamped);
+    });
+    return clamped;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
@@ -67,23 +82,27 @@ class _CharacterPageState extends ConsumerState<CharacterPage> {
 
   Widget _tabbedColumn() {
     final character = ref.watch(currentCharacterProvider);
+    final showSpells = _showSpells(character);
+    final tabs = ['總覽', '屬性', if (showSpells) '法術', '物品', '傳記'];
+    _index = _clampIndex(_index, tabs.length, _pageController);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         CharacterTabBar(
-          tabs: _tabs,
+          tabs: tabs,
           currentIndex: _index,
           onChanged: (i) => _animateTo(_pageController, i),
         ),
         Expanded(
           child: PageView(
+            key: ValueKey(showSpells),
             controller: _pageController,
             onPageChanged: (i) => setState(() => _index = i),
             children: [
               OverviewTab(character: character),
               AbilitiesTab(character: character),
-              SpellsTab(character: character),
+              if (showSpells) SpellsTab(character: character),
               InventoryTab(character: character),
               BiographyTab(character: character),
             ],
@@ -95,6 +114,14 @@ class _CharacterPageState extends ConsumerState<CharacterPage> {
 
   Widget _twoColumn() {
     final character = ref.watch(currentCharacterProvider);
+    final showSpells = _showSpells(character);
+    // expanded 右欄（總覽常駐左欄）。
+    final detailTabs = ['屬性', if (showSpells) '法術', '物品', '傳記'];
+    _detailIndex = _clampIndex(
+      _detailIndex,
+      detailTabs.length,
+      _detailPageController,
+    );
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,24 +129,25 @@ class _CharacterPageState extends ConsumerState<CharacterPage> {
         // 左欄：總覽常駐（跑團高頻查閱）。
         Expanded(flex: 2, child: OverviewTab(character: character)),
         const SizedBox(width: AppSpacing.lg),
-        // 右欄：其餘四 tab 分頁區。
+        // 右欄：其餘 tab 分頁區。
         Expanded(
           flex: 3,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               CharacterTabBar(
-                tabs: _detailTabs,
+                tabs: detailTabs,
                 currentIndex: _detailIndex,
                 onChanged: (i) => _animateTo(_detailPageController, i),
               ),
               Expanded(
                 child: PageView(
+                  key: ValueKey(showSpells),
                   controller: _detailPageController,
                   onPageChanged: (i) => setState(() => _detailIndex = i),
                   children: [
                     AbilitiesTab(character: character),
-                    SpellsTab(character: character),
+                    if (showSpells) SpellsTab(character: character),
                     InventoryTab(character: character),
                     BiographyTab(character: character),
                   ],
