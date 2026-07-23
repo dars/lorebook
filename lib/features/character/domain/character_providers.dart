@@ -431,7 +431,29 @@ class CharacterListNotifier extends StateNotifier<List<Character>> {
           ),
         ],
       ),
-      Character.mockBarbarian(),
+      Character.mockBarbarian().copyWith(
+        journalEntries: [
+          JournalEntry(
+            id: 'gj1',
+            title: '銀谷鎮的淡麥酒',
+            body:
+                '鎮上的麥酒淡得像洗鍋水，但鐵匠是個實在人。他說礦坑深處有怪聲，願意用折扣換人去看看。'
+                '書呆子一聽眼睛就亮了。行吧，反正斧頭也該活動活動了。',
+            createdAt: now.subtract(const Duration(days: 3)),
+            updatedAt: now.subtract(const Duration(days: 3)),
+          ),
+          JournalEntry(
+            id: 'gj2',
+            title: '洞裡的哥布林',
+            body:
+                '他們說是伏擊，我看是排隊送死。左邊三個，斧頭一掃剩一個；剩下的被書呆子的光箭追著跑。'
+                '他撿了枚刻花紋的戒指，盯著看了一路，說是「線索」。我說那叫戰利品。'
+                '洞更深處有東西在喘氣——下次帶多一點藥水。',
+            createdAt: now.subtract(const Duration(days: 1)),
+            updatedAt: now.subtract(const Duration(days: 1)),
+          ),
+        ],
+      ),
     ];
   }
 

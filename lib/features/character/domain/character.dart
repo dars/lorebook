@@ -395,11 +395,12 @@ abstract class Character with _$Character {
       deityEn: 'Mystra',
       creatureType: 'Humanoid',
       size: 'Medium',
-      ac: 12,
+      ac: 14,
+      mageArmorActive: true,
       maxHp: 17,
       currentHp: 14,
       tempHp: 0,
-      speed: '40ft',
+      speed: '30ft',
       initiative: 1,
       proficiencyBonus: 2,
       passivePerception: 13,
@@ -455,8 +456,7 @@ abstract class Character with _$Character {
           name: '說服',
           nameEn: 'Persuasion',
           abilityType: 'CHA',
-          modifier: 3,
-          proficient: true,
+          modifier: 1,
         ),
         Skill(
           name: '特技',
@@ -507,17 +507,6 @@ abstract class Character with _$Character {
           description:
               '你對施法距離內一名生物或物體擲出一團火焰，進行一次遠程法術攻擊。命中時，目標受到 1d10 點火焰傷害。未被穿著或攜帶的可燃物件被擊中時會開始燃燒。',
           upgrade: '升級效應：當你到達特定等級，傷害增加 1d10（5級 2d10、11級 3d10、17級 4d10）。',
-        ),
-        Spell(
-          name: '冰霜射線',
-          nameEn: 'Ray of Frost',
-          level: 0,
-          damage: '1d8',
-          damageType: 'cold',
-          range: '60 FT (12格)',
-          description:
-              '一道冰冷的藍白光束射向射程內一名生物，進行一次遠程法術攻擊。命中時造成 1d8 點寒冰傷害，且目標速度降低 10 呎直到你的下個回合開始。',
-          upgrade: '升級效應：5級 2d8、11級 3d8、17級 4d8。',
         ),
         Spell(
           name: '法師之手',
@@ -643,6 +632,16 @@ abstract class Character with _$Character {
           type: 'pack',
           description: '含背包、書本、墨水、筆等',
         ),
+        Equipment(
+          name: '符文戒指',
+          nameEn: 'Runed Ring',
+          type: 'wondrous',
+          itemType: ItemType.gear,
+          source: ItemSource.custom,
+          quest: true,
+          description: '哥布林洞窟深處拾獲的銀戒，內圈刻著一圈無人能辨識的符文。'
+              '靠近銀谷鎮礦坑時，符文似乎會微微發燙。',
+        ),
       ],
       currency: Currency(gp: 25, sp: 8, cp: 14),
       personality: Personality(
@@ -671,8 +670,13 @@ abstract class Character with _$Character {
           description: '當你不知道某項資訊時，通常知道去哪裡或找誰來獲取該資訊。',
         ),
       ],
-      languages: ['Common', 'Dwarvish', 'Draconic', 'Elvish'],
-      backstory: '',
+      languages: ['Common', 'Draconic', 'Elvish'],
+      backstory:
+          '出身王都抄書室的窮學徒，十二歲那年因偷讀禁書架上的《塑能初階》被逐出書院，'
+          '卻被路過的老法師梅里安收為關門弟子。導師臨終前把畢生研究謄入一本法術書交給我，'
+          '只留一句囑咐：「以眼證學，以足量世。」如今我帶著這本書走訪邊境，'
+          '白日記錄異象，夜裡對著星辰演算法式。銀谷鎮礦坑的怪聲、洞窟深處那枚刻著'
+          '陌生符文的戒指——每一個未解之謎，都是乜斯乍女神留給求知者的考題。',
       personalityTags: ['好奇', '書蟲', '理性'],
       conditions: [],
       hitDieFaces: 6,
@@ -754,7 +758,8 @@ abstract class Character with _$Character {
           name: '馴獸',
           nameEn: 'Animal Handling',
           abilityType: 'WIS',
-          modifier: 1,
+          modifier: 4,
+          proficient: true,
         ),
         Skill(name: '奧秘', nameEn: 'Arcana', abilityType: 'INT', modifier: -1),
         Skill(name: '欺瞞', nameEn: 'Deception', abilityType: 'CHA', modifier: 0),
@@ -838,12 +843,21 @@ abstract class Character with _$Character {
           description: '飲用回復 2d4+2 HP',
           priceCp: 5000,
         ),
+        Equipment(
+          name: '舊軍團徽記',
+          nameEn: 'Old Legion Badge',
+          type: 'keepsake',
+          itemType: ItemType.gear,
+          source: ItemSource.custom,
+          description: '邊防軍第三軍團的銅製徽記，邊角已磨圓。退伍時百夫長所贈，'
+              '出示可讓王國軍哨所行個方便。',
+        ),
       ],
       currency: Currency(gp: 15, sp: 5, cp: 0),
       personality: Personality(
         traits: '我面對危險時從不退縮，戰吼能撼動敵膽。',
         ideals: '力量。強者生存，弱者由我守護。',
-        bonds: '我的部族就是一切，為族人我願拼上性命。',
+        bonds: '這柄巨斧承載著老百夫長的託付；同行的夥伴，就是我的新部族。',
         flaws: '一旦動怒，我很難分辨敵友。',
       ),
       features: [
@@ -852,6 +866,18 @@ abstract class Character with _$Character {
           nameEn: 'Rage',
           source: 'Barbarian Lv1',
           description: '以附贈動作進入狂暴：力量檢定與力量豁免具優勢、近戰力量傷害 +2、對鈍擊/穿刺/揮砍傷害有抗性。',
+        ),
+        CharacterFeature(
+          name: '無甲防禦',
+          nameEn: 'Unarmored Defense',
+          source: 'Barbarian Lv1',
+          description: '未著甲時 AC = 10 + 敏捷調整值 + 體質調整值，可持盾。',
+        ),
+        CharacterFeature(
+          name: '武器精通',
+          nameEn: 'Weapon Mastery',
+          source: 'Barbarian Lv1',
+          description: '精通兩種武器的精通屬性：巨斧（劈砍：命中後可對緊鄰目標再攻擊一次）、標槍（遲滯：命中後目標速度 −10 呎）。',
         ),
         CharacterFeature(
           name: '魯莽攻擊',
@@ -864,6 +890,12 @@ abstract class Character with _$Character {
           nameEn: 'Danger Sense',
           source: 'Barbarian Lv2',
           description: '對你能看見的效應，敏捷豁免具優勢。',
+        ),
+        CharacterFeature(
+          name: '原始知識',
+          nameEn: 'Primal Knowledge',
+          source: 'Barbarian Lv3',
+          description: '額外習得一項野蠻人技能熟練（馴獸）；狂暴期間，特技/威嚇/察覺/隱匿/求生檢定可改用力量進行。',
         ),
         CharacterFeature(
           name: '二度攻擊',
@@ -881,10 +913,16 @@ abstract class Character with _$Character {
           name: '狂亂',
           nameEn: 'Frenzy',
           source: 'Berserker Lv3',
-          description: '狂暴期間可選擇狂亂，於後續回合以附贈動作進行一次近戰武器攻擊。',
+          description: '狂暴期間使用魯莽攻擊時，本回合首次以力量攻擊命中的目標額外受到 2d6 傷害（骰數等同狂暴傷害加值）。',
         ),
       ],
-      languages: ['Common', 'Orc'],
+      languages: ['Common', 'Orc', 'Giant'],
+      backstory:
+          '生在邊境要塞外的獸人聚落，十五歲被王國邊防軍收編當破陣手。'
+          '軍團教會我紀律，戰場教會我憤怒要留給對的敵人。退伍那天，'
+          '獨臂的百夫長把這柄巨斧塞進我手裡：「去保護那些打不贏的人。」'
+          '現在我跟一個滿腦子問題的人類書呆子同行——他負責找答案，'
+          '我負責讓他活著找到答案。',
       personalityTags: ['暴躁', '忠誠', '直接'],
       conditions: [],
       hitDieFaces: 12,

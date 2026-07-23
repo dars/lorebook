@@ -17174,7 +17174,8 @@
                   "fill": "#9A8A66",
                   "content": "標準陣列",
                   "fontFamily": "Noto Serif TC",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -17200,7 +17201,8 @@
                   "fill": "#9A8A66",
                   "content": "購點",
                   "fontFamily": "Noto Serif TC",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -18047,7 +18049,8 @@
                   "fill": "#9A8A66",
                   "content": "購點",
                   "fontFamily": "Noto Serif TC",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -18073,7 +18076,8 @@
                   "fill": "#9A8A66",
                   "content": "擲骰",
                   "fontFamily": "Noto Serif TC",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -19278,7 +19282,8 @@
                   "fill": "#9A8A66",
                   "content": "標準陣列",
                   "fontFamily": "Noto Serif TC",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -19331,7 +19336,8 @@
                   "fill": "#9A8A66",
                   "content": "擲骰",
                   "fontFamily": "Noto Serif TC",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -21608,6 +21614,1665 @@
                   "fontFamily": "Noto Serif TC",
                   "fontSize": 14,
                   "fontWeight": "700"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "rPDOn",
+      "x": 12666,
+      "y": -568,
+      "name": "裝備目錄挑選 iPad(改版)",
+      "clip": true,
+      "width": 1040,
+      "height": 760,
+      "fill": "$dnd-card",
+      "cornerRadius": 20,
+      "children": [
+        {
+          "type": "frame",
+          "id": "EtoYf",
+          "name": "左欄清單",
+          "width": 400,
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "wMo0v",
+              "name": "搜尋框",
+              "width": "fill_container",
+              "fill": "$dnd-bg",
+              "cornerRadius": 8,
+              "gap": 8,
+              "padding": [
+                10,
+                12
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "egNjA",
+                  "name": "搜尋icon",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "search",
+                  "library": "lucide",
+                  "fill": "$dnd-text-dim"
+                },
+                {
+                  "type": "text",
+                  "id": "m1JH0",
+                  "name": "搜尋提示",
+                  "fill": "$dnd-text-dim",
+                  "content": "搜尋物品(中/英文名稱)",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tyCwC",
+              "name": "分類segmented",
+              "width": "fill_container",
+              "fill": "$dnd-bg",
+              "cornerRadius": 8,
+              "gap": 2,
+              "padding": 3,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "RIgxS",
+                  "name": "分類-全部",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 6,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "v57K7",
+                      "name": "label",
+                      "fill": "$dnd-text-dim",
+                      "content": "全部",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 13
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NV3yF",
+                  "name": "分類-武器",
+                  "width": "fill_container",
+                  "fill": "$dnd-tab-active",
+                  "cornerRadius": 6,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "r4cWM0",
+                      "name": "label",
+                      "fill": "$dnd-text",
+                      "content": "武器",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "e8Ipft",
+                  "name": "分類-護甲",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 6,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "T6zV3",
+                      "name": "label",
+                      "fill": "$dnd-text-dim",
+                      "content": "護甲",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 13
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hgpRi",
+                  "name": "分類-裝備",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 6,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "y2GQRq",
+                      "name": "label",
+                      "fill": "$dnd-text-dim",
+                      "content": "裝備",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 13
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VXS7Z",
+                  "name": "分類-工具",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 6,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "oHGf6",
+                      "name": "label",
+                      "fill": "$dnd-text-dim",
+                      "content": "工具",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 13
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "IFYBf",
+              "name": "清單",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "q4CEZ0",
+                  "name": "分組-再次取得",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "padding": [
+                    10,
+                    4,
+                    4,
+                    4
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "H6L4Ah",
+                      "name": "分組label",
+                      "fill": "$dnd-gold-dim",
+                      "content": "再次取得",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "BcC3K",
+                      "name": "分組線",
+                      "fill": "$dnd-border2",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DqYWd",
+                  "name": "物品-標槍",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    9,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Xn8hO",
+                      "name": "名稱",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "jwiv8",
+                          "name": "中文名",
+                          "fill": "$dnd-text",
+                          "content": "標槍",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 14
+                        },
+                        {
+                          "type": "text",
+                          "id": "WesfD",
+                          "name": "英文名",
+                          "fill": "$dnd-text-dim",
+                          "content": "Javelin",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "oQ0cJ",
+                      "name": "價格",
+                      "gap": 3,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "AFIMD",
+                          "name": "coin",
+                          "width": 14,
+                          "height": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "f9jwz",
+                              "name": "coin-body",
+                              "fill": "#B8BCC2",
+                              "width": 14,
+                              "height": 14,
+                              "stroke": "#EDEFF3",
+                              "strokeWidth": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "wUsRH",
+                          "name": "價格數字",
+                          "fill": "$dnd-text-light",
+                          "content": "5",
+                          "fontFamily": "Cinzel",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "AXI24",
+                  "name": "分組-簡易近戰",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "padding": [
+                    10,
+                    4,
+                    4,
+                    4
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "yVxqD",
+                      "name": "分組label",
+                      "fill": "$dnd-gold-dim",
+                      "content": "簡易近戰",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "h4WEp",
+                      "name": "分組線",
+                      "fill": "$dnd-border2",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "meIuS",
+                  "name": "物品-匕首",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    9,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "OQfi8",
+                      "name": "名稱",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "qajMe",
+                          "name": "中文名",
+                          "fill": "$dnd-text",
+                          "content": "匕首",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 14
+                        },
+                        {
+                          "type": "text",
+                          "id": "I6rKob",
+                          "name": "英文名",
+                          "fill": "$dnd-text-dim",
+                          "content": "Dagger",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZT3IW",
+                      "name": "價格",
+                      "gap": 3,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "MfafL",
+                          "name": "coin",
+                          "width": 14,
+                          "height": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "Q6RxQ5",
+                              "name": "coin-body",
+                              "fill": "#D4AF37",
+                              "width": 14,
+                              "height": 14,
+                              "stroke": "#F6DD8C",
+                              "strokeWidth": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "mkWm5",
+                          "name": "價格數字",
+                          "fill": "$dnd-text-light",
+                          "content": "2",
+                          "fontFamily": "Cinzel",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Hrl3y",
+                  "name": "物品-長棍",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    9,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "C5SLtW",
+                      "name": "名稱",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "wOmNc",
+                          "name": "中文名",
+                          "fill": "$dnd-text",
+                          "content": "長棍",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 14
+                        },
+                        {
+                          "type": "text",
+                          "id": "ZqhZz",
+                          "name": "英文名",
+                          "fill": "$dnd-text-dim",
+                          "content": "Quarterstaff",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "TRCL6",
+                      "name": "價格",
+                      "gap": 3,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "poPdl",
+                          "name": "coin",
+                          "width": 14,
+                          "height": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "RUjUf",
+                              "name": "coin-body",
+                              "fill": "#B8BCC2",
+                              "width": 14,
+                              "height": 14,
+                              "stroke": "#EDEFF3",
+                              "strokeWidth": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "hK0Mz",
+                          "name": "價格數字",
+                          "fill": "$dnd-text-light",
+                          "content": "2",
+                          "fontFamily": "Cinzel",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "S4asV",
+                  "name": "分組-軍用近戰",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "padding": [
+                    10,
+                    4,
+                    4,
+                    4
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "O9qVU",
+                      "name": "分組label",
+                      "fill": "$dnd-gold-dim",
+                      "content": "軍用近戰",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "dB0i5",
+                      "name": "分組線",
+                      "fill": "$dnd-border2",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "A9qF9",
+                  "name": "物品-戰斧",
+                  "width": "fill_container",
+                  "fill": "$dnd-card2",
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    9,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 2,
+                      "id": "osdCv",
+                      "name": "選取指示",
+                      "fill": "$dnd-gold",
+                      "width": 3,
+                      "height": 30
+                    },
+                    {
+                      "type": "frame",
+                      "id": "GFK6A",
+                      "name": "名稱",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Uxbmx",
+                          "name": "中文名",
+                          "fill": "$dnd-text",
+                          "content": "戰斧",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "zHaR1",
+                          "name": "英文名",
+                          "fill": "$dnd-text-dim",
+                          "content": "Battleaxe",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "T4XOue",
+                      "name": "價格",
+                      "gap": 3,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "HtQ3m",
+                          "name": "coin",
+                          "width": 14,
+                          "height": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "TxIiV",
+                              "name": "coin-body",
+                              "fill": "#D4AF37",
+                              "width": 14,
+                              "height": 14,
+                              "stroke": "#F6DD8C",
+                              "strokeWidth": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "mtZuz",
+                          "name": "價格數字",
+                          "fill": "$dnd-text-light",
+                          "content": "10",
+                          "fontFamily": "Cinzel",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BQ1YS",
+                  "name": "物品-長劍",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    9,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "o6DFz",
+                      "name": "名稱",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "hJsqt",
+                          "name": "中文名",
+                          "fill": "$dnd-text",
+                          "content": "長劍",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 14
+                        },
+                        {
+                          "type": "text",
+                          "id": "g66Yvm",
+                          "name": "英文名",
+                          "fill": "$dnd-text-dim",
+                          "content": "Longsword",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "x7JBgf",
+                      "name": "價格",
+                      "gap": 3,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "dVMhM",
+                          "name": "coin",
+                          "width": 14,
+                          "height": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "KHSrC",
+                              "name": "coin-body",
+                              "fill": "#D4AF37",
+                              "width": 14,
+                              "height": 14,
+                              "stroke": "#F6DD8C",
+                              "strokeWidth": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "tXd9o",
+                          "name": "價格數字",
+                          "fill": "$dnd-text-light",
+                          "content": "15",
+                          "fontFamily": "Cinzel",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "g36na",
+                  "name": "物品-巨斧",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    9,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Pgipi",
+                      "name": "名稱",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "TZotB",
+                          "name": "中文名",
+                          "fill": "$dnd-text",
+                          "content": "巨斧",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 14
+                        },
+                        {
+                          "type": "text",
+                          "id": "iKhqz",
+                          "name": "英文名",
+                          "fill": "$dnd-text-dim",
+                          "content": "Greataxe",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "UZt8u",
+                      "name": "價格",
+                      "gap": 3,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "EW22c",
+                          "name": "coin",
+                          "width": 14,
+                          "height": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "hyqUw",
+                              "name": "coin-body",
+                              "fill": "#D4AF37",
+                              "width": 14,
+                              "height": 14,
+                              "stroke": "#F6DD8C",
+                              "strokeWidth": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "f8iRb",
+                          "name": "價格數字",
+                          "fill": "$dnd-text-light",
+                          "content": "30",
+                          "fontFamily": "Cinzel",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gujPo",
+                  "name": "物品-戰鎚",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    9,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "s4luW0",
+                      "name": "名稱",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "tTdtG",
+                          "name": "中文名",
+                          "fill": "$dnd-text",
+                          "content": "戰鎚",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 14
+                        },
+                        {
+                          "type": "text",
+                          "id": "flfaj",
+                          "name": "英文名",
+                          "fill": "$dnd-text-dim",
+                          "content": "Warhammer",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jYCEB",
+                      "name": "價格",
+                      "gap": 3,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Cue58",
+                          "name": "coin",
+                          "width": 14,
+                          "height": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "O84b1b",
+                              "name": "coin-body",
+                              "fill": "#D4AF37",
+                              "width": 14,
+                              "height": 14,
+                              "stroke": "#F6DD8C",
+                              "strokeWidth": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "eklS2",
+                          "name": "價格數字",
+                          "fill": "$dnd-text-light",
+                          "content": "15",
+                          "fontFamily": "Cinzel",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "TmWEu",
+          "name": "分隔線",
+          "fill": "$dnd-border2",
+          "width": 1,
+          "height": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "hom1A",
+          "name": "右欄詳情",
+          "width": "fill_container",
+          "height": "fill_container",
+          "fill": "$dnd-bg2",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "Sn0tt",
+              "name": "標題區",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "SCiDi",
+                  "name": "標題列",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "KCfwF",
+                      "name": "中文名",
+                      "fill": "$dnd-text",
+                      "content": "戰斧",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 26,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "A3K7sX",
+                      "name": "英文名",
+                      "fill": "$dnd-text-dim",
+                      "content": "BATTLEAXE",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "lConX",
+                  "name": "徽章列",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Oarvv",
+                      "name": "徽章-軍用近戰",
+                      "fill": "#00000000",
+                      "cornerRadius": 4,
+                      "stroke": "$dnd-gold",
+                      "strokeWidth": 1,
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "lHqjV",
+                          "name": "label",
+                          "fill": "$dnd-gold",
+                          "content": "軍用近戰",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XcXKd",
+                      "name": "徽章-versatile (1d10)",
+                      "fill": "#00000000",
+                      "cornerRadius": 4,
+                      "stroke": "$dnd-border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "OycPk",
+                          "name": "label",
+                          "fill": "$dnd-text-light",
+                          "content": "versatile (1d10)",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "atjk7",
+                      "name": "徽章-mastery: 擊倒",
+                      "fill": "#00000000",
+                      "cornerRadius": 4,
+                      "stroke": "$dnd-border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "NRUqg",
+                          "name": "label",
+                          "fill": "$dnd-text-light",
+                          "content": "mastery: 擊倒",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "y3UuX",
+              "name": "統計列",
+              "width": "fill_container",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rZM7F",
+                  "name": "stat-傷害 DAMAGE",
+                  "width": "fill_container",
+                  "fill": "$dnd-card",
+                  "cornerRadius": 10,
+                  "stroke": "$dnd-border2",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 3,
+                  "padding": [
+                    12,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "J7Sonz",
+                      "name": "label",
+                      "fill": "$dnd-section-label",
+                      "content": "傷害 DAMAGE",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "tzjWR",
+                      "name": "value",
+                      "fill": "$dnd-gold",
+                      "content": "1d8",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 19,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "U5SU12",
+                      "name": "sub",
+                      "fill": "$dnd-text-dim",
+                      "content": "揮砍 slashing",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "G7AB9a",
+                  "name": "stat-重量 WEIGHT",
+                  "width": "fill_container",
+                  "fill": "$dnd-card",
+                  "cornerRadius": 10,
+                  "stroke": "$dnd-border2",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 3,
+                  "padding": [
+                    12,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Ca26W",
+                      "name": "label",
+                      "fill": "$dnd-section-label",
+                      "content": "重量 WEIGHT",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "MUGKs",
+                      "name": "value",
+                      "fill": "$dnd-text-light",
+                      "content": "4 lb",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 19,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "o6CEQ",
+                      "name": "sub",
+                      "fill": "$dnd-text-dim",
+                      "content": "—",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VExsg",
+                  "name": "stat-標價 PRICE",
+                  "width": "fill_container",
+                  "fill": "$dnd-card",
+                  "cornerRadius": 10,
+                  "stroke": "$dnd-border2",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 3,
+                  "padding": [
+                    12,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "HHEy0",
+                      "name": "label",
+                      "fill": "$dnd-section-label",
+                      "content": "標價 PRICE",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xumu5",
+                      "name": "價格值(數字+幣圖)",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "D1hYB",
+                          "name": "數字",
+                          "fill": "$dnd-gold",
+                          "content": "10",
+                          "fontFamily": "Cinzel",
+                          "fontSize": 19,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "ellipse",
+                          "id": "bMubm",
+                          "name": "金幣",
+                          "fill": "#D4AF37",
+                          "width": 16,
+                          "height": 16,
+                          "stroke": "#F6DD8C",
+                          "strokeWidth": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "J7N4Q",
+                      "name": "sub",
+                      "fill": "$dnd-text-dim",
+                      "content": "SRD 定價",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "U0nbo",
+                  "name": "stat-精通 MASTERY",
+                  "width": "fill_container",
+                  "fill": "$dnd-card",
+                  "cornerRadius": 10,
+                  "stroke": "$dnd-border2",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 3,
+                  "padding": [
+                    12,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "dfNeq",
+                      "name": "label",
+                      "fill": "$dnd-section-label",
+                      "content": "精通 MASTERY",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "X9fgg3",
+                      "name": "value",
+                      "fill": "$dnd-text-light",
+                      "content": "擊倒",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 19,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "l7RFEb",
+                      "name": "sub",
+                      "fill": "$dnd-text-dim",
+                      "content": "Topple",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "EDBAJ",
+              "name": "規則文字卡",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "$dnd-card",
+              "cornerRadius": 10,
+              "stroke": "$dnd-border2",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "lV6sI",
+                  "name": "規則標題",
+                  "fill": "$dnd-gold-dim",
+                  "content": "規則 RULES",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 11,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "OC8Zu",
+                  "name": "規則內文",
+                  "fill": "$dnd-text-light",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "精通——擊倒 Topple：以此武器命中時，可迫使目標進行體質豁免（DC 8＋屬性調整值＋熟練加值），失敗即陷入倒地。",
+                  "lineHeight": 1.7,
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "QgCvw",
+                  "name": "規則備註",
+                  "fill": "$dnd-text-dim",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "versatile（靈活）：雙手持用時傷害改為 1d10。",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "MIO5t",
+              "name": "取得面板",
+              "width": "fill_container",
+              "fill": "$dnd-card",
+              "cornerRadius": 12,
+              "stroke": "$dnd-border2",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "OysU4",
+                  "name": "數量單價列",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "tNa8D",
+                      "name": "數量",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "WiCEM",
+                          "name": "label",
+                          "fill": "$dnd-text-dim",
+                          "content": "數量",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "kfdPJ",
+                          "name": "minus",
+                          "width": 32,
+                          "height": 32,
+                          "fill": "$dnd-bg",
+                          "cornerRadius": 8,
+                          "stroke": "$dnd-border",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "WxPH8",
+                              "name": "i",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "minus",
+                              "library": "lucide",
+                              "fill": "$dnd-text-dim"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "d0zyB",
+                          "name": "qty",
+                          "fill": "$dnd-text",
+                          "content": "1",
+                          "fontFamily": "Cinzel",
+                          "fontSize": 18,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "TVdQd",
+                          "name": "plus",
+                          "width": 32,
+                          "height": 32,
+                          "fill": "$dnd-bg",
+                          "cornerRadius": 8,
+                          "stroke": "$dnd-border",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "CfWi3",
+                              "name": "i",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "plus",
+                              "library": "lucide",
+                              "fill": "$dnd-text"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "WpwfF",
+                      "name": "sp",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "BsZiR",
+                      "name": "單價",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "D1g4J",
+                          "name": "label",
+                          "fill": "$dnd-text-dim",
+                          "content": "成交單價",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "rfOr7",
+                          "name": "單價pill",
+                          "fill": "$dnd-bg",
+                          "cornerRadius": 8,
+                          "stroke": "$dnd-border",
+                          "strokeWidth": 1,
+                          "gap": 5,
+                          "padding": [
+                            7,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "uzUOW",
+                              "name": "amount",
+                              "fill": "$dnd-text",
+                              "content": "10",
+                              "fontFamily": "Cinzel",
+                              "fontSize": 15,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "EN60B",
+                              "name": "金幣",
+                              "fill": "#D4AF37",
+                              "width": 15,
+                              "height": 15,
+                              "stroke": "#F6DD8C",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "AJ2WO",
+                              "name": "unit",
+                              "fill": "$dnd-text-dim",
+                              "content": "gp",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "WxPJc",
+                              "name": "edit",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "pencil",
+                              "library": "lucide",
+                              "fill": "$dnd-text-dim"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "rectangle",
+                  "id": "y4g73w",
+                  "name": "分隔",
+                  "fill": "$dnd-border2",
+                  "width": "fill_container",
+                  "height": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "S0q2zi",
+                  "name": "總計列",
+                  "width": "fill_container",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "qGANP",
+                      "name": "label",
+                      "fill": "$dnd-text-dim",
+                      "content": "總計",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "s1Npz2",
+                      "name": "sp",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n9vg4s",
+                      "name": "總計值",
+                      "gap": 5,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "gxkgX",
+                          "name": "數字",
+                          "fill": "$dnd-gold",
+                          "content": "10",
+                          "fontFamily": "Cinzel",
+                          "fontSize": 22,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "ellipse",
+                          "id": "V1SaN",
+                          "name": "金幣",
+                          "fill": "#D4AF37",
+                          "width": 18,
+                          "height": 18,
+                          "stroke": "#F6DD8C",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "VzA5i",
+                          "name": "unit",
+                          "fill": "$dnd-text-dim",
+                          "content": "gp",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "c4BYxM",
+                  "name": "按鈕列",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Q1D9cM",
+                      "name": "直接取得btn",
+                      "width": "fill_container",
+                      "fill": "#00000000",
+                      "cornerRadius": 8,
+                      "stroke": "$dnd-border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        12,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Z7jjv",
+                          "name": "label",
+                          "fill": "$dnd-text-light",
+                          "content": "直接取得",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rrqro",
+                      "name": "購買btn",
+                      "width": "fill_container",
+                      "fill": "$dnd-gold",
+                      "cornerRadius": 8,
+                      "padding": [
+                        12,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "IyJsJ",
+                          "name": "label",
+                          "fill": "#1A1206",
+                          "content": "購買",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
