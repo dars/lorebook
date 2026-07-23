@@ -7,8 +7,11 @@ import 'package:supabase_flutter/supabase_flutter.dart' hide AuthException;
 import '../../../features/auth/domain/auth_state.dart';
 import '../../../shared/data/supabase_client.dart';
 import '../../../shared/domain/app_exception.dart';
+import '../../catalog/data/catalog_repository.dart';
+import '../../catalog/domain/catalog_models.dart';
 import '../domain/character.dart';
 import '../domain/character_providers.dart';
+import '../domain/class_feature_backfill.dart';
 import '../domain/class_resources.dart';
 
 /// 角色資料雲端同步（`user_characters` 表，見
@@ -96,10 +99,35 @@ final characterSyncRepositoryProvider = Provider<CharacterSyncRepository>((
 ///
 /// 依賴 auth 狀態：登入/登出/token 更新都會重新抓取，避免
 /// 「登入前抓失敗被快取、登入後不重試」的時序問題。
-final remoteCharactersProvider = FutureProvider<List<Character>>((ref) {
+final remoteCharactersProvider = FutureProvider<List<Character>>((ref) async {
   ref.watch(authStateChangesProvider);
-  return ref.watch(characterSyncRepositoryProvider).fetchAll();
+  final list = await ref.watch(characterSyncRepositoryProvider).fetchAll();
+  return _backfillFeatures(ref, list);
 });
+
+/// 職業特性回填：建角修正前建立的角色缺 1 級（或漏發等級）特性，
+/// 讀入時以內容庫比對補寫。內容庫離線時原樣返回（下次讀入再補）。
+Future<List<Character>> _backfillFeatures(Ref ref, List<Character> list) async {
+  try {
+    final classes = await ref.watch(classCatalogProvider.future);
+    final byEn = {for (final c in classes) c.engName: c.id};
+    final cache = <String, List<CatalogClassFeature>>{};
+    Future<List<CatalogClassFeature>> featuresFor(String classEn) async {
+      final id = byEn[classEn];
+      if (id == null) return const [];
+      return cache[id] ??= await ref.watch(
+        classFeatureCatalogProvider(id).future,
+      );
+    }
+
+    return [
+      for (final c in list)
+        backfillClassFeatures(c, await featuresFor(c.classNameEn)),
+    ];
+  } catch (_) {
+    return list;
+  }
+}
 
 /// 自動同步控制器：
 /// - 當前角色任何變更 → debounce 3 秒後推送；
