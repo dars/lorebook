@@ -128,35 +128,42 @@ class _HpColumn extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 2),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            Text(
-              '${character.currentHp}',
-              style: TextStyle(
-                fontFamily: 'Cinzel',
-                fontSize: 30,
-                fontWeight: FontWeight.w700,
-                color: dying ? AppColors.danger : surfaces.textPrimary,
-              ),
+        // 窄欄（iPad 三欄等）時整列等比縮小，chip 不會貼到欄界。
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  '${character.currentHp}',
+                  style: TextStyle(
+                    fontFamily: 'Cinzel',
+                    fontSize: 30,
+                    fontWeight: FontWeight.w700,
+                    color: dying ? AppColors.danger : surfaces.textPrimary,
+                  ),
+                ),
+                Text(
+                  '/${character.maxHp}',
+                  style: TextStyle(
+                    fontFamily: 'Cinzel',
+                    fontSize: 14,
+                    color: surfaces.textSecondary,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                _TempHpChip(
+                  value: character.tempHp,
+                  color: dnd.tempHp,
+                  onTap: onTapShield,
+                ),
+              ],
             ),
-            Text(
-              '/${character.maxHp}',
-              style: TextStyle(
-                fontFamily: 'Cinzel',
-                fontSize: 14,
-                color: surfaces.textSecondary,
-              ),
-            ),
-            const SizedBox(width: 8),
-            _TempHpChip(
-              value: character.tempHp,
-              color: dnd.tempHp,
-              onTap: onTapShield,
-            ),
-          ],
+          ),
         ),
         const SizedBox(height: 4),
         ClipRRect(
