@@ -7,6 +7,7 @@ library;
 import 'character.dart';
 import 'character_creation_data.dart';
 import 'character_math.dart';
+import 'class_resources.dart';
 
 /// 基本 ASI 等級（2024：4／8／12／16；19 為史詩恩賜，可改選 ASI 專長，
 /// 本 app 一律視為 ASI 事件）。
@@ -187,19 +188,21 @@ Character applyLevelUp(Character c, LevelUpPlan plan, LevelUpChoices choices) {
   final caster = c.spellcastingAbility.isNotEmpty;
   final spellMod = caster ? scores[c.spellcastingAbility]!.modifier : 0;
 
+  final newScores = AbilityScores(
+    str: scores['STR']!,
+    dex: scores['DEX']!,
+    con: scores['CON']!,
+    int_: scores['INT']!,
+    wis: scores['WIS']!,
+    cha: scores['CHA']!,
+  );
+
   return c.copyWith(
     level: target,
     proficiencyBonus: pb,
     maxHp: c.maxHp + hpDelta,
     currentHp: c.currentHp + hpDelta,
-    abilityScores: AbilityScores(
-      str: scores['STR']!,
-      dex: scores['DEX']!,
-      con: scores['CON']!,
-      int_: scores['INT']!,
-      wis: scores['WIS']!,
-      cha: scores['CHA']!,
-    ),
+    abilityScores: newScores,
     skills: skills,
     initiative: scores['DEX']!.modifier,
     passivePerception: passivePerceptionFor(
@@ -215,5 +218,13 @@ Character applyLevelUp(Character c, LevelUpPlan plan, LevelUpChoices choices) {
     features: [...c.features, ...choices.features],
     cantrips: [...c.cantrips, ...choices.cantrips],
     spells: [...c.spells, ...choices.spells],
+    // 職業資源：max/骰面依新等級與能力值重算、current 差額入帳，
+    // 新獲得資源滿額加入（升級不視為休息）。
+    resources: syncClassResources(
+      c.resources,
+      c.classNameEn,
+      target,
+      newScores,
+    ),
   );
 }

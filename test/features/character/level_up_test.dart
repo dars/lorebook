@@ -186,6 +186,83 @@ void main() {
     });
   });
 
+  group('applyLevelUp 職業資源同步', () {
+    Character char(String cn, String en, int level, {int cha = 10}) =>
+        Character(
+          id: 'r1',
+          name: '測試$cn',
+          className: cn,
+          classNameEn: en,
+          level: level,
+          maxHp: 20,
+          currentHp: 20,
+          proficiencyBonus: proficiencyBonusFor(level),
+          hitDieFaces: 12,
+          abilityScores: AbilityScores(
+            str: _as(16),
+            dex: _as(14),
+            con: _as(14),
+            int_: _as(8),
+            wis: _as(10),
+            cha: _as(cha),
+          ),
+        );
+
+    test('野蠻人 2→3：狂暴 1/2 差額入帳為 2/3', () {
+      final c = char('野蠻人', 'Barbarian', 2).copyWith(
+        resources: const [
+          ClassResource(name: '狂暴', nameEn: 'Rage', current: 1, max: 2),
+        ],
+      );
+      final next = applyLevelUp(
+        c,
+        LevelUpPlan.forCharacter(c),
+        const LevelUpChoices(),
+      );
+      final rage = next.resources.firstWhere((r) => r.nameEn == 'Rage');
+      expect(rage.current, 2);
+      expect(rage.max, 3);
+    });
+
+    test('術士 1→2：獲得術法點數 2/2', () {
+      final c = char('術士', 'Sorcerer', 1, cha: 16);
+      final next = applyLevelUp(
+        c,
+        LevelUpPlan.forCharacter(c),
+        const LevelUpChoices(),
+      );
+      final sp = next.resources.firstWhere((r) => r.nameEn == 'Sorcery Points');
+      expect(sp.current, 2);
+      expect(sp.max, 2);
+    });
+
+    test('吟遊詩人 4→5：吟遊激勵 d6→d8、恢復轉短休', () {
+      final c = char('吟遊詩人', 'Bard', 4, cha: 16).copyWith(
+        resources: const [
+          ClassResource(
+            name: '吟遊激勵',
+            nameEn: 'Bardic Inspiration',
+            current: 2,
+            max: 3,
+            display: ResourceDisplay.dice,
+            dieFaces: 6,
+          ),
+        ],
+      );
+      final next = applyLevelUp(
+        c,
+        LevelUpPlan.forCharacter(c),
+        const LevelUpChoices(),
+      );
+      final bi = next.resources.firstWhere(
+        (r) => r.nameEn == 'Bardic Inspiration',
+      );
+      expect(bi.dieFaces, 8);
+      expect(bi.recovery, ResourceRecovery.short);
+      expect(bi.current, 2); // max 不變 → current 不動
+    });
+  });
+
   group('isChoiceFeature', () {
     test('選項型特性關鍵字', () {
       expect(isChoiceFeature('Expertise'), isTrue);

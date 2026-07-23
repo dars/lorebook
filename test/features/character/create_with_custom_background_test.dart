@@ -178,6 +178,14 @@ void main() {
       created.features.firstWhere((f) => f.name == '第二風').source,
       '職業：戰士 Lv1',
     );
+    // 職業資源由內建規則表推導：戰士 Lv1 含第二風 2/2（pips）；
+    // 動作如潮 2 級才獲得。
+    final secondWind = created.resources.firstWhere(
+      (r) => r.nameEn == 'Second Wind',
+    );
+    expect(secondWind.max, 2);
+    expect(secondWind.current, 2);
+    expect(created.resources.any((r) => r.nameEn == 'Action Surge'), isFalse);
   });
 
   testWidgets('離線降級：僅內建背景 + 提示，不阻擋建角', (tester) async {

@@ -16,6 +16,7 @@ import '../../catalog/presentation/fivetools_renderer.dart';
 import '../../../shared/domain/app_exception.dart';
 import '../domain/character.dart';
 import '../domain/character_creation_data.dart';
+import '../domain/class_resources.dart';
 import '../domain/character_math.dart';
 import '../domain/character_providers.dart';
 import '../domain/custom_background.dart';
@@ -364,6 +365,15 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       CharacterFeature(name: bg.originFeat, source: '背景：${bg.cn}'),
     ];
 
+    final abilityScores = AbilityScores(
+      str: ab('STR'),
+      dex: ab('DEX'),
+      con: ab('CON'),
+      int_: ab('INT'),
+      wis: ab('WIS'),
+      cha: ab('CHA'),
+    );
+
     var character = Character(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       name: _name.trim(),
@@ -387,14 +397,7 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       spellDc: caster ? spellSaveDcFor(pb, spellMod) : 0,
       spellAttack: caster ? spellAttackFor(pb, spellMod) : 0,
       spellcastingAbility: cls.spellAbility,
-      abilityScores: AbilityScores(
-        str: ab('STR'),
-        dex: ab('DEX'),
-        con: ab('CON'),
-        int_: ab('INT'),
-        wis: ab('WIS'),
-        cha: ab('CHA'),
-      ),
+      abilityScores: abilityScores,
       skills: skills,
       // 法術：選擇當下反正規化（跳過法術步驟時為空，法術位仍建立）。
       cantrips: [for (final s in _selCantrips.values) spellFromCatalog(s)],
@@ -403,6 +406,8 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           ? [SpellSlots(level: 1, total: cls.level1Slots)]
           : const [],
       features: features,
+      // 職業資源（狂暴、聖療之觸等）：內建規則表推導，不依賴內容庫。
+      resources: deriveClassResources(cls.en, 1, abilityScores),
       hitDieFaces: cls.hitDie,
     );
 

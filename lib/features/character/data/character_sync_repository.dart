@@ -9,6 +9,7 @@ import '../../../shared/data/supabase_client.dart';
 import '../../../shared/domain/app_exception.dart';
 import '../domain/character.dart';
 import '../domain/character_providers.dart';
+import '../domain/class_resources.dart';
 
 /// 角色資料雲端同步（`user_characters` 表，見
 /// supabase/migrations/0001_user_characters.sql）。
@@ -34,10 +35,13 @@ class CharacterSyncRepository {
           .isFilter('deleted_at', null)
           .order('updated_at', ascending: false);
       return [
-        // 舊版靜態 weapons 清單在讀入時一次性轉為 equipment 武器條目。
+        // 舊版靜態 weapons 清單在讀入時一次性轉為 equipment 武器條目；
+        // 職業資源缺漏（規則表前建立的角色）讀入時回填。
         for (final r in rows)
-          migrateLegacyWeapons(
-            Character.fromJson((r['data'] as Map).cast<String, dynamic>()),
+          backfillClassResources(
+            migrateLegacyWeapons(
+              Character.fromJson((r['data'] as Map).cast<String, dynamic>()),
+            ),
           ),
       ];
     } on PostgrestException catch (e) {
