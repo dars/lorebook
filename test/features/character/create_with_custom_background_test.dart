@@ -3,6 +3,8 @@ import 'package:lorebook/app/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lorebook/features/catalog/data/catalog_repository.dart';
+import 'package:lorebook/features/catalog/domain/catalog_models.dart';
 import 'package:lorebook/features/character/data/custom_background_repository.dart';
 import 'package:lorebook/features/character/domain/character_providers.dart';
 import 'package:lorebook/features/character/domain/custom_background.dart';
@@ -25,6 +27,29 @@ class _FakeCustomBgs extends CustomBackgroundsNotifier {
   Future<List<CustomBackground>> build() async => [_hunter];
 }
 
+const _fighterCatalog = [
+  CatalogClass(id: 'c-fighter', name: '戰士', engName: 'Fighter', source: 'XPHB'),
+];
+
+const _fighterFeatures = [
+  CatalogClassFeature(
+    id: 'ff-1',
+    name: '第二風',
+    engName: 'Second Wind',
+    source: 'XPHB',
+    level: 1,
+    classId: 'c-fighter',
+  ),
+  CatalogClassFeature(
+    id: 'ff-2',
+    name: '動作如潮',
+    engName: 'Action Surge',
+    source: 'XPHB',
+    level: 2,
+    classId: 'c-fighter',
+  ),
+];
+
 class _ErrorCustomBgs extends CustomBackgroundsNotifier {
   @override
   Future<List<CustomBackground>> build() async => throw Exception('offline');
@@ -39,6 +64,13 @@ Future<ProviderContainer> _pump(
       customBackgroundsProvider.overrideWith(
         offline ? _ErrorCustomBgs.new : _FakeCustomBgs.new,
       ),
+      // 內容庫：供 1 級職業特性帶入（offline 案例維持不覆寫＝取用失敗降級）。
+      if (!offline) ...[
+        classCatalogProvider.overrideWith((ref) async => _fighterCatalog),
+        classFeatureCatalogProvider.overrideWith(
+          (ref, id) async => _fighterFeatures,
+        ),
+      ],
     ],
   );
   addTearDown(container.dispose);
@@ -139,6 +171,13 @@ void main() {
       containsAll(['隱匿', '求生', '體能', '威嚇']),
     );
     expect(created.features.map((f) => f.source), contains('背景：獵人'));
+    // 1 級職業特性由內容庫帶入；2 級以上不帶（留給升級流程）。
+    expect(created.features.map((f) => f.name), contains('第二風'));
+    expect(created.features.map((f) => f.name), isNot(contains('動作如潮')));
+    expect(
+      created.features.firstWhere((f) => f.name == '第二風').source,
+      '職業：戰士 Lv1',
+    );
   });
 
   testWidgets('離線降級：僅內建背景 + 提示，不阻擋建角', (tester) async {

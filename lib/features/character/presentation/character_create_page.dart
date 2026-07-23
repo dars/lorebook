@@ -328,7 +328,37 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     final caster = cls.spellAbility.isNotEmpty;
     final spellMod = caster ? mods[cls.spellAbility]! : 0;
 
+    // 1 級職業特性（無甲防禦、狂暴等）由內容庫補入；
+    // 離線或查無對應職業時略過，不阻擋建角。
+    var classFeatures = const <CharacterFeature>[];
+    try {
+      final classes = await ref.read(classCatalogProvider.future);
+      CatalogClass? cat;
+      for (final c in classes) {
+        if (c.engName == cls.en) {
+          cat = c;
+          break;
+        }
+      }
+      if (cat != null) {
+        final all = await ref.read(classFeatureCatalogProvider(cat.id).future);
+        classFeatures = [
+          for (final f in all)
+            if (!f.isSubclass && f.level == 1)
+              CharacterFeature(
+                name: f.name,
+                nameEn: f.engName ?? '',
+                source: '職業：${cls.cn} Lv1',
+                description: ftFlattenEntries(
+                  (f.data['entries'] as List<dynamic>?) ?? const [],
+                ),
+              ),
+        ];
+      }
+    } catch (_) {}
+
     final features = <CharacterFeature>[
+      ...classFeatures,
       for (final t in sp.traits)
         CharacterFeature(name: t, source: '種族：${sp.cn}'),
       CharacterFeature(name: bg.originFeat, source: '背景：${bg.cn}'),
