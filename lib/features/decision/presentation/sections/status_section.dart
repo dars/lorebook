@@ -150,8 +150,8 @@ class _HpColumn extends StatelessWidget {
                 color: surfaces.textSecondary,
               ),
             ),
-            const SizedBox(width: 6),
-            _TempHpShield(
+            const SizedBox(width: 8),
+            _TempHpChip(
               value: character.tempHp,
               color: dnd.tempHp,
               onTap: onTapShield,
@@ -165,15 +165,24 @@ class _HpColumn extends StatelessWidget {
             height: 5,
             child: Row(
               children: [
-                Expanded(
-                  flex: (ratio * 100).round(),
-                  child: Container(color: _barColor(ratio)),
-                ),
-                if (ratio < 1.0)
+                // 條總長 = maxHp + 臨時：傷害先消藍段、紅段不動，行為可直接看見。
+                if (character.currentHp > 0)
                   Expanded(
-                    flex: ((1 - ratio) * 100).round(),
+                    flex: character.currentHp,
+                    child: Container(color: _barColor(ratio)),
+                  ),
+                if (character.tempHp > 0)
+                  Expanded(
+                    flex: character.tempHp,
+                    child: Container(color: dnd.tempHp),
+                  ),
+                if (character.maxHp - character.currentHp > 0)
+                  Expanded(
+                    flex: character.maxHp - character.currentHp,
                     child: Container(color: dnd.hpBarBg),
                   ),
+                if (character.maxHp == 0 && character.tempHp == 0)
+                  Expanded(child: Container(color: dnd.hpBarBg)),
               ],
             ),
           ),
@@ -200,45 +209,100 @@ class _HpColumn extends StatelessWidget {
   }
 }
 
-class _TempHpShield extends StatelessWidget {
+/// 臨時 HP chip：有值時「+N 臨時」、歸零時「＋臨時」幽靈態提示可點。
+/// 值變動時脈衝一下，讓「傷害先吃臨時」看得見。
+class _TempHpChip extends StatefulWidget {
   final int value;
   final Color color;
   final VoidCallback onTap;
 
-  const _TempHpShield({
+  const _TempHpChip({
     required this.value,
     required this.color,
     required this.onTap,
   });
 
   @override
+  State<_TempHpChip> createState() => _TempHpChipState();
+}
+
+class _TempHpChipState extends State<_TempHpChip>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulse = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 280),
+  );
+  late final Animation<double> _scale = TweenSequence<double>([
+    TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.25), weight: 1),
+    TweenSequenceItem(tween: Tween(begin: 1.25, end: 1.0), weight: 1),
+  ]).animate(_pulse);
+
+  @override
+  void didUpdateWidget(_TempHpChip oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value && widget.value > 0) {
+      _pulse.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final active = value > 0;
+    final active = widget.value > 0;
+    final color = widget.color;
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 26,
-        height: 26,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Icon(
-              Icons.shield,
-              size: 26,
-              color: active ? color : color.withValues(alpha: 0.3),
+      child: ScaleTransition(
+        scale: _scale,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          decoration: BoxDecoration(
+            // 幽靈態也帶一點底色與較實的框，避免在深色卡上糊成灰。
+            color: color.withValues(alpha: active ? 0.16 : 0.08),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: active ? color : color.withValues(alpha: 0.55),
             ),
-            if (active)
-              Text(
-                '$value',
-                style: const TextStyle(
-                  fontFamily: 'Cinzel',
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+          ),
+          child: active
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '+${widget.value}',
+                      style: TextStyle(
+                        fontFamily: 'Cinzel',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: color,
+                      ),
+                    ),
+                    const SizedBox(width: 3),
+                    Text(
+                      '臨時',
+                      style: TextStyle(
+                        fontFamily: 'NotoSerifTC',
+                        fontSize: 9,
+                        color: color,
+                      ),
+                    ),
+                  ],
+                )
+              : Text(
+                  '＋臨時',
+                  style: TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 9,
+                    color: color.withValues(alpha: 0.9),
+                  ),
                 ),
-              ),
-          ],
         ),
       ),
     );
