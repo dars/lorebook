@@ -21710,7 +21710,8 @@
                       "fill": "$dnd-text-dim",
                       "content": "全部",
                       "fontFamily": "Noto Serif TC",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -21761,7 +21762,8 @@
                       "fill": "$dnd-text-dim",
                       "content": "護甲",
                       "fontFamily": "Noto Serif TC",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -21786,7 +21788,8 @@
                       "fill": "$dnd-text-dim",
                       "content": "裝備",
                       "fontFamily": "Noto Serif TC",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -21811,7 +21814,8 @@
                       "fill": "$dnd-text-dim",
                       "content": "工具",
                       "fontFamily": "Noto Serif TC",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -21889,7 +21893,8 @@
                           "fill": "$dnd-text",
                           "content": "標槍",
                           "fontFamily": "Noto Serif TC",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -22008,7 +22013,8 @@
                           "fill": "$dnd-text",
                           "content": "匕首",
                           "fontFamily": "Noto Serif TC",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -22093,7 +22099,8 @@
                           "fill": "$dnd-text",
                           "content": "長棍",
                           "fontFamily": "Noto Serif TC",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -22307,7 +22314,8 @@
                           "fill": "$dnd-text",
                           "content": "長劍",
                           "fontFamily": "Noto Serif TC",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -22392,7 +22400,8 @@
                           "fill": "$dnd-text",
                           "content": "巨斧",
                           "fontFamily": "Noto Serif TC",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -22477,7 +22486,8 @@
                           "fill": "$dnd-text",
                           "content": "戰鎚",
                           "fontFamily": "Noto Serif TC",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -23277,6 +23287,983 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "X2S7V",
+      "x": 1346,
+      "y": 1044,
+      "name": "臨時HP改版 Mockup",
+      "clip": true,
+      "width": 360,
+      "fill": "#14110C",
+      "layout": "vertical",
+      "gap": 14,
+      "padding": 16,
+      "children": [
+        {
+          "type": "text",
+          "id": "Bi6CZ",
+          "name": "lab現況",
+          "fill": "#7A6A48",
+          "content": "現況 · 臨時 HP 是小盾牌，與 AC 大盾撞圖示",
+          "fontFamily": "Inter",
+          "fontSize": 9,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "vjSy6",
+          "name": "現況Row",
+          "width": "fill_container",
+          "gap": 8,
+          "children": [
+            {
+              "type": "frame",
+              "id": "nfR6E",
+              "name": "HP Card 現況",
+              "width": "fill_container",
+              "fill": "$dnd-card",
+              "cornerRadius": 4,
+              "stroke": "$dnd-border",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 6,
+              "padding": [
+                10,
+                12
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "YeZNl",
+                  "name": "HP Header",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "SS9ce",
+                      "name": "Heart",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "heart",
+                      "library": "lucide",
+                      "fill": "#C0392B"
+                    },
+                    {
+                      "type": "text",
+                      "id": "YMd15",
+                      "name": "HP Label",
+                      "fill": "$dnd-gold",
+                      "content": "HP",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "KmGSU",
+                  "name": "HP Value Row",
+                  "gap": 2,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "sEDMo",
+                      "name": "Current",
+                      "fill": "$dnd-text",
+                      "content": "14",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 32,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "i4pgt",
+                      "name": "Max",
+                      "fill": "$dnd-text-dim",
+                      "content": "/17",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "frOkp",
+                      "name": "ShieldPad",
+                      "padding": [
+                        0,
+                        0,
+                        4,
+                        6
+                      ],
+                      "children": [
+                        {
+                          "id": "xGFhj",
+                          "type": "ref",
+                          "ref": "m3Zmy",
+                          "name": "TempShield 現況"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "rU6Ok",
+                  "name": "HP Bar Track",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": 5,
+                  "fill": "$dnd-hp-bar",
+                  "cornerRadius": 3,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "IfA2w",
+                      "name": "HP Fill",
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 90,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#C0392B",
+                            "position": 0
+                          },
+                          {
+                            "color": "#8B3A3A",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "width": 100,
+                      "height": 5
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "XKS0E",
+                  "name": "HP Controls",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "xjJdP",
+                      "name": "Minus",
+                      "width": 28,
+                      "height": 24,
+                      "fill": "$dnd-border",
+                      "cornerRadius": 4,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "QIoXZ",
+                          "name": "−",
+                          "fill": "$dnd-text",
+                          "content": "−",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Z0zfg",
+                      "name": "Plus",
+                      "width": 28,
+                      "height": 24,
+                      "fill": "$dnd-border",
+                      "cornerRadius": 4,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "YXd9I",
+                          "name": "+",
+                          "fill": "$dnd-text",
+                          "content": "+",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "hRiqr",
+              "name": "AC Card",
+              "width": 92,
+              "fill": "$dnd-card",
+              "cornerRadius": 4,
+              "stroke": "$dnd-border",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 4,
+              "padding": [
+                10,
+                12
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "lteWL",
+                  "name": "AC Header",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Ihmnq",
+                      "name": "ShieldOut",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "shield",
+                      "library": "lucide",
+                      "fill": "#C8A86B"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Ca3k5",
+                      "name": "AC Label",
+                      "fill": "#C8A86B",
+                      "content": "AC",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 11,
+                      "fontWeight": "700",
+                      "letterSpacing": 1.5
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FXs0C",
+                  "name": "AC Shield Body",
+                  "width": 44,
+                  "height": 44,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "R0IS40",
+                      "layoutPosition": "absolute",
+                      "x": 0,
+                      "y": 0,
+                      "name": "AC Shield Icon",
+                      "width": 44,
+                      "height": 44,
+                      "icon": "shield",
+                      "library": "Material Symbols Rounded",
+                      "fill": "#3A2E1E"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XoZGz",
+                      "layoutPosition": "absolute",
+                      "x": 0,
+                      "y": 0,
+                      "name": "AC NumWrap",
+                      "width": 44,
+                      "height": 44,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "r63EE",
+                          "name": "AC Val",
+                          "fill": "$dnd-gold",
+                          "content": "14",
+                          "fontFamily": "Cinzel",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "BH8Wb",
+                  "name": "AC Sub",
+                  "fill": "#A08050",
+                  "content": "法師護甲",
+                  "fontFamily": "Noto Serif TC",
+                  "fontSize": 9,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KKPJc",
+          "name": "警示1",
+          "width": "fill_container",
+          "gap": 6,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "sLeB8",
+              "name": "warn",
+              "width": 11,
+              "height": 11,
+              "icon": "triangle-alert",
+              "library": "lucide",
+              "fill": "#C97A5A"
+            },
+            {
+              "type": "text",
+              "id": "Ic8ay",
+              "name": "警示文",
+              "fill": "#C97A5A",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "同列兩個盾牌意義不同；小盾無標示、歸零時半透明，難以發現",
+              "fontFamily": "Noto Serif TC",
+              "fontSize": 10,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "Pmy8O",
+          "name": "分隔A",
+          "fill": "$dnd-border2",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "text",
+          "id": "j2UeR",
+          "name": "lab提案",
+          "fill": "#7A6A48",
+          "content": "提案 · 「+N 臨時」文字 chip＋血條臨時段",
+          "fontFamily": "Inter",
+          "fontSize": 9,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "qS2iZ",
+          "name": "HP Card 提案",
+          "width": "fill_container",
+          "fill": "$dnd-card",
+          "cornerRadius": 4,
+          "stroke": "$dnd-gold-dim",
+          "strokeWidth": 1,
+          "layout": "vertical",
+          "gap": 6,
+          "padding": [
+            10,
+            12
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "dYO0K",
+              "name": "HP Header",
+              "gap": 4,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "dxFBN",
+                  "name": "Heart",
+                  "width": 12,
+                  "height": 12,
+                  "icon": "heart",
+                  "library": "lucide",
+                  "fill": "#C0392B"
+                },
+                {
+                  "type": "text",
+                  "id": "Y6Z3Lw",
+                  "name": "HP Label",
+                  "fill": "$dnd-gold",
+                  "content": "HP",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Z1pN4F",
+              "name": "HP Value Row",
+              "width": "fill_container",
+              "gap": 2,
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "A3JbU",
+                  "name": "Current",
+                  "fill": "$dnd-text",
+                  "content": "14",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 32,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "JXhLS",
+                  "name": "Max",
+                  "fill": "$dnd-text-dim",
+                  "content": "/17",
+                  "fontFamily": "Cinzel",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "MXpQ5",
+                  "name": "ChipPad",
+                  "padding": [
+                    0,
+                    0,
+                    6,
+                    8
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UG7Mj",
+                      "name": "TempChip",
+                      "fill": "#6FB0D422",
+                      "cornerRadius": 10,
+                      "stroke": "#6FB0D4",
+                      "strokeWidth": 1,
+                      "gap": 3,
+                      "padding": [
+                        2,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "QUxu7",
+                          "name": "ChipVal",
+                          "fill": "#6FB0D4",
+                          "content": "+5",
+                          "fontFamily": "Cinzel",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "I5tqp",
+                          "name": "ChipLabel",
+                          "fill": "#6FB0D4",
+                          "content": "臨時",
+                          "fontFamily": "Noto Serif TC",
+                          "fontSize": 9,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "B1j72",
+              "name": "HP Bar Track",
+              "clip": true,
+              "width": "fill_container",
+              "height": 5,
+              "fill": "$dnd-hp-bar",
+              "cornerRadius": 3,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "sAWRc",
+                  "name": "HP Fill",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 90,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#C0392B",
+                        "position": 0
+                      },
+                      {
+                        "color": "#8B3A3A",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "width": 100,
+                  "height": 5
+                },
+                {
+                  "type": "rectangle",
+                  "id": "lw77V",
+                  "name": "Temp Fill",
+                  "fill": "#6FB0D4",
+                  "width": 36,
+                  "height": 5
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ZF5gP",
+              "name": "HP Controls",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "pdOUO",
+                  "name": "Minus",
+                  "width": 28,
+                  "height": 24,
+                  "fill": "$dnd-border",
+                  "cornerRadius": 4,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "a4aE8D",
+                      "name": "−",
+                      "fill": "$dnd-text",
+                      "content": "−",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "D4u6b",
+                  "name": "Plus",
+                  "width": 28,
+                  "height": 24,
+                  "fill": "$dnd-border",
+                  "cornerRadius": 4,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "UymbR",
+                      "name": "+",
+                      "fill": "$dnd-text",
+                      "content": "+",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "R3p4kv",
+          "name": "提案說明",
+          "fill": "#9A8A66",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "血條尾端接一段藍色臨時段；chip 用文字標明「臨時」，不再與 AC 盾牌混淆。點 chip 開設定對話框（維持現有流程）。",
+          "lineHeight": 1.5,
+          "fontFamily": "Noto Serif TC",
+          "fontSize": 10,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "UyE2G",
+          "name": "lab歸零",
+          "fill": "#7A6A48",
+          "content": "臨時 HP = 0 · 幽靈 chip 提示可點",
+          "fontFamily": "Inter",
+          "fontSize": 9,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "WSGZv",
+          "name": "歸零 Value Row",
+          "gap": 2,
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "text",
+              "id": "BRb6f",
+              "name": "Current",
+              "fill": "$dnd-text",
+              "content": "14",
+              "fontFamily": "Cinzel",
+              "fontSize": 32,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "fKCAF",
+              "name": "Max",
+              "fill": "$dnd-text-dim",
+              "content": "/17",
+              "fontFamily": "Cinzel",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "Jtz4Z",
+              "name": "GhostPad",
+              "padding": [
+                0,
+                0,
+                6,
+                8
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "S1GdN",
+                  "name": "GhostChip",
+                  "cornerRadius": 10,
+                  "stroke": "#6FB0D455",
+                  "strokeWidth": 1,
+                  "gap": 3,
+                  "padding": [
+                    2,
+                    8
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "SNPqr",
+                      "name": "GhostLabel",
+                      "fill": "#6FB0D488",
+                      "content": "＋臨時",
+                      "fontFamily": "Noto Serif TC",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "R2cUPO",
+          "name": "分隔B",
+          "fill": "$dnd-border2",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "text",
+          "id": "N2oxs",
+          "name": "lab扣血",
+          "fill": "#7A6A48",
+          "content": "扣血回饋 · 按 − 時傷害先吃臨時，本體不動",
+          "fontFamily": "Inter",
+          "fontSize": 9,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "xPmOd",
+          "name": "扣血流程",
+          "width": "fill_container",
+          "gap": 10,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "V5Hfv",
+              "name": "按前",
+              "fill": "$dnd-card2",
+              "cornerRadius": 6,
+              "stroke": "$dnd-border2",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 5,
+              "padding": [
+                8,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "p9oWT",
+                  "name": "值",
+                  "gap": 2,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Lz8sk",
+                      "name": "Cur",
+                      "fill": "$dnd-text",
+                      "content": "14",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 20,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "HLhmj",
+                      "name": "Max",
+                      "fill": "$dnd-text-dim",
+                      "content": "/17",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "v1U8he",
+                      "name": "cpad",
+                      "padding": [
+                        0,
+                        0,
+                        3,
+                        5
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "iXtU8",
+                          "name": "chip",
+                          "fill": "#6FB0D422",
+                          "cornerRadius": 8,
+                          "stroke": "#6FB0D4",
+                          "strokeWidth": 1,
+                          "gap": 2,
+                          "padding": [
+                            1,
+                            6
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "XzkyX",
+                              "name": "cv",
+                              "fill": "#6FB0D4",
+                              "content": "+5",
+                              "fontFamily": "Cinzel",
+                              "fontSize": 11,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NQw0W",
+                  "name": "bar",
+                  "clip": true,
+                  "width": 96,
+                  "height": 4,
+                  "fill": "$dnd-hp-bar",
+                  "cornerRadius": 2,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "IVSLN",
+                      "name": "fill",
+                      "fill": "#8B3A3A",
+                      "width": 66,
+                      "height": 4
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "AB6UP",
+                      "name": "temp",
+                      "fill": "#6FB0D4",
+                      "width": 24,
+                      "height": 4
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "Z8MIJE",
+              "name": "arrow",
+              "width": 16,
+              "height": 16,
+              "icon": "arrow-right",
+              "library": "lucide",
+              "fill": "#A08B62"
+            },
+            {
+              "type": "frame",
+              "id": "WkaD4",
+              "name": "按後",
+              "fill": "$dnd-card2",
+              "cornerRadius": 6,
+              "stroke": "$dnd-border2",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 5,
+              "padding": [
+                8,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Yphik",
+                  "name": "值",
+                  "gap": 2,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "l7YgT",
+                      "name": "Cur",
+                      "fill": "$dnd-text",
+                      "content": "14",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 20,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "SXt5q",
+                      "name": "Max",
+                      "fill": "$dnd-text-dim",
+                      "content": "/17",
+                      "fontFamily": "Cinzel",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g6jh1",
+                      "name": "cpad",
+                      "padding": [
+                        0,
+                        0,
+                        3,
+                        5
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Z2C7R",
+                          "name": "chip",
+                          "fill": "#6FB0D444",
+                          "cornerRadius": 8,
+                          "stroke": "#6FB0D4",
+                          "strokeWidth": 1,
+                          "gap": 2,
+                          "padding": [
+                            1,
+                            6
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "O046ky",
+                              "name": "cv",
+                              "fill": "#6FB0D4",
+                              "content": "+4",
+                              "fontFamily": "Cinzel",
+                              "fontSize": 11,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "fBPn7",
+                  "name": "bar",
+                  "clip": true,
+                  "width": 96,
+                  "height": 4,
+                  "fill": "$dnd-hp-bar",
+                  "cornerRadius": 2,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "U6r2D",
+                      "name": "fill",
+                      "fill": "#8B3A3A",
+                      "width": 66,
+                      "height": 4
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "P7P08q",
+                      "name": "temp",
+                      "fill": "#6FB0D4",
+                      "width": 19,
+                      "height": 4
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "xpF4F",
+          "name": "扣血說明",
+          "fill": "#9A8A66",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "−1 後：本體維持 14，chip 由 +5 跳為 +4 並閃爍一下；藍色臨時段同步縮短。玩家能直接看見「這點傷害被臨時 HP 吃掉了」。",
+          "lineHeight": 1.5,
+          "fontFamily": "Noto Serif TC",
+          "fontSize": 10,
+          "fontWeight": "normal"
         }
       ]
     }
