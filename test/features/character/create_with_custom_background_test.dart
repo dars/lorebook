@@ -31,6 +31,18 @@ const _fighterCatalog = [
   CatalogClass(id: 'c-fighter', name: '戰士', engName: 'Fighter', source: 'XPHB'),
 ];
 
+const _feats = [
+  CatalogFeat(
+    id: 'ft-alert',
+    name: '警覺',
+    engName: 'Alert',
+    source: 'XPHB',
+    data: {
+      'entries': ['先攻加上熟練加值；可與盟友交換先攻。'],
+    },
+  ),
+];
+
 const _fighterFeatures = [
   CatalogClassFeature(
     id: 'ff-1',
@@ -70,6 +82,7 @@ Future<ProviderContainer> _pump(
         classFeatureCatalogProvider.overrideWith(
           (ref, id) async => _fighterFeatures,
         ),
+        featCatalogProvider.overrideWith((ref) async => _feats),
       ],
     ],
   );
@@ -171,6 +184,11 @@ void main() {
       containsAll(['隱匿', '求生', '體能', '威嚇']),
     );
     expect(created.features.map((f) => f.source), contains('背景：獵人'));
+    // 起源專長的說明來自內容庫 feats 表 → 角色頁可點開
+    final originFeat = created.features.firstWhere((f) => f.source == '背景：獵人');
+    expect(originFeat.name, '警覺');
+    expect(originFeat.nameEn, 'Alert');
+    expect(originFeat.description, contains('先攻'));
     // 1 級職業特性由內容庫帶入；2 級以上不帶（留給升級流程）。
     expect(created.features.map((f) => f.name), contains('第二風'));
     expect(created.features.map((f) => f.name), isNot(contains('動作如潮')));

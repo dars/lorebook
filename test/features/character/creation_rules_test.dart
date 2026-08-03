@@ -54,7 +54,10 @@ void main() {
     });
 
     test('半身人含天生隱匿；單一體型種族 effectiveSizeChoices 為固定值', () {
-      expect(_sp('半身人').traits, contains('天生隱匿'));
+      // 特性為結構化條目（名稱／英文名／說明），不再是單一字串。
+      final nimble = _sp('半身人').traits.firstWhere((t) => t.name == '天生隱匿');
+      expect(nimble.nameEn, 'Naturally Stealthy');
+      expect(nimble.description, isNotEmpty);
       expect(_sp('半身人').effectiveSizeChoices, ['Small']);
       expect(_sp('矮人').effectiveSizeChoices, ['Medium']);
     });

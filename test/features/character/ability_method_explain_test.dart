@@ -69,7 +69,34 @@ Future<void> _toAbilityStep(WidgetTester tester) async {
   await _next(tester);
 }
 
+/// 走到種族步驟（僅需填名稱）。
+Future<void> _toSpeciesStep(WidgetTester tester) async {
+  await _pump(tester);
+  await tester.enterText(find.byType(TextField).first, '特性測試');
+  await tester.pumpAndSettle();
+}
+
 void main() {
+  testWidgets('建角種族步驟：特性可點擊看說明', (tester) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    await _toSpeciesStep(tester);
+    await tester.tap(find.text('矮人').first);
+    await tester.pumpAndSettle();
+
+    // 敘述卡的特性只顯示名稱。
+    expect(find.text('矮人堅毅'), findsOneWidget);
+    expect(find.text('生命值上限每個等級 +1。'), findsNothing);
+
+    await tester.ensureVisible(find.text('矮人堅毅'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('矮人堅毅'));
+    await tester.pumpAndSettle();
+    expect(find.text('生命值上限每個等級 +1。'), findsOneWidget);
+  });
+
   testWidgets('摘要常駐、詳解預設收合，點「怎麼用」展開', (tester) async {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;

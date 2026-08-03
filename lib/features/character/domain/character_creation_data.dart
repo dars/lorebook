@@ -69,13 +69,30 @@ const kSkills = <SkillDef>[
 
 SkillDef skillByName(String name) => kSkills.firstWhere((s) => s.name == name);
 
+/// 種族特性：名稱與說明分開存放。
+///
+/// 兩者黏成一個字串的話，`CharacterFeature.description` 永遠是空的，顯示端
+/// 的說明分支也就永遠觸發不到——資訊會在建角時被丟掉。說明為純文字，不做
+/// 機制自動化，也不進入內容庫的標記渲染路徑。
+class SpeciesTrait {
+  final String name;
+  final String nameEn;
+
+  /// 說明；空字串代表無說明，呈現時不提供展開互動。
+  final String description;
+
+  const SpeciesTrait(this.name, {this.nameEn = '', this.description = ''});
+}
+
 /// 種族（2024：不給能力加值；提供速度/體型/感官/特性）。
 class SpeciesOption {
   final String cn;
   final String en;
   final String speed; // 如 '30ft'
   final String size; // 'Medium' / 'Small'
-  final bool darkvision;
+  /// 黑暗視覺距離（呎）；0 = 無。黑暗視覺的特性條目由此推導
+  /// （見 [allTraits]），不在 [traits] 內重複列出。
+  final int darkvisionFt;
 
   /// 每等級額外 HP（矮人堅韌 Dwarven Toughness = 1；其餘 0）。
   final int hpPerLevel;
@@ -88,14 +105,14 @@ class SpeciesOption {
 
   /// 可選體型（2024 人類可選中型/小型；空 = 固定為 [size]）。
   final List<String> sizeChoices;
-  final List<String> traits;
+  final List<SpeciesTrait> traits;
   final String description; // 佔位文案
   const SpeciesOption({
     required this.cn,
     required this.en,
     this.speed = '30ft',
     this.size = 'Medium',
-    this.darkvision = false,
+    this.darkvisionFt = 0,
     this.hpPerLevel = 0,
     this.skillPickCount = 0,
     this.skillPickFrom = const [],
@@ -107,6 +124,21 @@ class SpeciesOption {
   /// 實際可選體型清單（未宣告 sizeChoices 時為固定單值）。
   List<String> get effectiveSizeChoices =>
       sizeChoices.isEmpty ? [size] : sizeChoices;
+
+  /// 呈現與寫入角色卡用的完整特性清單。
+  ///
+  /// 黑暗視覺由 [darkvisionFt] 推導而非各種族各寫一遍——先前兩種表示法
+  /// 並存，導致建角卡上同時出現「黑暗視覺」與「黑暗視覺 120」兩個項目，
+  /// 且 bool 表達不了 60／120 的差別。
+  List<SpeciesTrait> get allTraits => [
+    ...traits,
+    if (darkvisionFt > 0)
+      SpeciesTrait(
+        '黑暗視覺 $darkvisionFt',
+        nameEn: 'Darkvision',
+        description: '$darkvisionFt 呎內，昏暗光線視為明亮、黑暗視為昏暗（僅能辨色為灰階）。',
+      ),
+  ];
 }
 
 const kSpecies = <SpeciesOption>[
@@ -116,68 +148,200 @@ const kSpecies = <SpeciesOption>[
     skillPickCount: 1,
     skillPickFrom: _allSkillNames,
     sizeChoices: ['Medium', 'Small'],
-    traits: ['足智多謀 長休得英雄激勵', '多才多藝 技能選1', '天賦異稟 起源專長'],
+    traits: [
+      SpeciesTrait(
+        '足智多謀',
+        nameEn: 'Resourceful',
+        description: '每次長休結束時獲得一次英雄激勵。',
+      ),
+      SpeciesTrait('多才多藝', nameEn: 'Skillful', description: '任選一項技能獲得熟練。'),
+      SpeciesTrait('天賦異稟', nameEn: 'Versatile', description: '額外獲得一個起源專長。'),
+    ],
     description: '〔敘述佔位〕適應力極強、分布最廣的種族，靠才智與韌性立足於各地。（文案待補）',
   ),
   SpeciesOption(
     cn: '精靈',
     en: 'Elf',
-    darkvision: true,
+    darkvisionFt: 60,
     skillPickCount: 1,
     skillPickFrom: ['洞察', '感知', '求生'],
-    traits: ['精靈血系 卓爾/高等/木精靈', '妖精血統', '敏銳感官 擇一熟練', '出神'],
+    traits: [
+      SpeciesTrait(
+        '精靈血系',
+        nameEn: 'Elven Lineage',
+        description: '卓爾／高等／木精靈三選一，各自帶來不同的天生法術與增益。',
+      ),
+      SpeciesTrait(
+        '妖精血統',
+        nameEn: 'Fey Ancestry',
+        description: '對抗魅惑的豁免具優勢，魔法無法使你入睡。',
+      ),
+      SpeciesTrait(
+        '敏銳感官',
+        nameEn: 'Keen Senses',
+        description: '洞察、感知、求生擇一獲得熟練。',
+      ),
+      SpeciesTrait(
+        '出神',
+        nameEn: 'Trance',
+        description: '長休只需 4 小時的冥想，期間保持部分意識。',
+      ),
+    ],
     description: '〔敘述佔位〕優雅長壽、與魔法和自然親近的種族，感官敏銳。（文案待補）',
   ),
   SpeciesOption(
     cn: '矮人',
     en: 'Dwarf',
-    darkvision: true,
+    darkvisionFt: 120,
     hpPerLevel: 1,
-    traits: ['矮人韌性 毒抗', '矮人堅毅 +1HP/級', '石工直覺 震顫感知', '黑暗視覺 120'],
+    traits: [
+      SpeciesTrait(
+        '矮人韌性',
+        nameEn: 'Dwarven Resilience',
+        description: '具毒素傷害抗性，對抗中毒狀態的豁免具優勢。',
+      ),
+      SpeciesTrait(
+        '矮人堅毅',
+        nameEn: 'Dwarven Toughness',
+        description: '生命值上限每個等級 +1。',
+      ),
+      SpeciesTrait(
+        '石工直覺',
+        nameEn: 'Stonecunning',
+        description: '附贈動作獲得 60 呎震顫感知 10 分鐘，每次長休可用熟練加值次數。',
+      ),
+    ],
     description: '〔敘述佔位〕堅毅耐勞的山地與地底民族，擅長工藝與抵抗毒素。（文案待補）',
   ),
   SpeciesOption(
     cn: '半身人',
     en: 'Halfling',
     size: 'Small',
-    traits: ['幸運', '勇毅', '半身人的靈巧', '天生隱匿'],
+    traits: [
+      SpeciesTrait(
+        '幸運',
+        nameEn: 'Lucky',
+        description: 'd20 檢定擲出 1 時可重擲一次，須採用新結果。',
+      ),
+      SpeciesTrait('勇毅', nameEn: 'Brave', description: '對抗恐懼的豁免具優勢。'),
+      SpeciesTrait(
+        '半身人的靈巧',
+        nameEn: 'Halfling Nimbleness',
+        description: '可穿越體型比你大的生物所佔空間。',
+      ),
+      SpeciesTrait(
+        '天生隱匿',
+        nameEn: 'Naturally Stealthy',
+        description: '被體型比你大的生物遮蔽時，仍可嘗試躲藏。',
+      ),
+    ],
     description: '〔敘述佔位〕樂天知足的小個子，天生幸運、臨危不亂。（文案待補）',
   ),
   SpeciesOption(
     cn: '龍裔',
     en: 'Dragonborn',
-    darkvision: true,
-    traits: ['龍族血統', '吐息武器', '傷害抗性', '龍族飛行 Lv5', '黑暗視覺'],
+    darkvisionFt: 60,
+    traits: [
+      SpeciesTrait(
+        '龍族血統',
+        nameEn: 'Draconic Ancestry',
+        description: '選定一種巨龍血脈，決定吐息與抗性的傷害類型。',
+      ),
+      SpeciesTrait(
+        '吐息武器',
+        nameEn: 'Breath Weapon',
+        description: '攻擊時可改為噴吐能量，每次長休可用熟練加值次數。',
+      ),
+      SpeciesTrait(
+        '傷害抗性',
+        nameEn: 'Damage Resistance',
+        description: '對血脈對應的傷害類型具抗性。',
+      ),
+      SpeciesTrait(
+        '龍族飛行',
+        nameEn: 'Draconic Flight',
+        description: '5 級起可附贈動作生出靈體之翼，飛行速度等同步行速度，持續 10 分鐘。',
+      ),
+    ],
     description: '〔敘述佔位〕承襲巨龍血脈的戰士種族，可吐出龍息。（文案待補）',
   ),
   SpeciesOption(
     cn: '獸人',
     en: 'Orc',
-    darkvision: true,
-    traits: ['腎上腺素爆發', '不屈毅力', '黑暗視覺 120'],
+    darkvisionFt: 120,
+    traits: [
+      SpeciesTrait(
+        '腎上腺素爆發',
+        nameEn: 'Adrenaline Rush',
+        description: '附贈動作衝刺，並獲得等同熟練加值的臨時生命值。',
+      ),
+      SpeciesTrait(
+        '不屈毅力',
+        nameEn: 'Relentless Endurance',
+        description: '生命值降至 0 時改為保留 1 點，每次長休一次。',
+      ),
+    ],
     description: '〔敘述佔位〕強壯而堅韌的戰鬥種族，衝勁十足且瀕死不倒。（文案待補）',
   ),
   SpeciesOption(
     cn: '提夫林',
     en: 'Tiefling',
-    darkvision: true,
+    darkvisionFt: 60,
     sizeChoices: ['Medium', 'Small'],
-    traits: ['魔裔傳承 深淵/冥府/煉獄', '異界威儀 奇術', '黑暗視覺'],
+    traits: [
+      SpeciesTrait(
+        '魔裔傳承',
+        nameEn: 'Fiendish Legacy',
+        description: '深淵／冥府／煉獄三選一，各自帶來不同的天生法術與抗性。',
+      ),
+      SpeciesTrait(
+        '異界威儀',
+        nameEn: 'Otherworldly Presence',
+        description: '習得奇術戲法，施法屬性可自選智力、感知或魅力。',
+      ),
+    ],
     description: '〔敘述佔位〕帶有異界血脈的種族，天生掌握些許法術。（文案待補）',
   ),
   SpeciesOption(
     cn: '侏儒',
     en: 'Gnome',
     size: 'Small',
-    darkvision: true,
-    traits: ['侏儒狡黠 心智豁免優勢', '侏儒血系 森林/岩石', '黑暗視覺'],
+    darkvisionFt: 60,
+    traits: [
+      SpeciesTrait(
+        '侏儒狡黠',
+        nameEn: 'Gnomish Cunning',
+        description: '智力、感知、魅力的豁免皆具優勢。',
+      ),
+      SpeciesTrait(
+        '侏儒血系',
+        nameEn: 'Gnomish Lineage',
+        description: '森林／岩石二選一，帶來不同的天生法術或工藝能力。',
+      ),
+    ],
     description: '〔敘述佔位〕好奇心旺盛、心智抗性強的小個子發明家。（文案待補）',
   ),
   SpeciesOption(
     cn: '歌利亞',
     en: 'Goliath',
     speed: '35ft',
-    traits: ['巨人血統 六選一', '巨大形體 Lv5', '魁梧體格'],
+    traits: [
+      SpeciesTrait(
+        '巨人血統',
+        nameEn: 'Giant Ancestry',
+        description: '六種巨人恩賜擇一，各自提供不同的戰鬥增益。',
+      ),
+      SpeciesTrait(
+        '巨大形體',
+        nameEn: 'Large Form',
+        description: '5 級起可附贈動作變為大型，持續 10 分鐘，每次長休一次。',
+      ),
+      SpeciesTrait(
+        '魁梧體格',
+        nameEn: 'Powerful Build',
+        description: '對抗被擒抱的豁免具優勢；負重與推拉舉視為大型生物。',
+      ),
+    ],
     description: '〔敘述佔位〕承襲巨人血脈的高大山民，健步如飛、力能扛鼎。（文案待補）',
   ),
 ];

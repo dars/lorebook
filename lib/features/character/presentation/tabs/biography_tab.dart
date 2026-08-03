@@ -9,6 +9,7 @@ import '../../domain/character.dart';
 import '../../domain/character_providers.dart';
 import '../../domain/derived_stats.dart';
 import '../read_only_scope.dart';
+import '../widgets/feature_detail_dialog.dart';
 import '../widgets/editor_sheet.dart';
 
 class BiographyTab extends ConsumerWidget {
@@ -380,95 +381,11 @@ class _Features extends StatelessWidget {
         children: [
           for (var i = 0; i < features.length; i++) ...[
             if (i > 0) const SizedBox(height: AppSpacing.lg),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: Icon(Icons.circle, size: 6, color: AppColors.goldDim),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: features[i].name,
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSerifTC',
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: theme.colorScheme.onSurface,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: '  ${features[i].nameEn}',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 11,
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.45),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          // 著甲條件不滿足 → 失效提示（不隱藏、不刪除）
-                          if (featureArmorViolation(character, features[i])
-                              case final violation?) ...[
-                            const SizedBox(width: 6),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 1,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: AppColors.danger.withValues(
-                                    alpha: 0.6,
-                                  ),
-                                ),
-                              ),
-                              child: Text(
-                                violation,
-                                style: TextStyle(
-                                  fontFamily: 'NotoSerifTC',
-                                  fontSize: 9,
-                                  color: AppColors.danger.withValues(
-                                    alpha: 0.9,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                      if (features[i].description.isNotEmpty) ...[
-                        const SizedBox(height: 3),
-                        Text(
-                          features[i].description,
-                          style: TextStyle(
-                            fontFamily: 'NotoSerifTC',
-                            fontSize: 13,
-                            height: 1.5,
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.7,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
+            // 有說明才可點——無說明者（如上線前建立的角色、背景起源專長）
+            // 不呈現可點擊提示，避免按了沒反應。
+            _FeatureRow(
+              feature: features[i],
+              violation: featureArmorViolation(character, features[i]),
             ),
           ],
           if (languages.isNotEmpty) ...[
@@ -505,6 +422,118 @@ class _Features extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// 特性列：只顯示名稱，有說明時可點開。
+///
+/// 說明改為點擊展開而非常駐——職業特性隨等級累積，說明全部攤開會讓清單
+/// 越拉越長；且同一份清單不該混用兩種互動。
+class _FeatureRow extends StatelessWidget {
+  final CharacterFeature feature;
+
+  /// 著甲條件不滿足的提示（不隱藏、不刪除該特性）。
+  final String? violation;
+
+  const _FeatureRow({required this.feature, required this.violation});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final hasDetail = feature.description.isNotEmpty;
+
+    final row = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 6),
+          child: Icon(Icons.circle, size: 6, color: AppColors.goldDim),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Row(
+            children: [
+              Flexible(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: feature.name,
+                        style: TextStyle(
+                          fontFamily: 'NotoSerifTC',
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                      if (feature.nameEn.isNotEmpty)
+                        TextSpan(
+                          text: '  ${feature.nameEn}',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 11,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.45,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              if (hasDetail) ...[
+                const SizedBox(width: 5),
+                Icon(
+                  Icons.info_outline,
+                  size: 13,
+                  color: AppColors.goldDim.withValues(alpha: 0.8),
+                ),
+              ],
+              if (violation case final v?) ...[
+                const SizedBox(width: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 1,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(
+                      color: AppColors.danger.withValues(alpha: 0.6),
+                    ),
+                  ),
+                  child: Text(
+                    v,
+                    style: TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 9,
+                      color: AppColors.danger.withValues(alpha: 0.9),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+
+    if (!hasDetail) return row;
+    return GestureDetector(
+      onTap: () => showFeatureDetail(
+        context,
+        name: feature.name,
+        nameEn: feature.nameEn,
+        source: feature.source,
+        description: feature.description,
+      ),
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        // 觸控目標高度（列本身約 22dp，上下各補 13dp）。
+        padding: const EdgeInsets.symmetric(vertical: 13),
+        child: row,
       ),
     );
   }

@@ -22,7 +22,9 @@ import '../domain/character_providers.dart';
 import '../domain/custom_background.dart';
 import '../data/custom_background_repository.dart';
 import '../data/portrait_service.dart';
+import 'widgets/feature_detail_dialog.dart';
 import 'widgets/portrait_transform.dart';
+import '../domain/origin_feat_lookup.dart';
 import '../domain/spell_from_catalog.dart';
 import '../../../shared/analytics/analytics.dart';
 
@@ -363,11 +365,32 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       }
     } catch (_) {}
 
+    // 起源專長的說明同樣來自內容庫（feats 表）。取用失敗時說明留空，
+    // 該列退化為不可點擊——與職業特性的降級一致。
+    var originFeat = (nameEn: '', description: '');
+    try {
+      originFeat = originFeatDetail(
+        await ref.read(featCatalogProvider.future),
+        bg.originFeat,
+      );
+    } catch (_) {}
+
     final features = <CharacterFeature>[
       ...classFeatures,
-      for (final t in sp.traits)
-        CharacterFeature(name: t, source: '種族：${sp.cn}'),
-      CharacterFeature(name: bg.originFeat, source: '背景：${bg.cn}'),
+      // 三欄分別映射，不把名稱與說明黏成一串——否則角色卡上的說明永遠是空的。
+      for (final t in sp.allTraits)
+        CharacterFeature(
+          name: t.name,
+          nameEn: t.nameEn,
+          description: t.description,
+          source: '種族：${sp.cn}',
+        ),
+      CharacterFeature(
+        name: bg.originFeat,
+        nameEn: originFeat.nameEn,
+        description: originFeat.description,
+        source: '背景：${bg.cn}',
+      ),
     ];
 
     final abilityScores = AbilityScores(
@@ -612,9 +635,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
             chips: [
               '速度 ${_species!.speed}',
               '體型 ${_species!.size == 'Small' ? '小型' : '中型'}',
-              if (_species!.darkvision) '黑暗視覺',
-              ..._species!.traits,
             ],
+            // 黑暗視覺已是 allTraits 的一員，不再另外掛一個沒有說明的 chip。
+            traits: _species!.allTraits,
           ),
         ],
       ],
@@ -2712,10 +2735,15 @@ class _DescCard extends StatelessWidget {
   final String title;
   final String body;
   final List<String> chips;
+
+  /// 可點擊的特性 chip（點擊出說明）；與 [chips] 的靜態資訊分開，
+  /// 因為只有特性有說明可看。
+  final List<SpeciesTrait> traits;
   const _DescCard({
     required this.title,
     required this.body,
     required this.chips,
+    this.traits = const [],
   });
   @override
   Widget build(BuildContext context) {
@@ -2773,10 +2801,67 @@ class _DescCard extends StatelessWidget {
                     ),
                   ),
                 ),
+              for (final t in traits) _TraitChip(trait: t),
             ],
           ),
         ],
       ),
+    );
+  }
+}
+
+/// 特性 chip：有說明時可點開，無說明時不給可點擊的視覺提示
+/// （避免留下按了沒反應的目標）。
+class _TraitChip extends StatelessWidget {
+  final SpeciesTrait trait;
+  const _TraitChip({required this.trait});
+
+  @override
+  Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+    final hasDetail = trait.description.isNotEmpty;
+
+    final chip = Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: surfaces.surface2,
+        borderRadius: BorderRadius.circular(6),
+        border: hasDetail
+            ? Border.all(color: AppColors.goldDim.withValues(alpha: 0.6))
+            : null,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            trait.name,
+            style: const TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 11,
+              color: AppColors.accentGold,
+            ),
+          ),
+          if (hasDetail) ...[
+            const SizedBox(width: 3),
+            const Icon(Icons.info_outline, size: 11, color: AppColors.goldDim),
+          ],
+        ],
+      ),
+    );
+
+    if (!hasDetail) return chip;
+    return GestureDetector(
+      onTap: () => showFeatureDetail(
+        context,
+        name: trait.name,
+        nameEn: trait.nameEn,
+        description: trait.description,
+      ),
+      behavior: HitTestBehavior.opaque,
+      child: chip,
     );
   }
 }
