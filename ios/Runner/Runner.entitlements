@@ -3,9 +3,12 @@
 <plist version="1.0">
 <dict>
 	<!-- Universal Link：分享連結（/v/ 角色卡、/s/ homebrew）直接開 App。
-	     網域驗證檔：web/.well-known/apple-app-site-association -->
+	     網域驗證檔：web/.well-known/apple-app-site-association
+	     主網域為 code4soul.dev；pages.dev 一併列入，讓舊連結仍能開 App。
+	     兩個網域由同一個 Pages 專案供應，AASA 內容相同。 -->
 	<key>com.apple.developer.associated-domains</key>
 	<array>
+		<string>applinks:lorebook.code4soul.dev</string>
 		<string>applinks:lorebook-1om.pages.dev</string>
 	</array>
 </dict>

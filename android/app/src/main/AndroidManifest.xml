@@ -27,7 +27,22 @@
             </intent-filter>
             <!-- App Link：分享連結（/v/ 角色卡、/s/ homebrew）直接開 App。
                  未安裝時由瀏覽器落到 web 版同一頁。
-                 網域驗證檔：web/.well-known/assetlinks.json -->
+                 網域驗證檔：web/.well-known/assetlinks.json（兩個網域同一份）。
+                 兩網域刻意分成獨立 intent-filter：Android 12+ 對單一
+                 intent-filter 內的所有 host 採全有全無驗證，分開才不會
+                 因為其中一個驗證失敗而拖垮另一個。 -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https"
+                      android:host="lorebook.code4soul.dev"
+                      android:pathPrefix="/v/"/>
+                <data android:scheme="https"
+                      android:host="lorebook.code4soul.dev"
+                      android:pathPrefix="/s/"/>
+            </intent-filter>
+            <!-- 底層 pages.dev：舊連結仍能開 App -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>

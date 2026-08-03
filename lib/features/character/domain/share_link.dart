@@ -8,9 +8,12 @@ const String kSharePathPrefix = '/v';
 
 /// web 版網域。原生端以編譯期參數覆寫（`--dart-define=WEB_BASE_URL=…`）；
 /// web 端直接沿用當前 origin，本機開發與正式站都不必改設定。
+///
+/// 預設為主網域而非底層的 `lorebook-1om.pages.dev`——deep link 的網域驗證
+/// （AASA／assetlinks）綁在連結實際使用的網域上，兩邊不一致就驗不過。
 const String _kWebBaseUrl = String.fromEnvironment(
   'WEB_BASE_URL',
-  defaultValue: 'https://lorebook-1om.pages.dev',
+  defaultValue: 'https://lorebook.code4soul.dev',
 );
 
 String get _base => kIsWeb ? Uri.base.origin : _kWebBaseUrl;
