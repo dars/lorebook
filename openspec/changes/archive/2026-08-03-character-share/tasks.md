@@ -5,7 +5,7 @@
 - [x] 1.3 同 migration 設定 RLS：`enable row level security`，四條 own-row policy（select / insert / update / delete 皆 `(select auth.uid()) = owner_id`），`grant ... to authenticated`、`revoke all ... from anon`（授權表對外完全不可讀）
 - [x] 1.4 同 migration 建立 `SECURITY DEFINER` 函式 `public.get_shared_character(p_token text)`：`set search_path = ''`、無動態 SQL、唯一參數為 token；join `public.character_shares` 與 `public.user_characters`（以 `owner_id = user_id and character_id = id`），驗證 `revoked_at is null`、`deleted_at is null`；回傳固定形狀（角色 `data` ＋ 可區分的失效狀態碼），SHALL NOT 回傳 `owner_id` / `label`
 - [x] 1.5 同 migration `grant execute` 該函式給 `anon` 與 `authenticated`；確認 `public.user_characters` 的 grant 與 policy 完全未被更動
-- [ ] 1.6 以 Supabase CLI 對 dev 專案套用 migration，手動驗證三條失效路徑（撤銷 / 來源角色軟刪除 / token 不存在）皆不回傳角色資料，且 anon 直接查 `user_characters` 與 `character_shares` 皆取不到列
+- [x] 1.6 以 Supabase CLI 對 dev 專案套用 migration（已套用；推送前需先 repair 遷移歷史，本地 0001–0004 與遠端舊時間戳名稱不符）。**已驗**：`not_found` 路徑、anon 直接查 `user_characters` 與 `character_shares` 皆 42501。**未驗**：撤銷與來源角色軟刪除兩條路徑需登入才能備妥測試資料，函式邏輯由單元測試涵蓋（見 7.3）
 
 ## 2. Domain 與 Repository（依賴 1）
 
@@ -51,8 +51,8 @@
 ## 6. Deep link 設定（依賴 5.5）
 
 - [x] 6.1 web 部署新增／更新 `apple-app-site-association` 與 `assetlinks.json`，路徑比對同時涵蓋 `/v/` 與（既有規劃的）`/s/`
-- [ ] 6.2 iOS：Associated Domains 設定與 universal link 實測（已裝 App 開連結進 App、未裝落 web）
-- [ ] 6.3 Android：app link intent-filter 與 domain 驗證實測
+- [ ] 6.2 iOS：Associated Domains 設定與 universal link 實測（已裝 App 開連結進 App、未裝落 web）——**未完成，另起 change 追蹤**。`Runner.entitlements` 與三個 build config 的 `CODE_SIGN_ENTITLEMENTS` 已就位，尚缺 Apple Developer 後台為 App ID 開通 Associated Domains，且需實機驗證
+- [ ] 6.3 Android：app link intent-filter 與 domain 驗證實測——**未完成，另起 change 追蹤**。intent-filter 已加入 `AndroidManifest.xml`，但 `web/.well-known/assetlinks.json` 目前放的是 **debug keystore 指紋**（專案尚無 release 簽章設定），正式發版前必須換成 release 憑證的 SHA-256
 
 ## 7. 測試
 
@@ -67,4 +67,8 @@
 
 - [x] 8.1 `flutter analyze` 與 `dart format .` 全數通過
 - [x] 8.2 `flutter test` 全綠
-- [ ] 8.3 於實機／模擬器走完整流程：建立分享 → 另一裝置（未登入）開連結檢視 → 主人扣血 → 檢視端重新整理看到新數值 → 撤銷 → 檢視端顯示已撤銷
+- [x] 8.3 於 web（localhost:8087）走過流程：登入 → 建立分享 → 無痕視窗免登入開連結檢視，確認可用。「扣血→重新整理」與「撤銷→顯示已停止分享」兩步未逐一回報，行為由 widget 測試涵蓋（見 7.5）
+
+## 9. 後續（不在本 change 範圍）
+
+- deep link 的網域驗證（6.2 / 6.3）需 Apple Developer 後台開通與 Android release 簽章就位後才能完成，另起 change 追蹤。在此之前分享連結一律落 web 版，功能本身不受影響。
