@@ -75,6 +75,11 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
   _AbilityMethod _method = _AbilityMethod.array;
   bool _abilitiesInit = false;
 
+  /// 取值方式詳解是否展開。預設收合——能力值這步的主體是六列數值，
+  /// 說明不該喧賓奪主；切換方式時保留展開狀態（正在讀說明的人會想
+  /// 逐一比較三種方式）。
+  bool _methodDetail = false;
+
   /// 背景加值（由建議帶入、頁首說明，不在此頁編輯）。
   String _bonusMode = '2/1';
   String? _plus2;
@@ -823,6 +828,8 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         AbilityHexChart(values: _realHexValues),
         const SizedBox(height: AppSpacing.md),
         _methodTabs(),
+        const SizedBox(height: AppSpacing.sm),
+        _methodExplain(),
         const SizedBox(height: AppSpacing.md),
         _bonusExplain(),
         const SizedBox(height: AppSpacing.md),
@@ -876,6 +883,469 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           if (e.key != _AbilityMethod.roll) const SizedBox(width: 6),
         ],
       ],
+    );
+  }
+
+  /// 三種取值方式的說明：一行摘要常駐，詳解點開才展開。
+  ///
+  /// 標準陣列／購點／擲骰對沒跑過團的人是空詞，只給 tab 名稱等於要他先去
+  /// 查規則書。摘要回答「是什麼」，展開後回答「怎麼操作」與「適合誰」——
+  /// 後者才是新手真正卡住的問題。
+  Widget _methodExplain() {
+    final (icon, summary) = switch (_method) {
+      _AbilityMethod.array => (Icons.format_list_numbered, '六個固定數值，你決定誰拿哪個'),
+      _AbilityMethod.buy => (Icons.toll, '六項都從 8 起跳，用 $kPointBuyBudget 點買高'),
+      _AbilityMethod.roll => (Icons.casino_outlined, '擲 4d6，去掉最低的一顆，重複六次'),
+    };
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: _surfaces.surface1,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: _surfaces.border2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () => setState(() => _methodDetail = !_methodDetail),
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: 11,
+              ),
+              child: Row(
+                children: [
+                  Icon(icon, size: 15, color: AppColors.accentGold),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      summary,
+                      style: TextStyle(
+                        fontFamily: 'NotoSerifTC',
+                        fontSize: 11,
+                        color: _surfaces.textLight,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    '怎麼用',
+                    style: const TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 11,
+                      color: AppColors.accentGold,
+                    ),
+                  ),
+                  Icon(
+                    _methodDetail ? Icons.expand_less : Icons.expand_more,
+                    size: 16,
+                    color: AppColors.accentGold,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_methodDetail) ...[
+            Divider(height: 1, color: _surfaces.border2),
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ..._methodVisual(),
+                  const SizedBox(height: AppSpacing.md),
+                  ..._methodSteps(),
+                  const SizedBox(height: AppSpacing.sm),
+                  _methodFitFor(),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// 每種方式的圖解——比文字描述省一次腦內換算。
+  List<Widget> _methodVisual() {
+    switch (_method) {
+      case _AbilityMethod.array:
+        // 直接反映實際狀態：金框＝還沒用，灰＝已指派給某個能力。
+        return [
+          Row(
+            children: [
+              for (final v in kStandardArray) ...[
+                Expanded(child: _arrayValueChip(v, used: !_pool.contains(v))),
+                if (v != kStandardArray.last) const SizedBox(width: 6),
+              ],
+            ],
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              _chipLegend(used: false, label: '還沒用'),
+              const SizedBox(width: 14),
+              _chipLegend(used: true, label: '已指派'),
+            ],
+          ),
+        ];
+      case _AbilityMethod.buy:
+        return [_pointCostTable()];
+      case _AbilityMethod.roll:
+        return [_rollDemo()];
+    }
+  }
+
+  Widget _arrayValueChip(int v, {required bool used}) => Container(
+    height: 34,
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+      color: used
+          ? _surfaces.surface2
+          : AppColors.accentGold.withValues(alpha: 0.12),
+      borderRadius: BorderRadius.circular(6),
+      border: Border.all(
+        color: used ? _surfaces.border2 : AppColors.accentGold,
+      ),
+    ),
+    child: Text(
+      '$v',
+      style: TextStyle(
+        fontFamily: 'Cinzel',
+        fontSize: 16,
+        fontWeight: FontWeight.w700,
+        color: used ? _surfaces.textSecondary : AppColors.accentGold,
+      ),
+    ),
+  );
+
+  Widget _chipLegend({required bool used, required String label}) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(
+        width: 9,
+        height: 9,
+        decoration: BoxDecoration(
+          color: used
+              ? _surfaces.surface2
+              : AppColors.accentGold.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(2),
+          border: Border.all(
+            color: used ? _surfaces.border2 : AppColors.accentGold,
+          ),
+        ),
+      ),
+      const SizedBox(width: 5),
+      Text(
+        label,
+        style: TextStyle(
+          fontFamily: 'NotoSerifTC',
+          fontSize: 10,
+          color: _surfaces.textSecondary,
+        ),
+      ),
+    ],
+  );
+
+  /// 購點成本表。級距與數值全部由 [kPointBuyCost] 生成，改規則不必動文案。
+  Widget _pointCostTable() {
+    final scores = kPointBuyCost.keys.toList()..sort();
+    // 邊際成本 > 1 的分數（14、15）標金色——「哪裡開始變貴」是這張表的重點。
+    bool pricey(int s) {
+      final prev = kPointBuyCost[s - 1];
+      if (prev == null) return false;
+      return (kPointBuyCost[s]! - prev) > 1;
+    }
+
+    Widget cell(String text, {required bool highlight, required bool isCost}) =>
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            alignment: Alignment.center,
+            color: highlight
+                ? AppColors.accentGold.withValues(alpha: 0.08)
+                : null,
+            child: Text(
+              text,
+              style: TextStyle(
+                fontFamily: 'Cinzel',
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: highlight
+                    ? AppColors.accentGold
+                    : (isCost ? _surfaces.textSecondary : _surfaces.textLight),
+              ),
+            ),
+          ),
+        );
+
+    Widget rowLabel(String text) => SizedBox(
+      width: 52,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontFamily: 'NotoSerifTC',
+            fontSize: 10,
+            color: AppColors.sectionLabel,
+          ),
+        ),
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(color: _surfaces.border2),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              Container(
+                color: _surfaces.surface2,
+                child: Row(
+                  children: [
+                    rowLabel('分數'),
+                    for (final s in scores)
+                      cell('$s', highlight: pricey(s), isCost: false),
+                  ],
+                ),
+              ),
+              Divider(height: 1, color: _surfaces.border2),
+              Row(
+                children: [
+                  rowLabel('累計花費'),
+                  for (final s in scores)
+                    cell(
+                      '${kPointBuyCost[s]}',
+                      highlight: pricey(s),
+                      isCost: true,
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          '金色兩格＝變貴的地方：14 與 15 每加 1 分要 2 點，其餘每分 1 點。',
+          style: TextStyle(
+            fontFamily: 'NotoSerifTC',
+            fontSize: 10,
+            height: 1.5,
+            color: _surfaces.textSecondary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 擲骰示範：把「4d6 去最低」用一次實例演完。
+  Widget _rollDemo() {
+    Widget die(int v, {required bool dropped}) => Container(
+      width: 34,
+      height: 34,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: dropped
+            ? _surfaces.surface2
+            : AppColors.accentGold.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(7),
+        border: Border.all(
+          color: dropped ? _surfaces.border2 : AppColors.accentGold,
+        ),
+      ),
+      child: Text(
+        '$v',
+        style: TextStyle(
+          fontFamily: 'Cinzel',
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+          color: dropped ? _surfaces.textSecondary : AppColors.accentGold,
+          decoration: dropped ? TextDecoration.lineThrough : null,
+          decorationColor: _surfaces.textSecondary,
+        ),
+      ),
+    );
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(11),
+      decoration: BoxDecoration(
+        color: _surfaces.surface2,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '一次的樣子',
+            style: const TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 10,
+              color: AppColors.sectionLabel,
+            ),
+          ),
+          const SizedBox(height: 7),
+          Row(
+            children: [
+              die(6, dropped: false),
+              const SizedBox(width: 7),
+              die(4, dropped: false),
+              const SizedBox(width: 7),
+              die(3, dropped: false),
+              const SizedBox(width: 7),
+              die(2, dropped: true),
+              const SizedBox(width: 7),
+              Icon(
+                Icons.arrow_forward,
+                size: 15,
+                color: _surfaces.textSecondary,
+              ),
+              const SizedBox(width: 7),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 7,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.accentGold.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(7),
+                  border: Border.all(color: AppColors.accentGold),
+                ),
+                child: const Text(
+                  '13',
+                  style: TextStyle(
+                    fontFamily: 'Cinzel',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.accentGold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 7),
+          Text(
+            '擲出 6、4、3、2 → 去掉最低的 2 → 6＋4＋3 ＝ 13。這樣做六次，得到六個值。',
+            style: TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 10,
+              height: 1.55,
+              color: _surfaces.textSecondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 編號操作步驟。
+  List<Widget> _methodSteps() {
+    final steps = switch (_method) {
+      _AbilityMethod.array => [
+        '點能力右邊的下拉，從還沒用的值裡挑一個。',
+        '挑到已被別的能力用走的值，兩者會自動對調——不會卡住。',
+        '「套用建議」依你選的職業自動排好，排完仍可自己改。',
+      ],
+      _AbilityMethod.buy => [
+        '用能力右邊的 ＋／− 加減，上方進度條顯示還剩幾點。',
+        '上限 15；種族與背景加值是之後才加，不受這個上限限制。',
+        '數值可以重複，點數也不必花完。',
+      ],
+      _AbilityMethod.roll => [
+        'App 不代擲——用實體骰或你習慣的擲骰工具擲完，再填進欄位。',
+        '哪個結果放哪個能力由你決定，填完就是最終的基礎值。',
+        '理論範圍 3–18，但六項全高或全低都可能發生。',
+      ],
+    };
+
+    return [
+      for (var i = 0; i < steps.length; i++)
+        Padding(
+          padding: EdgeInsets.only(bottom: i == steps.length - 1 ? 0 : 7),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 16,
+                height: 16,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.accentGold.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.goldDim),
+                ),
+                child: Text(
+                  '${i + 1}',
+                  style: const TextStyle(
+                    fontFamily: 'Cinzel',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.accentGold,
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  steps[i],
+                  style: TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 11,
+                    height: 1.55,
+                    color: _surfaces.textLight,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+    ];
+  }
+
+  /// 「適合誰」——新手真正卡住的是選哪一種，不是每種是什麼。
+  Widget _methodFitFor() {
+    final text = switch (_method) {
+      _AbilityMethod.array => '適合：第一次建角、想快點開始跑。所有人起點一樣，不會有人特別強或特別弱。',
+      _AbilityMethod.buy => '適合：想自己精算取捨的人。可以刻意壓低用不到的能力，換兩項特別突出。',
+      _AbilityMethod.roll => '適合：接受運氣、想要角色有意外性的人。三種裡唯一可能大好大壞，開團前先問過 DM。',
+    };
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.accentGold.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.how_to_reg_outlined,
+            size: 13,
+            color: AppColors.accentGold,
+          ),
+          const SizedBox(width: 7),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontFamily: 'NotoSerifTC',
+                fontSize: 11,
+                height: 1.55,
+                color: _surfaces.textLight,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -959,27 +1429,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
     ),
     const SizedBox(height: AppSpacing.md),
     for (final code in kAbilityOrder) _abilityRowFrame(code, _buyControl(code)),
-    const SizedBox(height: AppSpacing.sm),
-    Text(
-      '六項由 8 起，花點數買高（最高 15，可重複）',
-      style: TextStyle(
-        fontFamily: 'NotoSerifTC',
-        fontSize: 11,
-        color: _surfaces.textSecondary,
-      ),
-    ),
   ];
 
   List<Widget> _rollBody() => [
-    Text(
-      '自行擲 4d6 去最低 ×6，將結果填入（App 不代擲）',
-      style: TextStyle(
-        fontFamily: 'NotoSerifTC',
-        fontSize: 11,
-        color: _surfaces.textSecondary,
-      ),
-    ),
-    const SizedBox(height: AppSpacing.md),
     for (final code in kAbilityOrder)
       _abilityRowFrame(code, _rollControl(code)),
   ];
