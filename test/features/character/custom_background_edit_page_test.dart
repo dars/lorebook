@@ -64,6 +64,16 @@ void main() {
   bool saveEnabled(WidgetTester tester) =>
       tester.widget<FilledButton>(find.byType(FilledButton)).onPressed != null;
 
+  testWidgets('編輯頁載明 2024 版的背景建構規則（規則依據，非 App 自訂限制）', (tester) async {
+    await pump(tester);
+
+    expect(find.text('2024 版的背景建構規則'), findsOneWidget);
+    expect(find.textContaining('三個能力值加值候選'), findsOneWidget);
+    expect(find.textContaining('兩個固定技能'), findsOneWidget);
+    expect(find.textContaining('一個起源專長'), findsOneWidget);
+    expect(find.textContaining('不是這個 App 自訂的限制'), findsOneWidget);
+  });
+
   testWidgets('未填妥時儲存不可用；填妥後可儲存並寫入 repository', (tester) async {
     final router = await pump(tester);
     expect(saveEnabled(tester), isFalse);
@@ -71,10 +81,14 @@ void main() {
     await tester.enterText(find.byType(TextField).first, '獵人');
     // 能力區在技能區之前，用 .first 避免「感知」等同字撞名
     for (final label in ['敏捷', '體質', '魅力']) {
+      await tester.ensureVisible(find.text(label).first);
+      await tester.pumpAndSettle();
       await tester.tap(find.text(label).first);
       await tester.pump();
     }
     for (final label in ['隱匿', '求生', '警覺']) {
+      await tester.ensureVisible(find.text(label).last);
+      await tester.pumpAndSettle();
       await tester.tap(find.text(label).last);
       await tester.pump();
     }
@@ -95,13 +109,19 @@ void main() {
     await pump(tester);
     await tester.enterText(find.byType(TextField).first, 'X');
     for (final label in ['力量', '敏捷', '體質']) {
+      await tester.ensureVisible(find.text(label).last);
+      await tester.pumpAndSettle();
       await tester.tap(find.text(label).last);
       await tester.pump();
     }
     // 第 4 個能力（智力）已達上限，點了不生效
+    await tester.ensureVisible(find.text('智力').last);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('智力').last);
     await tester.pump();
     for (final label in ['隱匿', '求生', '警覺']) {
+      await tester.ensureVisible(find.text(label).last);
+      await tester.pumpAndSettle();
       await tester.tap(find.text(label).last);
       await tester.pump();
     }

@@ -125,6 +125,8 @@ class _CustomBackgroundEditPageState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        const _RulesNotice(),
+                        const SizedBox(height: AppSpacing.lg),
                         _label('名稱'),
                         TextField(
                           controller: _name,
@@ -306,6 +308,108 @@ class _MultiChips extends StatelessWidget {
                 : surfaces.textPrimary.withValues(alpha: 0.35),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// 自訂背景的規則依據。
+///
+/// 2024 版對背景給了明文的建構框架，這與自訂種族不同（種族沒有對等的官方
+/// 規則，屬社群 homebrew）——講清楚依據，使用者才知道自己做的東西站得住腳。
+class _RulesNotice extends StatelessWidget {
+  const _RulesNotice();
+
+  static const _lines = [
+    (Icons.trending_up, '三個能力值加值候選', '建角時自這三項分配 +2/+1 或 +1/+1/+1。'),
+    (Icons.school_outlined, '兩個固定技能', '選定後即為該背景的熟練，建角自動帶入。'),
+    (Icons.auto_awesome, '一個起源專長', '自 SRD 起源專長中選擇。'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.accentGold.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
+        border: Border.all(color: AppColors.goldDim),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.menu_book_outlined,
+                size: 16,
+                color: AppColors.accentGold,
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  '2024 版的背景建構規則',
+                  style: TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: surfaces.textPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          for (final (icon, title, desc) in _lines)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(icon, size: 14, color: surfaces.textSecondary),
+                  const SizedBox(width: 7),
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: title,
+                            style: TextStyle(
+                              fontFamily: 'NotoSerifTC',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: surfaces.textLight,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '　$desc',
+                            style: TextStyle(
+                              fontFamily: 'NotoSerifTC',
+                              fontSize: 12,
+                              height: 1.5,
+                              color: surfaces.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          const SizedBox(height: 2),
+          Text(
+            '這是 2024 版規則明文允許的建構方式，不是這個 App 自訂的限制。'
+            '能力值加值來自背景而非種族，是 2024 版與舊版最大的差異之一。',
+            style: TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 11,
+              height: 1.55,
+              color: surfaces.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }
