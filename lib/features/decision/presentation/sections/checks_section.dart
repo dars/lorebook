@@ -11,7 +11,11 @@ import '../../../../features/character/domain/character_providers.dart';
 import '../../../../shared/presentation/widgets/ability_card.dart';
 
 class ChecksSection extends ConsumerStatefulWidget {
-  const ChecksSection({super.key});
+  /// 指定角色時以其呈現（分享檢視頁）；null 則為當前角色。
+  /// 本區段的互動僅有 tab 切換與選取項目（純 UI 狀態），無寫入。
+  final Character? character;
+
+  const ChecksSection({super.key, this.character});
 
   @override
   ConsumerState<ChecksSection> createState() => _ChecksSectionState();
@@ -78,7 +82,8 @@ class _ChecksSectionState extends ConsumerState<ChecksSection> {
 
   @override
   Widget build(BuildContext context) {
-    final character = ref.watch(currentCharacterProvider);
+    final Character character =
+        widget.character ?? ref.watch(currentCharacterProvider);
 
     final abilities = [
       ('力量', 'Strength', 'STR', character.abilityScores.str),

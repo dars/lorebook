@@ -11,7 +11,9 @@ import '../../../auth/domain/guest_mode.dart';
 import '../../data/portrait_service.dart';
 import '../../domain/character.dart';
 import '../../domain/character_providers.dart';
+import '../read_only_scope.dart';
 import '../widgets/editor_sheet.dart';
+import '../widgets/share_section.dart';
 import '../widgets/portrait_transform.dart';
 import '../widgets/info_field.dart';
 
@@ -22,6 +24,7 @@ class OverviewTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final readOnly = ReadOnlyScope.of(context);
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
         AppSpacing.lg,
@@ -35,15 +38,18 @@ class OverviewTab extends StatelessWidget {
           _Hero(character: character),
           CollapsibleSection(
             title: 'BASIC 基本資訊',
-            trailing: SectionEditIcon(
-              onTap: () => _showBasicInfoEditor(context, character),
-            ),
+            trailing: readOnly
+                ? null
+                : SectionEditIcon(
+                    onTap: () => _showBasicInfoEditor(context, character),
+                  ),
             child: _InfoGrid(character: character),
           ),
           CollapsibleSection(
             title: 'STATS 戰鬥數值',
             child: _StatCards(character: character),
           ),
+          if (!readOnly) ShareSection(character: character),
         ],
       ),
     );
@@ -188,9 +194,9 @@ class _HeroState extends ConsumerState<_Hero> {
   /// 試玩模式：上傳需登入（Storage），直接提醒不進流程。
   void _onEdit() {
     if (ref.read(guestModeProvider)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('試玩模式不提供上傳角色圖，登入後即可自訂')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('試玩模式不提供上傳角色圖，登入後即可自訂')));
       return;
     }
     if (widget.character.portraitUrl.isEmpty) {
@@ -432,7 +438,8 @@ class _HeroState extends ConsumerState<_Hero> {
                 ),
               ),
             // 編輯鈕（右上角）：上傳 / 更換 / 移除角色圖
-            if (!_adjusting)
+            // 唯讀（分享檢視）時不渲染——立繪僅供觀看。
+            if (!_adjusting && !ReadOnlyScope.of(context))
               Positioned(
                 top: AppSpacing.md,
                 right: AppSpacing.md,

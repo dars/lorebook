@@ -31,8 +31,7 @@ class CharacterSelectPage extends ConsumerWidget {
     });
     final characters = ref.watch(characterListProvider);
     final isGuest = ref.watch(guestModeProvider);
-    final isSyncing =
-        !isGuest && ref.watch(remoteCharactersProvider).isLoading;
+    final isSyncing = !isGuest && ref.watch(remoteCharactersProvider).isLoading;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -88,10 +87,8 @@ class CharacterSelectPage extends ConsumerWidget {
                                 onTap: () => onCharacterSelected(c.id),
                                 // 試玩模式不開放刪除：避免訪客把範例角色刪光。
                                 onLongPress: isGuest
-                                    ? () =>
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
+                                    ? () => ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                             const SnackBar(
                                               content: Text('試玩模式無法刪除角色'),
                                             ),

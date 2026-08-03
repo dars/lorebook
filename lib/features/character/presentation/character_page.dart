@@ -16,7 +16,11 @@ import 'widgets/character_tab_bar.dart';
 /// compact/medium 五 tab 單欄（medium 置中限寬）；expanded（iPad 橫向）
 /// 總覽常駐左欄、右欄為其餘四 tab 的分頁區。
 class CharacterPage extends ConsumerStatefulWidget {
-  const CharacterPage({super.key});
+  /// 指定角色時以其驅動全部分頁（分享檢視頁用）；null 則為當前角色。
+  /// 檢視他人的角色卡不會讀取或改變「當前角色」狀態。
+  final Character? character;
+
+  const CharacterPage({super.key, this.character});
 
   @override
   ConsumerState<CharacterPage> createState() => _CharacterPageState();
@@ -81,7 +85,8 @@ class _CharacterPageState extends ConsumerState<CharacterPage> {
   }
 
   Widget _tabbedColumn() {
-    final character = ref.watch(currentCharacterProvider);
+    final Character character =
+        widget.character ?? ref.watch(currentCharacterProvider);
     final showSpells = _showSpells(character);
     final tabs = ['總覽', '屬性', if (showSpells) '法術', '物品', '傳記'];
     _index = _clampIndex(_index, tabs.length, _pageController);
@@ -113,7 +118,8 @@ class _CharacterPageState extends ConsumerState<CharacterPage> {
   }
 
   Widget _twoColumn() {
-    final character = ref.watch(currentCharacterProvider);
+    final Character character =
+        widget.character ?? ref.watch(currentCharacterProvider);
     final showSpells = _showSpells(character);
     // expanded 右欄（總覽常駐左欄）。
     final detailTabs = ['屬性', if (showSpells) '法術', '物品', '傳記'];

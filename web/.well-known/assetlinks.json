@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "dev.code4soul.lorebook",
+      "sha256_cert_fingerprints": [
+        "FC:39:A7:0E:F1:8E:C4:AB:40:49:B0:57:0A:F4:CB:DF:82:B3:84:7B:55:78:45:9D:5B:71:8A:A4:93:82:0E:B3"
+      ]
+    }
+  }
+]

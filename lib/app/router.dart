@@ -14,7 +14,9 @@ import '../features/character/presentation/character_create_page.dart';
 import '../features/character/presentation/character_level_up_page.dart';
 import '../features/character/presentation/character_page.dart';
 import '../features/character/presentation/character_select_page.dart';
+import '../features/character/domain/share_link.dart';
 import '../features/character/presentation/custom_background_edit_page.dart';
+import '../features/character/presentation/shared_character_view_page.dart';
 import '../features/decision/presentation/decision_page.dart';
 import '../features/journal/presentation/journal_page.dart';
 import '../features/system/presentation/system_page.dart';
@@ -33,6 +35,40 @@ bool get _isSupabaseInitialized {
   }
 }
 
+/// 導向決策（純函式，與 Supabase／Riverpod 解耦以便測試）。
+///
+/// 分享檢視豁免 auth guard：掃碼的人可能沒裝 App、沒帳號，要求註冊才能看
+/// 一眼角色卡，摩擦遠大於收益（design D4）。已登入者同樣停在此路由，
+/// 不被導回角色選擇。
+@visibleForTesting
+String? authRedirectFor({
+  required String location,
+  required bool isLoggedIn,
+  required String? selectedCharacterId,
+}) {
+  if (location.startsWith('$kSharePathPrefix/')) return null;
+
+  final isAuthRoute = location.startsWith('/auth');
+  final isCharSelect = location == '/character-select';
+  final isCreate = location == '/character-create';
+  // 建角流程可開自訂背景編輯頁，此時可能尚未選定角色。
+  final isBgEdit = location == '/custom-background-edit';
+
+  if (!isLoggedIn && !isAuthRoute) return '/auth/login';
+  if (isLoggedIn && isAuthRoute) {
+    return selectedCharacterId != null ? '/main/decision' : '/character-select';
+  }
+  if (isLoggedIn &&
+      !isCharSelect &&
+      !isCreate &&
+      !isBgEdit &&
+      selectedCharacterId == null) {
+    return '/character-select';
+  }
+
+  return null;
+}
+
 final routerProvider = Provider<GoRouter>((ref) {
   final authNotifier = _isSupabaseInitialized
       ? _AuthNotifier()
@@ -47,29 +83,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       final devBypass = ref.read(devBypassAuthProvider);
       final guest = ref.read(guestModeProvider);
       final session = Supabase.instance.client.auth.currentSession;
-      final isLoggedIn = session != null || devBypass || guest;
-      final isAuthRoute = state.matchedLocation.startsWith('/auth');
-      final isCharSelect = state.matchedLocation == '/character-select';
-      final isCreate = state.matchedLocation == '/character-create';
-      // 建角流程可開自訂背景編輯頁，此時可能尚未選定角色。
-      final isBgEdit = state.matchedLocation == '/custom-background-edit';
-      final selectedChar = ref.read(selectedCharacterIdProvider);
 
-      if (!isLoggedIn && !isAuthRoute) return '/auth/login';
-      if (isLoggedIn && isAuthRoute) {
-        return selectedChar != null ? '/main/decision' : '/character-select';
-      }
-      if (isLoggedIn &&
-          !isCharSelect &&
-          !isCreate &&
-          !isBgEdit &&
-          selectedChar == null) {
-        if (!state.matchedLocation.startsWith('/auth')) {
-          return '/character-select';
-        }
-      }
-
-      return null;
+      return authRedirectFor(
+        location: state.matchedLocation,
+        isLoggedIn: session != null || devBypass || guest,
+        selectedCharacterId: ref.read(selectedCharacterIdProvider),
+      );
     },
     routes: [
       GoRoute(
@@ -99,6 +118,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/custom-background-edit',
         builder: (context, state) =>
             CustomBackgroundEditPage(initial: state.extra as CustomBackground?),
+      ),
+      // 分享檢視（deep link 入口）。前綴與 homebrew 分享的 /s/ 錯開。
+      GoRoute(
+        path: '$kSharePathPrefix/:token',
+        builder: (context, state) =>
+            SharedCharacterViewPage(token: state.pathParameters['token']!),
       ),
       GoRoute(
         path: '/character-level-up',

@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["456MTF63LX.dev.code4soul.lorebook"],
+        "components": [
+          { "/": "/v/*", "comment": "角色卡分享檢視" },
+          { "/": "/s/*", "comment": "homebrew 分享（規劃中，先納入路徑比對）" }
+        ]
+      }
+    ]
+  }
+}

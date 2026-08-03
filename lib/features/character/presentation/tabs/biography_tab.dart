@@ -8,6 +8,7 @@ import '../../../../app/theme/surface_colors.dart';
 import '../../domain/character.dart';
 import '../../domain/character_providers.dart';
 import '../../domain/derived_stats.dart';
+import '../read_only_scope.dart';
 import '../widgets/editor_sheet.dart';
 
 class BiographyTab extends ConsumerWidget {
@@ -17,6 +18,7 @@ class BiographyTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final readOnly = ReadOnlyScope.of(context);
     final p = character.personality;
     final hasPersonality =
         p.traits.isNotEmpty ||
@@ -36,16 +38,20 @@ class BiographyTab extends ConsumerWidget {
         children: [
           CollapsibleSection(
             title: 'ABOUT 其人其事',
-            trailing: SectionEditIcon(
-              onTap: () => _showAboutEditor(context, character),
-            ),
+            trailing: readOnly
+                ? null
+                : SectionEditIcon(
+                    onTap: () => _showAboutEditor(context, character),
+                  ),
             child: _About(character: character),
           ),
           CollapsibleSection(
             title: 'PERSONALITY 性格',
-            trailing: SectionEditIcon(
-              onTap: () => _showPersonalityEditor(context, p),
-            ),
+            trailing: readOnly
+                ? null
+                : SectionEditIcon(
+                    onTap: () => _showPersonalityEditor(context, p),
+                  ),
             child: ParchmentCard(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.lg,

@@ -4,14 +4,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/decorations.dart';
 import '../../../../app/theme/surface_colors.dart';
+import '../../../../features/character/domain/character.dart';
 import '../../../../features/character/domain/character_providers.dart';
 
 class MovementSection extends ConsumerWidget {
-  const MovementSection({super.key});
+  /// 指定角色時以其呈現（分享檢視頁）；null 則為當前角色。
+  final Character? character;
+
+  const MovementSection({super.key, this.character});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final character = ref.watch(currentCharacterProvider);
+    final Character character =
+        this.character ?? ref.watch(currentCharacterProvider);
 
     final speedNum =
         int.tryParse(character.speed.replaceAll(RegExp(r'[^0-9]'), '')) ?? 30;

@@ -12,15 +12,24 @@ import '../../../../features/catalog/presentation/fivetools_renderer.dart';
 import '../../../../features/character/domain/character.dart';
 import '../../../../features/character/domain/character_providers.dart';
 import '../../../../features/character/domain/derived_stats.dart';
+import '../../../../features/character/presentation/read_only_scope.dart';
 import '../../domain/conditions_catalog.dart';
 
 class StatusSection extends ConsumerWidget {
-  const StatusSection({super.key});
+  /// 指定角色時以其呈現（分享檢視頁）；null 則為當前角色。
+  final Character? character;
+
+  const StatusSection({super.key, this.character});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final character = ref.watch(currentCharacterProvider);
-    final notifier = ref.read(currentCharacterProvider.notifier);
+    final readOnly = ReadOnlyScope.of(context);
+    final Character character =
+        this.character ?? ref.watch(currentCharacterProvider);
+    // 唯讀時連 notifier 都不取——檢視他人的卡不碰自己的當前角色狀態。
+    final notifier = readOnly
+        ? null
+        : ref.read(currentCharacterProvider.notifier);
     final dividerColor = Theme.of(context).colorScheme.outline;
 
     return CollapsibleSection(
@@ -38,19 +47,30 @@ class StatusSection extends ConsumerWidget {
                   Expanded(
                     child: _HpColumn(
                       character: character,
-                      onMinus: () => notifier.adjustHp(-1),
-                      onPlus: () => notifier.adjustHp(1),
-                      onTapShield: () =>
-                          _showTempHpDialog(context, ref, character.tempHp),
+                      onMinus: notifier == null
+                          ? null
+                          : () => notifier.adjustHp(-1),
+                      onPlus: notifier == null
+                          ? null
+                          : () => notifier.adjustHp(1),
+                      onTapShield: readOnly
+                          ? null
+                          : () => _showTempHpDialog(
+                              context,
+                              ref,
+                              character.tempHp,
+                            ),
                     ),
                   ),
                   _vDivider(dividerColor),
-                  const _AcShield(),
+                  _AcShield(character: character),
                   _vDivider(dividerColor),
                   Expanded(
                     child: _ConcentrationColumn(
                       character: character,
-                      onTap: () => _onTapConcentration(context, ref, character),
+                      onTap: readOnly
+                          ? null
+                          : () => _onTapConcentration(context, ref, character),
                     ),
                   ),
                 ],
@@ -63,7 +83,9 @@ class StatusSection extends ConsumerWidget {
               _ConditionsRow(
                 character: character,
                 notifier: notifier,
-                onEdit: () => _showConditionsSheet(context, ref),
+                onEdit: readOnly
+                    ? null
+                    : () => _showConditionsSheet(context, ref),
               ),
             ],
           ),
@@ -82,9 +104,11 @@ class StatusSection extends ConsumerWidget {
 
 class _HpColumn extends StatelessWidget {
   final Character character;
-  final VoidCallback onMinus;
-  final VoidCallback onPlus;
-  final VoidCallback onTapShield;
+
+  /// null＝唯讀：加減鈕不渲染、臨時 HP chip 不可點。
+  final VoidCallback? onMinus;
+  final VoidCallback? onPlus;
+  final VoidCallback? onTapShield;
 
   const _HpColumn({
     required this.character,
@@ -155,12 +179,14 @@ class _HpColumn extends StatelessWidget {
                     color: surfaces.textSecondary,
                   ),
                 ),
-                const SizedBox(width: 8),
-                _TempHpChip(
-                  value: character.tempHp,
-                  color: dnd.tempHp,
-                  onTap: onTapShield,
-                ),
+                if (onTapShield != null || character.tempHp > 0) ...[
+                  const SizedBox(width: 8),
+                  _TempHpChip(
+                    value: character.tempHp,
+                    color: dnd.tempHp,
+                    onTap: onTapShield,
+                  ),
+                ],
               ],
             ),
           ),
@@ -195,22 +221,23 @@ class _HpColumn extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _HpButton(
-              key: const Key('hp-minus'),
-              icon: Icons.remove,
-              onPressed: onMinus,
-            ),
-            const SizedBox(width: 10),
-            _HpButton(
-              key: const Key('hp-plus'),
-              icon: Icons.add,
-              onPressed: onPlus,
-            ),
-          ],
-        ),
+        if (onMinus != null && onPlus != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _HpButton(
+                key: const Key('hp-minus'),
+                icon: Icons.remove,
+                onPressed: onMinus!,
+              ),
+              const SizedBox(width: 10),
+              _HpButton(
+                key: const Key('hp-plus'),
+                icon: Icons.add,
+                onPressed: onPlus!,
+              ),
+            ],
+          ),
       ],
     );
   }
@@ -221,7 +248,9 @@ class _HpColumn extends StatelessWidget {
 class _TempHpChip extends StatefulWidget {
   final int value;
   final Color color;
-  final VoidCallback onTap;
+
+  /// null＝唯讀：僅顯示數值，不可點開調整。
+  final VoidCallback? onTap;
 
   const _TempHpChip({
     required this.value,
@@ -344,7 +373,9 @@ class _HpButton extends StatelessWidget {
 
 class _ConcentrationColumn extends StatelessWidget {
   final Character character;
-  final VoidCallback onTap;
+
+  /// null＝唯讀：專注欄僅顯示，不可切換。
+  final VoidCallback? onTap;
 
   const _ConcentrationColumn({required this.character, required this.onTap});
 
@@ -440,8 +471,10 @@ class _ConcentrationColumn extends StatelessWidget {
 
 class _ConditionsRow extends StatelessWidget {
   final Character character;
-  final CurrentCharacterNotifier notifier;
-  final VoidCallback onEdit;
+
+  /// 皆為 null＝唯讀：不可開啟狀態選單，chip 也不帶移除鈕。
+  final CurrentCharacterNotifier? notifier;
+  final VoidCallback? onEdit;
 
   const _ConditionsRow({
     required this.character,
@@ -500,14 +533,19 @@ class _ConditionsRow extends StatelessWidget {
                   for (final name in character.conditions)
                     _ConditionChip(
                       label: name,
-                      onRemove: () => notifier.removeCondition(name),
+                      onRemove: notifier == null
+                          ? null
+                          : () => notifier!.removeCondition(name),
                       onTap: () => _showEffectDialog(context, name),
                     ),
                   if (character.exhaustionLevel > 0)
                     _ConditionChip(
                       label: '力竭 ${character.exhaustionLevel}',
-                      onRemove: () =>
-                          notifier.adjustExhaustion(-character.exhaustionLevel),
+                      onRemove: notifier == null
+                          ? null
+                          : () => notifier!.adjustExhaustion(
+                              -character.exhaustionLevel,
+                            ),
                       onTap: () => _showEffectDialog(context, '力竭'),
                     ),
                 ],
@@ -521,7 +559,9 @@ class _ConditionsRow extends StatelessWidget {
 
 class _ConditionChip extends StatelessWidget {
   final String label;
-  final VoidCallback onRemove;
+
+  /// null＝唯讀：不渲染移除鈕（狀態仍可點開看說明）。
+  final VoidCallback? onRemove;
   final VoidCallback onTap;
 
   const _ConditionChip({
@@ -553,12 +593,18 @@ class _ConditionChip extends StatelessWidget {
                 color: surfaces.textPrimary,
               ),
             ),
-            const SizedBox(width: 2),
-            GestureDetector(
-              onTap: onRemove,
-              behavior: HitTestBehavior.opaque,
-              child: Icon(Icons.close, size: 14, color: surfaces.textSecondary),
-            ),
+            if (onRemove != null) ...[
+              const SizedBox(width: 2),
+              GestureDetector(
+                onTap: onRemove,
+                behavior: HitTestBehavior.opaque,
+                child: Icon(
+                  Icons.close,
+                  size: 14,
+                  color: surfaces.textSecondary,
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -923,20 +969,26 @@ void _showEffectDialog(BuildContext context, String name) {
 // ─────────────────────────────────────────── AC 盾牌（沿用）
 
 class _AcShield extends StatelessWidget {
-  const _AcShield();
+  /// 指定角色時以其推導 AC（分享檢視頁）；null 則為當前角色。
+  final Character? character;
+
+  const _AcShield({this.character});
 
   @override
   Widget build(BuildContext context) {
     // AC 由裝備狀態推導（equipment-effects）；點按可看依據／切換法師護甲。
+    final readOnly = ReadOnlyScope.of(context);
     return Consumer(
       builder: (context, ref, _) {
-        final character = ref.watch(currentCharacterProvider);
+        final Character character =
+            this.character ?? ref.watch(currentCharacterProvider);
         final acResult = computeAc(character);
         final value = acResult.value;
         final isDark = Theme.of(context).brightness == Brightness.dark;
         final surfaces = Theme.of(context).extension<SurfaceColors>()!;
         return InkWell(
-          onTap: () => _showAcSheet(context, ref),
+          // 唯讀時 AC 僅顯示：依據說明含「切換法師護甲」等寫入操作。
+          onTap: readOnly ? null : () => _showAcSheet(context, ref),
           borderRadius: BorderRadius.circular(8),
           child: SizedBox(
             width: 96,

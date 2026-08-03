@@ -639,7 +639,8 @@ abstract class Character with _$Character {
           itemType: ItemType.gear,
           source: ItemSource.custom,
           quest: true,
-          description: '哥布林洞窟深處拾獲的銀戒，內圈刻著一圈無人能辨識的符文。'
+          description:
+              '哥布林洞窟深處拾獲的銀戒，內圈刻著一圈無人能辨識的符文。'
               '靠近銀谷鎮礦坑時，符文似乎會微微發燙。',
         ),
       ],
@@ -849,7 +850,8 @@ abstract class Character with _$Character {
           type: 'keepsake',
           itemType: ItemType.gear,
           source: ItemSource.custom,
-          description: '邊防軍第三軍團的銅製徽記，邊角已磨圓。退伍時百夫長所贈，'
+          description:
+              '邊防軍第三軍團的銅製徽記，邊角已磨圓。退伍時百夫長所贈，'
               '出示可讓王國軍哨所行個方便。',
         ),
       ],
@@ -877,7 +879,8 @@ abstract class Character with _$Character {
           name: '武器精通',
           nameEn: 'Weapon Mastery',
           source: 'Barbarian Lv1',
-          description: '精通兩種武器的精通屬性：巨斧（劈砍：命中後可對緊鄰目標再攻擊一次）、標槍（遲滯：命中後目標速度 −10 呎）。',
+          description:
+              '精通兩種武器的精通屬性：巨斧（劈砍：命中後可對緊鄰目標再攻擊一次）、標槍（遲滯：命中後目標速度 −10 呎）。',
         ),
         CharacterFeature(
           name: '魯莽攻擊',

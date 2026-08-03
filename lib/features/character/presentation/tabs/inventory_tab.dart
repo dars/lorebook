@@ -8,6 +8,7 @@ import '../../../../app/theme/surface_colors.dart';
 import '../../../catalog/data/catalog_repository.dart';
 import '../../domain/character.dart';
 import '../../domain/character_providers.dart';
+import '../read_only_scope.dart';
 import '../widgets/editor_sheet.dart';
 import '../widgets/item_catalog_picker.dart';
 import '../widgets/item_editor_sheet.dart';
@@ -19,9 +20,12 @@ class InventoryTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final readOnly = ReadOnlyScope.of(context);
     // 進物品頁即預抓目錄（watch 觸發查詢）；點「新增」時才能正確判斷
-    // 目錄是否可用（ref.read 不會觸發初次載入，會永遠判空）。
+    // 目錄是否可用（ref.read 不會觸發初次載入，會永遠判空）。唯讀時
+    // 沒有新增入口，不必預抓。
     final hasCatalog =
+        !readOnly &&
         (ref.watch(itemCatalogProvider).valueOrNull ?? const []).isNotEmpty;
     final equipped = [
       for (final e in character.equipment)
@@ -50,9 +54,12 @@ class InventoryTab extends ConsumerWidget {
           ),
           CollapsibleSection(
             title: 'EQUIPMENT 裝備',
-            trailing: SectionEditIcon(
-              onTap: () => _showAddItemSheet(context, hasCatalog: hasCatalog),
-            ),
+            trailing: readOnly
+                ? null
+                : SectionEditIcon(
+                    onTap: () =>
+                        _showAddItemSheet(context, hasCatalog: hasCatalog),
+                  ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -62,7 +69,7 @@ class InventoryTab extends ConsumerWidget {
                       vertical: AppSpacing.md,
                     ),
                     child: Text(
-                      '物品欄是空的，點右上角新增',
+                      readOnly ? '物品欄是空的' : '物品欄是空的，點右上角新增',
                       style: TextStyle(
                         fontFamily: 'NotoSerifTC',
                         fontSize: 12,
@@ -78,7 +85,10 @@ class InventoryTab extends ConsumerWidget {
                     text: '已裝備 EQUIPPED',
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  for (final e in equipped) _dismissibleRow(context, ref, e),
+                  for (final e in equipped)
+                    readOnly
+                        ? _readOnlyRow(e)
+                        : _dismissibleRow(context, ref, e),
                 ],
                 if (carried.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.md),
@@ -87,7 +97,10 @@ class InventoryTab extends ConsumerWidget {
                     text: '攜帶中 CARRIED',
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  for (final e in carried) _dismissibleRow(context, ref, e),
+                  for (final e in carried)
+                    readOnly
+                        ? _readOnlyRow(e)
+                        : _dismissibleRow(context, ref, e),
                 ],
               ],
             ),
@@ -144,6 +157,12 @@ class InventoryTab extends ConsumerWidget {
       ),
     );
   }
+
+  /// 唯讀（分享檢視）用的物品列：無左滑刪除、無點按編輯、無裝備／使用鈕。
+  Widget _readOnlyRow(Equipment e) => Padding(
+    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+    child: _ItemRow(item: e),
+  );
 
   /// 左滑刪除（任務物品加強警示）＋點按編輯。
   Widget _dismissibleRow(BuildContext context, WidgetRef ref, Equipment e) {
@@ -237,15 +256,18 @@ class InventoryTab extends ConsumerWidget {
 /// 武器/護甲帶裝備切換、消耗品帶「使用」。
 class _ItemRow extends StatelessWidget {
   final Equipment item;
-  final VoidCallback onTap;
-  final VoidCallback onToggleEquip;
-  final VoidCallback onUse;
+
+  /// 三個回呼皆為 null 時即唯讀列：不包 GestureDetector，也不渲染
+  /// 「使用」與裝備切換鈕（不留按不動的觸控目標）。
+  final VoidCallback? onTap;
+  final VoidCallback? onToggleEquip;
+  final VoidCallback? onUse;
 
   const _ItemRow({
     required this.item,
-    required this.onTap,
-    required this.onToggleEquip,
-    required this.onUse,
+    this.onTap,
+    this.onToggleEquip,
+    this.onUse,
   });
 
   IconData get _typeIcon => switch (item.itemType) {
@@ -265,136 +287,145 @@ class _ItemRow extends StatelessWidget {
     final equippable =
         item.itemType == ItemType.weapon || item.itemType == ItemType.armor;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: ParchmentCard(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
-          vertical: AppSpacing.md,
-        ),
-        child: Row(
-          children: [
-            Icon(
-              _typeIcon,
-              size: 18,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: item.quantity > 1
-                                    ? '${item.name} ×${item.quantity}'
-                                    : item.name,
-                                style: TextStyle(
-                                  fontFamily: 'NotoSerifTC',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: theme.colorScheme.onSurface,
-                                ),
+    final card = ParchmentCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
+      child: Row(
+        children: [
+          Icon(
+            _typeIcon,
+            size: 18,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: item.quantity > 1
+                                  ? '${item.name} ×${item.quantity}'
+                                  : item.name,
+                              style: TextStyle(
+                                fontFamily: 'NotoSerifTC',
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: theme.colorScheme.onSurface,
                               ),
-                              if (item.nameEn.isNotEmpty)
-                                TextSpan(
-                                  text: '  ${item.nameEn}',
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 11,
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.45),
+                            ),
+                            if (item.nameEn.isNotEmpty)
+                              TextSpan(
+                                text: '  ${item.nameEn}',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 11,
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.45,
                                   ),
                                 ),
-                            ],
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                              ),
+                          ],
                         ),
-                      ),
-                      if (item.quest) ...[
-                        const SizedBox(width: 6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 1,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: AppColors.accentGold),
-                          ),
-                          child: Text(
-                            '任務',
-                            style: TextStyle(
-                              fontFamily: 'NotoSerifTC',
-                              fontSize: 9,
-                              color: surfaces.accent,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  if (item.type.isNotEmpty ||
-                      item.damage.isNotEmpty ||
-                      item.description.isNotEmpty) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      [
-                        if (item.type.isNotEmpty) item.type,
-                        if (item.damage.isNotEmpty)
-                          '${item.damage} ${item.damageType}'.trim(),
-                        if (item.description.isNotEmpty) item.description,
-                      ].join('・'),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: 'NotoSerifTC',
-                        fontSize: 11,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.5,
-                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    if (item.quest) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 1,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.accentGold),
+                        ),
+                        child: Text(
+                          '任務',
+                          style: TextStyle(
+                            fontFamily: 'NotoSerifTC',
+                            fontSize: 9,
+                            color: surfaces.accent,
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
+                ),
+                if (item.type.isNotEmpty ||
+                    item.damage.isNotEmpty ||
+                    item.description.isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    [
+                      if (item.type.isNotEmpty) item.type,
+                      if (item.damage.isNotEmpty)
+                        '${item.damage} ${item.damageType}'.trim(),
+                      if (item.description.isNotEmpty) item.description,
+                    ].join('・'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'NotoSerifTC',
+                      fontSize: 11,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
+                  ),
                 ],
+              ],
+            ),
+          ),
+          if (item.itemType == ItemType.consumable && onUse != null)
+            TextButton(
+              onPressed: item.quantity > 0 ? onUse : null,
+              style: TextButton.styleFrom(
+                minimumSize: const Size(48, 48),
+                foregroundColor: surfaces.accent,
+              ),
+              child: const Text(
+                '使用',
+                style: TextStyle(fontFamily: 'NotoSerifTC', fontSize: 13),
               ),
             ),
-            if (item.itemType == ItemType.consumable)
-              TextButton(
-                onPressed: item.quantity > 0 ? onUse : null,
-                style: TextButton.styleFrom(
-                  minimumSize: const Size(48, 48),
-                  foregroundColor: surfaces.accent,
-                ),
-                child: const Text(
-                  '使用',
-                  style: TextStyle(fontFamily: 'NotoSerifTC', fontSize: 13),
-                ),
+          if (equippable && onToggleEquip != null)
+            IconButton(
+              onPressed: onToggleEquip,
+              tooltip: item.equipped ? '卸下' : '裝備',
+              iconSize: 20,
+              icon: Icon(
+                item.equipped
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
+                color: item.equipped
+                    ? AppColors.accentGold
+                    : surfaces.textSecondary,
               ),
-            if (equippable)
-              IconButton(
-                onPressed: onToggleEquip,
-                tooltip: item.equipped ? '卸下' : '裝備',
-                iconSize: 20,
-                icon: Icon(
-                  item.equipped
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
-                  color: item.equipped
-                      ? AppColors.accentGold
-                      : surfaces.textSecondary,
-                ),
+            )
+          // 唯讀時裝備狀態仍要看得出來，但不是可按的控制項。
+          else if (equippable && item.equipped)
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+              child: Icon(
+                Icons.radio_button_checked,
+                size: 20,
+                color: AppColors.accentGold,
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
+
+    if (onTap == null) return card;
+    return GestureDetector(onTap: onTap, child: card);
   }
 }
 
@@ -468,22 +499,29 @@ class _Treasury extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final coins = Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+      child: Row(
+        children: [
+          for (final spec in _coinSpecs)
+            Expanded(
+              child: _Coin(spec: spec, amount: spec.read(currency)),
+            ),
+        ],
+      ),
+    );
+
+    // 唯讀（分享檢視）時金額仍顯示，但不開啟收支計算機。
+    if (ReadOnlyScope.of(context)) {
+      return ParchmentCard(padding: EdgeInsets.zero, child: coins);
+    }
+
     return ParchmentCard(
       padding: EdgeInsets.zero,
       child: InkWell(
         borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
         onTap: () => _showCurrencyCalculator(context),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
-          child: Row(
-            children: [
-              for (final spec in _coinSpecs)
-                Expanded(
-                  child: _Coin(spec: spec, amount: spec.read(currency)),
-                ),
-            ],
-          ),
-        ),
+        child: coins,
       ),
     );
   }

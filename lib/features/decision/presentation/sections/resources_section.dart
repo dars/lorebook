@@ -7,6 +7,7 @@ import '../../../../app/theme/decorations.dart';
 import '../../../../app/theme/surface_colors.dart';
 import '../../../../features/character/domain/character.dart';
 import '../../../../features/character/domain/character_providers.dart';
+import '../../../../features/character/presentation/read_only_scope.dart';
 import '../../../../shared/presentation/widgets/gold_pips.dart';
 
 String _recoverLabel(ResourceRecovery r) => switch (r) {
@@ -16,12 +17,19 @@ String _recoverLabel(ResourceRecovery r) => switch (r) {
 };
 
 class ResourcesSection extends ConsumerWidget {
-  const ResourcesSection({super.key});
+  /// 指定角色時以其呈現（分享檢視頁）；null 則為當前角色。
+  final Character? character;
+
+  const ResourcesSection({super.key, this.character});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final character = ref.watch(currentCharacterProvider);
-    final notifier = ref.read(currentCharacterProvider.notifier);
+    final readOnly = ReadOnlyScope.of(context);
+    final Character character =
+        this.character ?? ref.watch(currentCharacterProvider);
+    final notifier = readOnly
+        ? null
+        : ref.read(currentCharacterProvider.notifier);
     final hasSlots = character.spellSlots.isNotEmpty;
     final hasResources = character.resources.isNotEmpty;
 
@@ -48,8 +56,12 @@ class ResourcesSection extends ConsumerWidget {
                       sub: '',
                       current: slot.total - slot.used,
                       max: slot.total,
-                      onChanged: (v) =>
-                          notifier.setSlotUsed(slot.level, slot.total - v),
+                      onChanged: notifier == null
+                          ? null
+                          : (v) => notifier.setSlotUsed(
+                              slot.level,
+                              slot.total - v,
+                            ),
                     ),
                   ),
               ],
@@ -187,7 +199,9 @@ class _PipRow extends StatelessWidget {
   final int current;
   final int max;
   final String recover;
-  final ValueChanged<int> onChanged;
+
+  /// null＝唯讀：pip 僅顯示剩餘量，不可點掉。
+  final ValueChanged<int>? onChanged;
 
   const _PipRow({
     required this.label,
@@ -217,7 +231,9 @@ class _PipRow extends StatelessWidget {
 
 class _ResourceRow extends StatelessWidget {
   final ClassResource resource;
-  final CurrentCharacterNotifier notifier;
+
+  /// null＝唯讀：僅顯示當前值與上限，不渲染增減鈕。
+  final CurrentCharacterNotifier? notifier;
   const _ResourceRow({required this.resource, required this.notifier});
 
   @override
@@ -234,7 +250,9 @@ class _ResourceRow extends StatelessWidget {
           current: r.current,
           max: r.max,
           recover: recover,
-          onChanged: (v) => notifier.setResourceCurrent(r.name, v),
+          onChanged: notifier == null
+              ? null
+              : (v) => notifier!.setResourceCurrent(r.name, v),
         );
       case ResourceDisplay.number:
         return Row(
@@ -244,11 +262,13 @@ class _ResourceRow extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  _StepBtn(
-                    sym: '−',
-                    onTap: () => notifier.spendResource(r.name),
-                  ),
-                  const SizedBox(width: 8),
+                  if (notifier != null) ...[
+                    _StepBtn(
+                      sym: '−',
+                      onTap: () => notifier!.spendResource(r.name),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                   Text(
                     '${r.current}',
                     style: TextStyle(
@@ -269,11 +289,13 @@ class _ResourceRow extends StatelessWidget {
                       ),
                     ),
                   ],
-                  const SizedBox(width: 8),
-                  _StepBtn(
-                    sym: '+',
-                    onTap: () => notifier.restoreResource(r.name),
-                  ),
+                  if (notifier != null) ...[
+                    const SizedBox(width: 8),
+                    _StepBtn(
+                      sym: '+',
+                      onTap: () => notifier!.restoreResource(r.name),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -300,11 +322,13 @@ class _ResourceRow extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 6),
-                  _StepBtn(
-                    sym: '−',
-                    onTap: () => notifier.spendResource(r.name),
-                  ),
-                  const SizedBox(width: 8),
+                  if (notifier != null) ...[
+                    _StepBtn(
+                      sym: '−',
+                      onTap: () => notifier!.spendResource(r.name),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                   Text(
                     '${r.current}',
                     style: TextStyle(
@@ -314,11 +338,13 @@ class _ResourceRow extends StatelessWidget {
                       color: AppColors.accentGold,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  _StepBtn(
-                    sym: '+',
-                    onTap: () => notifier.restoreResource(r.name),
-                  ),
+                  if (notifier != null) ...[
+                    const SizedBox(width: 8),
+                    _StepBtn(
+                      sym: '+',
+                      onTap: () => notifier!.restoreResource(r.name),
+                    ),
+                  ],
                 ],
               ),
             ),

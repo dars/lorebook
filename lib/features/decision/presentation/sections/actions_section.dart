@@ -40,11 +40,16 @@ class ActionsSection extends ConsumerStatefulWidget {
   final bool showBonus;
   final bool showReaction;
 
+  /// 指定角色時以其呈現（分享檢視頁）；null 則為當前角色。
+  /// 本區段的互動僅有分類收合（純 UI 狀態），無寫入，故不需唯讀分支。
+  final Character? character;
+
   const ActionsSection({
     super.key,
     this.showAction = true,
     this.showBonus = true,
     this.showReaction = true,
+    this.character,
   });
 
   @override
@@ -69,7 +74,8 @@ class _ActionsSectionState extends ConsumerState<ActionsSection> {
 
   @override
   Widget build(BuildContext context) {
-    final character = ref.watch(currentCharacterProvider);
+    final Character character =
+        widget.character ?? ref.watch(currentCharacterProvider);
     final dnd = Theme.of(context).extension<DndColors>()!;
     final surfaces = Theme.of(context).extension<SurfaceColors>()!;
 
