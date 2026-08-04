@@ -27,6 +27,33 @@ class _FakeCustomBgs extends CustomBackgroundsNotifier {
   Future<List<CustomBackground>> build() async => [_hunter];
 }
 
+/// 自訂起源專長（同名於 SRD 的「警覺」，且文件內另有自訂說明）。
+const _homeRule = CustomBackground(
+  id: 'bg-home',
+  name: '家規',
+  abilities: ['STR', 'CON', 'WIS'],
+  skills: ['隱匿', '求生'],
+  originFeat: '警覺',
+  originFeatCustom: true,
+  originFeatDescription: '我們這桌的警覺不一樣。',
+);
+
+/// SRD 模式，但文件內殘留著先前自訂模式輸入的說明（切回 SRD 後未清）。
+const _stale = CustomBackground(
+  id: 'bg-stale',
+  name: '殘留',
+  abilities: ['STR', 'CON', 'WIS'],
+  skills: ['隱匿', '求生'],
+  originFeat: '警覺',
+  originFeatDescription: '這段不該被採用。',
+);
+
+class _FakeCustomBgsWith extends CustomBackgroundsNotifier {
+  static late CustomBackground bg;
+  @override
+  Future<List<CustomBackground>> build() async => [bg];
+}
+
 const _fighterCatalog = [
   CatalogClass(id: 'c-fighter', name: '戰士', engName: 'Fighter', source: 'XPHB'),
 ];
@@ -70,11 +97,15 @@ class _ErrorCustomBgs extends CustomBackgroundsNotifier {
 Future<ProviderContainer> _pump(
   WidgetTester tester, {
   bool offline = false,
+  CustomBackground? only,
 }) async {
+  if (only != null) _FakeCustomBgsWith.bg = only;
   final container = ProviderContainer(
     overrides: [
       customBackgroundsProvider.overrideWith(
-        offline ? _ErrorCustomBgs.new : _FakeCustomBgs.new,
+        offline
+            ? _ErrorCustomBgs.new
+            : (only != null ? _FakeCustomBgsWith.new : _FakeCustomBgs.new),
       ),
       // 內容庫：供 1 級職業特性帶入（offline 案例維持不覆寫＝取用失敗降級）。
       if (!offline) ...[
@@ -230,4 +261,75 @@ void main() {
     await _next(tester); // 可正常續行
     expect(find.textContaining('背景加值 · 士兵'), findsOneWidget);
   });
+
+  testWidgets('自訂起源專長：採使用者的說明，且標示為自訂', (tester) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    final container = await _pump(tester, only: _homeRule);
+    await _walkToCreate(tester, bgLabel: '家規（自訂）');
+
+    final created = container.read(characterListProvider).last;
+    final feat = created.features.firstWhere((f) => f.source.startsWith('背景：'));
+    expect(feat.name, '警覺');
+    // 同名於 SRD，但模式為自訂 → 採使用者寫的說明，而非內容庫的警覺。
+    expect(feat.description, '我們這桌的警覺不一樣。');
+    expect(feat.source, contains('自訂'));
+  });
+
+  testWidgets('SRD 模式：文件內殘留的自訂說明不被採用', (tester) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    final container = await _pump(tester, only: _stale);
+    await _walkToCreate(tester, bgLabel: '殘留（自訂）');
+
+    final created = container.read(characterListProvider).last;
+    final feat = created.features.firstWhere((f) => f.source.startsWith('背景：'));
+    expect(feat.name, '警覺');
+    expect(feat.description, isNot('這段不該被採用。'));
+    expect(feat.description, contains('先攻')); // 來自內容庫 fixture
+    expect(feat.source, isNot(contains('自訂')));
+  });
+}
+
+/// 走完建角流程（名稱→種族→職業→背景→能力→技能→建立）。
+Future<void> _walkToCreate(
+  WidgetTester tester, {
+  required String bgLabel,
+}) async {
+  await tester.enterText(find.byType(TextField).first, '測試');
+  await tester.tap(find.text('人類').first);
+  await tester.pumpAndSettle();
+  await _next(tester);
+
+  await tester.ensureVisible(find.text('戰士').first);
+  await tester.tap(find.text('戰士').first);
+  await tester.pumpAndSettle();
+  await _next(tester);
+
+  await tester.tap(find.text(bgLabel));
+  await tester.pumpAndSettle();
+  await _next(tester);
+  await _next(tester); // 能力值（預設標準陣列已套用建議）
+
+  // 技能：職業 2 + 種族 1
+  for (final s in ['體能 Athletics', '威嚇 Intimidation']) {
+    await tester.ensureVisible(find.textContaining(s).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining(s).first);
+    await tester.pump();
+  }
+  await tester.ensureVisible(find.textContaining('醫藥 Medicine').last);
+  await tester.pumpAndSettle();
+  await tester.tap(find.textContaining('醫藥 Medicine').last);
+  await tester.pumpAndSettle();
+  await _next(tester);
+
+  await tester.ensureVisible(find.text('建立角色'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('建立角色'));
+  await tester.pumpAndSettle();
 }

@@ -33,6 +33,9 @@ class _CustomBackgroundEditPageState
   late final Set<String> _abilities; // 能力代碼，恰 3
   late final Set<String> _skills; // 技能中文名，恰 2
   String? _originFeat;
+  bool _originFeatCustom = false;
+  late final TextEditingController _customFeatName;
+  late final TextEditingController _customFeatDesc;
   bool _saving = false;
 
   @override
@@ -43,13 +46,23 @@ class _CustomBackgroundEditPageState
     _description = TextEditingController(text: b?.description ?? '');
     _abilities = {...?b?.abilities};
     _skills = {...?b?.skills};
-    _originFeat = b?.originFeat;
+    _originFeatCustom = b?.originFeatCustom ?? false;
+    // SRD 模式時 _originFeat 才是清單選取值；自訂模式下名稱在自己的欄位裡。
+    _originFeat = (b != null && !b.originFeatCustom) ? b.originFeat : null;
+    _customFeatName = TextEditingController(
+      text: (b?.originFeatCustom ?? false) ? b!.originFeat : '',
+    );
+    _customFeatDesc = TextEditingController(
+      text: b?.originFeatDescription ?? '',
+    );
   }
 
   @override
   void dispose() {
     _name.dispose();
     _description.dispose();
+    _customFeatName.dispose();
+    _customFeatDesc.dispose();
     super.dispose();
   }
 
@@ -61,11 +74,19 @@ class _CustomBackgroundEditPageState
     return null;
   }
 
+  String get _customFeatTrimmed => _customFeatName.text.trim();
+
+  bool get _originFeatValid => _originFeatCustom
+      ? _customFeatTrimmed.isNotEmpty &&
+            _customFeatTrimmed.length <= kCustomOriginFeatNameMax &&
+            _customFeatDesc.text.length <= kCustomOriginFeatDescMax
+      : _originFeat != null;
+
   bool get _valid =>
       _nameError == null &&
       _abilities.length == 3 &&
       _skills.length == 2 &&
-      _originFeat != null;
+      _originFeatValid;
 
   Future<void> _save() async {
     setState(() => _saving = true);
@@ -76,7 +97,12 @@ class _CustomBackgroundEditPageState
       name: _trimmedName,
       abilities: _abilities.toList(),
       skills: _skills.toList(),
-      originFeat: _originFeat!,
+      originFeat: _originFeatCustom ? _customFeatTrimmed : _originFeat!,
+      originFeatCustom: _originFeatCustom,
+      // SRD 模式不留殘值（讀取端另以旗標把關，見 design D2）。
+      originFeatDescription: _originFeatCustom
+          ? _customFeatDesc.text.trim()
+          : '',
       description: _description.text.trim(),
     );
     try {
@@ -161,17 +187,54 @@ class _CustomBackgroundEditPageState
                         ),
                         const SizedBox(height: AppSpacing.lg),
                         _label('起源專長'),
-                        _MultiChips(
-                          options: [
-                            for (final f in kOriginFeatChoices)
-                              (value: f, text: f),
-                          ],
-                          selected: {?_originFeat},
-                          max: 1,
-                          replaceOnMax: true,
-                          onChanged: () => setState(() {}),
-                          onSingle: (v) => _originFeat = v,
+                        _ModeToggle(
+                          custom: _originFeatCustom,
+                          onChanged: (v) =>
+                              setState(() => _originFeatCustom = v),
                         ),
+                        const SizedBox(height: AppSpacing.md),
+                        if (!_originFeatCustom)
+                          _MultiChips(
+                            options: [
+                              for (final f in kOriginFeatChoices)
+                                (value: f, text: f),
+                            ],
+                            selected: {?_originFeat},
+                            max: 1,
+                            replaceOnMax: true,
+                            onChanged: () => setState(() {}),
+                            onSingle: (v) => _originFeat = v,
+                          )
+                        else ...[
+                          TextField(
+                            controller: _customFeatName,
+                            maxLength: kCustomOriginFeatNameMax,
+                            decoration: const InputDecoration(
+                              hintText: '專長名稱，例：荒野嚮導',
+                            ),
+                            onChanged: (_) => setState(() {}),
+                          ),
+                          TextField(
+                            controller: _customFeatDesc,
+                            maxLength: kCustomOriginFeatDescMax,
+                            maxLines: 3,
+                            decoration: const InputDecoration(
+                              hintText: '說明（選填）：這個專長做什麼',
+                            ),
+                            onChanged: (_) => setState(() {}),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Text(
+                            '自訂的起源專長僅為顯示文字，不會產生任何規則效果，'
+                            '也不會成為可被其他背景引用的專長。角色卡上會標示為自訂。',
+                            style: TextStyle(
+                              fontFamily: 'NotoSerifTC',
+                              fontSize: 11,
+                              height: 1.55,
+                              color: surfaces.textSecondary,
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: AppSpacing.lg),
                         _label('敘述（選填）'),
                         TextField(
@@ -309,6 +372,60 @@ class _MultiChips extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// 起源專長的來源模式：自 SRD 選取／自行填寫。
+///
+/// 模式是使用者的選擇，須明確記錄——名稱推導不出來（使用者可能自訂一個
+/// 也叫「警覺」的專長，見 design D2）。
+class _ModeToggle extends StatelessWidget {
+  final bool custom;
+  final ValueChanged<bool> onChanged;
+
+  const _ModeToggle({required this.custom, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+
+    Widget seg(String label, bool isCustom) {
+      final on = custom == isCustom;
+      return Expanded(
+        child: GestureDetector(
+          onTap: () => onChanged(isCustom),
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            height: 40,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: on ? AppColors.accentGold : surfaces.surface1,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
+              border: Border.all(
+                color: on ? AppColors.accentGold : surfaces.border2,
+              ),
+            ),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'NotoSerifTC',
+                fontSize: 13,
+                fontWeight: on ? FontWeight.w700 : FontWeight.w400,
+                color: on ? const Color(0xFF1A1206) : surfaces.textSecondary,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        seg('自 SRD 選取', false),
+        const SizedBox(width: AppSpacing.sm),
+        seg('自行填寫', true),
+      ],
     );
   }
 }

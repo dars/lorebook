@@ -64,6 +64,99 @@ void main() {
   bool saveEnabled(WidgetTester tester) =>
       tester.widget<FilledButton>(find.byType(FilledButton)).onPressed != null;
 
+  testWidgets('起源專長可自行填寫；名稱必填、明示無規則效果', (tester) async {
+    await pump(tester);
+
+    // 預設為 SRD 模式：清單可見、自訂欄位不存在
+    expect(find.text('技藝精湛'), findsOneWidget);
+    expect(find.textContaining('僅為顯示文字'), findsNothing);
+
+    await tester.ensureVisible(find.text('自行填寫'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('自行填寫'));
+    await tester.pumpAndSettle();
+
+    // 切換後：SRD 清單收起，出現名稱與說明欄，並明示限制
+    expect(find.text('技藝精湛'), findsNothing);
+    expect(find.textContaining('僅為顯示文字'), findsOneWidget);
+
+    // 名稱未填 → 不可儲存
+    await tester.enterText(find.byType(TextField).first, '荒野背景');
+    for (final label in ['敏捷', '體質', '魅力']) {
+      await tester.ensureVisible(find.text(label).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(label).first);
+      await tester.pump();
+    }
+    for (final label in ['隱匿', '求生']) {
+      await tester.ensureVisible(find.text(label).last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(label).last);
+      await tester.pump();
+    }
+    expect(saveEnabled(tester), isFalse, reason: '自訂模式下名稱必填');
+
+    // 填入名稱與說明 → 可儲存
+    await tester.enterText(
+      find.widgetWithText(TextField, '專長名稱，例：荒野嚮導'),
+      '荒野嚮導',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextField, '說明（選填）：這個專長做什麼'),
+      '在野外行進時不會迷路。',
+    );
+    await tester.pumpAndSettle();
+    expect(saveEnabled(tester), isTrue);
+
+    await tester.ensureVisible(find.text('儲存'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('儲存'));
+    await tester.pumpAndSettle();
+
+    final b = repo.upserted.single;
+    expect(b.originFeatCustom, isTrue);
+    expect(b.originFeat, '荒野嚮導');
+    expect(b.originFeatDescription, '在野外行進時不會迷路。');
+  });
+
+  testWidgets('自訂名稱可與 SRD 候選同名（模式由旗標決定）', (tester) async {
+    await pump(tester);
+    await tester.ensureVisible(find.text('自行填寫'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('自行填寫'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField).first, '家規背景');
+    for (final label in ['敏捷', '體質', '魅力']) {
+      await tester.ensureVisible(find.text(label).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(label).first);
+      await tester.pump();
+    }
+    for (final label in ['隱匿', '求生']) {
+      await tester.ensureVisible(find.text(label).last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(label).last);
+      await tester.pump();
+    }
+    await tester.enterText(find.widgetWithText(TextField, '專長名稱，例：荒野嚮導'), '警覺');
+    await tester.enterText(
+      find.widgetWithText(TextField, '說明（選填）：這個專長做什麼'),
+      '我們這桌的警覺不一樣。',
+    );
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('儲存'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('儲存'));
+    await tester.pumpAndSettle();
+
+    final b = repo.upserted.single;
+    expect(b.originFeat, '警覺');
+    expect(b.originFeatCustom, isTrue, reason: '同名不影響模式');
+    expect(b.originFeatDescription, '我們這桌的警覺不一樣。');
+  });
+
   testWidgets('編輯頁載明 2024 版的背景建構規則（規則依據，非 App 自訂限制）', (tester) async {
     await pump(tester);
 

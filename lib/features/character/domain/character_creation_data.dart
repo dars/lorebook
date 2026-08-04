@@ -586,6 +586,14 @@ class BackgroundOption {
   final List<String> abilities; // 能力加值候選（3 代碼）
   final List<String> skills; // 固定技能熟練（中文名）
   final String originFeat; // 起源專長名（機制效果後續）
+
+  /// 起源專長是否為使用者自行定義（內建背景恆為 false）。
+  /// 模式一律以此判斷，不由名稱推導。
+  final bool originFeatCustom;
+
+  /// 自訂起源專長的說明；`originFeatCustom` 為 false 時不採用
+  /// （說明取自內容庫）。
+  final String originFeatDescription;
   final String description; // 佔位文案
   const BackgroundOption({
     required this.cn,
@@ -593,6 +601,8 @@ class BackgroundOption {
     required this.abilities,
     required this.skills,
     required this.originFeat,
+    this.originFeatCustom = false,
+    this.originFeatDescription = '',
     this.description = '',
   });
 }

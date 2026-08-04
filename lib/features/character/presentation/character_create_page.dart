@@ -365,15 +365,21 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
       }
     } catch (_) {}
 
-    // 起源專長的說明同樣來自內容庫（feats 表）。取用失敗時說明留空，
-    // 該列退化為不可點擊——與職業特性的降級一致。
+    // 起源專長的說明：自訂模式採背景自帶的說明；SRD 模式一律取自內容庫
+    // （文件內殘留的自訂說明不採用）。模式一律以旗標判斷，不看名稱——
+    // 使用者可能自訂一個也叫「警覺」的專長。
     var originFeat = (nameEn: '', description: '');
-    try {
-      originFeat = originFeatDetail(
-        await ref.read(featCatalogProvider.future),
-        bg.originFeat,
-      );
-    } catch (_) {}
+    if (bg.originFeatCustom) {
+      originFeat = (nameEn: '', description: bg.originFeatDescription);
+    } else {
+      // 取用失敗時說明留空，該列退化為不可點擊——與職業特性的降級一致。
+      try {
+        originFeat = originFeatDetail(
+          await ref.read(featCatalogProvider.future),
+          bg.originFeat,
+        );
+      } catch (_) {}
+    }
 
     final features = <CharacterFeature>[
       ...classFeatures,
@@ -389,7 +395,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
         name: bg.originFeat,
         nameEn: originFeat.nameEn,
         description: originFeat.description,
-        source: '背景：${bg.cn}',
+        // 自訂起源專長標示來源，讓檢視者（含匯入他人分享背景者）分辨得出
+        // 這不是 SRD 內容（design D2a）。
+        source: bg.originFeatCustom ? '背景：${bg.cn}・自訂' : '背景：${bg.cn}',
       ),
     ];
 
