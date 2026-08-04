@@ -81,12 +81,13 @@ class BiographyTab extends ConsumerWidget {
           // 熟練與特長分開：特長是角色獲得的能力（有規則文字），熟練只是
           // 「我會用這個」的清單。且熟練會隨冒險增加（休息期訓練學得工具或
           // 語言），需要自己的位置容納日後的增修入口。
-          if (character.languages.isNotEmpty ||
-              character.toolProficiencies.isNotEmpty)
-            CollapsibleSection(
-              title: 'PROFICIENCIES 熟練',
-              child: _Proficiencies(character: character),
-            ),
+          //
+          // **空的時候也要渲染**——這裡是未來新增熟練的入口所在，藏起來的話
+          // 一項都沒有的角色會永遠加不了第一項。與「其人其事」「性格」一致。
+          CollapsibleSection(
+            title: 'PROFICIENCIES 熟練',
+            child: _Proficiencies(character: character),
+          ),
         ],
       ),
     );
@@ -525,18 +526,22 @@ class _Proficiencies extends StatelessWidget {
   Widget build(BuildContext context) {
     final languages = character.languages;
     final tools = character.toolProficiencies;
+    final empty = languages.isEmpty && tools.isEmpty;
     return ParchmentCard(
       padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (languages.isNotEmpty) _ProficiencyRow('語言', languages),
-          if (tools.isNotEmpty) ...[
-            if (languages.isNotEmpty) const SizedBox(height: AppSpacing.md),
-            _ProficiencyRow('工具', tools),
-          ],
-        ],
-      ),
+      child: empty
+          ? const _EmptyHint(text: '尚未有語言或工具熟練')
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (languages.isNotEmpty) _ProficiencyRow('語言', languages),
+                if (tools.isNotEmpty) ...[
+                  if (languages.isNotEmpty)
+                    const SizedBox(height: AppSpacing.md),
+                  _ProficiencyRow('工具', tools),
+                ],
+              ],
+            ),
     );
   }
 }

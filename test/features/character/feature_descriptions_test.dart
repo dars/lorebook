@@ -217,9 +217,12 @@ void main() {
       expect(find.text('語言'), findsOneWidget); // 語言仍在，區段照常顯示
     });
 
-    testWidgets('語言與工具皆空時，熟練區段整個不渲染', (tester) async {
+    testWidgets('語言與工具皆空時，區段仍渲染並顯示空狀態', (tester) async {
+      // 這裡是未來新增熟練的入口所在，藏起來的話一項都沒有的角色
+      // 會永遠加不了第一項。
       await _pumpBiography(tester, _char(features: const []));
-      expect(find.text('PROFICIENCIES'), findsNothing);
+      expect(find.text('PROFICIENCIES'), findsOneWidget);
+      expect(find.text('尚未有語言或工具熟練'), findsOneWidget);
     });
   });
 }
