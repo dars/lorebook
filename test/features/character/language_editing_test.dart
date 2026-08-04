@@ -5,6 +5,8 @@ import 'package:lorebook/app/theme/app_theme.dart';
 import 'package:lorebook/features/character/domain/character.dart';
 import 'package:lorebook/features/character/domain/character_creation_data.dart';
 import 'package:lorebook/features/character/domain/character_providers.dart';
+import 'package:lorebook/features/catalog/data/catalog_repository.dart';
+import 'package:lorebook/features/catalog/domain/catalog_models.dart';
 import 'package:lorebook/features/character/presentation/character_page.dart';
 
 /// character-management spec「角色的語言可於角色卡增刪」。
@@ -29,20 +31,55 @@ Character _char({List<String> languages = const []}) => Character(
   ),
 );
 
-ProviderContainer _container(Character c) {
+/// 工具候選 fixture（涵蓋兩個分組）。
+const kTestTools = [
+  CatalogItem(
+    id: 't1',
+    name: '鐵匠工具',
+    source: 'XPHB',
+    category: 'tool',
+    subcategory: '工匠工具',
+  ),
+  CatalogItem(
+    id: 't2',
+    name: '書法工具',
+    source: 'XPHB',
+    category: 'tool',
+    subcategory: '工匠工具',
+  ),
+  CatalogItem(
+    id: 't3',
+    name: '盜賊工具',
+    source: 'XPHB',
+    category: 'tool',
+    subcategory: '工具',
+  ),
+];
+
+ProviderContainer _container(
+  Character c, {
+  List<CatalogItem> tools = kTestTools,
+}) {
   final container = ProviderContainer(
-    overrides: [selectedCharacterIdProvider.overrideWith((ref) => c.id)],
+    overrides: [
+      selectedCharacterIdProvider.overrideWith((ref) => c.id),
+      itemCatalogProvider.overrideWith((ref) async => tools),
+    ],
   );
   container.read(characterListProvider.notifier).replaceAll([c]);
   return container;
 }
 
-Future<ProviderContainer> _pumpEditor(WidgetTester tester, Character c) async {
+Future<ProviderContainer> _pumpEditor(
+  WidgetTester tester,
+  Character c, {
+  List<CatalogItem> tools = kTestTools,
+}) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
 
-  final container = _container(c);
+  final container = _container(c, tools: tools);
   addTearDown(container.dispose);
   await tester.pumpWidget(
     UncontrolledProviderScope(

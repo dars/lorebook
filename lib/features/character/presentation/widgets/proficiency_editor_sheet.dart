@@ -6,12 +6,14 @@ import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/surface_colors.dart';
 import '../../domain/character_creation_data.dart';
 import '../../domain/character_providers.dart';
+import '../../domain/tool_proficiency_options.dart';
 import 'editor_sheet.dart';
 
-/// 熟練編輯（語言；工具熟練待 `tool-proficiency-editing` 接入）。
+/// 熟練編輯：語言與工具。
 ///
-/// 版面刻意分段，工具接進來時直接補一段即可，不需重構——兩者共用同一個
-/// 入口，否則熟練區段會長出兩個並列的編輯按鈕。
+/// 兩者共用同一個入口與 sheet——都是「會什麼」的清單，分開會逼使用者記得
+/// 哪個按鈕管哪個。差別只在選項來源：語言是 App 內建常數（永遠可用），
+/// 工具來自內容庫（需離線降級）。
 void showProficiencyEditor(BuildContext context) {
   showModalBottomSheet<void>(
     context: context,
@@ -30,27 +32,40 @@ class _ProficiencyEditorSheet extends ConsumerStatefulWidget {
 
 class _ProficiencyEditorSheetState
     extends ConsumerState<_ProficiencyEditorSheet> {
-  final _custom = TextEditingController();
+  final _customLang = TextEditingController();
+  final _customTool = TextEditingController();
 
   @override
   void dispose() {
-    _custom.dispose();
+    _customLang.dispose();
+    _customTool.dispose();
     super.dispose();
   }
 
-  void _addCustom() {
-    final v = _custom.text.trim();
+  void _addCustomLanguage() {
+    final v = _customLang.text.trim();
     if (v.isEmpty) return;
     ref.read(currentCharacterProvider.notifier).addLanguage(v);
-    _custom.clear();
+    _customLang.clear();
+    setState(() {});
+  }
+
+  void _addCustomTool() {
+    final v = _customTool.text.trim();
+    if (v.isEmpty) return;
+    ref.read(currentCharacterProvider.notifier).addToolProficiency(v);
+    _customTool.clear();
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final surfaces = Theme.of(context).extension<SurfaceColors>()!;
-    final languages = ref.watch(currentCharacterProvider).languages;
+    final character = ref.watch(currentCharacterProvider);
+    final languages = character.languages;
+    final tools = character.toolProficiencies;
     final notifier = ref.read(currentCharacterProvider.notifier);
+    final toolOptions = ref.watch(toolProficiencyOptionsProvider);
 
     return SafeArea(
       child: Padding(
@@ -123,10 +138,10 @@ class _ProficiencyEditorSheetState
                     children: [
                       Expanded(
                         child: TextField(
-                          controller: _custom,
+                          controller: _customLang,
                           maxLength: kProficiencyEntryMax,
                           textInputAction: TextInputAction.done,
-                          onSubmitted: (_) => _addCustom(),
+                          onSubmitted: (_) => _addCustomLanguage(),
                           decoration: const InputDecoration(
                             hintText: '清單沒有的語言，自行填寫',
                             counterText: '',
@@ -135,8 +150,98 @@ class _ProficiencyEditorSheetState
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       IconButton(
-                        tooltip: '加入',
-                        onPressed: _addCustom,
+                        tooltip: '加入語言',
+                        onPressed: _addCustomLanguage,
+                        icon: const Icon(
+                          Icons.add,
+                          color: AppColors.accentGold,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: AppSpacing.lg),
+
+                  // ── 工具 ──
+                  const EditorFieldLabel('工具'),
+                  if (tools.isNotEmpty) ...[
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: [
+                        for (final t in tools)
+                          _SelectedChip(
+                            label: t,
+                            onRemove: () => setState(
+                              () => notifier.removeToolProficiency(t),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  toolOptions.when(
+                    loading: () => _hint(surfaces, '載入工具清單…'),
+                    error: (_, _) => _hint(surfaces, '工具清單離線不可用，可用下方欄位自行填寫。'),
+                    data: (grouped) {
+                      if (grouped.isEmpty) {
+                        return _hint(surfaces, '工具清單離線不可用，可用下方欄位自行填寫。');
+                      }
+                      // 38 項平鋪會變成難以檢索的 chip 牆（光工匠工具就 18
+                      // 項），因此依 subcategory 分組，與自訂背景的選單一致。
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (final entry in grouped.entries) ...[
+                            Padding(
+                              padding: const EdgeInsets.only(top: 6, bottom: 2),
+                              child: Text(
+                                entry.key,
+                                style: const TextStyle(
+                                  fontFamily: 'NotoSerifTC',
+                                  fontSize: 11,
+                                  color: AppColors.goldDim,
+                                ),
+                              ),
+                            ),
+                            Wrap(
+                              spacing: 6,
+                              children: [
+                                for (final i in entry.value)
+                                  if (!tools.contains(i.name))
+                                    _AddChip(
+                                      label: i.name,
+                                      onTap: () => setState(
+                                        () =>
+                                            notifier.addToolProficiency(i.name),
+                                      ),
+                                    ),
+                              ],
+                            ),
+                          ],
+                        ],
+                      );
+                    },
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _customTool,
+                          maxLength: kProficiencyEntryMax,
+                          textInputAction: TextInputAction.done,
+                          onSubmitted: (_) => _addCustomTool(),
+                          decoration: const InputDecoration(
+                            hintText: '清單沒有的工具，自行填寫',
+                            counterText: '',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      IconButton(
+                        tooltip: '加入工具',
+                        onPressed: _addCustomTool,
                         icon: const Icon(
                           Icons.add,
                           color: AppColors.accentGold,
@@ -171,6 +276,18 @@ class _ProficiencyEditorSheetState
     );
   }
 }
+
+Widget _hint(SurfaceColors surfaces, String text) => Padding(
+  padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+  child: Text(
+    text,
+    style: TextStyle(
+      fontFamily: 'NotoSerifTC',
+      fontSize: 12,
+      color: surfaces.textSecondary,
+    ),
+  ),
+);
 
 /// 已擁有的項目：點 × 移除。
 class _SelectedChip extends StatelessWidget {

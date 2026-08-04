@@ -115,6 +115,23 @@ class CurrentCharacterNotifier extends Notifier<Character> {
     );
   }
 
+  /// 新增工具熟練。規則與語言一致：去前後空白、去重、不排序。
+  void addToolProficiency(String name) {
+    final v = name.trim();
+    if (v.isEmpty) return;
+    if (state.toolProficiencies.any((t) => t.trim() == v)) return;
+    state = state.copyWith(toolProficiencies: [...state.toolProficiencies, v]);
+  }
+
+  void removeToolProficiency(String name) {
+    state = state.copyWith(
+      toolProficiencies: [
+        for (final t in state.toolProficiencies)
+          if (t != name) t,
+      ],
+    );
+  }
+
   void setPortraitUrl(String url) {
     state = state.copyWith(
       portraitUrl: url,
