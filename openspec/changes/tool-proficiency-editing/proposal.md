@@ -6,7 +6,7 @@
 
 ## What Changes
 
-- 傳記頁「FEATURES & TRAITS 特長」區段的工具列加編輯入口，可增刪
+- 傳記頁「PROFICIENCIES 熟練」區段的工具列加編輯入口，可增刪
 - 選項沿用既有的 `toolProficiencyOptionsProvider`（內容庫 `items` 的工具類，38 項依工匠工具／工具／遊戲組／樂器分組）
 - 內容庫取用失敗時的降級：沿用自訂背景編輯頁的處理（顯示離線提示、不阻擋其他操作）
 
@@ -25,7 +25,7 @@
 - 新增編輯 sheet，選單沿用 `toolProficiencyOptionsProvider`
 - `CurrentCharacterNotifier`：增刪工具熟練的方法
 
-**與 `language-editing` 的關係**：兩者是同一類問題，且**共用傳記頁的同一個編輯入口**。先落地者建立該入口，後者接進去——實作順序需協調，否則會做出兩個並列的編輯按鈕。
+**與 `language-editing` 的關係**：兩者是同一類問題，且**共用傳記頁「熟練」區段的同一個編輯入口**。先落地者建立該入口，後者接進去——實作順序需協調，否則會做出兩個並列的編輯按鈕。
 
 差異在資料來源：**工具有內容庫可查**（本 change 直接沿用既有 provider），語言沒有。
 

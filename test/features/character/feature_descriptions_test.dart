@@ -187,7 +187,7 @@ void main() {
   });
 
   group('工具熟練的呈現', () {
-    testWidgets('有工具時與語言並列於傳記頁', (tester) async {
+    testWidgets('熟練自成區段，與特長分開', (tester) async {
       await _pumpBiography(
         tester,
         _char(
@@ -196,14 +196,30 @@ void main() {
           languages: const ['通用語'],
         ),
       );
+      // 熟練有自己的區段標題（CollapsibleSection 拆成 EN／CN 兩個 Text）
+      expect(find.text('PROFICIENCIES'), findsOneWidget);
+      expect(find.text('熟練'), findsOneWidget);
       expect(find.text('工具'), findsOneWidget);
       expect(find.text('盜賊工具'), findsOneWidget);
       expect(find.text('語言'), findsOneWidget);
+      // 特長區段仍在，且不再包含熟練。
+      // 註：標題含 '&'，不在 CollapsibleSection 的中英拆分字元集內，
+      // 因此整串為單一 Text（'PROFICIENCIES 熟練' 則會被拆成兩段）。
+      expect(find.text('FEATURES & TRAITS 特長'), findsOneWidget);
     });
 
     testWidgets('無工具時整列不渲染（既有角色的降級路徑）', (tester) async {
-      await _pumpBiography(tester, _char(features: const []));
+      await _pumpBiography(
+        tester,
+        _char(features: const [], languages: const ['通用語']),
+      );
       expect(find.text('工具'), findsNothing);
+      expect(find.text('語言'), findsOneWidget); // 語言仍在，區段照常顯示
+    });
+
+    testWidgets('語言與工具皆空時，熟練區段整個不渲染', (tester) async {
+      await _pumpBiography(tester, _char(features: const []));
+      expect(find.text('PROFICIENCIES'), findsNothing);
     });
   });
 }

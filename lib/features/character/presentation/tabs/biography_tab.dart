@@ -78,6 +78,15 @@ class BiographyTab extends ConsumerWidget {
             title: 'FEATURES & TRAITS 特長',
             child: _Features(character: character),
           ),
+          // 熟練與特長分開：特長是角色獲得的能力（有規則文字），熟練只是
+          // 「我會用這個」的清單。且熟練會隨冒險增加（休息期訓練學得工具或
+          // 語言），需要自己的位置容納日後的增修入口。
+          if (character.languages.isNotEmpty ||
+              character.toolProficiencies.isNotEmpty)
+            CollapsibleSection(
+              title: 'PROFICIENCIES 熟練',
+              child: _Proficiencies(character: character),
+            ),
         ],
       ),
     );
@@ -371,10 +380,7 @@ class _Features extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final features = character.features;
-    final languages = character.languages;
-    final tools = character.toolProficiencies;
     return ParchmentCard(
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
@@ -388,18 +394,6 @@ class _Features extends StatelessWidget {
               feature: features[i],
               violation: featureArmorViolation(character, features[i]),
             ),
-          ],
-          if (languages.isNotEmpty || tools.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-              child: Divider(color: theme.colorScheme.outline, height: 1),
-            ),
-          if (languages.isNotEmpty) _ProficiencyRow('語言', languages),
-          // 工具熟練與語言同為「有／沒有」的清單型熟練，不帶數值，
-          // 因此沿用同一個排列而不另開區段。清單為空時整列不渲染。
-          if (tools.isNotEmpty) ...[
-            if (languages.isNotEmpty) const SizedBox(height: AppSpacing.sm),
-            _ProficiencyRow('工具', tools),
           ],
         ],
       ),
@@ -514,6 +508,34 @@ class _FeatureRow extends StatelessWidget {
         // 觸控目標高度（列本身約 22dp，上下各補 13dp）。
         padding: const EdgeInsets.symmetric(vertical: 13),
         child: row,
+      ),
+    );
+  }
+}
+
+/// 熟練區段：語言與工具熟練。
+///
+/// 與特長分開——特長是角色獲得的能力（帶規則文字、可點開看說明），熟練只是
+/// 「會用什麼」的清單。且熟練會隨冒險增加，特長不會以同樣的方式增加。
+class _Proficiencies extends StatelessWidget {
+  final Character character;
+  const _Proficiencies({required this.character});
+
+  @override
+  Widget build(BuildContext context) {
+    final languages = character.languages;
+    final tools = character.toolProficiencies;
+    return ParchmentCard(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (languages.isNotEmpty) _ProficiencyRow('語言', languages),
+          if (tools.isNotEmpty) ...[
+            if (languages.isNotEmpty) const SizedBox(height: AppSpacing.md),
+            _ProficiencyRow('工具', tools),
+          ],
+        ],
       ),
     );
   }
