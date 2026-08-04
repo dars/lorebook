@@ -587,6 +587,12 @@ class BackgroundOption {
   final List<String> skills; // 固定技能熟練（中文名）
   final String originFeat; // 起源專長名（機制效果後續）
 
+  /// 工具熟練（2024 每個背景給一項）；空字串 = 未設定。
+  ///
+  /// SRD 的士兵給的是「遊戲組」這個**類別**而非特定一項——本版照原樣記錄，
+  /// 不在建角時再挑一次（見 design D3）。
+  final String toolProficiency;
+
   /// 起源專長是否為使用者自行定義（內建背景恆為 false）。
   /// 模式一律以此判斷，不由名稱推導。
   final bool originFeatCustom;
@@ -601,6 +607,7 @@ class BackgroundOption {
     required this.abilities,
     required this.skills,
     required this.originFeat,
+    this.toolProficiency = '',
     this.originFeatCustom = false,
     this.originFeatDescription = '',
     this.description = '',
@@ -613,6 +620,7 @@ const kBackgrounds = <BackgroundOption>[
     en: 'Soldier',
     abilities: ['STR', 'DEX', 'CON'],
     skills: ['體能', '威嚇'],
+    toolProficiency: '遊戲組',
     originFeat: '野蠻打擊',
     description: '〔敘述佔位〕受過軍事訓練的戰士，習於紀律與陣列作戰。（文案待補）',
   ),
@@ -621,6 +629,7 @@ const kBackgrounds = <BackgroundOption>[
     en: 'Sage',
     abilities: ['CON', 'INT', 'WIS'],
     skills: ['奧秘', '歷史'],
+    toolProficiency: '書法工具',
     originFeat: '法術新手（法師）',
     description: '〔敘述佔位〕埋首典籍的學者，博聞強記、通曉祕辛。（文案待補）',
   ),
@@ -629,6 +638,7 @@ const kBackgrounds = <BackgroundOption>[
     en: 'Acolyte',
     abilities: ['INT', 'WIS', 'CHA'],
     skills: ['洞察', '宗教'],
+    toolProficiency: '書法工具',
     originFeat: '法術新手（牧師）',
     description: '〔敘述佔位〕在神殿中侍奉的信徒，熟稔禮儀與信仰。（文案待補）',
   ),
@@ -637,6 +647,7 @@ const kBackgrounds = <BackgroundOption>[
     en: 'Criminal',
     abilities: ['DEX', 'CON', 'INT'],
     skills: ['巧手', '隱匿'],
+    toolProficiency: '盜賊工具',
     originFeat: '警覺',
     description: '〔敘述佔位〕遊走法外的能手，熟悉黑街與不法門路。（文案待補）',
   ),

@@ -64,6 +64,37 @@ void main() {
   bool saveEnabled(WidgetTester tester) =>
       tester.widget<FilledButton>(find.byType(FilledButton)).onPressed != null;
 
+  testWidgets('工具清單離線不可用時可留空，不阻擋儲存', (tester) async {
+    await pump(tester);
+
+    // 測試環境未覆寫 itemCatalogProvider → 取用失敗回空清單 → 顯示離線提示
+    await tester.ensureVisible(find.textContaining('工具清單離線不可用'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('工具清單離線不可用'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField).first, '獵人');
+    for (final label in ['敏捷', '體質', '魅力']) {
+      await tester.ensureVisible(find.text(label).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(label).first);
+      await tester.pump();
+    }
+    for (final label in ['隱匿', '求生', '警覺']) {
+      await tester.ensureVisible(find.text(label).last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(label).last);
+      await tester.pump();
+    }
+    // 工具留空仍可儲存
+    expect(saveEnabled(tester), isTrue);
+
+    await tester.ensureVisible(find.text('儲存'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('儲存'));
+    await tester.pumpAndSettle();
+    expect(repo.upserted.single.toolProficiency, '');
+  });
+
   testWidgets('起源專長可自行填寫；名稱必填、明示無規則效果', (tester) async {
     await pump(tester);
 

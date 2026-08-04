@@ -38,6 +38,9 @@ abstract class CustomBackground with _$CustomBackground {
     required List<String> abilities, // 3 個能力代碼（STR/DEX/...）
     required List<String> skills, // 2 個技能中文名
     required String originFeat, // SRD 模式為 kOriginFeatChoices 之一；自訂模式為使用者填寫
+    /// 工具熟練（2024 每個背景給一項）；選項來自內容庫，離線時可留空。
+    @Default('') String toolProficiency,
+
     /// 起源專長是否為使用者自行定義。
     ///
     /// **模式不可由名稱推導**：使用者可能自訂一個也叫「警覺」的專長，那與
@@ -75,6 +78,7 @@ abstract class CustomBackground with _$CustomBackground {
     abilities: abilities,
     skills: skills,
     originFeat: originFeat,
+    toolProficiency: toolProficiency,
     originFeatCustom: originFeatCustom,
     originFeatDescription: originFeatDescription,
     description: description,

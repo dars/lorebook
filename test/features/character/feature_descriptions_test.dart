@@ -11,7 +11,13 @@ import 'package:lorebook/features/character/presentation/character_page.dart';
 AbilityScore _as(int score) =>
     AbilityScore(score: score, modifier: (score - 10) ~/ 2);
 
-Character _char({required List<CharacterFeature> features}) => Character(
+Character _char({
+  required List<CharacterFeature> features,
+  List<String> tools = const [],
+  List<String> languages = const [],
+}) => Character(
+  toolProficiencies: tools,
+  languages: languages,
   id: 'c1',
   name: '測試者',
   species: '矮人',
@@ -177,6 +183,27 @@ void main() {
       await tester.tap(find.textContaining('矮人堅毅 +1HP/級'));
       await tester.pumpAndSettle();
       expect(find.byType(AlertDialog), findsNothing);
+    });
+  });
+
+  group('工具熟練的呈現', () {
+    testWidgets('有工具時與語言並列於傳記頁', (tester) async {
+      await _pumpBiography(
+        tester,
+        _char(
+          features: const [],
+          tools: const ['盜賊工具'],
+          languages: const ['通用語'],
+        ),
+      );
+      expect(find.text('工具'), findsOneWidget);
+      expect(find.text('盜賊工具'), findsOneWidget);
+      expect(find.text('語言'), findsOneWidget);
+    });
+
+    testWidgets('無工具時整列不渲染（既有角色的降級路徑）', (tester) async {
+      await _pumpBiography(tester, _char(features: const []));
+      expect(find.text('工具'), findsNothing);
     });
   });
 }

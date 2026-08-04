@@ -215,6 +215,8 @@ void main() {
       containsAll(['隱匿', '求生', '體能', '威嚇']),
     );
     expect(created.features.map((f) => f.source), contains('背景：獵人'));
+    // 自訂背景未設定工具（fixture 留空）→ 不寫入
+    expect(created.toolProficiencies, isEmpty);
     // 起源專長的說明來自內容庫 feats 表 → 角色頁可點開
     final originFeat = created.features.firstWhere((f) => f.source == '背景：獵人');
     expect(originFeat.name, '警覺');

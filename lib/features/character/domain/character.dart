@@ -346,6 +346,10 @@ abstract class Character with _$Character {
     @Default(Personality()) Personality personality,
     @Default(<CharacterFeature>[]) List<CharacterFeature> features,
     @Default(<String>[]) List<String> languages,
+
+    /// 工具熟練（目前來源為背景）。獨立於 [skills]——工具熟練不帶關聯屬性
+    /// 與加值，2024 規則裡多為情境判定。
+    @Default(<String>[]) List<String> toolProficiencies,
     @Default('') String backstory,
     @Default(<String>[]) List<String> personalityTags,
     @Default(<String>[]) List<String> conditions,

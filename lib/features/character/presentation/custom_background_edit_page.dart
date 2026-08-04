@@ -9,6 +9,7 @@ import '../../../shared/domain/app_exception.dart';
 import '../data/custom_background_repository.dart';
 import '../domain/character_creation_data.dart';
 import '../domain/custom_background.dart';
+import '../domain/tool_proficiency_options.dart';
 
 /// 自訂背景編輯頁（建立與編輯共用；custom-backgrounds spec）。
 ///
@@ -33,6 +34,7 @@ class _CustomBackgroundEditPageState
   late final Set<String> _abilities; // 能力代碼，恰 3
   late final Set<String> _skills; // 技能中文名，恰 2
   String? _originFeat;
+  String? _tool;
   bool _originFeatCustom = false;
   late final TextEditingController _customFeatName;
   late final TextEditingController _customFeatDesc;
@@ -46,6 +48,7 @@ class _CustomBackgroundEditPageState
     _description = TextEditingController(text: b?.description ?? '');
     _abilities = {...?b?.abilities};
     _skills = {...?b?.skills};
+    _tool = (b?.toolProficiency.isEmpty ?? true) ? null : b!.toolProficiency;
     _originFeatCustom = b?.originFeatCustom ?? false;
     // SRD 模式時 _originFeat 才是清單選取值；自訂模式下名稱在自己的欄位裡。
     _originFeat = (b != null && !b.originFeatCustom) ? b.originFeat : null;
@@ -97,6 +100,7 @@ class _CustomBackgroundEditPageState
       name: _trimmedName,
       abilities: _abilities.toList(),
       skills: _skills.toList(),
+      toolProficiency: _tool ?? '',
       originFeat: _originFeatCustom ? _customFeatTrimmed : _originFeat!,
       originFeatCustom: _originFeatCustom,
       // SRD 模式不留殘值（讀取端另以旗標把關，見 design D2）。
@@ -235,6 +239,12 @@ class _CustomBackgroundEditPageState
                             ),
                           ),
                         ],
+                        const SizedBox(height: AppSpacing.lg),
+                        _label('工具熟練'),
+                        _ToolPicker(
+                          selected: _tool,
+                          onChanged: (v) => setState(() => _tool = v),
+                        ),
                         const SizedBox(height: AppSpacing.lg),
                         _label('敘述（選填）'),
                         TextField(
@@ -376,6 +386,73 @@ class _MultiChips extends StatelessWidget {
   }
 }
 
+/// 工具熟練選擇器：選項來自內容庫，依類別分組。
+///
+/// 工具是規則裡的既有集合，因此為選單而非自由填空。內容庫取不到時顯示
+/// 離線提示並允許留空——不阻擋儲存，與自訂背景其餘欄位的離線行為一致。
+class _ToolPicker extends ConsumerWidget {
+  final String? selected;
+  final ValueChanged<String?> onChanged;
+
+  const _ToolPicker({required this.selected, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final surfaces = Theme.of(context).extension<SurfaceColors>()!;
+    final async = ref.watch(toolProficiencyOptionsProvider);
+
+    Widget hint(String text) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontFamily: 'NotoSerifTC',
+          fontSize: 12,
+          color: surfaces.textSecondary,
+        ),
+      ),
+    );
+
+    return async.when(
+      loading: () => hint('載入工具清單…'),
+      error: (_, _) => hint('工具清單離線不可用，可留空稍後再補。'),
+      data: (grouped) {
+        if (grouped.isEmpty) {
+          return hint('工具清單離線不可用，可留空稍後再補。');
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final entry in grouped.entries) ...[
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.sm, bottom: 4),
+                child: Text(
+                  entry.key,
+                  style: const TextStyle(
+                    fontFamily: 'NotoSerifTC',
+                    fontSize: 11,
+                    color: AppColors.goldDim,
+                  ),
+                ),
+              ),
+              _MultiChips(
+                options: [
+                  for (final i in entry.value) (value: i.name, text: i.name),
+                ],
+                selected: {?selected},
+                max: 1,
+                replaceOnMax: true,
+                onChanged: () {},
+                onSingle: onChanged,
+              ),
+            ],
+          ],
+        );
+      },
+    );
+  }
+}
+
 /// 起源專長的來源模式：自 SRD 選取／自行填寫。
 ///
 /// 模式是使用者的選擇，須明確記錄——名稱推導不出來（使用者可能自訂一個
@@ -440,7 +517,8 @@ class _RulesNotice extends StatelessWidget {
   static const _lines = [
     (Icons.trending_up, '三個能力值加值候選', '建角時自這三項分配 +2/+1 或 +1/+1/+1。'),
     (Icons.school_outlined, '兩個固定技能', '選定後即為該背景的熟練，建角自動帶入。'),
-    (Icons.auto_awesome, '一個起源專長', '自 SRD 起源專長中選擇。'),
+    (Icons.auto_awesome, '一個起源專長', '自 SRD 起源專長中選擇，或自行填寫。'),
+    (Icons.handyman_outlined, '一項工具熟練', '自內容庫的工具清單中選擇。'),
   ];
 
   @override

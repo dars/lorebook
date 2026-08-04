@@ -374,6 +374,7 @@ class _Features extends StatelessWidget {
     final theme = Theme.of(context);
     final features = character.features;
     final languages = character.languages;
+    final tools = character.toolProficiencies;
     return ParchmentCard(
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
@@ -388,38 +389,17 @@ class _Features extends StatelessWidget {
               violation: featureArmorViolation(character, features[i]),
             ),
           ],
-          if (languages.isNotEmpty) ...[
+          if (languages.isNotEmpty || tools.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
               child: Divider(color: theme.colorScheme.outline, height: 1),
             ),
-            Row(
-              children: [
-                SizedBox(
-                  width: 40,
-                  child: Text(
-                    '語言',
-                    style: const TextStyle(
-                      fontFamily: 'NotoSerifTC',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.goldDim,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    languages.join(' · '),
-                    style: TextStyle(
-                      fontFamily: 'NotoSerifTC',
-                      fontSize: 13,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          if (languages.isNotEmpty) _ProficiencyRow('語言', languages),
+          // 工具熟練與語言同為「有／沒有」的清單型熟練，不帶數值，
+          // 因此沿用同一個排列而不另開區段。清單為空時整列不渲染。
+          if (tools.isNotEmpty) ...[
+            if (languages.isNotEmpty) const SizedBox(height: AppSpacing.sm),
+            _ProficiencyRow('工具', tools),
           ],
         ],
       ),
@@ -535,6 +515,47 @@ class _FeatureRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 13),
         child: row,
       ),
+    );
+  }
+}
+
+/// 清單型熟練列（語言、工具）：標籤 ＋ 以「·」分隔的項目。
+class _ProficiencyRow extends StatelessWidget {
+  final String label;
+  final List<String> items;
+
+  const _ProficiencyRow(this.label, this.items);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 40,
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AppColors.goldDim,
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Text(
+            items.join(' · '),
+            style: TextStyle(
+              fontFamily: 'NotoSerifTC',
+              fontSize: 13,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

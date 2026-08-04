@@ -442,6 +442,10 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           ? [SpellSlots(level: 1, total: cls.level1Slots)]
           : const [],
       features: features,
+      // 工具熟練目前僅來自背景；未設定（含離線建立的自訂背景）則不寫入。
+      toolProficiencies: [
+        if (bg.toolProficiency.isNotEmpty) bg.toolProficiency,
+      ],
       // 職業資源（狂暴、聖療之觸等）：內建規則表推導，不依賴內容庫。
       resources: deriveClassResources(cls.en, 1, abilityScores),
       hitDieFaces: cls.hitDie,
