@@ -217,6 +217,8 @@ void main() {
     expect(created.features.map((f) => f.source), contains('背景：獵人'));
     // 自訂背景未設定工具（fixture 留空）→ 不寫入
     expect(created.toolProficiencies, isEmpty);
+    // 2024 角色至少會通用語（種族／背景的語言來源尚未建模，先給預設）
+    expect(created.languages, ['通用語']);
     // 起源專長的說明來自內容庫 feats 表 → 角色頁可點開
     final originFeat = created.features.firstWhere((f) => f.source == '背景：獵人');
     expect(originFeat.name, '警覺');

@@ -675,7 +675,7 @@ abstract class Character with _$Character {
           description: '當你不知道某項資訊時，通常知道去哪裡或找誰來獲取該資訊。',
         ),
       ],
-      languages: ['Common', 'Draconic', 'Elvish'],
+      languages: ['通用語', '龍語', '精靈語'],
       backstory:
           '出身王都抄書室的窮學徒，十二歲那年因偷讀禁書架上的《塑能初階》被逐出書院，'
           '卻被路過的老法師梅里安收為關門弟子。導師臨終前把畢生研究謄入一本法術書交給我，'
@@ -923,7 +923,7 @@ abstract class Character with _$Character {
           description: '狂暴期間使用魯莽攻擊時，本回合首次以力量攻擊命中的目標額外受到 2d6 傷害（骰數等同狂暴傷害加值）。',
         ),
       ],
-      languages: ['Common', 'Orc', 'Giant'],
+      languages: ['通用語', '獸人語', '巨人語'],
       backstory:
           '生在邊境要塞外的獸人聚落，十五歲被王國邊防軍收編當破陣手。'
           '軍團教會我紀律，戰場教會我憤怒要留給對的敵人。退伍那天，'

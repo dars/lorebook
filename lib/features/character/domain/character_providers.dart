@@ -97,6 +97,24 @@ class CurrentCharacterNotifier extends Notifier<Character> {
 
   /// 設定/清空角色圖 URL（上傳/移除後呼叫；經 debounce 同步推送）。
   /// 換圖時取景一併重置為預設（新圖套舊取景無意義）。
+  /// 新增語言。去前後空白、去重（比對去空白後的值）；不排序——使用者
+  /// 心裡有自己的順序（母語在前），自動排序會把它打亂。
+  void addLanguage(String name) {
+    final v = name.trim();
+    if (v.isEmpty) return;
+    if (state.languages.any((l) => l.trim() == v)) return;
+    state = state.copyWith(languages: [...state.languages, v]);
+  }
+
+  void removeLanguage(String name) {
+    state = state.copyWith(
+      languages: [
+        for (final l in state.languages)
+          if (l != name) l,
+      ],
+    );
+  }
+
   void setPortraitUrl(String url) {
     state = state.copyWith(
       portraitUrl: url,

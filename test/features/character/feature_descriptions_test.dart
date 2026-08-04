@@ -222,7 +222,7 @@ void main() {
       // 會永遠加不了第一項。
       await _pumpBiography(tester, _char(features: const []));
       expect(find.text('PROFICIENCIES'), findsOneWidget);
-      expect(find.text('尚未有語言或工具熟練'), findsOneWidget);
+      expect(find.text('尚未有語言或工具熟練，點右上角新增'), findsOneWidget);
     });
   });
 }

@@ -10,6 +10,7 @@ import '../../domain/character_providers.dart';
 import '../../domain/derived_stats.dart';
 import '../read_only_scope.dart';
 import '../widgets/feature_detail_dialog.dart';
+import '../widgets/proficiency_editor_sheet.dart';
 import '../widgets/editor_sheet.dart';
 
 class BiographyTab extends ConsumerWidget {
@@ -86,6 +87,9 @@ class BiographyTab extends ConsumerWidget {
           // 一項都沒有的角色會永遠加不了第一項。與「其人其事」「性格」一致。
           CollapsibleSection(
             title: 'PROFICIENCIES 熟練',
+            trailing: readOnly
+                ? null
+                : SectionEditIcon(onTap: () => showProficiencyEditor(context)),
             child: _Proficiencies(character: character),
           ),
         ],
@@ -530,7 +534,7 @@ class _Proficiencies extends StatelessWidget {
     return ParchmentCard(
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: empty
-          ? const _EmptyHint(text: '尚未有語言或工具熟練')
+          ? const _EmptyHint(text: '尚未有語言或工具熟練，點右上角新增')
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -442,6 +442,9 @@ class _CharacterCreatePageState extends ConsumerState<CharacterCreatePage> {
           ? [SpellSlots(level: 1, total: cls.level1Slots)]
           : const [],
       features: features,
+      // 2024 角色至少會通用語（規則上來自種族與背景，兩者目前皆未建模
+      // 語言來源——待補之前先給預設值，否則新建角色的語言是空的）。
+      languages: const ['通用語'],
       // 工具熟練目前僅來自背景；未設定（含離線建立的自訂背景）則不寫入。
       toolProficiencies: [
         if (bg.toolProficiency.isNotEmpty) bg.toolProficiency,
