@@ -25,10 +25,15 @@ import { BiographyTab, InventoryTab, SpellsTab } from './tabs/rest-tabs';
 export function CharacterSheet({
   c,
   share,
+  onEditBasic,
+  onEditProficiency,
 }: {
   c: Character;
   /** 分享區塊。唯讀檢視不傳，該區塊即不渲染。 */
   share?: ReactNode;
+  /** 編輯入口。唯讀檢視不傳——寫入入口不予渲染，而非渲染後停用。 */
+  onEditBasic?: () => void;
+  onEditProficiency?: () => void;
 }) {
   const showSpells = c.spellSlots.length > 0 || c.cantrips.length > 0;
 
@@ -40,7 +45,7 @@ export function CharacterSheet({
   const render = (name: string) => {
     switch (name) {
       case '總覽':
-        return <OverviewTab c={c} share={share} />;
+        return <OverviewTab c={c} share={share} onEditBasic={onEditBasic} />;
       case '屬性':
         return <AbilitiesTab c={c} />;
       case '法術':
@@ -48,7 +53,9 @@ export function CharacterSheet({
       case '物品':
         return <InventoryTab c={c} />;
       default:
-        return <BiographyTab c={c} />;
+        return (
+          <BiographyTab c={c} onEditProficiency={onEditProficiency} />
+        );
     }
   };
 
@@ -63,7 +70,7 @@ export function CharacterSheet({
       {/* expanded：左欄總覽常駐、右欄分頁 */}
       <div className="expanded:flex hidden w-full items-start gap-4">
         <div className="min-w-0 flex-2">
-          <OverviewTab c={c} share={share} />
+          <OverviewTab c={c} share={share} onEditBasic={onEditBasic} />
         </div>
         <div className="min-w-0 flex-3">
           <CharacterTabBar

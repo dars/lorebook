@@ -1,5 +1,6 @@
 import { CollapsibleSection } from '@/components/ui/collapsible-section';
 import { ParchmentCard } from '@/components/ui/decorations';
+import { EditIcon } from '@/components/ui/editor-sheet';
 import type { Character } from '@/lib/domain/character';
 import { formatCp } from '@/lib/rules/currency';
 
@@ -174,7 +175,13 @@ export function InventoryTab({ c }: { c: Character }) {
   );
 }
 
-export function BiographyTab({ c }: { c: Character }) {
+export function BiographyTab({
+  c,
+  onEditProficiency,
+}: {
+  c: Character;
+  onEditProficiency?: () => void;
+}) {
   return (
     <div className="px-4 pb-10">
       <CollapsibleSection en="ABOUT" cn="其人其事" first>
@@ -260,7 +267,15 @@ export function BiographyTab({ c }: { c: Character }) {
         </ParchmentCard>
       </CollapsibleSection>
 
-      <CollapsibleSection en="PROFICIENCIES" cn="熟練">
+      <CollapsibleSection
+        en="PROFICIENCIES"
+        cn="熟練"
+        trailing={
+          onEditProficiency && (
+            <EditIcon onClick={onEditProficiency} label="編輯熟練" />
+          )
+        }
+      >
         <ParchmentCard className="px-4 py-1">
           {c.languages.length === 0 && c.toolProficiencies.length === 0 ? (
             <p className="py-2 text-[13px] text-text-secondary">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { CollapsibleSection } from '@/components/ui/collapsible-section';
 import { ParchmentCard } from '@/components/ui/decorations';
@@ -231,6 +231,10 @@ export function DecisionView({ initial }: { initial: Character }) {
         </ParchmentCard>
       </CollapsibleSection>
 
+      <CollapsibleSection en="CHECKS" cn="檢定">
+        <ChecksPanel c={c} />
+      </CollapsibleSection>
+
       <CollapsibleSection en="ACTION" cn="動作">
         <ParchmentCard className="px-4">
           {attacks.map((a, i) => (
@@ -261,7 +265,178 @@ export function DecisionView({ initial }: { initial: Character }) {
           ))}
         </ParchmentCard>
       </CollapsibleSection>
+      <CollapsibleSection en="REST" cn="休息">
+        <ParchmentCard className="px-4 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-[13px] text-text-secondary">
+              生命骰 {c.level - c.hitDiceUsed}/{c.level}（d{c.hitDieFaces}）
+            </span>
+            <button
+              type="button"
+              onClick={() => characterActions.useHitDie()}
+              disabled={c.level - c.hitDiceUsed <= 0}
+              className="min-h-9 rounded-chip border border-border px-3 text-[12px] text-text-primary disabled:opacity-40"
+            >
+              花用一顆
+            </button>
+          </div>
+          {/* App 不替玩家擲骰——說明白，免得以為壞了。 */}
+          <p className="mt-1 text-[11px] text-text-secondary">
+            花用後請自行擲 d{c.hitDieFaces}＋體質，再用上方 HP 加減調整。
+          </p>
+
+          <div className="mt-3 flex gap-2">
+            <RestButton
+              title="短休"
+              subtitle="職業能力"
+              onConfirm={() => characterActions.shortRest()}
+              confirm="短休將回復標記為短休的職業資源。"
+            />
+            <RestButton
+              title="長休"
+              subtitle="完全恢復"
+              onConfirm={() => characterActions.longRest()}
+              confirm="長休將回滿 HP、法術位、職業資源，清除臨時 HP，降低 1 級力竭，並回復一半生命骰。"
+            />
+          </div>
+        </ParchmentCard>
+      </CollapsibleSection>
     </div>
+  );
+}
+
+/**
+ * 檢定：能力／豁免／技能三個切換，列出各項的加值。
+ *
+ * 純查閱用——App 不擲骰（與 Flutter 一致），玩家看加值後自己擲實體骰。
+ */
+function ChecksPanel({ c }: { c: Character }) {
+  const [tab, setTab] = useState(0);
+  const tabs = ['能力', '豁免', '技能'];
+
+  const abilities: [keyof Character['abilityScores'], string, string][] = [
+    ['str', '力量', 'STR'],
+    ['dex', '敏捷', 'DEX'],
+    ['con', '體質', 'CON'],
+    ['int_', '智力', 'INT'],
+    ['wis', '感知', 'WIS'],
+    ['cha', '魅力', 'CHA'],
+  ];
+
+  const rows: { name: string; value: number; prof?: boolean }[] =
+    tab === 0
+      ? abilities.map(([k, cn]) => ({
+          name: cn,
+          value: c.abilityScores[k].modifier,
+        }))
+      : tab === 1
+        ? abilities.map(([k, cn]) => ({
+            name: cn,
+            value:
+              c.abilityScores[k].modifier +
+              (c.abilityScores[k].proficientSave ? c.proficiencyBonus : 0),
+            prof: c.abilityScores[k].proficientSave,
+          }))
+        : c.skills.map((s) => ({
+            name: s.name,
+            value: s.modifier,
+            prof: s.proficient,
+          }));
+
+  return (
+    <>
+      <div className="mb-2 flex gap-1">
+        {tabs.map((t, i) => (
+          <button
+            key={t}
+            type="button"
+            onClick={() => setTab(i)}
+            className={`min-h-9 flex-1 rounded-chip border text-[12px] ${
+              i === tab
+                ? 'border-gold bg-gold/10 text-gold'
+                : 'border-border-2 text-text-secondary'
+            }`}
+          >
+            {t}
+          </button>
+        ))}
+      </div>
+      <ParchmentCard className="px-4">
+        <div className="grid grid-cols-2 gap-x-4">
+          {rows.map((r, i) => (
+            <div
+              key={r.name}
+              className={`flex items-center justify-between py-2 ${i > 1 ? 'border-t border-border/40' : ''}`}
+            >
+              <span className="flex items-center gap-1.5">
+                {r.prof !== undefined && (
+                  <span
+                    className={`size-1.5 rounded-full ${r.prof ? 'bg-gold' : 'border border-border'}`}
+                  />
+                )}
+                <span className="text-[13px] text-text-primary">{r.name}</span>
+              </span>
+              <span className="text-[14px] font-semibold text-gold">
+                {sign(r.value)}
+              </span>
+            </div>
+          ))}
+        </div>
+      </ParchmentCard>
+    </>
+  );
+}
+
+/** 休息按鈕：破壞性且不可復原，一律先確認。 */
+function RestButton({
+  title,
+  subtitle,
+  confirm,
+  onConfirm,
+}: {
+  title: string;
+  subtitle: string;
+  confirm: string;
+  onConfirm: () => void;
+}) {
+  const [asking, setAsking] = useState(false);
+
+  if (asking) {
+    return (
+      <div className="flex-1 rounded-card border border-gold p-2">
+        <p className="text-[11px] leading-relaxed text-text-light">{confirm}</p>
+        <div className="mt-2 flex gap-2">
+          <button
+            type="button"
+            onClick={() => setAsking(false)}
+            className="min-h-9 flex-1 rounded-chip border border-border text-[12px] text-text-secondary"
+          >
+            取消
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              onConfirm();
+              setAsking(false);
+            }}
+            className="min-h-9 flex-1 rounded-chip border border-gold bg-gold/10 text-[12px] text-gold"
+          >
+            確定
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => setAsking(true)}
+      className="flex min-h-14 flex-1 flex-col items-center justify-center rounded-card border border-border"
+    >
+      <span className="text-[14px] text-text-primary">{title}</span>
+      <span className="text-[11px] text-text-secondary">{subtitle}</span>
+    </button>
   );
 }
 

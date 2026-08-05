@@ -88,6 +88,103 @@ export const characterActions = {
       .update((c) => ({ ...c, tempHp: Math.max(0, value) }));
   },
 
+  /**
+   * 短休：只回復標記為短休的職業資源。
+   *
+   * 不回 HP——2024 規則的短休回 HP 要花生命骰，那是玩家的選擇而非自動發生。
+   */
+  shortRest() {
+    useCharacterStore.getState().update((c) => ({
+      ...c,
+      resources: c.resources.map((r) =>
+        r.recovery === 'short' ? { ...r, current: r.max } : r,
+      ),
+    }));
+  },
+
+  /**
+   * 長休：HP 全滿、法術位全滿、職業資源全滿、臨時 HP 清空、力竭 −1、
+   * 回復一半生命骰（最少 1）。
+   */
+  longRest() {
+    useCharacterStore.getState().update((c) => {
+      const regain = Math.max(1, Math.floor(c.level / 2));
+      return {
+        ...c,
+        currentHp: c.maxHp,
+        tempHp: 0,
+        spellSlots: c.spellSlots.map((s) => ({ ...s, used: 0 })),
+        resources: c.resources.map((r) => ({ ...r, current: r.max })),
+        exhaustionLevel: clamp(c.exhaustionLevel - 1, 0, 6),
+        hitDiceUsed: clamp(c.hitDiceUsed - regain, 0, c.level),
+      };
+    });
+  },
+
+  /**
+   * 花用一顆生命骰。
+   *
+   * **不擲骰、不自動改 HP**——App 不替玩家擲骰（與 Flutter 一致）；玩家自行擲
+   * d{面數}+體質後用 HP 加減調整。這裡只記錄「用掉了一顆」。
+   */
+  useHitDie() {
+    useCharacterStore.getState().update((c) =>
+      c.level - c.hitDiceUsed <= 0
+        ? c
+        : { ...c, hitDiceUsed: c.hitDiceUsed + 1 },
+    );
+  },
+
+  setExhaustion(level: number) {
+    useCharacterStore
+      .getState()
+      .update((c) => ({ ...c, exhaustionLevel: clamp(level, 0, 6) }));
+  },
+
+  /** 僅扮演資訊；規則資料（物種／體型／背景）不在此處，見編輯器說明。 */
+  setBasicInfo(v: {
+    name: string;
+    alignment: string;
+    alignmentEn: string;
+    deity: string;
+  }) {
+    useCharacterStore.getState().update((c) => ({ ...c, ...v }));
+  },
+
+  addLanguage(name: string) {
+    const v = name.trim();
+    if (!v) return;
+    useCharacterStore.getState().update((c) =>
+      c.languages.some((l) => l.trim() === v)
+        ? c
+        : { ...c, languages: [...c.languages, v] },
+    );
+  },
+
+  removeLanguage(name: string) {
+    useCharacterStore.getState().update((c) => ({
+      ...c,
+      languages: c.languages.filter((l) => l !== name),
+    }));
+  },
+
+  addToolProficiency(name: string) {
+    const v = name.trim();
+    if (!v) return;
+    useCharacterStore.getState().update((c) =>
+      c.toolProficiencies.some((t) => t.trim() === v)
+        ? c
+        : { ...c, toolProficiencies: [...c.toolProficiencies, v] },
+    );
+  },
+
+  removeToolProficiency(name: string) {
+    useCharacterStore.getState().update((c) => ({
+      ...c,
+      toolProficiencies: c.toolProficiencies.filter((t) => t !== name),
+    }));
+  },
+
   toggleCondition(name: string) {
     useCharacterStore.getState().update((c) => ({
       ...c,

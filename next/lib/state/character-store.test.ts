@@ -80,3 +80,48 @@ describe('角色編輯動作', () => {
     expect(useCharacterStore.getState().dirty).toBe(false);
   });
 });
+
+describe('休息', () => {
+  beforeEach(() => {
+    useCharacterStore.getState().load({
+      ...base(),
+      level: 6,
+      currentHp: 5,
+      tempHp: 7,
+      hitDiceUsed: 5,
+      exhaustionLevel: 3,
+      spellSlots: [{ level: 1, total: 3, used: 3 }],
+      resources: [
+        { name: '短休資源', nameEn: '', current: 0, max: 2, recovery: 'short', display: 'pips', dieFaces: 0, unit: '' },
+        { name: '長休資源', nameEn: '', current: 0, max: 4, recovery: 'long', display: 'pips', dieFaces: 0, unit: '' },
+      ],
+    });
+  });
+
+  const c = () => useCharacterStore.getState().character!;
+
+  it('短休只回短休資源，不動 HP 也不動長休資源', () => {
+    characterActions.shortRest();
+    expect(c().resources[0].current).toBe(2);
+    expect(c().resources[1].current).toBe(0);
+    expect(c().currentHp).toBe(5);
+  });
+
+  it('長休全回、清臨時 HP、力竭 −1、回一半生命骰', () => {
+    characterActions.longRest();
+    expect(c().currentHp).toBe(20);
+    expect(c().tempHp).toBe(0);
+    expect(c().spellSlots[0].used).toBe(0);
+    expect(c().resources.every((r) => r.current === r.max)).toBe(true);
+    expect(c().exhaustionLevel).toBe(2);
+    expect(c().hitDiceUsed).toBe(2); // 6 級回 3 顆：5 - 3
+  });
+
+  it('生命骰用完就不再減——不擲骰、不自動改 HP', () => {
+    useCharacterStore.getState().load({ ...base(), level: 2, hitDiceUsed: 2 });
+    const hp = c().currentHp;
+    characterActions.useHitDie();
+    expect(c().hitDiceUsed).toBe(2);
+    expect(c().currentHp).toBe(hp);
+  });
+});

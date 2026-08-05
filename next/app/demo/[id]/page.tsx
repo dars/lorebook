@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { CharacterSheet } from '@/components/character/character-sheet';
+import { CharacterSheetLive } from '@/components/character/character-sheet-live';
 import { CharacterHeader } from '@/components/shell/character-header';
 import { DEMO_CHARACTERS, findDemoCharacter } from '@/lib/demo/characters';
 
@@ -20,8 +20,9 @@ export default async function DemoCharacterPage({
     <div className="flex min-h-full flex-1 flex-col">
       <CharacterHeader c={character} />
       <div className="mx-auto w-full max-w-[1100px] flex-1">
-        {/* 試玩不提供分享：訪客的角色不存在雲端，連結無從指向。 */}
-        <CharacterSheet c={character} />
+        {/* 試玩不提供分享：訪客的角色不存在雲端，連結無從指向。
+            persist=false：可操作但不推雲端。 */}
+        <CharacterSheetLive initial={character} tools={[]} persist={false} />
       </div>
     </div>
   );

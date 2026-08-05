@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 
 import { CollapsibleSection } from '@/components/ui/collapsible-section';
 import { InfoField, ParchmentCard } from '@/components/ui/decorations';
+import { EditIcon } from '@/components/ui/editor-sheet';
 import type { Character } from '@/lib/domain/character';
 import { PortraitCard } from '../portrait-card';
 
@@ -9,7 +10,15 @@ import { PortraitCard } from '../portrait-card';
  * 總覽分頁，對照 Flutter 端的 `OverviewTab`：
  * 立繪卡 → BASIC 基本資訊（2 欄 × 3 列、列間細線）→ STATS 戰鬥數值（四格）。
  */
-export function OverviewTab({ c, share }: { c: Character; share?: ReactNode }) {
+export function OverviewTab({
+  c,
+  share,
+  onEditBasic,
+}: {
+  c: Character;
+  share?: ReactNode;
+  onEditBasic?: () => void;
+}) {
   const rows: [
     React.ComponentProps<typeof InfoField>,
     React.ComponentProps<typeof InfoField>,
@@ -50,7 +59,13 @@ export function OverviewTab({ c, share }: { c: Character; share?: ReactNode }) {
     <div className="px-4 pb-10">
       <PortraitCard c={c} />
 
-      <CollapsibleSection en="BASIC" cn="基本資訊">
+      <CollapsibleSection
+        en="BASIC"
+        cn="基本資訊"
+        trailing={
+          onEditBasic && <EditIcon onClick={onEditBasic} label="編輯基本資訊" />
+        }
+      >
         <ParchmentCard className="px-5 py-2">
           {rows.map((row, i) => (
             <div key={i}>

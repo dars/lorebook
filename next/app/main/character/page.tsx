@@ -1,4 +1,5 @@
-import { CharacterSheet } from '@/components/character/character-sheet';
+import { CharacterSheetLive } from '@/components/character/character-sheet-live';
+import { fetchItems } from '@/lib/catalog/fetch';
 import { getCurrentCharacterId } from '@/lib/characters/current';
 import { fetchMyCharacter } from '@/lib/characters/fetch';
 import { listShares } from '@/lib/share/actions';
@@ -13,10 +14,14 @@ export default async function CharacterTabPage() {
   if (!character) return null;
 
   const { shares } = await listShares(id);
+  // 工具熟練的候選來自內容庫；離線時為空陣列，編輯器據此降級。
+  const { rows } = await fetchItems();
+  const tools = rows.filter((i) => i.category === 'tool');
 
   return (
-    <CharacterSheet
-      c={character}
+    <CharacterSheetLive
+      initial={character}
+      tools={tools}
       share={<SharePanelSection characterId={id} shares={shares} />}
     />
   );
