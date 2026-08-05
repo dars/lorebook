@@ -2,15 +2,14 @@ import 'package:flutter/foundation.dart';
 
 /// 角色卡分享連結的路徑前綴。
 ///
-/// 與 homebrew 分享（規劃中的 `/s/`）刻意錯開——單看連結就能判斷會開出
-/// 什麼，deep link 的路徑比對也不會互相攔截。
+/// 與 homebrew 分享（規劃中的 `/s/`）刻意錯開——單看連結就能判斷會開出什麼。
 const String kSharePathPrefix = '/v';
 
-/// web 版網域。原生端以編譯期參數覆寫（`--dart-define=WEB_BASE_URL=…`）；
-/// web 端直接沿用當前 origin，本機開發與正式站都不必改設定。
+/// web 版網域。web 端直接沿用當前 origin，本機開發與正式站都不必改設定；
+/// 保留編譯期參數（`--dart-define=WEB_BASE_URL=…`）供非瀏覽器情境覆寫。
 ///
-/// 預設為主網域而非底層的 `lorebook-1om.pages.dev`——deep link 的網域驗證
-/// （AASA／assetlinks）綁在連結實際使用的網域上，兩邊不一致就驗不過。
+/// 預設為主網域而非底層的 `lorebook-1om.pages.dev`——分享出去的連結應該是
+/// 使用者認得的那一個。
 const String _kWebBaseUrl = String.fromEnvironment(
   'WEB_BASE_URL',
   defaultValue: 'https://lorebook.code4soul.dev',

@@ -1,3 +1,8 @@
+> **⛔ 已凍結（2026-08-05）**：專案改為 web-only 並以 Next.js 全面重寫
+> （`web-only-nextjs-migration`）。本變更**不在 Flutter 端實作**——在即將退場的
+> 程式碼上開發是純粹的浪費。提案與設計保留：那是產品判斷，與實作語言無關。
+> 解凍條件：Next.js 重寫完成並切換上線後，以新實作為前提更新 design。
+
 ## Why
 
 Web 版已註冊 service worker，離線時 app 開得起來——但開起來是空的。角色資料完全沒有本機持久化（`shared_preferences` 全 app 只用於主題與 A2HS 旗標），一律來自 Supabase 並活在記憶體。內容庫（法術、物品、職業特性）同樣是每次進站現抓。

@@ -4,8 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 專案
 
-Lorebook — 支援 iOS / Android 的 Flutter App，同時適配手機與平板版型。  
-核心功能為 D&D 5.5e（2024 版規則）跑團角色卡，附帶世界觀筆記功能。
+Lorebook — **web-only** 的 D&D 5.5e（2024 版規則）跑團角色卡，附帶世界觀筆記功能。
+同一份 codebase 適配手機與桌機版型。
+
+> **進行中：以 Next.js 全面重寫**（`openspec/changes/web-only-nextjs-migration`）。
+> 現行的 Flutter 實作**已凍結**——不再部署、不接受新功能，僅保留作為重寫期間的
+> 行為對照，追平後刪除。修 bug 或加功能前先確認該任務屬於哪一邊。
 
 ### 內容範圍政策（content-scope）
 
@@ -22,11 +26,8 @@ Lorebook — 支援 iOS / Android 的 Flutter App，同時適配手機與平板�
 # 安裝套件
 flutter pub get
 
-# 執行 App（指定裝置）
-flutter run -d <device_id>
-
-# 列出可用裝置
-flutter devices
+# 執行 dev server（埠號固定 8087：Supabase Auth 的 Redirect URLs 登記了它）
+flutter run -d chrome --web-port=8087 --dart-define-from-file=.env.json
 
 # 執行所有測試
 flutter test
@@ -43,11 +44,15 @@ dart format .
 # 靜態分析
 flutter analyze
 
-# 建置 iOS（release）
-flutter build ios --release
+# 建置 web（release）
+flutter build web --release --dart-define-from-file=.env.json
+```
 
-# 建置 Android APK（release）
-flutter build apk --release
+部署一律手動走 wrangler，**git push 不會部署**（Cloudflare Pages 的 GitHub
+檢查會謊報成功但產出空的部署）：
+
+```bash
+npx wrangler pages deploy build/web --project-name=lorebook --branch=main
 ```
 
 ## 架構
@@ -56,11 +61,11 @@ _專案初始化後在此補充架構說明。_
 
 ### 版型適配原則
 
-- 手機與平板使用同一份 codebase，以 `shared/presentation/responsive_layout.dart` 的 `ResponsiveLayout` 依**可用寬度**（非裝置種類）切換版型
+- 以 `shared/presentation/responsive_layout.dart` 的 `ResponsiveLayout` 依**可用寬度**（非裝置種類）切換版型——web-only 之後這點更重要，同一台裝置縮放視窗就會跨級距
 - 三段式寬度級距（對齊 Material 3 window size class）：
   - **compact**（< 600dp，手機）：單欄 + 底部 Tab Bar
-  - **medium**（600–840dp，iPad 直向）：排列沿用手機單欄、內容置中限寬；導覽為 NavigationRail
-  - **expanded**（≥ 840dp，iPad 橫向）：可用多欄排列（如 Decision 頁三欄）
+  - **medium**（600–840dp，平板直向或窄視窗）：排列沿用手機單欄、內容置中限寬；導覽為 NavigationRail
+  - **expanded**（≥ 840dp，桌機或平板橫向）：可用多欄排列（如 Decision 頁三欄）
 - 拆分原則：優先同檔內以參數/私有 layout widget 切換排列，資料與狀態保持一份；只有互動流程本身不同時才分頁面檔案
 
 ### 資料夾結構慣例（待確認後調整）

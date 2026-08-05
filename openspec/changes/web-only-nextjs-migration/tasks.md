@@ -1,13 +1,13 @@
 ## 1. 了結原生與凍結 Flutter
 
-- [ ] 1.1 處置 `ios/Runner.xcodeproj/project.pbxproj` 與 `ios/Podfile.lock` 目前未進版控的變動，不留懸置
-- [ ] 1.2 打版控標籤 `native-final`，作為日後取回原生支援的起點
-- [ ] 1.3 `git rm -r ios/ android/`
-- [ ] 1.4 移除 `web/.well-known/apple-app-site-association`、`assetlinks.json` 與 `web/_headers` 中對應的 Content-Type 規則
-- [ ] 1.5 移除 `share_link.dart` 等處與 deep link／universal link 相關的敘述與設定
-- [ ] 1.6 更新 CLAUDE.md：平台敘述、常用指令中的原生建置段落
-- [ ] 1.7 於 `custom-species`、`homebrew-share`、`dual-rules-version`、`offline-character-cache` 各自標注「Flutter 端凍結，待 Next.js 重寫完成後接續」
-- [ ] 1.8 `flutter analyze` 與 `flutter test` 全綠
+- [x] 1.1 處置 `ios/Runner.xcodeproj/project.pbxproj` 與 `ios/Podfile.lock` 目前未進版控的變動，不留懸置
+- [x] 1.2 打版控標籤 `native-final`，作為日後取回原生支援的起點
+- [x] 1.3 `git rm -r ios/ android/`
+- [x] 1.4 移除 `web/.well-known/apple-app-site-association`、`assetlinks.json` 與 `web/_headers` 中對應的 Content-Type 規則
+- [x] 1.5 移除 `share_link.dart` 等處與 deep link／universal link 相關的敘述與設定
+- [x] 1.6 更新 CLAUDE.md：平台敘述、常用指令中的原生建置段落
+- [x] 1.7 於 `custom-species`、`homebrew-share`、`dual-rules-version`、`offline-character-cache` 各自標注「Flutter 端凍結，待 Next.js 重寫完成後接續」
+- [x] 1.8 `flutter analyze` 與 `flutter test` 全綠
 
 ## 2. Golden 對照匯出
 

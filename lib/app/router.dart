@@ -119,7 +119,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) =>
             CustomBackgroundEditPage(initial: state.extra as CustomBackground?),
       ),
-      // 分享檢視（deep link 入口）。前綴與 homebrew 分享的 /s/ 錯開。
+      // 分享檢視。前綴與 homebrew 分享的 /s/ 錯開。
       GoRoute(
         path: '$kSharePathPrefix/:token',
         builder: (context, state) =>
