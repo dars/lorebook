@@ -1,0 +1,19 @@
+// Cloudflare Workers 設定。
+//
+// **部署目標由 Pages 改為 Workers**：OpenNext 的 Cloudflare 轉接器產出的是
+// Worker（`.open-next/worker.js`）＋靜態資產綁定，不是 Pages 的目錄產物。
+// 現行的 `lorebook` Pages 專案於切換上線後退場。
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "lorebook",
+  "compatibility_date": "2026-08-05",
+  // nodejs_compat：Next.js 的 server runtime 需要 Node API
+  // global_fetch_strictly_public：讓 worker 內的 fetch 走公開網路語意，
+  //   與 Next.js 對 fetch 的假設一致
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  }
+}

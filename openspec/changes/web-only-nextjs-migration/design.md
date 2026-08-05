@@ -96,6 +96,35 @@ Next.js 的根版面加入一次性註銷（`getRegistrations()` → `unregister
 
 分享頁因為與第 3 項共用呈現元件，落在同一階段，不需另外排。
 
+### D10：部署採 OpenNext，目標由 Pages 改為 Workers
+
+`@cloudflare/next-on-pages` **已正式棄用**，npm 上的 deprecated 訊息直接指向
+OpenNext（`Please use the OpenNext adapter instead`）。無須實測比較——選項只剩
+一個。採 `@opennextjs/cloudflare`。
+
+**連帶的架構改變**：OpenNext 產出的是 Worker（`.open-next/worker.js`）＋靜態
+資產綁定，不是 Pages 的目錄產物。因此**部署目標由 Cloudflare Pages 改為
+Workers**，現行的 `lorebook` Pages 專案於切換上線後退場。部署指令也隨之改變
+（`wrangler deploy`，不再是 `wrangler pages deploy`）。
+
+已實地驗證（spike worker 部署後即刪除，避免留下公開端點）：
+
+| 驗證項 | 結果 |
+|---|---|
+| SSR 在 Workers 上執行 | ✓ curl 不執行 JS 即見完整內容 |
+| 伺服器端呼叫既有 RPC | ✓ `get_shared_character` 以 anon key 直接可用 |
+| 邊緣端 TTFB（含 RPC） | 0.37–0.46 s（5 次取樣） |
+| RPC 往返 | 263 ms（自 Cloudflare 邊緣；本機測時為 1182 ms） |
+
+**不啟用樣板預設的 R2 增量快取**：本站沒有 ISR 需求——分享頁必須是即時活資料
+（character-share 規格），角色頁是登入後的動態內容。加了只是多一個會壞的地方。
+
+**建置工具鏈的 undici 警告可接受**：`wrangler@4.118.0`（已是最新）鎖
+`miniflare@5-alpha`，後者帶有 advisory 的 `undici@7.28.0`，`npm audit fix` 無法
+在不降級工具鏈的前提下修復。已確認該套件**不在部署產物內**（`.open-next` 的
+server function 之 node_modules 無 undici；Next.js 自身程式碼中的 undici 字串
+是另一回事）。
+
 ## Risks / Trade-offs
 
 - **一次性切換，沒有回退到部分完成狀態的餘地** → Flutter 版留在 repo（D2），最壞情況是重新部署舊版；但那需要恢復 SW 設定，不是零成本
@@ -104,6 +133,7 @@ Next.js 的根版面加入一次性註銷（`getRegistrations()` → `unregister
 - **舊 SW 導致朋友看到舊畫面並回報假故障** → D3 的註銷程式碼從第一次部署就在；切換時主動告知
 - **新型別定義吃不下真實 JSON** → 以全部 21 筆真實資料跑全量解析驗證，不只測樣本；這是保留舊資料到切換前的主要理由
 - **Next.js 端的 Supabase 金鑰暴露面** → SSR 一律用 anon key；分享頁沿用 `get_shared_character` RPC，該函式已是唯一授權點。**service role key 不得進入任何前端可達路徑**
+- **spike 的 2.5 KB 不是分享頁的最終體積** → 該頁幾乎無樣式、無字型、無 hydration。實際的分享頁加上分片字型、CSS 與 client JS，合理預期落在 150–400 KB。與 Flutter 的 7.8 MB 相比仍是一個數量級以上的差距，但不應以 2.5 KB 對外表述
 
 ## Migration Plan
 
@@ -120,7 +150,7 @@ Next.js 的根版面加入一次性註銷（`getRegistrations()` → `unregister
 
 ## Open Questions
 
-- Next.js 的 Cloudflare 部署採 `@cloudflare/next-on-pages` 或 OpenNext？分享頁需 SSR，靜態匯出不可行。**這題不解決，第 3 項動不了**
+~~Next.js 的 Cloudflare 部署方案~~ **已於 2026-08-05 定案，見 D10。**
 - 設計 token 自 Flutter theme 抽出的形式：手動移植一次，還是產生器？一次性重寫的話手動即可，但要確保色票不漂移
 - 狀態管理選型：Zustand＋TanStack Query，或 Server Components 為主、client state 最小化？後者更能發揮 Next.js，但編輯與戰鬥介面是重度 client state
 - 既有分享 token 是否保留？路徑 `/v/:token` 不變即可相容，但需確認 Next.js 端的 RPC 呼叫與現行行為一致

@@ -55,3 +55,9 @@ app.*.map.json
 # Supabase CLI link artifacts
 supabase/.temp/
 .wrangler/
+
+# Cloudflare Workers 的本機環境變數（含 Supabase 金鑰）
+next/.dev.vars
+next/.open-next/
+next/.next/
+next/node_modules/

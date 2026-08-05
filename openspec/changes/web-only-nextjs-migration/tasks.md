@@ -21,8 +21,8 @@
 
 ## 3. Next.js 基礎
 
-- [ ] 3.1 實測並決定 Cloudflare 部署方案（`@cloudflare/next-on-pages` 或 OpenNext），以分享頁需 SSR 為前提
-- [ ] 3.2 建立 Next.js 專案骨架與部署管線（沿用手動 wrangler，勿依賴 git push 觸發）
+- [x] 3.1 決定 Cloudflare 部署方案——next-on-pages 已棄用，採 OpenNext；目標由 Pages 改為 Workers（design D10）
+- [x] 3.2 建立 Next.js 專案骨架（`next/`，因 `web/` 已被 Flutter 佔用）與 OpenNext 設定
 - [ ] 3.3 自 Flutter theme 抽出設計 token（色票、字級、間距、圓角），確保色票不漂移
 - [ ] 3.4 字型策略：woff2 ＋ unicode-range 分片；使用者自產內容需 fallback，不得出現豆腐字
 - [ ] 3.5 Supabase JS client 接線（anon key；**service role key 不得進入前端可達路徑**）
