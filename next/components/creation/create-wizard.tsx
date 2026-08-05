@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import type { CatalogSpell } from '@/lib/catalog/types';
@@ -16,6 +16,7 @@ import {
 import {
   ABILITY_ORDER,
   BACKGROUNDS,
+  type BackgroundOption,
   CLASSES,
   SKILLS,
   SPECIES,
@@ -38,7 +39,14 @@ const ABILITY_LABEL: Record<string, string> = {
   INT: '智力', WIS: '感知', CHA: '魅力',
 };
 
-export function CreateWizard({ spells }: { spells: CatalogSpell[] }) {
+export function CreateWizard({
+  spells,
+  customBackgrounds = [],
+}: {
+  spells: CatalogSpell[];
+  /** 自訂背景，與內建並列供選擇。 */
+  customBackgrounds?: BackgroundOption[];
+}) {
   const [step, setStep] = useState(0);
   const [name, setName] = useState('');
   const [speciesCn, setSpeciesCn] = useState<string | null>(null);
@@ -61,7 +69,8 @@ export function CreateWizard({ spells }: { spells: CatalogSpell[] }) {
 
   const species = SPECIES.find((s) => s.cn === speciesCn) ?? null;
   const cls = CLASSES.find((c) => c.cn === classCn) ?? null;
-  const bg = BACKGROUNDS.find((b) => b.cn === bgCn) ?? null;
+  const allBackgrounds = [...BACKGROUNDS, ...customBackgrounds];
+  const bg = allBackgrounds.find((b) => b.cn === bgCn) ?? null;
   const caster = cls ? isCaster(cls) : false;
 
   const steps = [
@@ -71,13 +80,10 @@ export function CreateWizard({ spells }: { spells: CatalogSpell[] }) {
   ];
   const current = steps[Math.min(step, steps.length - 1)];
 
-  const bonus = useMemo(
-    () =>
-      bg
-        ? bonusMap(bg, bonusMode, plus2 ?? undefined, plus1 ?? undefined)
-        : Object.fromEntries(ABILITY_ORDER.map((a) => [a, 0])),
-    [bg, bonusMode, plus2, plus1],
-  );
+  // 不 memo：只是六個鍵的物件，每次算的成本遠低於維護相依清單的風險。
+  const bonus = bg
+    ? bonusMap(bg, bonusMode, plus2 ?? undefined, plus1 ?? undefined)
+    : Object.fromEntries(ABILITY_ORDER.map((a) => [a, 0]));
 
   const filled = ABILITY_ORDER.every((a) => base[a] !== null);
   const canNext = (() => {
@@ -260,9 +266,9 @@ export function CreateWizard({ spells }: { spells: CatalogSpell[] }) {
         {current === '背景' && (
           <>
             <OptionList
-              options={BACKGROUNDS.map((b) => ({
+              options={allBackgrounds.map((b) => ({
                 key: b.cn,
-                title: b.cn,
+                title: b.cn + (b.originFeatCustom || !b.en ? '（自訂）' : ''),
                 sub: b.en,
                 desc: `${b.skills.join('、')}・${b.originFeat}${b.toolProficiency ? `・${b.toolProficiency}` : ''}`,
               }))}

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { CreateWizard } from '@/components/creation/create-wizard';
+import { fetchCustomBackgrounds } from '@/lib/backgrounds/actions';
 import { fetchSpells } from '@/lib/catalog/fetch';
 import { createClient } from '@/lib/supabase/server';
 
@@ -23,5 +24,20 @@ export default async function CharacterCreatePage() {
   // 只有 0 與 1 環用得到——339 筆全傳會讓 HTML 多出數百 KB。
   const spells = rows.filter((s) => s.level <= 1);
 
-  return <CreateWizard spells={spells} />;
+  // 自訂背景與內建並列。轉為 BackgroundOption 的形狀——建角流程不必區分來源，
+  // 選取後一律快照進角色卡。
+  const { backgrounds } = await fetchCustomBackgrounds();
+  const custom = backgrounds.map((b) => ({
+    cn: b.name,
+    en: '',
+    abilities: b.abilities,
+    skills: b.skills,
+    originFeat: b.originFeat,
+    toolProficiency: b.toolProficiency,
+    originFeatCustom: b.originFeatCustom,
+    originFeatDescription: b.originFeatDescription,
+    description: b.description,
+  }));
+
+  return <CreateWizard spells={spells} customBackgrounds={custom} />;
 }

@@ -41,6 +41,12 @@ export default async function SystemPage() {
         >
           切換角色
         </Link>
+        <Link
+          href="/custom-backgrounds"
+          className="mt-2 flex min-h-11 items-center justify-center rounded-card border border-border text-[13px] text-text-primary"
+        >
+          自訂背景
+        </Link>
       </ParchmentCard>
 
       <ParchmentCard className="p-4">
