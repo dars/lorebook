@@ -287,6 +287,26 @@ export const characterActions = {
     useCharacterStore.getState().update((c) => ({ ...c, mageArmorActive: active }));
   },
 
+  setPortrait(url: string) {
+    useCharacterStore.getState().update((c) => ({
+      ...c,
+      portraitUrl: url,
+      // 換圖時取景歸零：新圖的構圖與舊圖無關，沿用舊取景通常是錯的。
+      ...(url === '' || url !== c.portraitUrl
+        ? { portraitScale: 1, portraitCenterX: 0.5, portraitCenterY: 0.5 }
+        : {}),
+    }));
+  },
+
+  setPortraitFraming(v: { scale?: number; x?: number; y?: number }) {
+    useCharacterStore.getState().update((c) => ({
+      ...c,
+      portraitScale: v.scale ?? c.portraitScale,
+      portraitCenterX: v.x ?? c.portraitCenterX,
+      portraitCenterY: v.y ?? c.portraitCenterY,
+    }));
+  },
+
   toggleCondition(name: string) {
     useCharacterStore.getState().update((c) => ({
       ...c,

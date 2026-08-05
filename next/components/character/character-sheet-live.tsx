@@ -9,6 +9,7 @@ import { useCharacterSync } from '@/lib/state/sync';
 import { CharacterSheet } from './character-sheet';
 import { BasicInfoEditor } from './editors/basic-info-editor';
 import { CurrencyEditor, InventoryEditor } from './editors/inventory-editor';
+import { PortraitEditor } from './editors/portrait-editor';
 import { ProficiencyEditor } from './editors/proficiency-editor';
 
 /**
@@ -35,7 +36,7 @@ export function CharacterSheetLive({
 }) {
   const load = useCharacterStore((s) => s.load);
   const stored = useCharacterStore((s) => s.character);
-  const [editor, setEditor] = useState<'basic' | 'prof' | 'items' | 'coin' | null>(
+  const [editor, setEditor] = useState<'basic' | 'prof' | 'items' | 'coin' | 'portrait' | null>(
     null,
   );
 
@@ -53,6 +54,7 @@ export function CharacterSheetLive({
         share={share}
         onEditBasic={() => setEditor('basic')}
         onEditProficiency={() => setEditor('prof')}
+        onEditPortrait={persist ? () => setEditor('portrait') : undefined}
         inventory={{
           c,
           onEditCurrency: () => setEditor('coin'),
@@ -74,6 +76,10 @@ export function CharacterSheetLive({
         catalog={catalog}
       />
       <CurrencyEditor open={editor === 'coin'} onClose={() => setEditor(null)} />
+      {/* 試玩不提供立繪上傳：訪客沒有帳號，Storage 寫入會被擋。 */}
+      {persist && (
+        <PortraitEditor open={editor === 'portrait'} onClose={() => setEditor(null)} />
+      )}
     </>
   );
 }

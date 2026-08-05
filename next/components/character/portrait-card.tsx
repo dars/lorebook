@@ -11,7 +11,14 @@ import type { Character } from '@/lib/domain/character';
  * - 文字自底部起：職業列（13px 字距 2 金色）／名稱（44px w700 白）／
  *   英文名（Cinzel 16px 字距 8 白 70%）／背景·陣營·信仰（14px 白 85%）
  */
-export function PortraitCard({ c }: { c: Character }) {
+export function PortraitCard({
+  c,
+  onEdit,
+}: {
+  c: Character;
+  /** 編輯入口。唯讀檢視不傳——立繪僅供觀看。 */
+  onEdit?: () => void;
+}) {
   // 取景：Flutter 端存 scale 與正規化中心點，此處以 object-position 與
   // scale 表達同一件事。
   const objectPosition = `${c.portraitCenterX * 100}% ${c.portraitCenterY * 100}%`;
@@ -40,6 +47,19 @@ export function PortraitCard({ c }: { c: Character }) {
 
         {/* 底部漸層：自中段開始加深，確保文字可讀。 */}
         <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-transparent from-50% to-black/80" />
+
+        {onEdit && (
+          <button
+            type="button"
+            onClick={onEdit}
+            aria-label="更換角色圖"
+            className="absolute right-3 top-3 flex size-11 items-center justify-center rounded-full border border-border bg-black/60"
+          >
+            <svg viewBox="0 0 24 24" className="size-[18px] fill-white/90" aria-hidden>
+              <path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3zm3 5a6 6 0 1 1 0 12 6 6 0 0 1 0-12m0 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8" />
+            </svg>
+          </button>
+        )}
 
         <div className="absolute inset-0 flex flex-col justify-end p-5">
           {(c.className || c.subclass) && (

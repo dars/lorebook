@@ -14,10 +14,12 @@ export function OverviewTab({
   c,
   share,
   onEditBasic,
+  onEditPortrait,
 }: {
   c: Character;
   share?: ReactNode;
   onEditBasic?: () => void;
+  onEditPortrait?: () => void;
 }) {
   const rows: [
     React.ComponentProps<typeof InfoField>,
@@ -57,7 +59,7 @@ export function OverviewTab({
 
   return (
     <div className="px-4 pb-10">
-      <PortraitCard c={c} />
+      <PortraitCard c={c} onEdit={onEditPortrait} />
 
       <CollapsibleSection
         en="BASIC"

@@ -27,6 +27,7 @@ export function CharacterSheet({
   share,
   onEditBasic,
   onEditProficiency,
+  onEditPortrait,
   inventory,
 }: {
   c: Character;
@@ -35,6 +36,7 @@ export function CharacterSheet({
   /** 編輯入口。唯讀檢視不傳——寫入入口不予渲染，而非渲染後停用。 */
   onEditBasic?: () => void;
   onEditProficiency?: () => void;
+  onEditPortrait?: () => void;
   inventory?: React.ComponentProps<typeof InventoryTab>;
 }) {
   const showSpells = c.spellSlots.length > 0 || c.cantrips.length > 0;
@@ -47,7 +49,14 @@ export function CharacterSheet({
   const render = (name: string) => {
     switch (name) {
       case '總覽':
-        return <OverviewTab c={c} share={share} onEditBasic={onEditBasic} />;
+        return (
+          <OverviewTab
+            c={c}
+            share={share}
+            onEditBasic={onEditBasic}
+            onEditPortrait={onEditPortrait}
+          />
+        );
       case '屬性':
         return <AbilitiesTab c={c} />;
       case '法術':
@@ -72,7 +81,12 @@ export function CharacterSheet({
       {/* expanded：左欄總覽常駐、右欄分頁 */}
       <div className="expanded:flex hidden w-full items-start gap-4">
         <div className="min-w-0 flex-2">
-          <OverviewTab c={c} share={share} onEditBasic={onEditBasic} />
+          <OverviewTab
+            c={c}
+            share={share}
+            onEditBasic={onEditBasic}
+            onEditPortrait={onEditPortrait}
+          />
         </div>
         <div className="min-w-0 flex-3">
           <CharacterTabBar
