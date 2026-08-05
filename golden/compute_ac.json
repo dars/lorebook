@@ -1,0 +1,1811 @@
+[
+  {
+    "desc": "無甲・敏捷",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 13,
+      "label": "無甲・敏捷"
+    }
+  },
+  {
+    "desc": "無甲・敏捷＋盾牌",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "盾牌",
+          "nameEn": "",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "armor",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "shield",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 15,
+      "label": "無甲・敏捷・盾牌"
+    }
+  },
+  {
+    "desc": "輕甲：base＋敏捷全額",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "皮甲",
+          "nameEn": "",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "armor",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "light",
+          "acBase": 11
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 14,
+      "label": "皮甲"
+    }
+  },
+  {
+    "desc": "中甲：敏捷上限 +2（敏捷 +3 只計 +2）",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "鏈衫",
+          "nameEn": "",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "armor",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "medium",
+          "acBase": 13
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 15,
+      "label": "鏈衫"
+    }
+  },
+  {
+    "desc": "中甲：敏捷 +1 未達上限，全額計入",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 12,
+          "modifier": 1,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "鏈衫",
+          "nameEn": "",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "armor",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "medium",
+          "acBase": 13
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 14,
+      "label": "鏈衫"
+    }
+  },
+  {
+    "desc": "重甲：完全不計敏捷",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "板甲",
+          "nameEn": "",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "armor",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "heavy",
+          "acBase": 18
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 18,
+      "label": "板甲"
+    }
+  },
+  {
+    "desc": "重甲＋盾牌",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "板甲",
+          "nameEn": "",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "armor",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "heavy",
+          "acBase": 18
+        },
+        {
+          "name": "盾牌",
+          "nameEn": "",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "armor",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "shield",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 20,
+      "label": "板甲・盾牌"
+    }
+  },
+  {
+    "desc": "野蠻人無甲防禦：10＋敏＋體",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Barbarian",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 14,
+          "modifier": 2,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 15,
+      "label": "無甲防禦"
+    }
+  },
+  {
+    "desc": "野蠻人無甲防禦＋盾牌（持盾仍有效）",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Barbarian",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 14,
+          "modifier": 2,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "盾牌",
+          "nameEn": "",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "armor",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "shield",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 17,
+      "label": "無甲防禦・盾牌"
+    }
+  },
+  {
+    "desc": "武僧無甲防禦：10＋敏＋感",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Monk",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 14,
+          "modifier": 2,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 15,
+      "label": "無甲防禦"
+    }
+  },
+  {
+    "desc": "武僧持盾：無甲防禦失效，退回一般無甲",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Monk",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 14,
+          "modifier": 2,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "盾牌",
+          "nameEn": "",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "armor",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "shield",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 15,
+      "label": "無甲・敏捷・盾牌"
+    }
+  },
+  {
+    "desc": "法師護甲：13＋敏，高於一般無甲",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Wizard",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": true,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 12,
+          "modifier": 1,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 14,
+      "label": "法師護甲"
+    }
+  },
+  {
+    "desc": "法師護甲低於無甲防禦時不採用（取最高）",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Barbarian",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": true,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 14,
+          "modifier": 2,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 18,
+          "modifier": 4,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 16,
+      "label": "無甲防禦"
+    }
+  },
+  {
+    "desc": "自訂護甲缺 acBase：回退舊靜態 ac 欄位",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 15,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 14,
+          "modifier": 2,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "祖傳鎧",
+          "nameEn": "",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "armor",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "none",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 15,
+      "label": "祖傳鎧"
+    }
+  },
+  {
+    "desc": "未裝備的護甲不計入",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "板甲",
+          "nameEn": "",
+          "type": "",
+          "description": "",
+          "equipped": false,
+          "itemType": "armor",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "heavy",
+          "acBase": 18
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": {
+      "value": 13,
+      "label": "無甲・敏捷"
+    }
+  }
+]

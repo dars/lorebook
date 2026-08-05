@@ -1,0 +1,4008 @@
+[
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 1,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 2,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 3,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 4,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 5,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 6,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 7,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 8,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 9,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 10,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 11,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 12,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 5,
+        "current": 5,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 13,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 5,
+        "current": 5,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 14,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 5,
+        "current": 5,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 15,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 5,
+        "current": 5,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 16,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 5,
+        "current": 5,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 17,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 6,
+        "current": 6,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 18,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 6,
+        "current": 6,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 19,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 6,
+        "current": 6,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 20,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "狂暴",
+        "nameEn": "Rage",
+        "max": 6,
+        "current": 6,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 1,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 6,
+        "recovery": "long",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 2,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 6,
+        "recovery": "long",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 3,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 6,
+        "recovery": "long",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 4,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 6,
+        "recovery": "long",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 5,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 8,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 6,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 8,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 7,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 8,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 8,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 8,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 9,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 8,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 10,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 10,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 11,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 10,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 12,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 10,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 13,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 10,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 14,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 10,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 15,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 12,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 16,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 12,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 17,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 12,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 18,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 12,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 19,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 12,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 20,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "吟遊激勵",
+        "nameEn": "Bardic Inspiration",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 12,
+        "recovery": "short",
+        "unit": "",
+        "display": "dice"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 1,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": []
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 2,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 3,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 4,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 5,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 6,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 7,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 8,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 9,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 10,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 11,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 12,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 13,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 14,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 15,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 16,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 17,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 18,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 19,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 20,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 1,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": []
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 2,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 3,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 4,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 5,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 6,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 7,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 8,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 9,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 10,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 11,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 12,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 13,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 14,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 15,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 16,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 17,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 18,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 19,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 20,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "荒野變身",
+        "nameEn": "Wild Shape",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 1,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 2,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 3,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 4,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 5,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 6,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 7,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 8,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 9,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 10,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 11,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 12,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 13,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 14,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 15,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 16,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 17,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 18,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 19,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 20,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "第二風",
+        "nameEn": "Second Wind",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "動作如潮",
+        "nameEn": "Action Surge",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 1,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": []
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 2,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 3,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 4,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 5,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 5,
+        "current": 5,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 6,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 6,
+        "current": 6,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 7,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 7,
+        "current": 7,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 8,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 8,
+        "current": 8,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 9,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 9,
+        "current": 9,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 10,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 10,
+        "current": 10,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 11,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 11,
+        "current": 11,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 12,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 12,
+        "current": 12,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 13,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 13,
+        "current": 13,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 14,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 14,
+        "current": 14,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 15,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 15,
+        "current": 15,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 16,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 16,
+        "current": 16,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 17,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 17,
+        "current": 17,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 18,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 18,
+        "current": 18,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 19,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 19,
+        "current": 19,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 20,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "專注點",
+        "nameEn": "Focus Points",
+        "max": 20,
+        "current": 20,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 1,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 5,
+        "current": 5,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 2,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 10,
+        "current": 10,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 3,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 15,
+        "current": 15,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 4,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 20,
+        "current": 20,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 5,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 25,
+        "current": 25,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 6,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 30,
+        "current": 30,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 7,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 35,
+        "current": 35,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 8,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 40,
+        "current": 40,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 9,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 45,
+        "current": 45,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 10,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 50,
+        "current": 50,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 11,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 55,
+        "current": 55,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 12,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 60,
+        "current": 60,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 13,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 65,
+        "current": 65,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 14,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 70,
+        "current": 70,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 15,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 75,
+        "current": 75,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 16,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 80,
+        "current": 80,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 17,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 85,
+        "current": 85,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 18,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 90,
+        "current": 90,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 19,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 95,
+        "current": 95,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 20,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "聖療之觸",
+        "nameEn": "Lay on Hands",
+        "max": 100,
+        "current": 100,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "HP",
+        "display": "number"
+      },
+      {
+        "name": "引導神力",
+        "nameEn": "Channel Divinity",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 1,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": []
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 2,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 3,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 4,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 4,
+        "current": 4,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 5,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 5,
+        "current": 5,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 6,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 6,
+        "current": 6,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 7,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 7,
+        "current": 7,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 8,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 8,
+        "current": 8,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 9,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 9,
+        "current": 9,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 10,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 10,
+        "current": 10,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 11,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 11,
+        "current": 11,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 12,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 12,
+        "current": 12,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 13,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 13,
+        "current": 13,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 14,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 14,
+        "current": 14,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 15,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 15,
+        "current": 15,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 16,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 16,
+        "current": 16,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 17,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 17,
+        "current": 17,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 18,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 18,
+        "current": 18,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 19,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 19,
+        "current": 19,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 20,
+      "scores": {
+        "CHA": 16,
+        "CON": 14,
+        "WIS": 12
+      }
+    },
+    "output": [
+      {
+        "name": "術法點數",
+        "nameEn": "Sorcery Points",
+        "max": 20,
+        "current": 20,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "點",
+        "display": "number"
+      }
+    ]
+  }
+]

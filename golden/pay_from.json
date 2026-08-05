@@ -1,0 +1,242 @@
+[
+  {
+    "desc": "免費（0 cp）不動財富",
+    "input": {
+      "currency": {
+        "pp": 0,
+        "gp": 1,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "priceCp": 0
+    },
+    "output": {
+      "ok": true,
+      "remaining": {
+        "pp": 0,
+        "gp": 1,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "shortfallCp": 0
+    }
+  },
+  {
+    "desc": "同階剛好扣完",
+    "input": {
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 50
+      },
+      "priceCp": 50
+    },
+    "output": {
+      "ok": true,
+      "remaining": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "shortfallCp": 0
+    }
+  },
+  {
+    "desc": "同階不足，向上換零一枚 sp",
+    "input": {
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 5,
+        "cp": 3
+      },
+      "priceCp": 8
+    },
+    "output": {
+      "ok": true,
+      "remaining": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 4,
+        "cp": 5
+      },
+      "shortfallCp": 0
+    }
+  },
+  {
+    "desc": "跨階換零：只有 gp 買 3 cp",
+    "input": {
+      "currency": {
+        "pp": 0,
+        "gp": 1,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "priceCp": 3
+    },
+    "output": {
+      "ok": true,
+      "remaining": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 9,
+        "cp": 7
+      },
+      "shortfallCp": 0
+    }
+  },
+  {
+    "desc": "跨兩階換零：只有 pp 買 7 cp",
+    "input": {
+      "currency": {
+        "pp": 1,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "priceCp": 7
+    },
+    "output": {
+      "ok": true,
+      "remaining": {
+        "pp": 0,
+        "gp": 9,
+        "ep": 0,
+        "sp": 9,
+        "cp": 3
+      },
+      "shortfallCp": 0
+    }
+  },
+  {
+    "desc": "混合幣別，優先扣小額",
+    "input": {
+      "currency": {
+        "pp": 1,
+        "gp": 5,
+        "ep": 2,
+        "sp": 3,
+        "cp": 9
+      },
+      "priceCp": 137
+    },
+    "output": {
+      "ok": true,
+      "remaining": {
+        "pp": 1,
+        "gp": 5,
+        "ep": 0,
+        "sp": 0,
+        "cp": 2
+      },
+      "shortfallCp": 0
+    }
+  },
+  {
+    "desc": "不產生 ep：找零走 gp/sp/cp",
+    "input": {
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 1,
+        "sp": 0,
+        "cp": 0
+      },
+      "priceCp": 3
+    },
+    "output": {
+      "ok": true,
+      "remaining": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 4,
+        "cp": 7
+      },
+      "shortfallCp": 0
+    }
+  },
+  {
+    "desc": "總額不足，回傳差額且財富不變",
+    "input": {
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 2,
+        "cp": 0
+      },
+      "priceCp": 100
+    },
+    "output": {
+      "ok": false,
+      "remaining": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 2,
+        "cp": 0
+      },
+      "shortfallCp": 80
+    }
+  },
+  {
+    "desc": "身無分文",
+    "input": {
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "priceCp": 1
+    },
+    "output": {
+      "ok": false,
+      "remaining": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "shortfallCp": 1
+    }
+  },
+  {
+    "desc": "總額剛好用盡",
+    "input": {
+      "currency": {
+        "pp": 0,
+        "gp": 1,
+        "ep": 0,
+        "sp": 2,
+        "cp": 3
+      },
+      "priceCp": 123
+    },
+    "output": {
+      "ok": true,
+      "remaining": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "shortfallCp": 0
+    }
+  }
+]

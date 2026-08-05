@@ -11,13 +11,13 @@
 
 ## 2. Golden 對照匯出
 
-- [ ] 2.1 匯出全部 21 筆存活角色的 JSON 快照，作為新型別定義的解析素材（切換前不清除資料）
-- [ ] 2.2 記錄「0 筆含舊版 weapons 清單」的查詢與結果，作為不移植回填鏈的依據
-- [ ] 2.3 確認 `tool/seed_demo_characters.dart` 的 demo 規格可於新實作重現（切換後重灌用）
-- [ ] 2.4 匯出 `derived_stats` 的 golden 對照（各 AC 分支：無甲／無甲防禦／法師護甲／護甲公式＋盾牌）
-- [ ] 2.5 匯出 `currency_math` 的 golden 對照（分層扣款的邊界：剛好、需借位、不足）
-- [ ] 2.6 匯出 `level_up` 與 `class_resources` 的 golden 對照（各職業 1–20 級的資源與法術位）
-- [ ] 2.7 明確記錄 golden 未覆蓋的部分，不假裝全蓋到
+- [x] 2.1 匯出全部 21 筆存活角色的 JSON 快照，作為新型別定義的解析素材（切換前不清除資料）
+- [x] 2.2 記錄「0 筆含舊版 weapons 清單」的查詢與結果，作為不移植回填鏈的依據
+- [x] 2.3 確認 `tool/seed_demo_characters.dart` 的 demo 規格可於新實作重現（切換後重灌用）
+- [x] 2.4 匯出 `derived_stats` 的 golden 對照（各 AC 分支：無甲／無甲防禦／法師護甲／護甲公式＋盾牌）
+- [x] 2.5 匯出 `currency_math` 的 golden 對照（分層扣款的邊界：剛好、需借位、不足）
+- [x] 2.6 匯出 `level_up` 與 `class_resources` 的 golden 對照（各職業 1–20 級的資源與法術位）
+- [x] 2.7 明確記錄 golden 未覆蓋的部分，不假裝全蓋到
 
 ## 3. Next.js 基礎
 

@@ -1,0 +1,82 @@
+[
+  {
+    "input": {
+      "cp": 0
+    },
+    "output": {
+      "text": "0 cp"
+    }
+  },
+  {
+    "input": {
+      "cp": 1
+    },
+    "output": {
+      "text": "1 cp"
+    }
+  },
+  {
+    "input": {
+      "cp": 9
+    },
+    "output": {
+      "text": "9 cp"
+    }
+  },
+  {
+    "input": {
+      "cp": 10
+    },
+    "output": {
+      "text": "1 sp"
+    }
+  },
+  {
+    "input": {
+      "cp": 99
+    },
+    "output": {
+      "text": "9 sp 9 cp"
+    }
+  },
+  {
+    "input": {
+      "cp": 100
+    },
+    "output": {
+      "text": "1 gp"
+    }
+  },
+  {
+    "input": {
+      "cp": 137
+    },
+    "output": {
+      "text": "1 gp 3 sp 7 cp"
+    }
+  },
+  {
+    "input": {
+      "cp": 1000
+    },
+    "output": {
+      "text": "1 pp"
+    }
+  },
+  {
+    "input": {
+      "cp": 1234
+    },
+    "output": {
+      "text": "1 pp 2 gp 3 sp 4 cp"
+    }
+  },
+  {
+    "input": {
+      "cp": 123456
+    },
+    "output": {
+      "text": "123 pp 4 gp 5 sp 6 cp"
+    }
+  }
+]
