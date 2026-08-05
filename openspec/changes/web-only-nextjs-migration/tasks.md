@@ -1,66 +1,79 @@
-## 1. 了結原生（獨立可上線）
+## 1. 了結原生與凍結 Flutter
 
-- [ ] 1.1 決定並處置 `ios/Runner.xcodeproj/project.pbxproj` 與 `ios/Podfile.lock` 目前未進版控的變動（連同本步驟一起了結，不留懸置）
+- [ ] 1.1 處置 `ios/Runner.xcodeproj/project.pbxproj` 與 `ios/Podfile.lock` 目前未進版控的變動，不留懸置
 - [ ] 1.2 打版控標籤 `native-final`，作為日後取回原生支援的起點
 - [ ] 1.3 `git rm -r ios/ android/`
-- [ ] 1.4 移除 `web/.well-known/apple-app-site-association` 與 `assetlinks.json`，以及 `web/_headers` 中對應的 Content-Type 規則
+- [ ] 1.4 移除 `web/.well-known/apple-app-site-association`、`assetlinks.json` 與 `web/_headers` 中對應的 Content-Type 規則
 - [ ] 1.5 移除 `share_link.dart` 等處與 deep link／universal link 相關的敘述與設定
-- [ ] 1.6 更新 CLAUDE.md：開頭的平台敘述、常用指令中的 iOS/Android 建置段落
-- [ ] 1.7 更新 `openspec/project.md`（若含平台敘述）
-- [ ] 1.8 `flutter analyze` 與 `flutter test` 全綠，`flutter build web` 通過
-- [ ] 1.9 部署並確認線上功能不受影響
+- [ ] 1.6 更新 CLAUDE.md：平台敘述、常用指令中的原生建置段落
+- [ ] 1.7 於 `custom-species`、`homebrew-share`、`dual-rules-version`、`offline-character-cache` 各自標注「Flutter 端凍結，待 Next.js 重寫完成後接續」
+- [ ] 1.8 `flutter analyze` 與 `flutter test` 全綠
 
-## 2. 關閉 service worker
+## 2. Golden 對照匯出
 
-- [ ] 2.1 Flutter web 改以 `--pwa-strategy=none` 建置，更新部署腳本與 CLAUDE.md 的指令
-- [ ] 2.2 評估 `AppUpdateGate` 的處置——SW 關閉後其訊號源消失，決定停用或移除
-- [ ] 2.3 部署，以無痕視窗確認新訪客不再註冊 SW
-- [ ] 2.4 以既有 profile 確認舊 SW 仍在（此步驟尚未註銷，僅記錄現象作為 4.x 的對照）
+- [ ] 2.1 匯出全部 21 筆存活角色的 JSON 快照，作為新型別定義的解析素材（切換前不清除資料）
+- [ ] 2.2 記錄「0 筆含舊版 weapons 清單」的查詢與結果，作為不移植回填鏈的依據
+- [ ] 2.3 確認 `tool/seed_demo_characters.dart` 的 demo 規格可於新實作重現（切換後重灌用）
+- [ ] 2.4 匯出 `derived_stats` 的 golden 對照（各 AC 分支：無甲／無甲防禦／法師護甲／護甲公式＋盾牌）
+- [ ] 2.5 匯出 `currency_math` 的 golden 對照（分層扣款的邊界：剛好、需借位、不足）
+- [ ] 2.6 匯出 `level_up` 與 `class_resources` 的 golden 對照（各職業 1–20 級的資源與法術位）
+- [ ] 2.7 明確記錄 golden 未覆蓋的部分，不假裝全蓋到
 
-## 3. Next.js 骨架與合併部署
+## 3. Next.js 基礎
 
-- [ ] 3.1 決定 Cloudflare 部署方案（靜態匯出／`@cloudflare/next-on-pages`／OpenNext），以分享頁需要 SSR 為前提實測
-- [ ] 3.2 建立 Next.js 應用骨架，暫不含任何業務路由
-- [ ] 3.3 自 Flutter theme 抽出設計 token（色票、字級、間距），供兩邊共用
-- [ ] 3.4 合併部署腳本：Flutter 產物置於 Next.js 靜態資產下，未匹配路徑 rewrite 至 Flutter index.html
-- [ ] 3.5 部署，驗證所有既有路由仍由 Flutter 正常服務（catch-all 生效）
-- [ ] 3.6 驗證直接輸入網址、重新整理、瀏覽器上下頁在 fallback 路徑下皆正常
+- [ ] 3.1 實測並決定 Cloudflare 部署方案（`@cloudflare/next-on-pages` 或 OpenNext），以分享頁需 SSR 為前提
+- [ ] 3.2 建立 Next.js 專案骨架與部署管線（沿用手動 wrangler，勿依賴 git push 觸發）
+- [ ] 3.3 自 Flutter theme 抽出設計 token（色票、字級、間距、圓角），確保色票不漂移
+- [ ] 3.4 字型策略：woff2 ＋ unicode-range 分片；使用者自產內容需 fallback，不得出現豆腐字
+- [ ] 3.5 Supabase JS client 接線（anon key；**service role key 不得進入前端可達路徑**）
+- [ ] 3.6 Google／Apple OAuth 登入與 session 管理
+- [ ] 3.7 舊 service worker 註銷程式碼（`getRegistrations()` → `unregister()`），標注為切換期暫時性程式碼
+- [ ] 3.8 狀態管理選型定案（見 design Open Questions）
 
-## 4. 註銷舊 service worker
+## 4. 規則邏輯移植（頁面的前置）
 
-- [ ] 4.1 於 Next.js 根版面加入一次性註銷程式碼（`getRegistrations()` → `unregister()`），標註為遷移期暫時性程式碼
-- [ ] 4.2 部署，以既有 profile 確認舊 SW 已被註銷且不再攔截請求
-- [ ] 4.3 確認註銷後既有使用者的功能與資料不受影響
+- [ ] 4.1 型別定義：`Character` 及其巢狀模型（55 個頂層欄位），與現行 JSON 形狀對齊
+- [ ] 4.2 以真實的 21 筆資料驗證型別解析，全數通過才算完成
+- [ ] 4.3 移植能力值與熟練推導（`character_math`）
+- [ ] 4.4 移植 AC 推導（`derived_stats`），逐項對上 2.4 的 golden
+- [ ] 4.5 移植貨幣分層扣款（`currency_math`），逐項對上 2.5 的 golden
+- [ ] 4.6 移植職業資源推導（`class_resources`），逐項對上 2.6 的 golden
+- [ ] 4.7 移植升級邏輯（`level_up`），逐項對上 2.6 的 golden
+- [ ] 4.8 移植武器攻擊列推導（由裝備推導，非靜態清單）
 
-## 5. Session 共用
+## 5. 角色卡呈現與分享頁
 
-- [ ] 5.1 實作與 `@supabase/supabase-js` 相容的 `LocalStorage`（鍵 `sb-<project-ref>-auth-token`、JSON 形狀對齊）
-- [ ] 5.2 `lib/main.dart` 的 `Supabase.initialize` 改用該實作
-- [ ] 5.3 測試：session 寫入後可由 JS client 的格式解讀；登出後兩邊皆為未登入
-- [ ] 5.4 部署，確認既有使用者被登出一次後可正常重新登入（此為已接受的一次性代價）
-- [ ] 5.5 於登入頁加入本次變更的說明，避免使用者誤以為帳號異常
+- [ ] 5.1 版型框架：三段式寬度級距（compact / medium / expanded）與導覽
+- [ ] 5.2 角色卡唯讀呈現元件（屬性、法術、物品、傳記四個分頁）
+- [ ] 5.3 分享頁 `/v/:token`，以 anon key 呼叫既有的 `get_shared_character` RPC
+- [ ] 5.4 分享頁 SSR ＋ Open Graph 中介資料，且維持不被搜尋引擎索引
+- [ ] 5.5 失效分享的呈現、資料抓取時間與手動重新整理
+- [ ] 5.6 量測分享頁首次載入的傳輸量與可見內容時間，與 Flutter 版基準比對
 
-## 6. 分享頁遷移（第 1 步）
+## 6. 建角、編輯與戰鬥
 
-- [ ] 6.1 量測並記錄遷移前的基準：分享頁的傳輸量與首次可見內容時間
-- [ ] 6.2 Next.js 端實作 `/v/:token`，以 anon key 呼叫既有的 `get_shared_character(p_token)` RPC（**不得使用 service role key**）
-- [ ] 6.3 移植唯讀角色卡的呈現：行動與角色兩個情境，比照既有 `ReadOnlyScope` 下的內容範圍
-- [ ] 6.4 移植失效分享的呈現與「顯示資料抓取時間 ＋ 手動重新整理」
-- [ ] 6.5 字型策略：woff2 ＋ unicode-range 分片；使用者自產內容（角色名、筆記）需 fallback，不得出現豆腐字
-- [ ] 6.6 Open Graph 中介資料；決定靜態品牌圖或動態卡片（見 design Open Questions）
-- [ ] 6.7 確認分享頁仍不被搜尋引擎索引（既有「無公開索引」要求）
-- [ ] 6.8 移除 Flutter 端的 `/v/:token` 路由，確認流量由 Next.js 承接
-- [ ] 6.9 既有分享連結相容驗證：以遷移前發出的連結開啟
+- [ ] 6.1 建角流程（種族／職業／背景／能力值三種配點法／技能與法術選擇）
+- [ ] 6.2 角色卡編輯（HP、臨時 HP、狀態、法術位、資源）
+- [ ] 6.3 裝備與購買（含分層扣款接線）
+- [ ] 6.4 熟練編輯（語言與工具）
+- [ ] 6.5 升級流程
+- [ ] 6.6 分享建立與撤銷
+- [ ] 6.7 內容庫瀏覽（法術 339、物品 210；分頁策略見 design Open Questions）
+- [ ] 6.8 冒險日誌
+- [ ] 6.9 自訂背景
 
-## 7. 驗收與量測
+## 7. 切換上線
 
-- [ ] 7.1 量測遷移後分享頁的傳輸量與首次可見內容時間，與 6.1 的基準比對並記錄
-- [ ] 7.2 端到端驗證：建立分享 → 以無痕視窗開啟 → 撤銷 → 確認失效呈現
-- [ ] 7.3 跨應用登入狀態驗證：於 Flutter 路由登入後開啟 Next.js 路由，不被要求重新登入
-- [ ] 7.4 依實測結果決定是否繼續第 2 步（首頁／登入頁），並記錄判斷依據
+- [ ] 7.1 以全部 21 筆真實資料驗證解析與呈現，不只測樣本
+- [ ] 7.2 清除既有測試資料（**帶 user_id 並先 select 確認影響範圍**），以產生器重灌 demo 角色
+- [ ] 7.3 端到端驗證：登入 → 建角 → 編輯 → 分享 → 撤銷
+- [ ] 7.4 切換部署目標至 Next.js，確認舊 SW 註銷生效
+- [ ] 7.5 通知使用者需重新登入，並於登入頁說明
+- [ ] 7.6 量測並記錄切換後的首次載入，與 proposal 的 7.8 MB／8–10 秒基準比對
 
-## 8. 後續 change 的接續
+## 8. 收尾
 
-- [ ] 8.1 更新 `offline-character-cache` 的 design：刪除原生儲存段落，改以 Next.js 為前提，並註明待編輯介面遷移後再實作
-- [ ] 8.2 於 `custom-species`、`homebrew-share`、`dual-rules-version` 註記遷移期功能歸屬政策（續留 Flutter 端實作）
-- [ ] 8.3 建立第 2 步（首頁／登入頁遷移）的 change 提案
+- [ ] 8.1 觀察期無舊畫面回報後，移除 SW 註銷程式碼
+- [ ] 8.2 以獨立 commit 刪除 `lib/`、`test/` 與 Flutter 設定
+- [ ] 8.3 更新 CLAUDE.md 為 Next.js 專案的指令與架構
+- [ ] 8.4 解凍擱置的 change，各自以 Next.js 為前提更新 design

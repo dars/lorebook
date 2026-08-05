@@ -22,17 +22,17 @@ web-only 之後，**每一位新使用者的第一印象都是那 8–10 秒**�
 ## What Changes
 
 - **確立 web-only**：移除 iOS/Android 建置目標與其設定資產（**BREAKING**：不再產出原生 app；deep link／universal link 隨之退場）
-- 建立**絞殺者（strangler fig）遷移架構**：Next.js 與 Flutter 共存於同一網域，逐路由搬遷，未搬遷的路由 fallback 至 Flutter
-- 兩個建置產物合併為單一部署
-- Supabase session 跨兩個 client 共用，使用者不因路由屬於哪一邊而被要求重複登入
-- 處理 Flutter service worker 的作用域——它註冊於 `/`，會攔截已遷移的路由並回舊資產
-- **遷移第 1 步：分享頁 `/v/:token`** 改由 Next.js 以 SSR 提供，附社群預覽卡片
-- 遷移期間的新功能歸屬政策成文，避免同一功能兩邊各寫一次
+- **以 Next.js 全面重寫（clean-slate），不採絞殺者共存**：目前僅 11 個帳號、21 筆角色，皆為本人與朋友的測試資料，可接受一次性切換與重新登入。共存機制（catch-all 路由、雙產物部署、session 跨 client 相容）的唯一作用是避免中斷，不值得為此規模支付
+- Flutter 停止部署但留在 repo 作為重寫期間的行為對照，追平後再刪
+- Flutter 端功能凍結：待實作的 change 一律不在即將退場的程式碼上開發
+- **既有測試資料於切換時清除**（測試人員已知會）；因此不移植回填鏈——實測 21 筆中 0 筆含舊版武器清單，`migrateLegacyWeapons` 對現存資料完全不觸發。重寫期間資料保留作為真實解析素材，切換時清空並以產生器重灌 demo 角色
+- 主動註銷舊 service worker——它註冊於 `/`，會攔截新站並回舊資產
+- 分享頁 `/v/:token` 改為 SSR 並附社群預覽卡片
 
 ## Capabilities
 
 ### New Capabilities
-- `web-delivery`: 網站的交付形態——平台範圍、兩個 app 的路由分工與部署合併、session 共用、service worker 作用域、遷移期間的功能歸屬政策
+- `web-delivery`: 網站的交付形態——平台範圍、單一應用交付、切換期的 service worker 註銷、重寫期間的功能凍結、規則邏輯的移植驗收方式
 
 ### Modified Capabilities
 - `routing`: 分享檢視路由不再需要支援 deep link（universal link / app link）；該路由改由 Next.js 承接
@@ -46,18 +46,18 @@ web-only 之後，**每一位新使用者的第一印象都是那 8–10 秒**�
 - 目前未進版控的 `ios/Runner.xcodeproj/project.pbxproj` 與 `ios/Podfile.lock` 變動——連同本 change 一併了結
 
 **新增**
-- Next.js 應用（首版只含分享頁）
-- 合併部署腳本，取代現行的單一 `wrangler pages deploy build/web`
+- Next.js 應用（全功能，取代現行 Flutter web）
+- 部署管線改以 Next.js 產物為目標，取代現行的 `wrangler pages deploy build/web`
 
 **修改**
-- `lib/main.dart`：Supabase 初始化改用與 JS client 相容的 session 儲存
-- Flutter web 建置參數（service worker 策略）
-- `CLAUDE.md`：開頭的「支援 iOS / Android 的 Flutter App」與常用指令中的原生建置段落
+- `CLAUDE.md`：平台敘述與常用指令
 - `openspec/project.md`（若含平台敘述）
 
+**停止維護**
+- Flutter 專案（`lib/`、`test/`）於重寫期間凍結，追平後刪除
+
 **相依變更**
-- `offline-character-cache`（已提案未實作）：其原生儲存那半（`path_provider`）失去意義；且若編輯介面終將搬到 Next.js，在 Flutter 端實作等於寫了就丟。本 change 的 design 給出處置建議
-- `custom-species`、`homebrew-share`、`dual-rules-version` 均為 Flutter 端待實作 change，受遷移期功能歸屬政策約束
+- `custom-species`、`homebrew-share`、`dual-rules-version`、`offline-character-cache` 一律凍結，不在即將退場的 Flutter 端實作；proposal 與 design 保留，重寫完成後以 Next.js 為前提接續
 
 **不影響**
 - 後端：無 schema 或 RLS 變更。`get_shared_character(p_token)` RPC 原樣供 Next.js 呼叫
@@ -65,6 +65,6 @@ web-only 之後，**每一位新使用者的第一印象都是那 8–10 秒**�
 
 ## Non-Goals
 
-- 本 change 不實作遷移第 2–4 步（首頁／登入頁、角色卡唯讀檢視、編輯與戰鬥介面），各自另開 change
-- 不重寫規則邏輯（`derived_stats`、`currency_math`、`level_up`、職業資源推導）——那些留在 Flutter 端，直到其所屬路由被遷移
+- 保持服務不中斷——明確接受一次性切換與重新登入
+- 產品功能擴充：重寫期間不加新功能，擱置的 change 待完成後接續
 - 不改變視覺設計語言

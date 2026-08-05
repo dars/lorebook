@@ -1,116 +1,127 @@
 ## Context
 
-背景與實測數據見 proposal。這裡只記錄實作上的約束與取捨。
+背景與實測數據見 proposal。**本設計已由絞殺者（strangler fig）改為 clean-slate 全面重寫**——絞殺者的全部機制（catch-all 路由分流、雙建置產物合併部署、Dart/JS session 相容、雙軌功能歸屬政策）存在的唯一理由是保護既有使用者不中斷服務，而目前規模不需要支付這筆保費。
 
-四項已驗證、且會左右設計的現況：
+已驗證的現況（決定重寫難度，勿重新臆測）：
 
-- **Supabase session 在兩個 client 之間預設不相容**。`lib/main.dart:42` 以預設選項呼叫 `Supabase.initialize`，`supabase_flutter` 因而使用預設的 `SharedPreferencesLocalStorage`；在 web 上經 `shared_preferences` 落到 localStorage 的 `flutter.SUPABASE_PERSIST_SESSION_KEY`。而 `@supabase/supabase-js` 預設寫在 `sb-<project-ref>-auth-token`，格式也不同。**兩邊看不見彼此的登入狀態**
-- **Flutter 的 service worker 註冊於 scope `/`**，會攔截同網域下的所有路徑，包含已遷移到 Next.js 的路由，並以快取的舊資產回應
-- **`offline-character-cache` 尚未實作**——目前本機沒有任何離線資料可失去
-- 部署為手動 wrangler 兩步，git push 不會部署（Pages 的 GitHub 檢查會謊報成功）
+- **使用者確實存在但規模極小**：`user_characters` 有 11 個帳號、21 筆存活角色，最舊建於 2026-07-02，均為使用者本人與朋友的測試資料。測試人員已知會，**資料可於切換時清除**
+- **回填鏈幾乎是死碼**：21 筆中 **0 筆**有舊版靜態 `weapons` 清單，僅 **1 筆**缺職業資源。`migrateLegacyWeapons` 對現存資料完全不觸發
+- 後端零改動：`get_shared_character(p_token)` 等 RPC、RLS、schema 原樣沿用。`user_characters` 主鍵為複合的 `(user_id, id)`
+- Flutter 端資產：手寫 Dart 25,752 行／102 檔，250 個測試；規則邏輯集中在 `derived_stats`、`currency_math`、`level_up`、`class_resources`
+- 舊 service worker 已註冊於這些使用者的瀏覽器，scope 為 `/`
 
 ## Goals / Non-Goals
 
 **Goals:**
-- 每一步遷移都能單獨上線、單獨衡量、隨時喊停
-- 遷移期間使用者無感：不重複登入、不遇到路由黑洞、不看到兩套不一致的視覺
-- 規則邏輯（AC 推導、分層扣款、升級、職業資源）最後才動，且動的時候有對拍依據
-- 原生移除是乾淨的一刀，不留半死不活的設定檔
+- 以 Next.js 全面取代 Flutter web，取得 SSR、SEO、社群預覽與約 15 倍的首次載入改善
+- 新型別定義能解析全部 21 筆真實資料（切換前的驗收門檻；資料本身不需保留至切換後）
+- 規則邏輯的正確性不因重寫而退步
+- 不留半死不活的雙軌狀態
 
 **Non-Goals:**
-- 第 2–4 步的路由遷移
+- 保持服務不中斷（明確接受一次性切換與重新登入）
 - 後端變更
-- 視覺重新設計——遷移是換交付方式，不是改產品
+- 產品功能擴充——重寫是換交付方式，不是改產品。新功能一律等重寫完成
 
 ## Decisions
 
 ### D1：原生程式碼刪除，不保留「停止建置」的中間態
 
-`git rm -r ios/ android/`，連同 `web/.well-known/apple-app-site-association`、`assetlinks.json`、iOS entitlements 的 Associated Domains 一併移除。git 歷史保有全部內容，需要時 `git revert` 或自標籤取回。
+`git rm -r ios/ android/`，連同 `web/.well-known/apple-app-site-association`、`assetlinks.json`、iOS entitlements 的 Associated Domains 一併移除。刪除前打標籤（例如 `native-final`），使日後取回有明確起點。
 
-**否決「保留但停止建置」**：那會留下一份沒人跑、沒人測、隨 Flutter 升級逐漸腐爛的設定。目前 `ios/Runner.xcodeproj/project.pbxproj` 與 `ios/Podfile.lock` 已經有未進版控的變動懸在那裡好幾天，正是這種中間態的實例——它既沒有被使用，也沒有被了結，只是持續產生雜訊。一刀切乾淨，比留著一個「說不定哪天會用」的空殼誠實。
+**否決「保留但停止建置」**：無人建置、無人測試的設定會隨相依升級腐爛。`ios/Runner.xcodeproj/project.pbxproj` 與 `ios/Podfile.lock` 已經有未進版控的變動懸置多日，正是這種中間態的實例——既沒被使用，也沒被了結，只持續產生雜訊。
 
-刪除前先打一個 tag（例如 `native-final`），讓「取回」有明確的起點而不是翻 log。
+### D2：Flutter 停止部署但留在 repo，作為參考實作
 
-### D2：Next.js 為主體，Flutter 退居 catch-all
+Next.js 為唯一的部署目標。Flutter 專案不刪，但不再建置、不再接受新功能。
 
-單一 Cloudflare Pages 專案。Next.js 為部署根，Flutter 的 `build/web` 產物置於其靜態資產下；Next.js 未匹配的路徑一律 rewrite 至 Flutter 的 index.html。
+留著的理由是**對照**：重寫每一頁時，並排開兩個視窗比對行為，遠比翻程式碼推敲規格快。等 Next.js 版全面追平，再以獨立的 commit 刪除 `lib/`——那時它已無資訊價值。
 
-方向很重要：**新的當主體、舊的當 fallback**。反過來（Flutter 為主、特定路由轉給 Next.js）會讓每遷移一條路由就要改一次分流規則，而且退場時還要再拆一次。以 Next.js 為主體則是「遷一條、少一條 fallback」，最後 fallback 自然歸零，Flutter 無聲退場。
+**否決「立刻刪除 Flutter」**：省下的只是 repo 體積，付出的是整個重寫期間失去唯一可信的行為基準。
 
-**否決「兩個 Pages 專案 ＋ 前置 Worker 分流」**：多一層跳轉、多一個部署目標、多一處會壞的地方，換到的只是建置隔離——而建置本來就是兩個指令，沒有隔離問題。
+### D3：舊 service worker 必須主動註銷
 
-### D3：遷移期間關閉 Flutter 的 service worker
+Flutter 的 SW 註冊於 scope `/`，會攔截同網域的新站並回舊資產。使用者雖少但確實存在，且他們的瀏覽器裡已註冊。
 
-以 `--pwa-strategy=none` 建置 Flutter web。
+Next.js 的根版面加入一次性註銷（`getRegistrations()` → `unregister()`），並在重寫完成、確認無人回報舊畫面後移除。這段程式碼從第一次部署就要在，否則朋友們會看到「網站沒變」而回報假故障。
 
-理由是時機：`offline-character-cache` 尚未實作，**現在本機沒有任何離線資料可失去**，SW 目前唯一的實質作用是重複造訪的載入加速。用這個代價換取遷移期的可預測性，是這段期間最划算的交易——否則舊 SW 會以 scope `/` 攔截已遷移的路由並回舊資產，而這種故障極難診斷（使用者看到的是「新頁面偶爾變回舊的」）。
+### D4：接受一次性登出，不做 session 相容
 
-已上線的舊 SW 不會因為新建置不註冊就消失，必須**主動註銷**：在 Next.js 的根版面加入一次性的 `getRegistrations().then(rs => rs.forEach(r => r.unregister()))`。這段程式碼在遷移完成後移除。
+`supabase_flutter` 與 `@supabase/supabase-js` 的 session 儲存鍵與格式不同。做相容轉換的成本，只為了省下 11 個人各按兩下 OAuth——不划算，且那段相容碼之後還要清掉。
 
-離線能力於遷移完成後在 Next.js 端重新建立（見 D7）。
+切換時在登入頁說明即可。
 
-剛完成的 `AppUpdateGate`（`lib/shared/presentation/app_update/`）在 SW 關閉後不再有訊號可監聽，等同停用。這是預期的——它解決的是 Flutter SW 的快取問題，那個問題隨 SW 一起消失。
+### D5：Flutter 端功能凍結，待實作的 change 全部擱置
 
-### D4：Dart 端改用 JS 相容的 session 儲存格式
+`custom-species`（39 項）、`homebrew-share`（33 項）、`dual-rules-version`（2/45）、`offline-character-cache` 一律**不在 Flutter 端實作**。在即將退場的程式碼上開發，是純粹的浪費。
 
-給 `Supabase.initialize` 傳入自訂 `LocalStorage` 實作，讀寫 `sb-<project-ref>-auth-token` 這個鍵、並採 supabase-js 的 JSON 形狀。
+它們的 proposal 與 design 保留——那些是產品判斷，與實作語言無關，重寫完成後可直接接續。
 
-**方向是讓「即將退場的那一邊」去適應「留下來的那一邊」**。反過來讓 Next.js 去讀 `flutter.SUPABASE_PERSIST_SESSION_KEY`，等於把遷移的痕跡永久烙進最終要保留的程式碼裡——Flutter 退場後那段相容碼會變成沒人懂的考古層。
+這是與絞殺者版本最大的政策反轉：當時因為雙軌期會拖長，主張新功能續寫 Flutter；clean-slate 沒有雙軌期，凍結才是對的。
 
-需注意既有使用者的 session 落在舊鍵上，切換當下會被登出一次。可在首次啟動時做一次性搬遷（讀舊鍵、寫新鍵、刪舊鍵），或接受一次重新登入——**建議接受重新登入**：登入只是 OAuth 兩下，而搬遷程式碼是另一段之後要清掉的暫時性邏輯。
+### D6：不移植回填鏈；舊資料留到切換時才清
 
-### D5：遷移期間的新功能一律寫在 Flutter，例外需明示
+實測 21 筆存活角色中 **0 筆**含舊版 `weapons` 清單，`migrateLegacyWeapons` 對現存資料完全不觸發；且測試資料可於切換時清除。因此**不移植回填鏈**，新實作只面對當前格式。
 
-除非該功能所屬的路由正在被遷移，否則新功能寫 Flutter。
+這條鏈在 Flutter 端反覆滲透到多個讀取路徑（雲端讀取、分享讀取、原本規劃的快取讀取），是持續的複雜度來源。趁重寫一次結清，比原封不動搬過去有價值得多。
 
-理由：Next.js 端目前只有分享頁，缺乏元件庫、狀態管理、規則邏輯；在那裡開新功能等於同時付遷移成本與開發成本。而 Flutter 端該功能日後隨其路由一起遷移，屆時是「照著已驗證的實作重寫」，比「憑規格重新設計」風險低得多。
+**但重寫期間資料不清除**：那 21 筆是唯一的真實解析素材，用來驗證新的型別定義吃得下真實 JSON，比自捏樣本可信得多。清除排在切換上線，demo 角色屆時以 `tool/seed_demo_characters.dart` 的等效實作重灌。
 
-受此政策約束的既有 change：`custom-species`、`homebrew-share`、`dual-rules-version` 全部繼續在 Flutter 端實作。
+清除時必須**帶 `user_id` 並先 select 確認影響範圍**——該表是多租戶的，曾因未限定而誤刪 10 位使用者的資料。
 
-### D6：`offline-character-cache` 延後至遷移完成，並縮減範圍
+### D7：規則邏輯以 golden 對拍移植，且必須先於頁面
 
-該 change 目前規劃 web 用 IndexedDB、原生用 `path_provider`——原生那半在 web-only 之後直接失效。更關鍵的是，離線快取服務的是**編輯與戰鬥介面**，而那是遷移的最後一步；在 Flutter 端實作它，等於寫一套注定隨 Flutter 一起退場的程式碼。
+`derived_stats`（AC 推導）、`currency_math`（分層扣款）、`level_up`、`class_resources` 編碼的是 D&D 規則，目前由 250 個測試釘著。失敗模式不是「寫不出來」，而是「看起來對、但特定情境算錯」——玩家不會回報，只會默默失去信任。
 
-建議：`offline-character-cache` 維持提案狀態不實作，待編輯介面遷移完成後，以 Next.js 的前提重寫其 design（原生儲存段落刪除，SW 策略與 D7 合併）。
+作法：自 Flutter 端匯出涵蓋邊界的輸入／輸出對照（golden file），Next.js 端的實作逐項對上。
 
-### D7：離線與 PWA 於遷移完成後重建，不在期間維持
+**順序上必須先做**：頁面依賴這些推導值，規則層未定就寫頁面，等於在流沙上蓋房子。這也與 clean-slate 的一次性風險相稱——沒有並行雙軌可以當安全網。
 
-遷移期間沒有 SW（D3），因此沒有離線、沒有 A2HS 的安裝價值。這是明確接受的空窗。
+### D8：離線與 PWA 於重寫完成後再建
 
-在 Next.js 端重建時可用 Workbox 之類的成熟方案，取代 Flutter 自動產生的 `flutter_service_worker.js`——後者每次建置重新產生、無法客製，正是先前踩過的坑。
+重寫期間不做 SW。完成後在 Next.js 端以 Workbox 之類的成熟方案建立，取代 Flutter 每次建置重新產生、無法客製的 `flutter_service_worker.js`。
 
-### D8：規則邏輯以 golden test 對拍，不憑規格重寫
+`offline-character-cache` 屆時以 Next.js 為前提重寫 design：原生儲存段落刪除，其餘判斷（快取優先、本機優先的衝突處理、登出清角色不清內容庫、空狀態四分流）原樣沿用。
 
-`derived_stats`（AC 推導）、`currency_math`（分層扣款）、`level_up`、職業資源推導這幾支編碼的是 D&D 規則，目前有 250 個測試釘著。重寫時的風險不是「寫不出來」，而是「寫出來看起來對、但某場戰鬥算錯 AC」——這種錯誤玩家不會回報，只會默默降低信任。
+### D9：頁面依相依性排序，而非獲客價值
 
-作法：在遷移那些邏輯之前，先自 Flutter 端匯出一組涵蓋邊界的輸入／輸出對照（golden file），Next.js 端的實作必須逐一對上。這件事屬於第 4 步，本 change 只確立方針並產出第一份匯出工具的規格。
+絞殺者版本依獲客價值排（分享頁優先），因為每一步都要獨立上線、獨立衡量。clean-slate 是一次切換，沒有中途上線，排序改依**相依性**：
+
+1. 設計 token、Supabase 接線、auth
+2. 規則邏輯 ＋ golden 對拍（D7）
+3. 角色卡唯讀呈現（分享頁與自有角色共用同一套呈現元件）
+4. 建角流程
+5. 編輯與戰鬥介面
+6. 內容庫瀏覽、日誌、自訂背景
+
+分享頁因為與第 3 項共用呈現元件，落在同一階段，不需另外排。
 
 ## Risks / Trade-offs
 
-- **舊 SW 殘留攔截已遷移路由** → D3 的主動註銷；上線後以無痕視窗與既有 profile 分別驗證
-- **session 切換造成全體使用者登出一次** → D4 已接受；上線時機避開跑團尖峰，並在登入頁說明
-- **兩套 UI 的視覺不一致** → 分享頁是唯讀且獨立的入口，不與主 app 並排出現；但色票、字級、間距需自 Flutter 的 theme 抽出成共用 token，否則會越走越遠
-- **遷移拖長成永久雙軌** → 每一步都要有可衡量的完成條件；若某一步遲遲不動，代價是長期維護兩套。建議每完成一步就重新評估是否繼續
-- **Flutter 端仍在長新功能（D5），遷移目標持續變動** → 這是雙軌期的固有成本；壓縮遷移時程比凍結功能實際
-- **Next.js 端的 Supabase 金鑰暴露面** → SSR 取資料時若使用 service role key 會是嚴重問題；分享頁必須沿用既有的 `get_shared_character` RPC ＋ anon key，該函式已是唯一授權點
+- **一次性切換，沒有回退到部分完成狀態的餘地** → Flutter 版留在 repo（D2），最壞情況是重新部署舊版；但那需要恢復 SW 設定，不是零成本
+- **規則邏輯重寫出現靜默錯誤** → D7 的 golden 對拍是主要防線；覆蓋率不足的部分要明確列出，不假裝全蓋到
+- **重寫期間產品完全停滯** → 已接受。壓縮時程比中途插功能實際
+- **舊 SW 導致朋友看到舊畫面並回報假故障** → D3 的註銷程式碼從第一次部署就在；切換時主動告知
+- **新型別定義吃不下真實 JSON** → 以全部 21 筆真實資料跑全量解析驗證，不只測樣本；這是保留舊資料到切換前的主要理由
+- **Next.js 端的 Supabase 金鑰暴露面** → SSR 一律用 anon key；分享頁沿用 `get_shared_character` RPC，該函式已是唯一授權點。**service role key 不得進入任何前端可達路徑**
 
 ## Migration Plan
 
-1. 打 tag `native-final`，`git rm -r ios/ android/` 與相關設定，更新 CLAUDE.md
-2. Flutter 改以 `--pwa-strategy=none` 建置並部署，確認現有功能不受影響
-3. 建立 Next.js 應用骨架與合併部署腳本，暫不含任何路由，驗證 Flutter 仍由 catch-all 正常服務
-4. 加入舊 SW 註銷程式碼，部署，驗證舊使用者不再被舊 SW 攔截
-5. Dart 端切換 session 儲存格式（D4）
-6. 分享頁 `/v/:token` 遷移至 Next.js，含 SSR 與 OG 卡片
-7. 量測分享頁的首次可見內容時間，與遷移前的基準比對
+1. 打標籤 `native-final`，移除 `ios/`、`android/` 與原生設定，更新 CLAUDE.md
+2. Golden 對照匯出（D7）與真實資料快照（D6）
+3. Next.js 基礎：部署方案、設計 token、Supabase 接線、auth
+4. 規則邏輯移植並逐項對上 golden
+5. 頁面依 D9 順序移植
+6. 以真實資料全量驗證解析與呈現
+7. 切換部署目標；清除測試資料並重灌 demo；舊 SW 註銷生效；通知使用者重新登入
+8. 觀察一段時間後刪除 `lib/`，移除註銷程式碼
 
-回退：每一步皆可獨立回退。步驟 6 的回退只需移除 Next.js 的該路由，catch-all 會自動把流量交還 Flutter。
+回退：步驟 7 之前隨時可停——線上仍是 Flutter 版。步驟 7 之後回退需重新部署 Flutter 並恢復其 SW 設定。
 
 ## Open Questions
 
-- Next.js 的 Cloudflare 部署採靜態匯出、`@cloudflare/next-on-pages` 或 OpenNext？分享頁需要 SSR，靜態匯出不可行；三者對 Pages 的支援程度與部署複雜度需實測
-- 設計 token（色票／字級／間距）如何自 Flutter theme 抽出並讓兩邊共用？手動同步在兩軌期會漂移
-- 分享頁的 OG 圖是靜態品牌圖，還是動態產生含角色名與職業的卡片？後者體驗好得多，但需要邊緣端的圖片生成
-- 既有分享連結的相容：`/v/:token` 路徑不變，但需確認舊 SW 註銷前開啟舊連結的行為
-- 遷移完成後 Flutter 專案的處置——保留在同一 repo 還是移出？
+- Next.js 的 Cloudflare 部署採 `@cloudflare/next-on-pages` 或 OpenNext？分享頁需 SSR，靜態匯出不可行。**這題不解決，第 3 項動不了**
+- 設計 token 自 Flutter theme 抽出的形式：手動移植一次，還是產生器？一次性重寫的話手動即可，但要確保色票不漂移
+- 狀態管理選型：Zustand＋TanStack Query，或 Server Components 為主、client state 最小化？後者更能發揮 Next.js，但編輯與戰鬥介面是重度 client state
+- 既有分享 token 是否保留？路徑 `/v/:token` 不變即可相容，但需確認 Next.js 端的 RPC 呼叫與現行行為一致
+- 內容庫瀏覽頁的資料量（法術 339、物品 210）在 SSR 下的分頁策略
