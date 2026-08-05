@@ -1,3 +1,8 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 import type { Character } from '@/lib/domain/character';
 
 /**
@@ -9,13 +14,11 @@ import type { Character } from '@/lib/domain/character';
  *
  * 徽章可點擊與否用外觀區分：角色頁可升級時加金框膠囊，其餘頁面純顯示。
  */
-export function CharacterHeader({
-  c,
-  levelUpEnabled = false,
-}: {
-  c: Character;
-  levelUpEnabled?: boolean;
-}) {
+export function CharacterHeader({ c }: { c: Character }) {
+  // LEVEL 徽章僅在角色頁可點擊觸發升級；其他分頁純顯示，避免跑團中誤觸。
+  // 20 級為上限，沒得升時也不該是可點的。
+  const pathname = usePathname();
+  const levelUpEnabled = pathname.startsWith('/main/character') && c.level < 20;
   return (
     <header className="bg-surface-0">
       <div className="h-px bg-linear-to-r from-transparent via-gold/50 to-transparent" />
@@ -81,10 +84,14 @@ function LevelBadge({
   if (!interactive) {
     return <span className="flex flex-col items-center">{inner}</span>;
   }
-  // 可升級：金框膠囊標示可互動；觸控目標 ≥48px。
+  // 可升級：金框膠囊標示可互動，與純顯示自然區分；觸控目標 ≥48px。
   return (
-    <span className="flex min-h-12 flex-col items-center justify-center rounded-[10px] border border-gold px-3 py-0.5">
+    <Link
+      href="/character-level-up"
+      aria-label="升級"
+      className="flex min-h-12 flex-col items-center justify-center rounded-[10px] border border-gold px-3 py-0.5"
+    >
       {inner}
-    </span>
+    </Link>
   );
 }

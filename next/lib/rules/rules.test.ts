@@ -8,6 +8,7 @@ import { computeAc } from './ac';
 import { attackEntries } from './attacks';
 import { deriveClassResources } from './class-resources';
 import { formatCp, payFrom } from './currency';
+import { applyLevelUp, planFor } from './level-up';
 import {
   CANTRIPS_KNOWN,
   CLASS_PROGRESSION,
@@ -144,5 +145,34 @@ describe('升級規則表對拍（12 職業 × 1–20 級）', () => {
       newCantripPicks: newCantripPicksFor(cls, lv),
       newSpellPicks: newSpellPicksFor(cls, lv),
     }).toEqual(c.output);
+  });
+});
+
+describe('applyLevelUp 對拍', () => {
+  type In = {
+    character: unknown;
+    choices: {
+      hpRoll: number | null;
+      asi: Record<string, number>;
+      subclass: string | null;
+      subclassEn: string | null;
+    };
+  };
+  const cases = golden('apply_level_up.json') as Case<In, unknown>[];
+
+  it('案例不為空', () => expect(cases.length).toBeGreaterThan(0));
+
+  it.each(cases.map((c) => [c.desc, c] as const))('%s', (_d, c) => {
+    const ch = parseCharacter(c.input.character);
+    // 種族每級 HP：golden 的案例只有人類（0）與矮人（1）。
+    const speciesHpPerLevel = ch.species === '矮人' ? 1 : 0;
+    const plan = planFor(ch, speciesHpPerLevel);
+    const result = applyLevelUp(ch, plan, {
+      hpRoll: c.input.choices.hpRoll,
+      asi: c.input.choices.asi,
+      subclass: c.input.choices.subclass ?? undefined,
+      subclassEn: c.input.choices.subclassEn ?? undefined,
+    });
+    expect(parseCharacter(result)).toEqual(parseCharacter(c.output));
   });
 });

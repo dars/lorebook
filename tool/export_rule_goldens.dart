@@ -326,6 +326,104 @@ List<({String desc, Character c})> _attackCases() => [
   ),
 ];
 
+/// 升級案例。刻意涵蓋「取平均 vs 擲骰」「ASI 提升 CON 的回溯」「法術位已用數
+/// 的保留」「職業資源差額入帳」這幾條。
+Character _lvCase({
+  required String classNameEn,
+  required int level,
+  AbilityScores? scores,
+  List<SpellSlots> slots = const [],
+  List<ClassResource> resources = const [],
+  int maxHp = 30,
+  int currentHp = 20,
+  String species = '人類',
+  String spellcastingAbility = '',
+}) => Character(
+  id: 'lv',
+  name: 'Lv',
+  className: '',
+  classNameEn: classNameEn,
+  species: species,
+  level: level,
+  maxHp: maxHp,
+  currentHp: currentHp,
+  hitDieFaces: classNameEn == 'Wizard' ? 6 : 10,
+  spellcastingAbility: spellcastingAbility,
+  spellSlots: slots,
+  resources: resources,
+  abilityScores: scores ?? _scores(),
+);
+
+List<({String desc, Character c, LevelUpChoices choices})> _levelUpCases() => [
+  (
+    desc: '取平均值：HP 增量 = 平均 + 體質',
+    c: _lvCase(classNameEn: 'Fighter', level: 1, scores: _scores(con: 14)),
+    choices: const LevelUpChoices(),
+  ),
+  (
+    desc: '擲骰值取代平均值',
+    c: _lvCase(classNameEn: 'Fighter', level: 1, scores: _scores(con: 14)),
+    choices: const LevelUpChoices(hpRoll: 9),
+  ),
+  (
+    desc: 'ASI 提升體質時回溯既有等級的 HP',
+    c: _lvCase(classNameEn: 'Fighter', level: 3, scores: _scores(con: 13)),
+    choices: const LevelUpChoices(asi: {'CON': 1}),
+  ),
+  (
+    desc: 'ASI 分配兩點到不同能力',
+    c: _lvCase(
+      classNameEn: 'Fighter',
+      level: 3,
+      scores: _scores(str: 15, dex: 13),
+    ),
+    choices: const LevelUpChoices(asi: {'STR': 1, 'DEX': 1}),
+  ),
+  (
+    desc: '能力值上限 20——加值不會溢出',
+    c: _lvCase(classNameEn: 'Fighter', level: 3, scores: _scores(str: 20)),
+    choices: const LevelUpChoices(asi: {'STR': 2}),
+  ),
+  (
+    desc: '法術位：已用數保留並夾至新上限（升級不視為休息）',
+    c: _lvCase(
+      classNameEn: 'Wizard',
+      level: 2,
+      spellcastingAbility: 'INT',
+      scores: _scores(intel: 16, con: 12),
+      slots: [SpellSlots(level: 1, total: 3, used: 3)],
+    ),
+    choices: const LevelUpChoices(),
+  ),
+  (
+    desc: '職業資源：差額入帳而非回滿',
+    c: _lvCase(
+      classNameEn: 'Barbarian',
+      level: 2,
+      scores: _scores(con: 14),
+      resources: [
+        ClassResource(name: '狂暴', nameEn: 'Rage', current: 0, max: 2),
+      ],
+    ),
+    choices: const LevelUpChoices(),
+  ),
+  (
+    desc: '矮人的每級額外 HP 計入',
+    c: _lvCase(
+      classNameEn: 'Fighter',
+      level: 1,
+      species: '矮人',
+      scores: _scores(con: 14),
+    ),
+    choices: const LevelUpChoices(),
+  ),
+  (
+    desc: 'Lv3 子職選擇',
+    c: _lvCase(classNameEn: 'Fighter', level: 2),
+    choices: const LevelUpChoices(subclass: '冠軍', subclassEn: 'Champion'),
+  ),
+];
+
 Map<String, dynamic> _currencyJson(Currency c) => {
   'pp': c.pp,
   'gp': c.gp,
@@ -596,6 +694,32 @@ void main() {
           'desc': '射程：${t.$1}',
           'input': {'range': t.$2},
           'output': {'text': ftFormatRange(t.$2)},
+        },
+    ]);
+
+    // applyLevelUp：先前 README 列為未涵蓋，此處補上。
+    //
+    // 它是流程編排但仍是純函式，且含幾條容易漏的規則：CON 修正提升時回溯
+    // 既有等級的 HP、法術位的已用數保留並夾至新上限（升級不視為休息）、
+    // 職業資源的差額入帳。這些漏掉都不會報錯，只會讓數字悄悄不對。
+    write('apply_level_up', [
+      for (final k in _levelUpCases())
+        {
+          'desc': k.desc,
+          'input': {
+            'character': k.c.toJson(),
+            'choices': {
+              'hpRoll': k.choices.hpRoll,
+              'asi': k.choices.asi,
+              'subclass': k.choices.subclass,
+              'subclassEn': k.choices.subclassEn,
+            },
+          },
+          'output': applyLevelUp(
+            k.c,
+            LevelUpPlan.forCharacter(k.c),
+            k.choices,
+          ).toJson(),
         },
     ]);
 
