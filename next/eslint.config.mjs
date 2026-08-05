@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // OpenNext 與 wrangler 的建置產物：全是 bundle 過的第三方程式碼，
+    // 不加會 lint 出上萬條與本專案無關的問題。
+    ".open-next/**",
+    ".wrangler/**",
   ]),
 ]);
 

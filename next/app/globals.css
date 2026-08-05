@@ -1,26 +1,118 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * 設計 token，逐值移植自 Flutter 端的 lib/app/theme/。
+ *
+ * **色票不得漂移**：重寫換的是交付方式，不是視覺。任何調整都應先改 Flutter
+ * 端或 designs.pen，再同步過來，否則兩邊會各自演化。
+ *
+ * 對照來源：
+ *   app_colors.dart    → --color-*
+ *   app_spacing.dart   → --spacing-* / --radius-*
+ *   dnd_colors.dart    → --color-damage-*
+ *   app_text_styles.dart → --text-*
+ */
+
+@theme {
+  /* ── 核心色票 ───────────────────────────── */
+  --color-primary: #6b4e3e;
+  --color-primary-dark: #4b3766;
+  --color-gold: #c9a84c;
+  --color-gold-dim: #8b6e2a;
+  --color-success: #2e7d32;
+  --color-danger: #c0392b;
+
+  /* ── 深色主題（主視覺）───────────────────
+   * Flutter 端深淺兩套都有，但深色是這個 App 的識別。淺色待有需求再補。
+   */
+  --color-surface-0: #1c1610;
+  --color-surface-1: #2a1f0e;
+  --color-surface-2: #241a0c;
+  --color-border: #5c4420;
+  --color-border-2: #3d2d10;
+  --color-text-primary: #e8d9b5;
+  --color-text-secondary: #a08b62;
+  --color-text-light: #c9b48a;
+  --color-section-label: #8b7340;
+
+  /* ── HP 與法術位 ───────────────────────── */
+  --color-hp-full: #c0392b;
+  --color-hp-mid: #8b3a3a;
+  --color-hp-low: #c0392b;
+  --color-hp-bar-bg: #5b3b3b;
+  --color-crystal-active: #2e7d4f;
+  --color-crystal-empty: #4a3518;
+
+  /* ── 傷害類型（深色主題值）───────────────
+   * 物理／力場／中性刻意共用金色：它們不是「某種元素」，用主題色比硬湊
+   * 一個顏色更誠實。
+   */
+  --color-damage-fire: #d4845a;
+  --color-damage-cold: #5a9ed4;
+  --color-damage-lightning: #6fb7d4;
+  --color-damage-thunder: #9b8fd0;
+  --color-damage-acid: #8fa86b;
+  --color-damage-poison: #7ba86b;
+  --color-damage-necrotic: #7e8c6b;
+  --color-damage-radiant: #e0c56a;
+  --color-damage-psychic: #b58fd0;
+  --color-damage-force: #c9a84c;
+  --color-damage-physical: #c9a84c;
+  --color-damage-neutral: #c9a84c;
+  --color-temp-hp: #6fb0d4;
+
+  /* ── 間距 ─────────────────────────────── */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+  --spacing-4xl: 40px;
+
+  /* ── 圓角 ─────────────────────────────
+   * 卡片與 chip 都是 4px——這個 App 的視覺語言偏方正，不是圓潤風格。
+   * 角色頁首的 16px 是刻意的例外。
+   */
+  --radius-card: 4px;
+  --radius-chip: 4px;
+  --radius-character-header: 16px;
+
+  /* ── 字型 ─────────────────────────────
+   * display（Cinzel）：標題與數值，自我託管，古書感的主要來源
+   * body（Source Sans 3）：拉丁文內文，自我託管
+   * cjk：中文走系統字型，**不下載任何檔案**（見 layout.tsx 的實測說明）
+   *
+   * cjk 堆疊把拉丁字型排在中文字型之前：混排時拉丁字才會用 Source Sans，
+   * 而不是中文字型內建的拉丁字符——後者字形較窄，中英混排會參差。
+   */
+  --font-display: var(--font-display-src), Georgia, serif;
+  --font-body: var(--font-body-src), system-ui, sans-serif;
+  --font-cjk:
+    var(--font-body-src), 'PingFang TC', 'Noto Sans CJK TC',
+    'Microsoft JhengHei', 'Heiti TC', sans-serif;
+
+  /* ── 字級 ─────────────────────────────── */
+  --text-display: 32px;
+  --text-title: 28px;
+  --text-heading: 18px;
+  --text-body: 14px;
+  --text-small: 12px;
+  --text-tiny: 11px;
+
+  /* ── 版型級距（對齊 Material 3 window size class）───
+   * 與 Flutter 的 ResponsiveLayout 同值，兩邊斷點不可分歧。
+   */
+  --breakpoint-medium: 600px;
+  --breakpoint-expanded: 840px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-surface-0);
+  color: var(--color-text-primary);
 }
