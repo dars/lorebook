@@ -28,7 +28,7 @@
 - [x] 3.5 Supabase JS client 接線（server／browser／anon 三種 client ＋ session 續期 middleware）
 - [x] 3.6 Google／Apple OAuth：/auth/callback 伺服器端換 session、登入頁、dev 埠沿用 8087
 - [x] 3.7 舊 service worker 註銷元件（含 Cache Storage 清理與防迴圈旗標），標注為切換期暫時性程式碼
-- [ ] 3.8 狀態管理選型定案（見 design Open Questions）
+- [x] 3.8 狀態管理定案：混合式——編輯走 Zustand ＋ 3 秒 debounce 同步，其餘走 Server Components（design D12）
 
 ## 4. 規則邏輯移植（頁面的前置）
 

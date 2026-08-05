@@ -152,6 +152,33 @@ Google Fonts 的 Noto Serif TC 依**字碼區段**而非使用頻率切片，任
 字集的 Noto Serif TC，但即使切到 5000 字仍是 MB 級，且罕用字（角色名、玩家
 自訂內容）會掉字——不建議。
 
+### D12：混合式狀態管理——編輯走 client store，其餘走 Server Components
+
+界線以「**這份資料會不會被使用者高頻修改**」劃分，**不以頁面劃分**：
+
+| 路徑 | 作法 |
+|---|---|
+| 分享頁、內容庫、角色清單、建角選項 | Server Components 直接讀 |
+| 角色卡編輯、戰鬥介面 | client store（Zustand）＋ debounce 推回 |
+
+**否決全 Server Actions 路線**：跑團當下扣 HP、消法術位是連續操作，每次往返
+伺服器要 0.3–1.5 秒（實測 TTFB）才看到數字變化，戰鬥中不能接受。可用
+`useOptimistic` 緩解，但當 HP、臨時 HP、狀態、法術位、資源全都需要樂觀更新時，
+等於在手刻一個 client store，只是散落各元件、沒有統一管理處。
+
+**否決 TanStack Query**（修正先前的初步建議）：它解決的是「多個獨立的伺服器
+快取項目各自失效與重取」。本 App 的角色資料是**單一文件、由使用者獨佔編輯**，
+是本機擁有的狀態而非伺服器快取；用快取語意表達所有權語意，兩邊都彆扭。內容庫
+確實適合它，但內容庫已走 Server Components，不需要。
+
+同步層行為刻意與 Flutter 的 `characterSyncControllerProvider` 一致：任何變更
+debounce **3 秒**推送整份文件，頁面隱藏時 flush。3 秒是那邊實際使用驗證過的
+值。推送整份而非欄位差異——後端是 `data jsonb` 文件模式，算差異只會多一層會
+出錯的東西。
+
+編輯規則（HP 上下限、受傷先扣臨時 HP）集中在 `characterActions`，不散在元件：
+散落遲早會出現兩種算法。
+
 ## Risks / Trade-offs
 
 - **一次性切換，沒有回退到部分完成狀態的餘地** → Flutter 版留在 repo（D2），最壞情況是重新部署舊版；但那需要恢復 SW 設定，不是零成本
@@ -161,6 +188,7 @@ Google Fonts 的 Noto Serif TC 依**字碼區段**而非使用頻率切片，任
 - **新型別定義吃不下真實 JSON** → 以全部 21 筆真實資料跑全量解析驗證，不只測樣本；這是保留舊資料到切換前的主要理由
 - **Next.js 端的 Supabase 金鑰暴露面** → SSR 一律用 anon key；分享頁沿用 `get_shared_character` RPC，該函式已是唯一授權點。**service role key 不得進入任何前端可達路徑**
 - **spike 的 2.5 KB 不是分享頁的最終體積** → 該頁幾乎無樣式、無字型、無 hydration。加上拉丁字型（約 53 KB，見 D11）、CSS 與 client JS，合理預期落在 150–300 KB。與 Flutter 的 7.8 MB 相比仍是一到兩個數量級的差距，但不應以 2.5 KB 對外表述
+- **兩套資料存取寫法並存（D12）** → 需一條成文規則區分，否則會漂；規則已寫入 design 與 store 的檔頭註解
 - **中文以系統字型呈現，各平台字面不一致** → macOS 走蘋方、Windows 走微軟正黑，字面與字重略有差異。已接受（D11）；若某平台的呈現明顯崩壞再個別處理
 
 ## Migration Plan
