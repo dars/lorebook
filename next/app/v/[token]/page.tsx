@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { ReadOnlySheet } from '@/components/character/read-only-sheet';
+import { CharacterSheet } from '@/components/character/character-sheet';
 import { fetchSharedCharacter } from '@/lib/share/fetch';
 
 /**
@@ -52,8 +52,9 @@ export default async function SharedCharacterPage({ params }: Props) {
   }
 
   return (
-    <main className="flex-1">
-      <ReadOnlySheet c={result.character} />
+    <main className="mx-auto w-full max-w-[1100px] flex-1">
+      {/* 不傳 share：唯讀檢視不渲染分享區塊（對照 Flutter 的 ReadOnlyScope）。 */}
+      <CharacterSheet c={result.character} />
       <FetchedAt at={result.fetchedAt} />
     </main>
   );
@@ -88,10 +89,10 @@ const MESSAGES: Record<string, { title: string; body: string }> = {
 function Unavailable({ status }: { status: string }) {
   const m = MESSAGES[status] ?? MESSAGES.error;
   return (
-    <main className="flex flex-1 items-center justify-center p-lg">
-      <div className="w-full max-w-sm rounded-card border border-border bg-surface-1 p-2xl text-center">
+    <main className="flex flex-1 items-center justify-center p-4">
+      <div className="w-full max-w-sm rounded-card border border-border bg-surface-1 p-6 text-center">
         <h1 className="font-display text-heading text-gold">{m.title}</h1>
-        <p className="mt-md text-small leading-relaxed text-text-light">
+        <p className="mt-3 text-small leading-relaxed text-text-light">
           {m.body}
         </p>
       </div>
@@ -107,7 +108,7 @@ function Unavailable({ status }: { status: string }) {
  */
 function FetchedAt({ at }: { at: number }) {
   return (
-    <footer className="mx-auto max-w-3xl px-lg pb-2xl text-center text-tiny text-text-secondary">
+    <footer className="mx-auto max-w-3xl px-4 pb-6 text-center text-tiny text-text-secondary">
       資料取得於 {new Date(at).toLocaleString('zh-TW', { hour12: false })}
       {' · '}
       <a href="" className="underline hover:text-gold">

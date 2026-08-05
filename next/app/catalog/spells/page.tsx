@@ -34,7 +34,7 @@ export default async function SpellCatalogPage() {
 
   if (error) {
     return (
-      <main className="mx-auto w-full max-w-3xl flex-1 px-lg py-2xl">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6">
         <h1 className="font-display text-title text-gold">法術目錄</h1>
         <EmptyHint text={`目前無法載入內容庫（${error}）。稍後重新整理再試。`} />
       </main>
@@ -50,16 +50,16 @@ export default async function SpellCatalogPage() {
   const levels = [...byLevel.keys()].sort((a, b) => a - b);
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-lg pb-4xl">
-      <header className="pt-xl">
+    <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-10">
+      <header className="pt-5">
         <h1 className="font-display text-title text-gold">法術目錄</h1>
-        <p className="mt-sm text-small text-text-secondary">
+        <p className="mt-2 text-small text-text-secondary">
           SRD 5.2（CC-BY-4.0）· 共 {rows.length} 條 · 用瀏覽器的尋找功能（⌘F）
           可直接搜尋全部內容
         </p>
       </header>
 
-      <nav className="sticky top-0 z-10 -mx-lg mt-lg flex gap-md overflow-x-auto border-b border-border-2 bg-surface-0/95 px-lg py-sm backdrop-blur">
+      <nav className="sticky top-0 z-10 -mx-4 mt-4 flex gap-3 overflow-x-auto border-b border-border-2 bg-surface-0/95 px-4 py-2 backdrop-blur">
         {levels.map((lv) => (
           <a
             key={lv}
@@ -74,26 +74,26 @@ export default async function SpellCatalogPage() {
       {levels.map((lv) => (
         <Section key={lv} id={`lv${lv}`} title={LEVEL_LABEL(lv)}>
           {byLevel.get(lv)!.map((s) => (
-            <details key={s.id} className="border-b border-border-2 py-sm">
+            <details key={s.id} className="border-b border-border-2 py-2">
               <summary className="cursor-pointer text-body">
                 <span className="text-text-primary">{s.name}</span>
                 {s.eng_name && (
-                  <span className="ml-sm text-small text-text-secondary">
+                  <span className="ml-2 text-small text-text-secondary">
                     {s.eng_name}
                   </span>
                 )}
                 {s.school_name && (
-                  <span className="ml-sm text-tiny text-section-label">
+                  <span className="ml-2 text-tiny text-section-label">
                     {s.school_name}
                   </span>
                 )}
                 {s.concentration && (
-                  <span className="ml-sm text-tiny text-gold">專注</span>
+                  <span className="ml-2 text-tiny text-gold">專注</span>
                 )}
-                {s.ritual && <span className="ml-sm text-tiny text-gold">儀式</span>}
+                {s.ritual && <span className="ml-2 text-tiny text-gold">儀式</span>}
               </summary>
 
-              <div className="mt-sm flex flex-wrap gap-sm">
+              <div className="mt-2 flex flex-wrap gap-2">
                 <Chip>施法 {ftFormatCastingTime(s.casting_time) || '—'}</Chip>
                 <Chip>射程 {ftFormatRange(s.range) || '—'}</Chip>
                 <Chip>
@@ -102,7 +102,7 @@ export default async function SpellCatalogPage() {
                 {s.classes.length > 0 && <Chip>{s.classes.join('、')}</Chip>}
               </div>
 
-              <p className="mt-sm whitespace-pre-wrap text-small leading-relaxed text-text-light">
+              <p className="mt-2 whitespace-pre-wrap text-small leading-relaxed text-text-light">
                 {ftFlattenEntries(s.entries)}
               </p>
             </details>

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Cinzel, Source_Sans_3 } from 'next/font/google';
+import { Cinzel, Inter, Source_Sans_3 } from 'next/font/google';
 import { LegacySwCleanup } from '@/components/legacy-sw-cleanup';
 import './globals.css';
 
@@ -38,6 +38,13 @@ const sourceSans = Source_Sans_3({
   display: 'swap',
 });
 
+// Inter：區段標題與欄位標籤的英文小標（Flutter 端同樣用它）。
+const inter = Inter({
+  variable: '--font-label-src',
+  subsets: ['latin'],
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: 'Lorebook',
   description: 'D&D 2024 跑團角色卡與世界觀筆記',
@@ -47,7 +54,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang="zh-Hant"
-      className={`${cinzel.variable} ${sourceSans.variable} h-full antialiased`}
+      className={`${cinzel.variable} ${sourceSans.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-cjk">
         <LegacySwCleanup />

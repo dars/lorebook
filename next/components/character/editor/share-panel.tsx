@@ -66,24 +66,24 @@ export function SharePanel({
         內容，包含 HP 與剩餘資源。不想再讓對方看到時，撤銷連結即可。
       </p>
 
-      <div className="mt-md">
+      <div className="mt-3">
         <StepperButton label="建立分享連結" onClick={onCreate}>
           {pending ? '處理中…' : '建立分享連結'}
         </StepperButton>
       </div>
 
       {error && (
-        <p className="mt-sm text-small text-danger">無法完成（{error}）</p>
+        <p className="mt-2 text-small text-danger">無法完成（{error}）</p>
       )}
 
       {shares.length === 0 ? (
         <EmptyHint text="目前沒有有效的分享連結。" />
       ) : (
-        <ul className="mt-md">
+        <ul className="mt-3">
           {shares.map((s) => (
             <li
               key={s.token}
-              className="flex flex-wrap items-center gap-sm border-b border-border-2 py-sm"
+              className="flex flex-wrap items-center gap-2 border-b border-border-2 py-2"
             >
               <code className="grow break-all text-small text-text-light">
                 {shareLinkFor(origin, s.token).replace(/^https?:\/\//, '')}

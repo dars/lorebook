@@ -19,12 +19,6 @@ export default async function Home() {
 
   if (!user) redirect('/login');
 
-  return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-lg py-2xl">
-      <h1 className="font-display text-title text-gold">Lorebook</h1>
-      <p className="mt-md text-body text-text-light">
-        已登入為 {user.email}。角色清單尚未移植。
-      </p>
-    </main>
-  );
+  // 登入後直接進角色清單——首頁沒有其他內容時，多一次點擊只是阻礙。
+  redirect('/main/character');
 }

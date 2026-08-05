@@ -23,7 +23,7 @@ export function StepperButton({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="min-h-11 min-w-11 rounded-chip border border-border bg-surface-2 px-md text-body text-text-primary active:border-gold"
+      className="min-h-11 min-w-11 rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary active:border-gold"
     >
       {children}
     </button>
@@ -45,7 +45,7 @@ export function ToggleChip({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`min-h-11 rounded-chip border px-md text-small ${
+      className={`min-h-11 rounded-chip border px-3 text-small ${
         active
           ? 'border-danger bg-surface-2 text-danger'
           : 'border-border-2 text-text-secondary'
@@ -69,7 +69,7 @@ export function Pips({
   label: string;
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-xs">
+    <div className="flex flex-wrap items-center gap-1">
       {Array.from({ length: total }, (_, i) => {
         const spent = i < used;
         return (

@@ -14,8 +14,8 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-16 py-xl">
-      <h2 className="mb-md flex items-baseline gap-sm border-b border-border-2 pb-sm">
+    <section id={id} className="scroll-mt-16 py-5">
+      <h2 className="mb-3 flex items-baseline gap-2 border-b border-border-2 pb-2">
         {titleEn && (
           <span className="font-display text-tiny tracking-widest text-section-label">
             {titleEn}
@@ -39,11 +39,11 @@ export function StatBox({
   sub?: string;
 }) {
   return (
-    <div className="rounded-card border border-border-2 bg-surface-1 px-md py-sm text-center">
+    <div className="rounded-card border border-border-2 bg-surface-1 px-3 py-2 text-center">
       <div className="font-display text-display leading-none text-gold">
         {value}
       </div>
-      <div className="mt-xs text-tiny text-text-secondary">{label}</div>
+      <div className="mt-1 text-tiny text-text-secondary">{label}</div>
       {sub && <div className="text-tiny text-text-secondary">{sub}</div>}
     </div>
   );
@@ -64,7 +64,7 @@ export function Chip({
   }[tone];
   return (
     <span
-      className={`inline-block rounded-chip border px-sm py-xs text-small ${toneClass}`}
+      className={`inline-block rounded-chip border px-2 py-1 text-small ${toneClass}`}
     >
       {children}
     </span>
@@ -75,7 +75,7 @@ export function Chip({
 export function Row({ label, value }: { label: string; value: ReactNode }) {
   if (value === '' || value === null || value === undefined) return null;
   return (
-    <div className="flex gap-md py-xs text-body">
+    <div className="flex gap-3 py-1 text-body">
       <span className="w-24 shrink-0 text-small text-text-secondary">
         {label}
       </span>
@@ -85,5 +85,5 @@ export function Row({ label, value }: { label: string; value: ReactNode }) {
 }
 
 export function EmptyHint({ text }: { text: string }) {
-  return <p className="py-md text-small text-text-secondary">{text}</p>;
+  return <p className="py-3 text-small text-text-secondary">{text}</p>;
 }

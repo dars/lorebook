@@ -8,7 +8,7 @@
  *
  * 對照來源：
  *   app_colors.dart    → --color-*
- *   app_spacing.dart   → --spacing-* / --radius-*
+ *   app_spacing.dart   → Tailwind 數值尺度 / --radius-*
  *   dnd_colors.dart    → --color-damage-*
  *   app_text_styles.dart → --text-*
  */
@@ -61,15 +61,17 @@
   --color-damage-neutral: #c9a84c;
   --color-temp-hp: #6fb0d4;
 
-  /* ── 間距 ─────────────────────────────── */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 12px;
-  --spacing-lg: 16px;
-  --spacing-xl: 20px;
-  --spacing-2xl: 24px;
-  --spacing-3xl: 32px;
-  --spacing-4xl: 40px;
+  /* ── 間距 ─────────────────────────────
+   * **刻意不定義 --spacing-* 具名值。** Tailwind 的 max-w-* 會退回讀
+   * --spacing-* 命名空間，而 sm/lg/3xl 這些名字正好與容器尺度同名——
+   * 定義了它們會把 max-w-3xl 從 48rem 壓成 32px，整個版面變成一條窄柱
+   * （實際踩過）。
+   *
+   * 改用 Tailwind 內建的數值尺度，它預設即為 4px 基底，與 Flutter 的
+   * AppSpacing 完全對應：
+   *   xs 4px → 1    sm 8px → 2    md 12px → 3   lg 16px → 4
+   *   xl 20px → 5   2xl 24px → 6  3xl 32px → 8  4xl 40px → 10
+   */
 
   /* ── 圓角 ─────────────────────────────
    * 卡片與 chip 都是 4px——這個 App 的視覺語言偏方正，不是圓潤風格。
@@ -89,9 +91,13 @@
    */
   --font-display: var(--font-display-src), Georgia, serif;
   --font-body: var(--font-body-src), system-ui, sans-serif;
+  /* 中文用**系統襯線**堆疊：Flutter 端是 Noto Serif TC，襯線是這個 App
+   * 的識別之一。系統襯線字面接近且仍是 0 bytes。 */
   --font-cjk:
-    var(--font-body-src), 'PingFang TC', 'Noto Sans CJK TC',
-    'Microsoft JhengHei', 'Heiti TC', sans-serif;
+    var(--font-body-src), 'Noto Serif CJK TC', 'Songti TC', 'Source Han Serif TC',
+    'PMingLiU', 'MingLiU', serif;
+  /* 英文小標（區段標題、欄位標籤）。 */
+  --font-label: var(--font-label-src), system-ui, sans-serif;
 
   /* ── 字級 ─────────────────────────────── */
   --text-display: 32px;

@@ -39,12 +39,16 @@ async function push(c: Character): Promise<string | null> {
  * 回傳 void——同步是背景行為，元件不該因為它而重繪。狀態要顯示時直接讀
  * store 的 dirty / syncError。
  */
-export function useCharacterSync() {
+export function useCharacterSync(enabled = true) {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // 用 ref 保存最新值：debounce 觸發時要推的是「當下」的角色，不是排程當時的。
   const latest = useRef<Character | null>(null);
 
   useEffect(() => {
+    // 試玩模式不推雲端：訪客沒有帳號，寫入也會被 RLS 擋下。
+    // 以參數而非在呼叫端條件呼叫——hook 不能有條件地執行。
+    if (!enabled) return;
+
     const flush = async () => {
       const c = latest.current;
       if (!c || !useCharacterStore.getState().dirty) return;
@@ -74,5 +78,5 @@ export function useCharacterSync() {
       if (timer.current) clearTimeout(timer.current);
       void flush();
     };
-  }, []);
+  }, [enabled]);
 }

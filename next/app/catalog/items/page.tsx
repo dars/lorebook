@@ -33,7 +33,7 @@ export default async function ItemCatalogPage() {
 
   if (error) {
     return (
-      <main className="mx-auto w-full max-w-3xl flex-1 px-lg py-2xl">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6">
         <h1 className="font-display text-title text-gold">裝備目錄</h1>
         <EmptyHint text={`目前無法載入內容庫（${error}）。稍後重新整理再試。`} />
       </main>
@@ -52,16 +52,16 @@ export default async function ItemCatalogPage() {
   const categories = [...grouped.keys()];
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-lg pb-4xl">
-      <header className="pt-xl">
+    <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-10">
+      <header className="pt-5">
         <h1 className="font-display text-title text-gold">裝備目錄</h1>
-        <p className="mt-sm text-small text-text-secondary">
+        <p className="mt-2 text-small text-text-secondary">
           SRD 5.2（CC-BY-4.0）· 共 {rows.length} 條 · 用瀏覽器的尋找功能（⌘F）
           可直接搜尋全部內容
         </p>
       </header>
 
-      <nav className="sticky top-0 z-10 -mx-lg mt-lg flex gap-lg overflow-x-auto border-b border-border-2 bg-surface-0/95 px-lg py-sm backdrop-blur">
+      <nav className="sticky top-0 z-10 -mx-4 mt-4 flex gap-4 overflow-x-auto border-b border-border-2 bg-surface-0/95 px-4 py-2 backdrop-blur">
         {categories.map((c) => (
           <a
             key={c}
@@ -76,15 +76,15 @@ export default async function ItemCatalogPage() {
       {categories.map((cat) => (
         <Section key={cat} id={cat} title={CATEGORY_LABEL[cat] ?? cat}>
           {[...grouped.get(cat)!.entries()].map(([sub, items]) => (
-            <div key={sub} className="mt-md">
-              <h3 className="mb-sm text-small text-section-label">{sub}</h3>
+            <div key={sub} className="mt-3">
+              <h3 className="mb-2 text-small text-section-label">{sub}</h3>
               {items.map((it) => (
-                <details key={it.id} className="border-b border-border-2 py-sm">
-                  <summary className="flex cursor-pointer items-baseline justify-between gap-md text-body">
+                <details key={it.id} className="border-b border-border-2 py-2">
+                  <summary className="flex cursor-pointer items-baseline justify-between gap-3 text-body">
                     <span>
                       <span className="text-text-primary">{it.name}</span>
                       {it.eng_name && (
-                        <span className="ml-sm text-small text-text-secondary">
+                        <span className="ml-2 text-small text-text-secondary">
                           {it.eng_name}
                         </span>
                       )}
@@ -94,7 +94,7 @@ export default async function ItemCatalogPage() {
                     </span>
                   </summary>
 
-                  <div className="mt-sm flex flex-wrap gap-sm">
+                  <div className="mt-2 flex flex-wrap gap-2">
                     {it.weight !== null && <Chip>{it.weight} 磅</Chip>}
                     {it.damage_dice && (
                       <Chip tone="gold">
@@ -111,7 +111,7 @@ export default async function ItemCatalogPage() {
                   </div>
 
                   {it.entries.length > 0 && (
-                    <p className="mt-sm whitespace-pre-wrap text-small leading-relaxed text-text-light">
+                    <p className="mt-2 whitespace-pre-wrap text-small leading-relaxed text-text-light">
                       {ftFlattenEntries(it.entries)}
                     </p>
                   )}
