@@ -4,7 +4,9 @@ import { useState, useTransition } from 'react';
 
 import { createShare, revokeShare, type ShareRow } from '@/lib/share/actions';
 import { shareLinkFor } from '@/lib/share/token';
+import { EditorSheet } from '@/components/ui/editor-sheet';
 import { Chip, EmptyHint } from '../primitives';
+import { ShareQr } from './share-qr';
 import { StepperButton } from './controls';
 
 /**
@@ -23,6 +25,7 @@ export function SharePanel({
   const [shares, setShares] = useState(initial);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const [qrToken, setQrToken] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   // origin 於 client 取得——本機開發、預覽與正式站不必各自設定。
@@ -96,6 +99,12 @@ export function SharePanel({
                 複製
               </StepperButton>
               <StepperButton
+                label="顯示連結與 QR"
+                onClick={() => setQrToken(s.token)}
+              >
+                QR
+              </StepperButton>
+              <StepperButton
                 label="撤銷這個分享連結"
                 onClick={() => onRevoke(s.token)}
               >
@@ -105,6 +114,30 @@ export function SharePanel({
           ))}
         </ul>
       )}
+      <EditorSheet
+        open={qrToken !== null}
+        title="分享連結"
+        onClose={() => setQrToken(null)}
+      >
+        <p className="text-[12px] text-text-secondary">
+          讓對方掃描，或把連結傳給他。
+        </p>
+        {qrToken && (
+          <div className="mt-4 flex flex-col items-center">
+            <ShareQr link={shareLinkFor(origin, qrToken)} />
+            <code className="mt-4 w-full break-all rounded-card border border-border px-3 py-2 text-center text-[12px] text-text-light">
+              {shareLinkFor(origin, qrToken)}
+            </code>
+            <button
+              type="button"
+              onClick={() => void onCopy(qrToken)}
+              className="mt-2 min-h-11 w-full rounded-card border border-border text-[13px] text-text-secondary"
+            >
+              {copied === qrToken ? '已複製' : '複製連結'}
+            </button>
+          </div>
+        )}
+      </EditorSheet>
     </div>
   );
 }
