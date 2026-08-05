@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { CharacterEditor } from '@/components/character/editor/character-editor';
 import { EmptyHint } from '@/components/character/primitives';
 import { fetchMyCharacter } from '@/lib/characters/fetch';
+import { listShares } from '@/lib/share/actions';
 import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
@@ -35,5 +36,6 @@ export default async function CharacterPage({
   }
   if (!character) notFound();
 
-  return <CharacterEditor initial={character} />;
+  const { shares } = await listShares(id);
+  return <CharacterEditor initial={character} shares={shares} />;
 }

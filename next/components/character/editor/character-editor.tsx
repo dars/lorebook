@@ -3,12 +3,14 @@
 import { useEffect, useState } from 'react';
 
 import type { Character } from '@/lib/domain/character';
+import type { ShareRow } from '@/lib/share/actions';
 import { computeAc } from '@/lib/rules/ac';
 import { attackEntries } from '@/lib/rules/attacks';
 import { characterActions, useCharacterStore } from '@/lib/state/character-store';
 import { useCharacterSync } from '@/lib/state/sync';
 import { Chip, Section, StatBox } from '../primitives';
 import { Pips, StepperButton, ToggleChip } from './controls';
+import { SharePanel } from './share-panel';
 
 /** SRD 5.2 的狀態異常。內建固定清單，與 App 其他規則資料同哲學。 */
 const CONDITIONS = [
@@ -19,7 +21,13 @@ const CONDITIONS = [
 /** 常用的傷害／治療級距。逐點加減在戰鬥中太慢。 */
 const HP_STEPS = [-10, -5, -1, 1, 5, 10];
 
-export function CharacterEditor({ initial }: { initial: Character }) {
+export function CharacterEditor({
+  initial,
+  shares,
+}: {
+  initial: Character;
+  shares: ShareRow[];
+}) {
   const load = useCharacterStore((s) => s.load);
   const c = useCharacterStore((s) => s.character);
   const dirty = useCharacterStore((s) => s.dirty);
@@ -163,6 +171,10 @@ export function CharacterEditor({ initial }: { initial: Character }) {
           ))}
         </Section>
       )}
+
+      <Section id="share" title="分享" titleEn="SHARE">
+        <SharePanel characterId={ch.id} initial={shares} />
+      </Section>
 
       <Section id="attacks" title="攻擊" titleEn="ATTACKS">
         <table className="w-full text-body">
