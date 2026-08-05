@@ -1,0 +1,885 @@
+{
+  "species": [
+    {
+      "cn": "人類",
+      "en": "Human",
+      "speed": "30ft",
+      "size": "Medium",
+      "darkvisionFt": 0,
+      "hpPerLevel": 0,
+      "skillPickCount": 1,
+      "skillPickFrom": [
+        "體能",
+        "特技",
+        "巧手",
+        "隱匿",
+        "奧秘",
+        "歷史",
+        "調查",
+        "自然",
+        "宗教",
+        "馴獸",
+        "洞察",
+        "醫藥",
+        "感知",
+        "求生",
+        "欺瞞",
+        "威嚇",
+        "表演",
+        "說服"
+      ],
+      "sizeChoices": [
+        "Medium",
+        "Small"
+      ],
+      "description": "〔敘述佔位〕適應力極強、分布最廣的種族，靠才智與韌性立足於各地。（文案待補）",
+      "traits": [
+        {
+          "name": "足智多謀",
+          "nameEn": "Resourceful",
+          "description": "每次長休結束時獲得一次英雄激勵。"
+        },
+        {
+          "name": "多才多藝",
+          "nameEn": "Skillful",
+          "description": "任選一項技能獲得熟練。"
+        },
+        {
+          "name": "天賦異稟",
+          "nameEn": "Versatile",
+          "description": "額外獲得一個起源專長。"
+        }
+      ]
+    },
+    {
+      "cn": "精靈",
+      "en": "Elf",
+      "speed": "30ft",
+      "size": "Medium",
+      "darkvisionFt": 60,
+      "hpPerLevel": 0,
+      "skillPickCount": 1,
+      "skillPickFrom": [
+        "洞察",
+        "感知",
+        "求生"
+      ],
+      "sizeChoices": [
+        "Medium"
+      ],
+      "description": "〔敘述佔位〕優雅長壽、與魔法和自然親近的種族，感官敏銳。（文案待補）",
+      "traits": [
+        {
+          "name": "精靈血系",
+          "nameEn": "Elven Lineage",
+          "description": "卓爾／高等／木精靈三選一，各自帶來不同的天生法術與增益。"
+        },
+        {
+          "name": "妖精血統",
+          "nameEn": "Fey Ancestry",
+          "description": "對抗魅惑的豁免具優勢，魔法無法使你入睡。"
+        },
+        {
+          "name": "敏銳感官",
+          "nameEn": "Keen Senses",
+          "description": "洞察、感知、求生擇一獲得熟練。"
+        },
+        {
+          "name": "出神",
+          "nameEn": "Trance",
+          "description": "長休只需 4 小時的冥想，期間保持部分意識。"
+        },
+        {
+          "name": "黑暗視覺 60",
+          "nameEn": "Darkvision",
+          "description": "60 呎內，昏暗光線視為明亮、黑暗視為昏暗（僅能辨色為灰階）。"
+        }
+      ]
+    },
+    {
+      "cn": "矮人",
+      "en": "Dwarf",
+      "speed": "30ft",
+      "size": "Medium",
+      "darkvisionFt": 120,
+      "hpPerLevel": 1,
+      "skillPickCount": 0,
+      "skillPickFrom": [],
+      "sizeChoices": [
+        "Medium"
+      ],
+      "description": "〔敘述佔位〕堅毅耐勞的山地與地底民族，擅長工藝與抵抗毒素。（文案待補）",
+      "traits": [
+        {
+          "name": "矮人韌性",
+          "nameEn": "Dwarven Resilience",
+          "description": "具毒素傷害抗性，對抗中毒狀態的豁免具優勢。"
+        },
+        {
+          "name": "矮人堅毅",
+          "nameEn": "Dwarven Toughness",
+          "description": "生命值上限每個等級 +1。"
+        },
+        {
+          "name": "石工直覺",
+          "nameEn": "Stonecunning",
+          "description": "附贈動作獲得 60 呎震顫感知 10 分鐘，每次長休可用熟練加值次數。"
+        },
+        {
+          "name": "黑暗視覺 120",
+          "nameEn": "Darkvision",
+          "description": "120 呎內，昏暗光線視為明亮、黑暗視為昏暗（僅能辨色為灰階）。"
+        }
+      ]
+    },
+    {
+      "cn": "半身人",
+      "en": "Halfling",
+      "speed": "30ft",
+      "size": "Small",
+      "darkvisionFt": 0,
+      "hpPerLevel": 0,
+      "skillPickCount": 0,
+      "skillPickFrom": [],
+      "sizeChoices": [
+        "Small"
+      ],
+      "description": "〔敘述佔位〕樂天知足的小個子，天生幸運、臨危不亂。（文案待補）",
+      "traits": [
+        {
+          "name": "幸運",
+          "nameEn": "Lucky",
+          "description": "d20 檢定擲出 1 時可重擲一次，須採用新結果。"
+        },
+        {
+          "name": "勇毅",
+          "nameEn": "Brave",
+          "description": "對抗恐懼的豁免具優勢。"
+        },
+        {
+          "name": "半身人的靈巧",
+          "nameEn": "Halfling Nimbleness",
+          "description": "可穿越體型比你大的生物所佔空間。"
+        },
+        {
+          "name": "天生隱匿",
+          "nameEn": "Naturally Stealthy",
+          "description": "被體型比你大的生物遮蔽時，仍可嘗試躲藏。"
+        }
+      ]
+    },
+    {
+      "cn": "龍裔",
+      "en": "Dragonborn",
+      "speed": "30ft",
+      "size": "Medium",
+      "darkvisionFt": 60,
+      "hpPerLevel": 0,
+      "skillPickCount": 0,
+      "skillPickFrom": [],
+      "sizeChoices": [
+        "Medium"
+      ],
+      "description": "〔敘述佔位〕承襲巨龍血脈的戰士種族，可吐出龍息。（文案待補）",
+      "traits": [
+        {
+          "name": "龍族血統",
+          "nameEn": "Draconic Ancestry",
+          "description": "選定一種巨龍血脈，決定吐息與抗性的傷害類型。"
+        },
+        {
+          "name": "吐息武器",
+          "nameEn": "Breath Weapon",
+          "description": "攻擊時可改為噴吐能量，每次長休可用熟練加值次數。"
+        },
+        {
+          "name": "傷害抗性",
+          "nameEn": "Damage Resistance",
+          "description": "對血脈對應的傷害類型具抗性。"
+        },
+        {
+          "name": "龍族飛行",
+          "nameEn": "Draconic Flight",
+          "description": "5 級起可附贈動作生出靈體之翼，飛行速度等同步行速度，持續 10 分鐘。"
+        },
+        {
+          "name": "黑暗視覺 60",
+          "nameEn": "Darkvision",
+          "description": "60 呎內，昏暗光線視為明亮、黑暗視為昏暗（僅能辨色為灰階）。"
+        }
+      ]
+    },
+    {
+      "cn": "獸人",
+      "en": "Orc",
+      "speed": "30ft",
+      "size": "Medium",
+      "darkvisionFt": 120,
+      "hpPerLevel": 0,
+      "skillPickCount": 0,
+      "skillPickFrom": [],
+      "sizeChoices": [
+        "Medium"
+      ],
+      "description": "〔敘述佔位〕強壯而堅韌的戰鬥種族，衝勁十足且瀕死不倒。（文案待補）",
+      "traits": [
+        {
+          "name": "腎上腺素爆發",
+          "nameEn": "Adrenaline Rush",
+          "description": "附贈動作衝刺，並獲得等同熟練加值的臨時生命值。"
+        },
+        {
+          "name": "不屈毅力",
+          "nameEn": "Relentless Endurance",
+          "description": "生命值降至 0 時改為保留 1 點，每次長休一次。"
+        },
+        {
+          "name": "黑暗視覺 120",
+          "nameEn": "Darkvision",
+          "description": "120 呎內，昏暗光線視為明亮、黑暗視為昏暗（僅能辨色為灰階）。"
+        }
+      ]
+    },
+    {
+      "cn": "提夫林",
+      "en": "Tiefling",
+      "speed": "30ft",
+      "size": "Medium",
+      "darkvisionFt": 60,
+      "hpPerLevel": 0,
+      "skillPickCount": 0,
+      "skillPickFrom": [],
+      "sizeChoices": [
+        "Medium",
+        "Small"
+      ],
+      "description": "〔敘述佔位〕帶有異界血脈的種族，天生掌握些許法術。（文案待補）",
+      "traits": [
+        {
+          "name": "魔裔傳承",
+          "nameEn": "Fiendish Legacy",
+          "description": "深淵／冥府／煉獄三選一，各自帶來不同的天生法術與抗性。"
+        },
+        {
+          "name": "異界威儀",
+          "nameEn": "Otherworldly Presence",
+          "description": "習得奇術戲法，施法屬性可自選智力、感知或魅力。"
+        },
+        {
+          "name": "黑暗視覺 60",
+          "nameEn": "Darkvision",
+          "description": "60 呎內，昏暗光線視為明亮、黑暗視為昏暗（僅能辨色為灰階）。"
+        }
+      ]
+    },
+    {
+      "cn": "侏儒",
+      "en": "Gnome",
+      "speed": "30ft",
+      "size": "Small",
+      "darkvisionFt": 60,
+      "hpPerLevel": 0,
+      "skillPickCount": 0,
+      "skillPickFrom": [],
+      "sizeChoices": [
+        "Small"
+      ],
+      "description": "〔敘述佔位〕好奇心旺盛、心智抗性強的小個子發明家。（文案待補）",
+      "traits": [
+        {
+          "name": "侏儒狡黠",
+          "nameEn": "Gnomish Cunning",
+          "description": "智力、感知、魅力的豁免皆具優勢。"
+        },
+        {
+          "name": "侏儒血系",
+          "nameEn": "Gnomish Lineage",
+          "description": "森林／岩石二選一，帶來不同的天生法術或工藝能力。"
+        },
+        {
+          "name": "黑暗視覺 60",
+          "nameEn": "Darkvision",
+          "description": "60 呎內，昏暗光線視為明亮、黑暗視為昏暗（僅能辨色為灰階）。"
+        }
+      ]
+    },
+    {
+      "cn": "歌利亞",
+      "en": "Goliath",
+      "speed": "35ft",
+      "size": "Medium",
+      "darkvisionFt": 0,
+      "hpPerLevel": 0,
+      "skillPickCount": 0,
+      "skillPickFrom": [],
+      "sizeChoices": [
+        "Medium"
+      ],
+      "description": "〔敘述佔位〕承襲巨人血脈的高大山民，健步如飛、力能扛鼎。（文案待補）",
+      "traits": [
+        {
+          "name": "巨人血統",
+          "nameEn": "Giant Ancestry",
+          "description": "六種巨人恩賜擇一，各自提供不同的戰鬥增益。"
+        },
+        {
+          "name": "巨大形體",
+          "nameEn": "Large Form",
+          "description": "5 級起可附贈動作變為大型，持續 10 分鐘，每次長休一次。"
+        },
+        {
+          "name": "魁梧體格",
+          "nameEn": "Powerful Build",
+          "description": "對抗被擒抱的豁免具優勢；負重與推拉舉視為大型生物。"
+        }
+      ]
+    }
+  ],
+  "classes": [
+    {
+      "cn": "野蠻人",
+      "en": "Barbarian",
+      "hitDie": 12,
+      "spellAbility": "",
+      "saves": [
+        "STR",
+        "CON"
+      ],
+      "primaryAbilities": [
+        "STR"
+      ],
+      "skillCount": 2,
+      "skillChoices": [
+        "馴獸",
+        "體能",
+        "威嚇",
+        "自然",
+        "感知",
+        "求生"
+      ],
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "level1Slots": 0,
+      "unarmoredDefense": "CON",
+      "description": "〔敘述佔位〕揮舞重武器、以怒火為力量的前線戰士；越受傷越兇猛。（文案待補）"
+    },
+    {
+      "cn": "吟遊詩人",
+      "en": "Bard",
+      "hitDie": 8,
+      "spellAbility": "CHA",
+      "saves": [
+        "DEX",
+        "CHA"
+      ],
+      "primaryAbilities": [
+        "CHA"
+      ],
+      "skillCount": 3,
+      "skillChoices": [
+        "體能",
+        "特技",
+        "巧手",
+        "隱匿",
+        "奧秘",
+        "歷史",
+        "調查",
+        "自然",
+        "宗教",
+        "馴獸",
+        "洞察",
+        "醫藥",
+        "感知",
+        "求生",
+        "欺瞞",
+        "威嚇",
+        "表演",
+        "說服"
+      ],
+      "cantripsKnown": 2,
+      "preparedSpells": 4,
+      "level1Slots": 2,
+      "unarmoredDefense": "",
+      "description": "〔敘述佔位〕以表演與魔法鼓舞同伴、樣樣通的多才施法者。（文案待補）"
+    },
+    {
+      "cn": "牧師",
+      "en": "Cleric",
+      "hitDie": 8,
+      "spellAbility": "WIS",
+      "saves": [
+        "WIS",
+        "CHA"
+      ],
+      "primaryAbilities": [
+        "WIS"
+      ],
+      "skillCount": 2,
+      "skillChoices": [
+        "歷史",
+        "洞察",
+        "醫藥",
+        "說服",
+        "宗教"
+      ],
+      "cantripsKnown": 3,
+      "preparedSpells": 4,
+      "level1Slots": 2,
+      "unarmoredDefense": "",
+      "description": "〔敘述佔位〕承神祇之力的神聖施法者，能治療、守護與打擊。（文案待補）"
+    },
+    {
+      "cn": "德魯伊",
+      "en": "Druid",
+      "hitDie": 8,
+      "spellAbility": "WIS",
+      "saves": [
+        "INT",
+        "WIS"
+      ],
+      "primaryAbilities": [
+        "WIS"
+      ],
+      "skillCount": 2,
+      "skillChoices": [
+        "奧秘",
+        "馴獸",
+        "洞察",
+        "醫藥",
+        "自然",
+        "感知",
+        "宗教",
+        "求生"
+      ],
+      "cantripsKnown": 2,
+      "preparedSpells": 4,
+      "level1Slots": 2,
+      "unarmoredDefense": "",
+      "description": "〔敘述佔位〕汲取自然之力的施法者，可變身野獸。（文案待補）"
+    },
+    {
+      "cn": "戰士",
+      "en": "Fighter",
+      "hitDie": 10,
+      "spellAbility": "",
+      "saves": [
+        "STR",
+        "CON"
+      ],
+      "primaryAbilities": [
+        "STR",
+        "DEX"
+      ],
+      "skillCount": 2,
+      "skillChoices": [
+        "特技",
+        "馴獸",
+        "體能",
+        "歷史",
+        "洞察",
+        "威嚇",
+        "說服",
+        "感知",
+        "求生"
+      ],
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "level1Slots": 0,
+      "unarmoredDefense": "",
+      "description": "〔敘述佔位〕精通各式武器與戰技的全能戰鬥者。（文案待補）"
+    },
+    {
+      "cn": "武僧",
+      "en": "Monk",
+      "hitDie": 8,
+      "spellAbility": "",
+      "saves": [
+        "STR",
+        "DEX"
+      ],
+      "primaryAbilities": [
+        "DEX",
+        "WIS"
+      ],
+      "skillCount": 2,
+      "skillChoices": [
+        "特技",
+        "體能",
+        "歷史",
+        "洞察",
+        "宗教",
+        "隱匿"
+      ],
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "level1Slots": 0,
+      "unarmoredDefense": "WIS",
+      "description": "〔敘述佔位〕以氣與徒手武技作戰、身法迅捷的武者。（文案待補）"
+    },
+    {
+      "cn": "聖騎士",
+      "en": "Paladin",
+      "hitDie": 10,
+      "spellAbility": "CHA",
+      "saves": [
+        "WIS",
+        "CHA"
+      ],
+      "primaryAbilities": [
+        "STR",
+        "CHA"
+      ],
+      "skillCount": 2,
+      "skillChoices": [
+        "體能",
+        "洞察",
+        "威嚇",
+        "醫藥",
+        "說服",
+        "宗教"
+      ],
+      "cantripsKnown": 0,
+      "preparedSpells": 2,
+      "level1Slots": 2,
+      "unarmoredDefense": "",
+      "description": "〔敘述佔位〕立下誓言、半戰半法的聖戰士，能治療與制裁。（文案待補）"
+    },
+    {
+      "cn": "遊俠",
+      "en": "Ranger",
+      "hitDie": 10,
+      "spellAbility": "WIS",
+      "saves": [
+        "STR",
+        "DEX"
+      ],
+      "primaryAbilities": [
+        "DEX",
+        "WIS"
+      ],
+      "skillCount": 3,
+      "skillChoices": [
+        "馴獸",
+        "體能",
+        "洞察",
+        "調查",
+        "自然",
+        "感知",
+        "隱匿",
+        "求生"
+      ],
+      "cantripsKnown": 0,
+      "preparedSpells": 2,
+      "level1Slots": 2,
+      "unarmoredDefense": "",
+      "description": "〔敘述佔位〕通曉荒野、半法的追蹤獵手與神射手。（文案待補）"
+    },
+    {
+      "cn": "盜賊",
+      "en": "Rogue",
+      "hitDie": 8,
+      "spellAbility": "",
+      "saves": [
+        "DEX",
+        "INT"
+      ],
+      "primaryAbilities": [
+        "DEX"
+      ],
+      "skillCount": 4,
+      "skillChoices": [
+        "特技",
+        "體能",
+        "欺瞞",
+        "洞察",
+        "威嚇",
+        "調查",
+        "感知",
+        "說服",
+        "巧手",
+        "隱匿"
+      ],
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "level1Slots": 0,
+      "unarmoredDefense": "",
+      "description": "〔敘述佔位〕擅長潛行、技巧與偷襲的多面手。（文案待補）"
+    },
+    {
+      "cn": "術士",
+      "en": "Sorcerer",
+      "hitDie": 6,
+      "spellAbility": "CHA",
+      "saves": [
+        "CON",
+        "CHA"
+      ],
+      "primaryAbilities": [
+        "CHA"
+      ],
+      "skillCount": 2,
+      "skillChoices": [
+        "奧秘",
+        "欺瞞",
+        "洞察",
+        "威嚇",
+        "說服",
+        "宗教"
+      ],
+      "cantripsKnown": 4,
+      "preparedSpells": 2,
+      "level1Slots": 2,
+      "unarmoredDefense": "",
+      "description": "〔敘述佔位〕天生擁有魔法血脈、爆發力強的施法者。（文案待補）"
+    },
+    {
+      "cn": "邪術師",
+      "en": "Warlock",
+      "hitDie": 8,
+      "spellAbility": "CHA",
+      "saves": [
+        "WIS",
+        "CHA"
+      ],
+      "primaryAbilities": [
+        "CHA"
+      ],
+      "skillCount": 2,
+      "skillChoices": [
+        "奧秘",
+        "欺瞞",
+        "歷史",
+        "威嚇",
+        "調查",
+        "自然",
+        "宗教"
+      ],
+      "cantripsKnown": 2,
+      "preparedSpells": 2,
+      "level1Slots": 1,
+      "unarmoredDefense": "",
+      "description": "〔敘述佔位〕與異界主宰締約、換取詭祕力量的施法者。（文案待補）"
+    },
+    {
+      "cn": "法師",
+      "en": "Wizard",
+      "hitDie": 6,
+      "spellAbility": "INT",
+      "saves": [
+        "INT",
+        "WIS"
+      ],
+      "primaryAbilities": [
+        "INT"
+      ],
+      "skillCount": 2,
+      "skillChoices": [
+        "奧秘",
+        "歷史",
+        "洞察",
+        "調查",
+        "醫藥",
+        "自然",
+        "宗教"
+      ],
+      "cantripsKnown": 3,
+      "preparedSpells": 4,
+      "level1Slots": 2,
+      "unarmoredDefense": "",
+      "description": "〔敘述佔位〕鑽研法術書、博學多能的奧術施法者。（文案待補）"
+    }
+  ],
+  "backgrounds": [
+    {
+      "cn": "士兵",
+      "en": "Soldier",
+      "abilities": [
+        "STR",
+        "DEX",
+        "CON"
+      ],
+      "skills": [
+        "體能",
+        "威嚇"
+      ],
+      "originFeat": "野蠻打擊",
+      "toolProficiency": "遊戲組",
+      "originFeatCustom": false,
+      "originFeatDescription": "",
+      "description": "〔敘述佔位〕受過軍事訓練的戰士，習於紀律與陣列作戰。（文案待補）"
+    },
+    {
+      "cn": "賢者",
+      "en": "Sage",
+      "abilities": [
+        "CON",
+        "INT",
+        "WIS"
+      ],
+      "skills": [
+        "奧秘",
+        "歷史"
+      ],
+      "originFeat": "法術新手（法師）",
+      "toolProficiency": "書法工具",
+      "originFeatCustom": false,
+      "originFeatDescription": "",
+      "description": "〔敘述佔位〕埋首典籍的學者，博聞強記、通曉祕辛。（文案待補）"
+    },
+    {
+      "cn": "侍僧",
+      "en": "Acolyte",
+      "abilities": [
+        "INT",
+        "WIS",
+        "CHA"
+      ],
+      "skills": [
+        "洞察",
+        "宗教"
+      ],
+      "originFeat": "法術新手（牧師）",
+      "toolProficiency": "書法工具",
+      "originFeatCustom": false,
+      "originFeatDescription": "",
+      "description": "〔敘述佔位〕在神殿中侍奉的信徒，熟稔禮儀與信仰。（文案待補）"
+    },
+    {
+      "cn": "罪犯",
+      "en": "Criminal",
+      "abilities": [
+        "DEX",
+        "CON",
+        "INT"
+      ],
+      "skills": [
+        "巧手",
+        "隱匿"
+      ],
+      "originFeat": "警覺",
+      "toolProficiency": "盜賊工具",
+      "originFeatCustom": false,
+      "originFeatDescription": "",
+      "description": "〔敘述佔位〕遊走法外的能手，熟悉黑街與不法門路。（文案待補）"
+    }
+  ],
+  "skills": [
+    {
+      "name": "體能",
+      "nameEn": "Athletics",
+      "ability": "STR"
+    },
+    {
+      "name": "特技",
+      "nameEn": "Acrobatics",
+      "ability": "DEX"
+    },
+    {
+      "name": "巧手",
+      "nameEn": "Sleight of Hand",
+      "ability": "DEX"
+    },
+    {
+      "name": "隱匿",
+      "nameEn": "Stealth",
+      "ability": "DEX"
+    },
+    {
+      "name": "奧秘",
+      "nameEn": "Arcana",
+      "ability": "INT"
+    },
+    {
+      "name": "歷史",
+      "nameEn": "History",
+      "ability": "INT"
+    },
+    {
+      "name": "調查",
+      "nameEn": "Investigation",
+      "ability": "INT"
+    },
+    {
+      "name": "自然",
+      "nameEn": "Nature",
+      "ability": "INT"
+    },
+    {
+      "name": "宗教",
+      "nameEn": "Religion",
+      "ability": "INT"
+    },
+    {
+      "name": "馴獸",
+      "nameEn": "Animal Handling",
+      "ability": "WIS"
+    },
+    {
+      "name": "洞察",
+      "nameEn": "Insight",
+      "ability": "WIS"
+    },
+    {
+      "name": "醫藥",
+      "nameEn": "Medicine",
+      "ability": "WIS"
+    },
+    {
+      "name": "感知",
+      "nameEn": "Perception",
+      "ability": "WIS"
+    },
+    {
+      "name": "求生",
+      "nameEn": "Survival",
+      "ability": "WIS"
+    },
+    {
+      "name": "欺瞞",
+      "nameEn": "Deception",
+      "ability": "CHA"
+    },
+    {
+      "name": "威嚇",
+      "nameEn": "Intimidation",
+      "ability": "CHA"
+    },
+    {
+      "name": "表演",
+      "nameEn": "Performance",
+      "ability": "CHA"
+    },
+    {
+      "name": "說服",
+      "nameEn": "Persuasion",
+      "ability": "CHA"
+    }
+  ],
+  "languages": [
+    "通用語",
+    "矮人語",
+    "精靈語",
+    "巨人語",
+    "侏儒語",
+    "地精語",
+    "半身人語",
+    "獸人語",
+    "深淵語",
+    "天界語",
+    "深潛語",
+    "龍語",
+    "煉獄語",
+    "原初語",
+    "精類語",
+    "地底通用語"
+  ],
+  "abilityOrder": [
+    "STR",
+    "DEX",
+    "CON",
+    "INT",
+    "WIS",
+    "CHA"
+  ],
+  "proficiencyEntryMax": 20
+}
