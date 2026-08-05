@@ -1,0 +1,128 @@
+[
+  {
+    "desc": "骰子標記取第一參數",
+    "input": {
+      "text": "造成 {@dice 1d8} 點傷害"
+    },
+    "output": {
+      "text": "造成 1d8 點傷害"
+    }
+  },
+  {
+    "desc": "骰子標記有顯示名時取第二參數",
+    "input": {
+      "text": "造成 {@dice 2d6|2d6 火焰} 傷害"
+    },
+    "output": {
+      "text": "造成 2d6 火焰 傷害"
+    }
+  },
+  {
+    "desc": "dc 標記加前綴",
+    "input": {
+      "text": "{@dc 15} 敏捷豁免"
+    },
+    "output": {
+      "text": "DC 15 敏捷豁免"
+    }
+  },
+  {
+    "desc": "hit 標記補正號",
+    "input": {
+      "text": "{@hit 5} 命中"
+    },
+    "output": {
+      "text": "+5 命中"
+    }
+  },
+  {
+    "desc": "hit 標記已有正負號則不重複",
+    "input": {
+      "text": "{@hit +5} 與 {@hit -1}"
+    },
+    "output": {
+      "text": "+5 與 -1"
+    }
+  },
+  {
+    "desc": "參照標記取第三參數為顯示名",
+    "input": {
+      "text": "見 {@spell fireball|XPHB|火球術}"
+    },
+    "output": {
+      "text": "見 火球術"
+    }
+  },
+  {
+    "desc": "參照標記無顯示名時取第一參數",
+    "input": {
+      "text": "受到 {@condition 無力} 影響"
+    },
+    "output": {
+      "text": "受到 無力 影響"
+    }
+  },
+  {
+    "desc": "巢狀標記遞迴展開",
+    "input": {
+      "text": "{@b 造成 {@dice 1d6} 傷害}"
+    },
+    "output": {
+      "text": "造成 1d6 傷害"
+    }
+  },
+  {
+    "desc": "粗體標記保留內容",
+    "input": {
+      "text": "{@b 重要}的說明"
+    },
+    "output": {
+      "text": "重要的說明"
+    }
+  },
+  {
+    "desc": "未知標記降級為內容純文字",
+    "input": {
+      "text": "這是 {@unknowntag 一段文字} 的測試"
+    },
+    "output": {
+      "text": "這是 一段文字 的測試"
+    }
+  },
+  {
+    "desc": "不成對左括號原樣輸出",
+    "input": {
+      "text": "這裡有一個 {@dice 1d8 沒有收尾"
+    },
+    "output": {
+      "text": "這裡有一個 {@dice 1d8 沒有收尾"
+    }
+  },
+  {
+    "desc": "無參數的標記",
+    "input": {
+      "text": "{@dice}"
+    },
+    "output": {
+      "text": ""
+    }
+  },
+  {
+    "desc": "純文字不受影響",
+    "input": {
+      "text": "完全沒有標記的一段話"
+    },
+    "output": {
+      "text": "完全沒有標記的一段話"
+    }
+  },
+  {
+    "desc": "空字串",
+    "input": {
+      "text": ""
+    },
+    "output": {
+      "text": ""
+    }
+  }
+]

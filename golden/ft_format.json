@@ -1,0 +1,145 @@
+[
+  {
+    "desc": "施法時間：1 動作",
+    "input": {
+      "castingTime": [
+        {
+          "unit": "action",
+          "number": 1
+        }
+      ]
+    },
+    "output": {
+      "text": "1 動作"
+    }
+  },
+  {
+    "desc": "施法時間：附贈動作",
+    "input": {
+      "castingTime": [
+        {
+          "unit": "bonus",
+          "number": 1
+        }
+      ]
+    },
+    "output": {
+      "text": "1 附贈動作"
+    }
+  },
+  {
+    "desc": "施法時間：10 分鐘",
+    "input": {
+      "castingTime": [
+        {
+          "unit": "minute",
+          "number": 10
+        }
+      ]
+    },
+    "output": {
+      "text": "10 分鐘"
+    }
+  },
+  {
+    "desc": "施法時間：未知單位原樣輸出",
+    "input": {
+      "castingTime": [
+        {
+          "unit": "round",
+          "number": 2
+        }
+      ]
+    },
+    "output": {
+      "text": "2 round"
+    }
+  },
+  {
+    "desc": "施法時間：空清單",
+    "input": {
+      "castingTime": []
+    },
+    "output": {
+      "text": ""
+    }
+  },
+  {
+    "desc": "射程：點狀射程（呎）",
+    "input": {
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 120
+        }
+      }
+    },
+    "output": {
+      "text": "120呎"
+    }
+  },
+  {
+    "desc": "射程：觸及",
+    "input": {
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "touch"
+        }
+      }
+    },
+    "output": {
+      "text": "觸及"
+    }
+  },
+  {
+    "desc": "射程：自身",
+    "input": {
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "self"
+        }
+      }
+    },
+    "output": {
+      "text": "自身"
+    }
+  },
+  {
+    "desc": "射程：錐形範圍",
+    "input": {
+      "range": {
+        "type": "cone",
+        "distance": {
+          "type": "feet",
+          "amount": 15
+        }
+      }
+    },
+    "output": {
+      "text": "自身 (15呎錐形)"
+    }
+  },
+  {
+    "desc": "射程：特殊",
+    "input": {
+      "range": {
+        "type": "special"
+      }
+    },
+    "output": {
+      "text": "特殊"
+    }
+  },
+  {
+    "desc": "射程：空結構",
+    "input": {
+      "range": {}
+    },
+    "output": {
+      "text": ""
+    }
+  }
+]

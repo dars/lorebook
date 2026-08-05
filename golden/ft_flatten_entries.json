@@ -1,0 +1,97 @@
+[
+  {
+    "desc": "純字串段落",
+    "input": {
+      "entries": [
+        "第一段",
+        "第二段"
+      ]
+    },
+    "output": {
+      "text": "第一段\n第二段"
+    }
+  },
+  {
+    "desc": "list 加上項目符號",
+    "input": {
+      "entries": [
+        {
+          "type": "list",
+          "items": [
+            "甲",
+            "乙"
+          ]
+        }
+      ]
+    },
+    "output": {
+      "text": "• 甲\n• 乙"
+    }
+  },
+  {
+    "desc": "具名區塊加上【】標頭",
+    "input": {
+      "entries": [
+        {
+          "name": "法術位",
+          "entries": [
+            "說明文字"
+          ]
+        }
+      ]
+    },
+    "output": {
+      "text": "【法術位】\n說明文字"
+    }
+  },
+  {
+    "desc": "table 捨棄（純文字無法表達）",
+    "input": {
+      "entries": [
+        {
+          "type": "table",
+          "rows": [
+            [
+              "a",
+              "b"
+            ]
+          ]
+        },
+        "表格後的段落"
+      ]
+    },
+    "output": {
+      "text": "表格後的段落"
+    }
+  },
+  {
+    "desc": "巢狀區塊遞迴",
+    "input": {
+      "entries": [
+        {
+          "name": "外層",
+          "entries": [
+            {
+              "name": "內層",
+              "entries": [
+                "深處的文字 {@dice 1d4}"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "output": {
+      "text": "【外層】\n【內層】\n深處的文字 1d4"
+    }
+  },
+  {
+    "desc": "空 entries",
+    "input": {
+      "entries": []
+    },
+    "output": {
+      "text": ""
+    }
+  }
+]

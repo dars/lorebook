@@ -18,6 +18,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:lorebook/features/catalog/domain/fivetools_text.dart';
+
 import 'package:lorebook/features/character/domain/character.dart';
 import 'package:lorebook/features/character/domain/character_math.dart';
 import 'package:lorebook/features/character/domain/class_resources.dart';
@@ -441,6 +443,160 @@ void main() {
               'newSpellPicks': newSpellPicksFor(cls, lv),
             },
           },
+    ]);
+
+    // 5etools 標記解析。規格明訂未知標記與不成對括號須降級為純文字而非
+    // 崩潰——那類降級路徑最容易在重寫時漏掉，因此個別立案例。
+    write('ft_plain_text', [
+      for (final t in <(String, String)>[
+        ('骰子標記取第一參數', '造成 {@dice 1d8} 點傷害'),
+        ('骰子標記有顯示名時取第二參數', '造成 {@dice 2d6|2d6 火焰} 傷害'),
+        ('dc 標記加前綴', '{@dc 15} 敏捷豁免'),
+        ('hit 標記補正號', '{@hit 5} 命中'),
+        ('hit 標記已有正負號則不重複', '{@hit +5} 與 {@hit -1}'),
+        ('參照標記取第三參數為顯示名', '見 {@spell fireball|XPHB|火球術}'),
+        ('參照標記無顯示名時取第一參數', '受到 {@condition 無力} 影響'),
+        ('巢狀標記遞迴展開', '{@b 造成 {@dice 1d6} 傷害}'),
+        ('粗體標記保留內容', '{@b 重要}的說明'),
+        ('未知標記降級為內容純文字', '這是 {@unknowntag 一段文字} 的測試'),
+        ('不成對左括號原樣輸出', '這裡有一個 {@dice 1d8 沒有收尾'),
+        ('無參數的標記', '{@dice}'),
+        ('純文字不受影響', '完全沒有標記的一段話'),
+        ('空字串', ''),
+      ])
+        {
+          'desc': t.$1,
+          'input': {'text': t.$2},
+          'output': {'text': ftPlainText(t.$2)},
+        },
+    ]);
+
+    write('ft_flatten_entries', [
+      for (final t in <(String, List<dynamic>)>[
+        ('純字串段落', <dynamic>['第一段', '第二段']),
+        (
+          'list 加上項目符號',
+          <dynamic>[
+            {
+              'type': 'list',
+              'items': ['甲', '乙'],
+            },
+          ],
+        ),
+        (
+          '具名區塊加上【】標頭',
+          <dynamic>[
+            {
+              'name': '法術位',
+              'entries': ['說明文字'],
+            },
+          ],
+        ),
+        (
+          'table 捨棄（純文字無法表達）',
+          <dynamic>[
+            {
+              'type': 'table',
+              'rows': [
+                ['a', 'b'],
+              ],
+            },
+            '表格後的段落',
+          ],
+        ),
+        (
+          '巢狀區塊遞迴',
+          <dynamic>[
+            {
+              'name': '外層',
+              'entries': [
+                {
+                  'name': '內層',
+                  'entries': ['深處的文字 {@dice 1d4}'],
+                },
+              ],
+            },
+          ],
+        ),
+        ('空 entries', <dynamic>[]),
+      ])
+        {
+          'desc': t.$1,
+          'input': {'entries': t.$2},
+          'output': {'text': ftFlattenEntries(t.$2)},
+        },
+    ]);
+
+    write('ft_format', [
+      for (final t in <(String, List<dynamic>)>[
+        (
+          '1 動作',
+          <dynamic>[
+            {'unit': 'action', 'number': 1},
+          ],
+        ),
+        (
+          '附贈動作',
+          <dynamic>[
+            {'unit': 'bonus', 'number': 1},
+          ],
+        ),
+        (
+          '10 分鐘',
+          <dynamic>[
+            {'unit': 'minute', 'number': 10},
+          ],
+        ),
+        (
+          '未知單位原樣輸出',
+          <dynamic>[
+            {'unit': 'round', 'number': 2},
+          ],
+        ),
+        ('空清單', <dynamic>[]),
+      ])
+        {
+          'desc': '施法時間：${t.$1}',
+          'input': {'castingTime': t.$2},
+          'output': {'text': ftFormatCastingTime(t.$2)},
+        },
+      for (final t in <(String, Map<String, dynamic>)>[
+        (
+          '點狀射程（呎）',
+          {
+            'type': 'point',
+            'distance': {'type': 'feet', 'amount': 120},
+          },
+        ),
+        (
+          '觸及',
+          {
+            'type': 'point',
+            'distance': {'type': 'touch'},
+          },
+        ),
+        (
+          '自身',
+          {
+            'type': 'point',
+            'distance': {'type': 'self'},
+          },
+        ),
+        (
+          '錐形範圍',
+          {
+            'type': 'cone',
+            'distance': {'type': 'feet', 'amount': 15},
+          },
+        ),
+        ('特殊', {'type': 'special'}),
+        ('空結構', <String, dynamic>{}),
+      ])
+        {
+          'desc': '射程：${t.$1}',
+          'input': {'range': t.$2},
+          'output': {'text': ftFormatRange(t.$2)},
+        },
     ]);
 
     // 職業資源：全職業 × 1–20 級。這是最容易在重寫時抄漏一格的表格。
