@@ -47,6 +47,12 @@ export default async function SystemPage() {
         >
           自訂背景
         </Link>
+        <Link
+          href="/custom-subclasses"
+          className="mt-2 flex min-h-11 items-center justify-center rounded-card border border-border text-[13px] text-text-primary"
+        >
+          自訂子職業
+        </Link>
       </ParchmentCard>
 
       <ParchmentCard className="p-4">

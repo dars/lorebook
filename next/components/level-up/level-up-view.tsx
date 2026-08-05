@@ -7,6 +7,7 @@ import { updateCharacter } from '@/lib/characters/actions';
 import { SPECIES } from '@/lib/creation/data';
 import type { Character } from '@/lib/domain/character';
 import type { CatalogClassFeature, CatalogSubclass } from '@/lib/catalog/types';
+import type { CustomSubclass } from '@/lib/subclasses/types';
 import { ftFlattenEntries } from '@/lib/catalog/fivetools';
 import { applyLevelUp, planFor } from '@/lib/rules/level-up';
 
@@ -27,11 +28,14 @@ const CODES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
 export function LevelUpView({
   initial,
   subclasses,
+  customSubclasses,
   classFeatures,
   catalogOffline,
 }: {
   initial: Character;
   subclasses: CatalogSubclass[];
+  /** 母職業相符的自訂子職，與 SRD 並列。 */
+  customSubclasses: CustomSubclass[];
   classFeatures: CatalogClassFeature[];
   /** 內容庫取不到：子職與特性可跳過，數值仍照常升級。 */
   catalogOffline: boolean;
@@ -45,7 +49,10 @@ export function LevelUpView({
   const [asiMode, setAsiMode] = useState<'2' | '1+1'>('2');
   const [asiA, setAsiA] = useState<string | null>(null);
   const [asiB, setAsiB] = useState<string | null>(null);
+  // 兩種來源分開存：以旗標而非名稱區分，使用者自訂一個與 SRD 同名的子職時，
+  // 那是他的子職（與自訂起源專長同一原則）。
   const [subclass, setSubclass] = useState<CatalogSubclass | null>(null);
+  const [customSubclass, setCustomSubclass] = useState<CustomSubclass | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,7 +71,11 @@ export function LevelUpView({
     hpMode === 'average' || (typeof roll === 'number' && roll >= 1 && roll <= plan.hitDieFaces);
   // 子職：內容庫離線時可跳過——擋在這裡等於內容庫一有問題就不能升級，
   // 而數值部分完全不依賴它。之後可於角色卡補選。
-  const subclassReady = !plan.pickSubclass || subclass !== null || catalogOffline;
+  const subclassReady =
+    !plan.pickSubclass ||
+    subclass !== null ||
+    customSubclass !== null ||
+    (catalogOffline && customSubclasses.length === 0);
 
   // 本級的職業特性 ＋ 所選子職累積到本級的特性。
   // 子職特性取「≤ 目標等級」而非「＝目標等級」：3 級才選子職，但子職的
@@ -75,6 +86,9 @@ export function LevelUpView({
     source,
     description: ftFlattenEntries((f.data.entries as unknown[]) ?? []),
   });
+
+  // 3 級選用的自訂子職（本次），或角色卡上既有的快照（後續等級）。
+  const activeCustom = customSubclass ?? initial.customSubclass;
 
   const newFeatures = [
     ...classFeatures
@@ -90,19 +104,38 @@ export function LevelUpView({
           )
           .map((f) => toFeature(f, `子職：${subclass.name}`))
       : []),
+    // 自訂子職的特性自快照取用，不回查來源表——來源可能已被刪除。
+    // 3 級時取 ≤ 目標等級（一次補齊 1–3 級），之後只取該級。
+    ...(activeCustom
+      ? activeCustom.features
+          .filter((f) =>
+            plan.pickSubclass
+              ? f.level <= plan.targetLevel
+              : f.level === plan.targetLevel,
+          )
+          .map((f) => ({
+            name: f.name,
+            nameEn: '',
+            source: `子職：${activeCustom.name}・自訂`,
+            description: f.description,
+          }))
+      : []),
   ];
 
   const preview = applyLevelUp(initial, plan, {
     hpRoll: hpMode === 'roll' && typeof roll === 'number' ? roll : null,
     asi,
-    subclass: subclass?.name,
-    subclassEn: subclass?.eng_name ?? undefined,
+    subclass: subclass?.name ?? customSubclass?.name,
+    subclassEn: subclass?.eng_name ?? customSubclass?.nameEn ?? undefined,
     features: newFeatures,
   });
 
   const submit = async () => {
     setBusy(true);
-    const r = await updateCharacter(preview);
+    // 選用自訂子職時把整份定義快照進角色卡；SRD 子職維持 null。
+    const r = await updateCharacter(
+      customSubclass ? { ...preview, customSubclass } : preview,
+    );
     if (r.error) {
       setError(r.error);
       setBusy(false);
@@ -231,7 +264,7 @@ export function LevelUpView({
       {plan.pickSubclass && (
         <>
           <SectionTitle en="SUBCLASS" cn="子職業" />
-          {subclasses.length === 0 ? (
+          {subclasses.length === 0 && customSubclasses.length === 0 ? (
             <ParchmentCard className="px-4 py-3">
               <p className="text-[12px] leading-relaxed text-text-secondary">
                 子職清單目前無法取得（內容庫離線）。可先完成升級，之後再補選——
@@ -244,7 +277,10 @@ export function LevelUpView({
                 <button
                   key={s.id}
                   type="button"
-                  onClick={() => setSubclass(s)}
+                  onClick={() => {
+                    setSubclass(s);
+                    setCustomSubclass(null);
+                  }}
                   className="text-left"
                 >
                   <ParchmentCard
@@ -258,6 +294,42 @@ export function LevelUpView({
                         {s.eng_name}
                       </span>
                     </div>
+                  </ParchmentCard>
+                </button>
+              ))}
+
+              {customSubclasses.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => {
+                    setCustomSubclass(s);
+                    setSubclass(null);
+                  }}
+                  className="text-left"
+                >
+                  <ParchmentCard
+                    className={`px-4 py-3 ${customSubclass?.id === s.id ? 'border-gold' : ''}`}
+                  >
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[15px] font-semibold text-text-primary">
+                        {s.name}
+                      </span>
+                      {s.nameEn && (
+                        <span className="font-label text-[11px] text-text-primary/45">
+                          {s.nameEn}
+                        </span>
+                      )}
+                      <span className="ml-auto text-[11px] text-section-label">
+                        自訂
+                      </span>
+                    </div>
+                    <p className="mt-1 text-[11px] text-text-secondary">
+                      {[...new Set(s.features.map((f) => f.level))]
+                        .sort((a, b) => a - b)
+                        .join('/')}{' '}
+                      級共 {s.features.length} 個特性
+                    </p>
                   </ParchmentCard>
                 </button>
               ))}

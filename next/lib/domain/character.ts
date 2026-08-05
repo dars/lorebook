@@ -175,6 +175,34 @@ export const Character = z.object({
   classNameEn: z.string().default(''),
   subclass: z.string().default(''),
   subclassEn: z.string().default(''),
+  /**
+   * 自訂子職的**整份**快照（選用自訂子職時寫入；SRD 子職為 null）。
+   *
+   * 快照整份而非僅當級特性：子職的特性散布在 3/6/10/14 等多個等級，若只存
+   * 當級的，玩家升到下一個有特性的等級時就得回查來源表——而那時他可能已經
+   * 刪掉那個自訂子職，角色就卡在那裡升不上去。
+   *
+   * 後續等級一律自此取用，不回查 user_subclasses。
+   */
+  customSubclass: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+      nameEn: z.string().default(''),
+      classEn: z.string(),
+      levels: z.array(z.number().int()).default([]),
+      features: z
+        .array(
+          z.object({
+            level: z.number().int(),
+            name: z.string(),
+            description: z.string().default(''),
+          }),
+        )
+        .default([]),
+    })
+    .nullish()
+    .transform((v) => v ?? null),
   level: z.number().int().default(1),
   background: z.string().default(''),
   backgroundEn: z.string().default(''),
