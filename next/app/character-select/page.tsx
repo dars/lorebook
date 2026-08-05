@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
@@ -31,7 +32,7 @@ export default async function CharacterSelectPage() {
       )}
       {!error && characters.length === 0 && (
         <p className="py-3 text-[13px] text-text-secondary">
-          還沒有角色。建角流程尚未移植。
+          還沒有角色，從下方開始建立第一個。
         </p>
       )}
 
@@ -78,6 +79,13 @@ export default async function CharacterSelectPage() {
           </form>
         ))}
       </div>
+
+      <Link
+        href="/character-create"
+        className="mt-4 flex min-h-12 items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
+      >
+        ＋ 建立新角色
+      </Link>
     </main>
   );
 }
