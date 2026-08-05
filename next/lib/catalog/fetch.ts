@@ -1,6 +1,13 @@
 import { z } from 'zod';
 
-import { CATALOG_SOURCE, CatalogItem, CatalogSpell } from './types';
+import {
+  CATALOG_SOURCE,
+  CatalogClass,
+  CatalogClassFeature,
+  CatalogItem,
+  CatalogSpell,
+  CatalogSubclass,
+} from './types';
 import { createAnonClient } from '@/lib/supabase/server';
 
 /**
@@ -59,4 +66,73 @@ export async function fetchItems(): Promise<CatalogResult<CatalogItem>> {
   return parsed.success
     ? { rows: parsed.data, error: null }
     : { rows: [], error: describe('物品', parsed.error) };
+}
+
+/**
+ * 某職業的子職與特性。
+ *
+ * 一次取回兩者：升級時需要「本職業該等級的特性」與「所選子職累積到該等級的
+ * 特性」，分兩次查只是多一次往返。
+ *
+ * 以英文職業名查 class_id——角色卡存的是 classNameEn，而 classes 表的中文名
+ * 欄位中英混雜不可靠（catalog_repository 的既有註解也這麼說）。
+ */
+export async function fetchClassProgression(
+  classEn: string,
+  maxLevel: number,
+): Promise<{
+  subclasses: CatalogSubclass[];
+  features: CatalogClassFeature[];
+  error: string | null;
+}> {
+  const supabase = createAnonClient();
+
+  const { data: classRows, error: classErr } = await supabase
+    .from('classes')
+    .select('id, name, eng_name')
+    .eq('source', CATALOG_SOURCE)
+    .eq('eng_name', classEn);
+
+  if (classErr) return { subclasses: [], features: [], error: classErr.message };
+
+  const cls = CatalogClass.array().safeParse(classRows);
+  if (!cls.success || cls.data.length === 0) {
+    return { subclasses: [], features: [], error: null };
+  }
+  const classId = cls.data[0].id;
+
+  const [subRes, featRes] = await Promise.all([
+    supabase
+      .from('subclasses')
+      .select('id, name, eng_name, short_name, class_id, data')
+      .eq('class_id', classId)
+      .eq('source', CATALOG_SOURCE)
+      .order('page'),
+    supabase
+      .from('class_features')
+      .select('id, name, eng_name, level, is_subclass, subclass_short_name, data')
+      .eq('class_id', classId)
+      .eq('source', CATALOG_SOURCE)
+      .lte('level', maxLevel)
+      .order('level')
+      .order('page'),
+  ]);
+
+  if (subRes.error || featRes.error) {
+    return {
+      subclasses: [],
+      features: [],
+      error: subRes.error?.message ?? featRes.error?.message ?? null,
+    };
+  }
+
+  const subs = CatalogSubclass.array().safeParse(subRes.data);
+  const feats = CatalogClassFeature.array().safeParse(featRes.data);
+
+  return {
+    subclasses: subs.success ? subs.data : [],
+    features: feats.success ? feats.data : [],
+    error:
+      subs.success && feats.success ? null : describe('子職與職業特性', (subs.success ? feats : subs).error!),
+  };
 }

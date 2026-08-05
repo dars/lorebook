@@ -6,6 +6,8 @@ import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import { updateCharacter } from '@/lib/characters/actions';
 import { SPECIES } from '@/lib/creation/data';
 import type { Character } from '@/lib/domain/character';
+import type { CatalogClassFeature, CatalogSubclass } from '@/lib/catalog/types';
+import { ftFlattenEntries } from '@/lib/catalog/fivetools';
 import { applyLevelUp, planFor } from '@/lib/rules/level-up';
 
 /**
@@ -22,7 +24,18 @@ const ABILITY_LABEL: Record<string, string> = {
 };
 const CODES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
 
-export function LevelUpView({ initial }: { initial: Character }) {
+export function LevelUpView({
+  initial,
+  subclasses,
+  classFeatures,
+  catalogOffline,
+}: {
+  initial: Character;
+  subclasses: CatalogSubclass[];
+  classFeatures: CatalogClassFeature[];
+  /** 內容庫取不到：子職與特性可跳過，數值仍照常升級。 */
+  catalogOffline: boolean;
+}) {
   const speciesHpPerLevel =
     SPECIES.find((s) => s.cn === initial.species)?.hpPerLevel ?? 0;
   const plan = planFor(initial, speciesHpPerLevel);
@@ -32,6 +45,7 @@ export function LevelUpView({ initial }: { initial: Character }) {
   const [asiMode, setAsiMode] = useState<'2' | '1+1'>('2');
   const [asiA, setAsiA] = useState<string | null>(null);
   const [asiB, setAsiB] = useState<string | null>(null);
+  const [subclass, setSubclass] = useState<CatalogSubclass | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -48,10 +62,42 @@ export function LevelUpView({ initial }: { initial: Character }) {
     (asiMode === '2' ? asiA !== null : asiA !== null && asiB !== null && asiA !== asiB);
   const hpReady =
     hpMode === 'average' || (typeof roll === 'number' && roll >= 1 && roll <= plan.hitDieFaces);
+  // 子職：內容庫離線時可跳過——擋在這裡等於內容庫一有問題就不能升級，
+  // 而數值部分完全不依賴它。之後可於角色卡補選。
+  const subclassReady = !plan.pickSubclass || subclass !== null || catalogOffline;
+
+  // 本級的職業特性 ＋ 所選子職累積到本級的特性。
+  // 子職特性取「≤ 目標等級」而非「＝目標等級」：3 級才選子職，但子職的
+  // 1–3 級特性都該一次補上。
+  const toFeature = (f: CatalogClassFeature, source: string) => ({
+    name: f.name,
+    nameEn: f.eng_name ?? '',
+    source,
+    description: ftFlattenEntries((f.data.entries as unknown[]) ?? []),
+  });
+
+  const newFeatures = [
+    ...classFeatures
+      .filter((f) => !f.is_subclass && f.level === plan.targetLevel)
+      .map((f) => toFeature(f, `職業：${initial.className} Lv${plan.targetLevel}`)),
+    ...(subclass
+      ? classFeatures
+          .filter(
+            (f) =>
+              f.is_subclass &&
+              f.subclass_short_name === subclass.short_name &&
+              f.level <= plan.targetLevel,
+          )
+          .map((f) => toFeature(f, `子職：${subclass.name}`))
+      : []),
+  ];
 
   const preview = applyLevelUp(initial, plan, {
     hpRoll: hpMode === 'roll' && typeof roll === 'number' ? roll : null,
     asi,
+    subclass: subclass?.name,
+    subclassEn: subclass?.eng_name ?? undefined,
+    features: newFeatures,
   });
 
   const submit = async () => {
@@ -185,11 +231,63 @@ export function LevelUpView({ initial }: { initial: Character }) {
       {plan.pickSubclass && (
         <>
           <SectionTitle en="SUBCLASS" cn="子職業" />
-          <ParchmentCard className="px-4 py-3">
-            <p className="text-[12px] leading-relaxed text-text-secondary">
-              3 級選子職業。子職清單需要內容庫，目前尚未接入——升級後可於角色卡
-              補選，數值不受影響。
-            </p>
+          {subclasses.length === 0 ? (
+            <ParchmentCard className="px-4 py-3">
+              <p className="text-[12px] leading-relaxed text-text-secondary">
+                子職清單目前無法取得（內容庫離線）。可先完成升級，之後再補選——
+                數值不受影響。
+              </p>
+            </ParchmentCard>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {subclasses.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => setSubclass(s)}
+                  className="text-left"
+                >
+                  <ParchmentCard
+                    className={`px-4 py-3 ${subclass?.id === s.id ? 'border-gold' : ''}`}
+                  >
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[15px] font-semibold text-text-primary">
+                        {s.name}
+                      </span>
+                      <span className="font-label text-[11px] text-text-primary/45">
+                        {s.eng_name}
+                      </span>
+                    </div>
+                  </ParchmentCard>
+                </button>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {newFeatures.length > 0 && (
+        <>
+          <SectionTitle en="NEW FEATURES" cn="本級獲得" />
+          <ParchmentCard className="px-4">
+            {newFeatures.map((f, i) => (
+              <details
+                key={`${f.name}-${i}`}
+                className={`py-2 ${i > 0 ? 'border-t border-border/40' : ''}`}
+              >
+                <summary className="cursor-pointer">
+                  <span className="text-[14px] text-text-primary">{f.name}</span>
+                  <span className="ml-1.5 text-[10px] text-section-label">
+                    {f.source}
+                  </span>
+                </summary>
+                {f.description && (
+                  <p className="mt-2 whitespace-pre-wrap text-[13px] leading-relaxed text-text-light">
+                    {f.description}
+                  </p>
+                )}
+              </details>
+            ))}
           </ParchmentCard>
         </>
       )}
@@ -236,7 +334,7 @@ export function LevelUpView({ initial }: { initial: Character }) {
           <button
             type="button"
             onClick={submit}
-            disabled={busy || !asiReady || !hpReady}
+            disabled={busy || !asiReady || !hpReady || !subclassReady}
             className="min-h-12 w-full rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold disabled:opacity-40"
           >
             {busy ? '套用中…' : `確定升到 ${plan.targetLevel} 級`}

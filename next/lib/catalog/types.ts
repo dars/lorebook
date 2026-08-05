@@ -57,6 +57,35 @@ export const CatalogItem = z.object({
   entries: z.array(z.unknown()).nullish().transform((v) => v ?? []),
 });
 
+export const CatalogClass = z.object({
+  id: z.string(),
+  name: z.string(),
+  eng_name: z.string().nullish().transform((v) => v ?? null),
+});
+
+export const CatalogSubclass = z.object({
+  id: z.string(),
+  name: z.string(),
+  eng_name: z.string().nullish().transform((v) => v ?? null),
+  /** 用於比對 class_features 的 subclass_short_name。 */
+  short_name: z.string().nullish().transform((v) => v ?? ''),
+  class_id: z.string().nullish().transform((v) => v ?? ''),
+  data: z.record(z.string(), z.unknown()).nullish().transform((v) => v ?? {}),
+});
+
+export const CatalogClassFeature = z.object({
+  id: z.string(),
+  name: z.string(),
+  eng_name: z.string().nullish().transform((v) => v ?? null),
+  level: z.number().int(),
+  is_subclass: z.boolean().nullish().transform((v) => v ?? false),
+  subclass_short_name: z.string().nullish().transform((v) => v ?? ''),
+  data: z.record(z.string(), z.unknown()).nullish().transform((v) => v ?? {}),
+});
+
+export type CatalogClass = z.infer<typeof CatalogClass>;
+export type CatalogSubclass = z.infer<typeof CatalogSubclass>;
+export type CatalogClassFeature = z.infer<typeof CatalogClassFeature>;
 export type CatalogSpell = z.infer<typeof CatalogSpell>;
 export type CatalogItem = z.infer<typeof CatalogItem>;
 

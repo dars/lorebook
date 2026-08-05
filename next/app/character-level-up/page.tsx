@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { LevelUpView } from '@/components/level-up/level-up-view';
+import { fetchClassProgression } from '@/lib/catalog/fetch';
 import { getCurrentCharacterId } from '@/lib/characters/current';
 import { fetchMyCharacter } from '@/lib/characters/fetch';
 import { createClient } from '@/lib/supabase/server';
@@ -24,5 +25,19 @@ export default async function LevelUpPage() {
   // 20 級為上限，沒有可升的等級時直接回角色頁。
   if (character.level >= 20) redirect('/main/character');
 
-  return <LevelUpView initial={character} />;
+  // 子職與職業特性。取到目標等級為止——子職 3 級才選，但它的 1–3 級特性
+  // 都要一次補上。
+  const { subclasses, features, error } = await fetchClassProgression(
+    character.classNameEn,
+    character.level + 1,
+  );
+
+  return (
+    <LevelUpView
+      initial={character}
+      subclasses={subclasses}
+      classFeatures={features}
+      catalogOffline={error !== null || features.length === 0}
+    />
+  );
 }
