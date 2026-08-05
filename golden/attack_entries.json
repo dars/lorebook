@@ -1,0 +1,1378 @@
+[
+  {
+    "desc": "無武器：只有徒手攻擊",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Wizard",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 8,
+          "modifier": -1,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": [
+      {
+        "name": "徒手攻擊",
+        "nameEn": "Unarmed Strike",
+        "hitBonus": 1,
+        "damage": "0",
+        "damageType": "bludgeoning",
+        "quantity": 1,
+        "unarmed": true,
+        "properties": []
+      }
+    ]
+  },
+  {
+    "desc": "力量型武器：命中與傷害都用力量",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 12,
+          "modifier": 1,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "長劍",
+          "nameEn": "長劍",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "weapon",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "1d8",
+          "damageType": "slashing",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "none",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": [
+      {
+        "name": "長劍",
+        "nameEn": "長劍",
+        "hitBonus": 5,
+        "damage": "1d8+3",
+        "damageType": "slashing",
+        "quantity": 1,
+        "unarmed": false,
+        "properties": []
+      },
+      {
+        "name": "徒手攻擊",
+        "nameEn": "Unarmed Strike",
+        "hitBonus": 5,
+        "damage": "4",
+        "damageType": "bludgeoning",
+        "quantity": 1,
+        "unarmed": true,
+        "properties": []
+      }
+    ]
+  },
+  {
+    "desc": "finesse：取力量與敏捷較高者（此處敏捷較高）",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Rogue",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 18,
+          "modifier": 4,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "短劍",
+          "nameEn": "短劍",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "weapon",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "1d6",
+          "damageType": "piercing",
+          "finesse": true,
+          "properties": [],
+          "armorCategory": "none",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": [
+      {
+        "name": "短劍",
+        "nameEn": "短劍",
+        "hitBonus": 6,
+        "damage": "1d6+4",
+        "damageType": "piercing",
+        "quantity": 1,
+        "unarmed": false,
+        "properties": []
+      },
+      {
+        "name": "徒手攻擊",
+        "nameEn": "Unarmed Strike",
+        "hitBonus": 2,
+        "damage": "1",
+        "damageType": "bludgeoning",
+        "quantity": 1,
+        "unarmed": true,
+        "properties": []
+      }
+    ]
+  },
+  {
+    "desc": "finesse：力量較高時取力量",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Rogue",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 18,
+          "modifier": 4,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "短劍",
+          "nameEn": "短劍",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "weapon",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "1d6",
+          "damageType": "piercing",
+          "finesse": true,
+          "properties": [],
+          "armorCategory": "none",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": [
+      {
+        "name": "短劍",
+        "nameEn": "短劍",
+        "hitBonus": 6,
+        "damage": "1d6+4",
+        "damageType": "piercing",
+        "quantity": 1,
+        "unarmed": false,
+        "properties": []
+      },
+      {
+        "name": "徒手攻擊",
+        "nameEn": "Unarmed Strike",
+        "hitBonus": 6,
+        "damage": "5",
+        "damageType": "bludgeoning",
+        "quantity": 1,
+        "unarmed": true,
+        "properties": []
+      }
+    ]
+  },
+  {
+    "desc": "調整值為 0 時傷害不加尾綴",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "長劍",
+          "nameEn": "長劍",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "weapon",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "1d8",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "none",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": [
+      {
+        "name": "長劍",
+        "nameEn": "長劍",
+        "hitBonus": 2,
+        "damage": "1d8",
+        "damageType": "",
+        "quantity": 1,
+        "unarmed": false,
+        "properties": []
+      },
+      {
+        "name": "徒手攻擊",
+        "nameEn": "Unarmed Strike",
+        "hitBonus": 2,
+        "damage": "1",
+        "damageType": "bludgeoning",
+        "quantity": 1,
+        "unarmed": true,
+        "properties": []
+      }
+    ]
+  },
+  {
+    "desc": "負調整值：傷害顯示為減項",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 6,
+          "modifier": -2,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "長劍",
+          "nameEn": "長劍",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "weapon",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "1d8",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "none",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": [
+      {
+        "name": "長劍",
+        "nameEn": "長劍",
+        "hitBonus": 0,
+        "damage": "1d8-2",
+        "damageType": "",
+        "quantity": 1,
+        "unarmed": false,
+        "properties": []
+      },
+      {
+        "name": "徒手攻擊",
+        "nameEn": "Unarmed Strike",
+        "hitBonus": 0,
+        "damage": "0",
+        "damageType": "bludgeoning",
+        "quantity": 1,
+        "unarmed": true,
+        "properties": []
+      }
+    ]
+  },
+  {
+    "desc": "缺傷害資料：降級為僅顯示名稱（hitBonus 與 damage 為 null）",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "祖傳寶劍",
+          "nameEn": "祖傳寶劍",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "weapon",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "none",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": [
+      {
+        "name": "祖傳寶劍",
+        "nameEn": "祖傳寶劍",
+        "hitBonus": null,
+        "damage": null,
+        "damageType": "",
+        "quantity": 1,
+        "unarmed": false,
+        "properties": []
+      },
+      {
+        "name": "徒手攻擊",
+        "nameEn": "Unarmed Strike",
+        "hitBonus": 5,
+        "damage": "4",
+        "damageType": "bludgeoning",
+        "quantity": 1,
+        "unarmed": true,
+        "properties": []
+      }
+    ]
+  },
+  {
+    "desc": "數量與屬性標籤原樣帶出",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 14,
+          "modifier": 2,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "飛刀",
+          "nameEn": "飛刀",
+          "type": "",
+          "description": "",
+          "equipped": true,
+          "itemType": "weapon",
+          "source": "custom",
+          "quantity": 4,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "1d4",
+          "damageType": "piercing",
+          "finesse": true,
+          "properties": [
+            "thrown (20/60)",
+            "finesse"
+          ],
+          "armorCategory": "none",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": [
+      {
+        "name": "飛刀",
+        "nameEn": "飛刀",
+        "hitBonus": 4,
+        "damage": "1d4+2",
+        "damageType": "piercing",
+        "quantity": 4,
+        "unarmed": false,
+        "properties": [
+          "thrown (20/60)",
+          "finesse"
+        ]
+      },
+      {
+        "name": "徒手攻擊",
+        "nameEn": "Unarmed Strike",
+        "hitBonus": 4,
+        "damage": "3",
+        "damageType": "bludgeoning",
+        "quantity": 1,
+        "unarmed": true,
+        "properties": []
+      }
+    ]
+  },
+  {
+    "desc": "未裝備的武器不入攻擊列",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Fighter",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 16,
+          "modifier": 3,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [
+        {
+          "name": "長劍",
+          "nameEn": "長劍",
+          "type": "",
+          "description": "",
+          "equipped": false,
+          "itemType": "weapon",
+          "source": "custom",
+          "quantity": 1,
+          "quest": false,
+          "priceCp": 0,
+          "catalogRef": "",
+          "damage": "1d8",
+          "damageType": "",
+          "finesse": false,
+          "properties": [],
+          "armorCategory": "none",
+          "acBase": 0
+        }
+      ],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": [
+      {
+        "name": "徒手攻擊",
+        "nameEn": "Unarmed Strike",
+        "hitBonus": 5,
+        "damage": "4",
+        "damageType": "bludgeoning",
+        "quantity": 1,
+        "unarmed": true,
+        "properties": []
+      }
+    ]
+  },
+  {
+    "desc": "徒手傷害下限為 0（力量 -3 時不為負）",
+    "input": {
+      "id": "ac-case",
+      "name": "AC",
+      "nameEn": "",
+      "portraitUrl": "",
+      "portraitScale": 1.0,
+      "portraitCenterX": 0.5,
+      "portraitCenterY": 0.5,
+      "species": "",
+      "speciesEn": "",
+      "className": "",
+      "classNameEn": "Wizard",
+      "subclass": "",
+      "subclassEn": "",
+      "level": 1,
+      "background": "",
+      "backgroundEn": "",
+      "alignment": "",
+      "alignmentEn": "",
+      "deity": "",
+      "deityEn": "",
+      "creatureType": "",
+      "size": "",
+      "ac": 0,
+      "maxHp": 1,
+      "currentHp": 1,
+      "tempHp": 0,
+      "speed": "30ft",
+      "initiative": 0,
+      "proficiencyBonus": 2,
+      "passivePerception": 10,
+      "spellDc": 0,
+      "spellAttack": 0,
+      "spellcastingAbility": "",
+      "concentrationSpell": null,
+      "mageArmorActive": false,
+      "abilityScores": {
+        "str": {
+          "score": 4,
+          "modifier": -3,
+          "proficientSave": false
+        },
+        "dex": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "con": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "int_": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "wis": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        },
+        "cha": {
+          "score": 10,
+          "modifier": 0,
+          "proficientSave": false
+        }
+      },
+      "skills": [],
+      "spells": [],
+      "cantrips": [],
+      "spellSlots": [],
+      "weapons": [],
+      "equipment": [],
+      "currency": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "personality": {
+        "traits": "",
+        "ideals": "",
+        "bonds": "",
+        "flaws": ""
+      },
+      "features": [],
+      "languages": [],
+      "toolProficiencies": [],
+      "backstory": "",
+      "personalityTags": [],
+      "conditions": [],
+      "exhaustionLevel": 0,
+      "resources": [],
+      "hitDieFaces": 8,
+      "hitDiceUsed": 0,
+      "journalEntries": []
+    },
+    "output": [
+      {
+        "name": "徒手攻擊",
+        "nameEn": "Unarmed Strike",
+        "hitBonus": -1,
+        "damage": "0",
+        "damageType": "bludgeoning",
+        "quantity": 1,
+        "unarmed": true,
+        "properties": []
+      }
+    ]
+  }
+]

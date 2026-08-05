@@ -1,9 +1,8 @@
 import { defineConfig } from 'vitest/config';
-import path from 'node:path';
 
 export default defineConfig({
   resolve: {
-    alias: { '@': path.resolve(__dirname) },
+    alias: { '@': import.meta.dirname },
   },
   test: {
     // golden 對照檔在 repo 根目錄的 golden/，不在 next/ 內——它是 Flutter 端

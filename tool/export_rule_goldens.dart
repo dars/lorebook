@@ -19,9 +19,11 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:lorebook/features/character/domain/character.dart';
+import 'package:lorebook/features/character/domain/character_math.dart';
 import 'package:lorebook/features/character/domain/class_resources.dart';
 import 'package:lorebook/features/character/domain/currency_math.dart';
 import 'package:lorebook/features/character/domain/derived_stats.dart';
+import 'package:lorebook/features/character/domain/level_up.dart';
 
 const _out = String.fromEnvironment('out');
 
@@ -212,6 +214,116 @@ List<({String desc, Currency c, int priceCp})> _payCases() => [
   (desc: '總額剛好用盡', c: const Currency(gp: 1, sp: 2, cp: 3), priceCp: 123),
 ];
 
+/// 攻擊列的案例：涵蓋 finesse 取較高屬性、缺傷害資料的降級、數量、
+/// 以及「徒手攻擊恆存在」這條。
+Equipment _weapon(
+  String name, {
+  String damage = '',
+  String damageType = '',
+  bool finesse = false,
+  int quantity = 1,
+  bool equipped = true,
+  List<String> properties = const [],
+}) => Equipment(
+  name: name,
+  nameEn: name,
+  itemType: ItemType.weapon,
+  equipped: equipped,
+  quantity: quantity,
+  damage: damage,
+  damageType: damageType,
+  finesse: finesse,
+  properties: properties,
+);
+
+List<({String desc, Character c})> _attackCases() => [
+  (
+    desc: '無武器：只有徒手攻擊',
+    c: _acCase(classNameEn: 'Wizard', scores: _scores(str: 8)),
+  ),
+  (
+    desc: '力量型武器：命中與傷害都用力量',
+    c: _acCase(
+      classNameEn: 'Fighter',
+      scores: _scores(str: 16, dex: 12),
+      equipment: [_weapon('長劍', damage: '1d8', damageType: 'slashing')],
+    ),
+  ),
+  (
+    desc: 'finesse：取力量與敏捷較高者（此處敏捷較高）',
+    c: _acCase(
+      classNameEn: 'Rogue',
+      scores: _scores(str: 10, dex: 18),
+      equipment: [
+        _weapon('短劍', damage: '1d6', damageType: 'piercing', finesse: true),
+      ],
+    ),
+  ),
+  (
+    desc: 'finesse：力量較高時取力量',
+    c: _acCase(
+      classNameEn: 'Rogue',
+      scores: _scores(str: 18, dex: 10),
+      equipment: [
+        _weapon('短劍', damage: '1d6', damageType: 'piercing', finesse: true),
+      ],
+    ),
+  ),
+  (
+    desc: '調整值為 0 時傷害不加尾綴',
+    c: _acCase(
+      classNameEn: 'Fighter',
+      scores: _scores(str: 10),
+      equipment: [_weapon('長劍', damage: '1d8')],
+    ),
+  ),
+  (
+    desc: '負調整值：傷害顯示為減項',
+    c: _acCase(
+      classNameEn: 'Fighter',
+      scores: _scores(str: 6),
+      equipment: [_weapon('長劍', damage: '1d8')],
+    ),
+  ),
+  (
+    desc: '缺傷害資料：降級為僅顯示名稱（hitBonus 與 damage 為 null）',
+    c: _acCase(
+      classNameEn: 'Fighter',
+      scores: _scores(str: 16),
+      equipment: [_weapon('祖傳寶劍')],
+    ),
+  ),
+  (
+    desc: '數量與屬性標籤原樣帶出',
+    c: _acCase(
+      classNameEn: 'Fighter',
+      scores: _scores(str: 14),
+      equipment: [
+        _weapon(
+          '飛刀',
+          damage: '1d4',
+          damageType: 'piercing',
+          finesse: true,
+          quantity: 4,
+          properties: ['thrown (20/60)', 'finesse'],
+        ),
+      ],
+    ),
+  ),
+  (
+    desc: '未裝備的武器不入攻擊列',
+    c: _acCase(
+      classNameEn: 'Fighter',
+      scores: _scores(str: 16),
+      equipment: [_weapon('長劍', damage: '1d8', equipped: false)],
+    ),
+  ),
+  (
+    desc: '徒手傷害下限為 0（力量 -3 時不為負）',
+    c: _acCase(classNameEn: 'Wizard', scores: _scores(str: 4)),
+  ),
+];
+
 Map<String, dynamic> _currencyJson(Currency c) => {
   'pp': c.pp,
   'gp': c.gp,
@@ -266,6 +378,69 @@ void main() {
           'input': {'cp': cp},
           'output': {'text': formatCp(cp)},
         },
+    ]);
+
+    write('attack_entries', [
+      for (final k in _attackCases())
+        {
+          'desc': k.desc,
+          'input': k.c.toJson(),
+          'output': [
+            for (final a in attackEntries(k.c))
+              {
+                'name': a.name,
+                'nameEn': a.nameEn,
+                'hitBonus': a.hitBonus,
+                'damage': a.damage,
+                'damageType': a.damageType,
+                'quantity': a.quantity,
+                'unarmed': a.unarmed,
+                'properties': a.properties,
+              },
+          ],
+        },
+    ]);
+
+    // 升級相關的規則表。applyLevelUp 本身是流程編排（依賴玩家選擇），
+    // 隨其頁面移植；此處只凍結表格與純推導——那才是抄漏一格會出錯的部分。
+    write('level_tables', [
+      for (final cls in [
+        'Barbarian',
+        'Bard',
+        'Cleric',
+        'Druid',
+        'Fighter',
+        'Monk',
+        'Paladin',
+        'Ranger',
+        'Rogue',
+        'Sorcerer',
+        'Warlock',
+        'Wizard',
+      ])
+        for (var lv = 1; lv <= 20; lv++)
+          {
+            'input': {'classEn': cls, 'level': lv},
+            'output': {
+              'proficiencyBonus': proficiencyBonusFor(lv),
+              'isAsiLevel': asiLevelsFor(cls).contains(lv),
+              'spellSlots': {
+                for (final e in spellSlotTotalsFor(
+                  kClassProgression[cls] ?? CasterProgression.none,
+                  lv,
+                ).entries)
+                  '${e.key}': e.value,
+              },
+              'maxSpellRing': maxSpellRingFor(
+                kClassProgression[cls] ?? CasterProgression.none,
+                lv,
+              ),
+              'cantripsKnown': kCantripsKnown[cls]?[lv - 1] ?? 0,
+              'preparedSpells': kPreparedSpells[cls]?[lv - 1] ?? 0,
+              'newCantripPicks': newCantripPicksFor(cls, lv),
+              'newSpellPicks': newSpellPicksFor(cls, lv),
+            },
+          },
     ]);
 
     // 職業資源：全職業 × 1–20 級。這是最容易在重寫時抄漏一格的表格。

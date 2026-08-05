@@ -1,0 +1,4682 @@
+[
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 1
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 2
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 3
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 4
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 5
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 6
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 7
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 8
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 9
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 10
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 11
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 12
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 13
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 14
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 15
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 16
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 17
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 18
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 19
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Barbarian",
+      "level": 20
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 1
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 2
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 2,
+      "preparedSpells": 4,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 2
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 3
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 2,
+      "preparedSpells": 5,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 3
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 2
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 2,
+      "preparedSpells": 6,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 4
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 3,
+      "preparedSpells": 7,
+      "newCantripPicks": 1,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 5
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 2
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 3,
+      "preparedSpells": 9,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 6
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 3,
+      "preparedSpells": 10,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 7
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 1
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 3,
+      "preparedSpells": 11,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 8
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 2
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 3,
+      "preparedSpells": 12,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 9
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 1
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 3,
+      "preparedSpells": 14,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 10
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 15,
+      "newCantripPicks": 1,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 11
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "maxSpellRing": 6,
+      "cantripsKnown": 4,
+      "preparedSpells": 16,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 12
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "maxSpellRing": 6,
+      "cantripsKnown": 4,
+      "preparedSpells": 16,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 13
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1
+      },
+      "maxSpellRing": 7,
+      "cantripsKnown": 4,
+      "preparedSpells": 17,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 14
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1
+      },
+      "maxSpellRing": 7,
+      "cantripsKnown": 4,
+      "preparedSpells": 17,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 15
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1
+      },
+      "maxSpellRing": 8,
+      "cantripsKnown": 4,
+      "preparedSpells": 18,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 16
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1
+      },
+      "maxSpellRing": 8,
+      "cantripsKnown": 4,
+      "preparedSpells": 18,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 17
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 4,
+      "preparedSpells": 19,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 18
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 1,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 4,
+      "preparedSpells": 20,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 19
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 4,
+      "preparedSpells": 21,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Bard",
+      "level": 20
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 2,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 4,
+      "preparedSpells": 22,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 1
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 2
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 3,
+      "preparedSpells": 4,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 2
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 3
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 3,
+      "preparedSpells": 5,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 3
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 2
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 3,
+      "preparedSpells": 6,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 4
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 4,
+      "preparedSpells": 7,
+      "newCantripPicks": 1,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 5
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 2
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 4,
+      "preparedSpells": 9,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 6
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 4,
+      "preparedSpells": 10,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 7
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 1
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 4,
+      "preparedSpells": 11,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 8
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 2
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 4,
+      "preparedSpells": 12,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 9
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 1
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 14,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 10
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 5,
+      "preparedSpells": 15,
+      "newCantripPicks": 1,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 11
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "maxSpellRing": 6,
+      "cantripsKnown": 5,
+      "preparedSpells": 16,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 12
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "maxSpellRing": 6,
+      "cantripsKnown": 5,
+      "preparedSpells": 16,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 13
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1
+      },
+      "maxSpellRing": 7,
+      "cantripsKnown": 5,
+      "preparedSpells": 17,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 14
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1
+      },
+      "maxSpellRing": 7,
+      "cantripsKnown": 5,
+      "preparedSpells": 17,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 15
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1
+      },
+      "maxSpellRing": 8,
+      "cantripsKnown": 5,
+      "preparedSpells": 18,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 16
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1
+      },
+      "maxSpellRing": 8,
+      "cantripsKnown": 5,
+      "preparedSpells": 18,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 17
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 5,
+      "preparedSpells": 19,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 18
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 1,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 5,
+      "preparedSpells": 20,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 19
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 5,
+      "preparedSpells": 21,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Cleric",
+      "level": 20
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 2,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 5,
+      "preparedSpells": 22,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 1
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 2
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 2,
+      "preparedSpells": 4,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 2
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 3
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 2,
+      "preparedSpells": 5,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 3
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 2
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 2,
+      "preparedSpells": 6,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 4
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 3,
+      "preparedSpells": 7,
+      "newCantripPicks": 1,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 5
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 2
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 3,
+      "preparedSpells": 9,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 6
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 3,
+      "preparedSpells": 10,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 7
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 1
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 3,
+      "preparedSpells": 11,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 8
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 2
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 3,
+      "preparedSpells": 12,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 9
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 1
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 3,
+      "preparedSpells": 14,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 10
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 15,
+      "newCantripPicks": 1,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 11
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "maxSpellRing": 6,
+      "cantripsKnown": 4,
+      "preparedSpells": 16,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 12
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "maxSpellRing": 6,
+      "cantripsKnown": 4,
+      "preparedSpells": 16,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 13
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1
+      },
+      "maxSpellRing": 7,
+      "cantripsKnown": 4,
+      "preparedSpells": 17,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 14
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1
+      },
+      "maxSpellRing": 7,
+      "cantripsKnown": 4,
+      "preparedSpells": 17,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 15
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1
+      },
+      "maxSpellRing": 8,
+      "cantripsKnown": 4,
+      "preparedSpells": 18,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 16
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1
+      },
+      "maxSpellRing": 8,
+      "cantripsKnown": 4,
+      "preparedSpells": 18,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 17
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 4,
+      "preparedSpells": 19,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 18
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 1,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 4,
+      "preparedSpells": 20,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 19
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 4,
+      "preparedSpells": 21,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Druid",
+      "level": 20
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 2,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 4,
+      "preparedSpells": 22,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 1
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 2
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 3
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 4
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 5
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 6
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 7
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 8
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 9
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 10
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 11
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 12
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 13
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 14
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 15
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 16
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 17
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 18
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 19
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Fighter",
+      "level": 20
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 1
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 2
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 3
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 4
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 5
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 6
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 7
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 8
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 9
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 10
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 11
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 12
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 13
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 14
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 15
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 16
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 17
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 18
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 19
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Monk",
+      "level": 20
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 1
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 2
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 0,
+      "preparedSpells": 2,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 2
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 2
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 0,
+      "preparedSpells": 3,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 3
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 3
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 0,
+      "preparedSpells": 4,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 4
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 3
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 0,
+      "preparedSpells": 5,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 5
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 2
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 0,
+      "preparedSpells": 6,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 6
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 2
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 0,
+      "preparedSpells": 6,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 7
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 0,
+      "preparedSpells": 7,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 8
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 0,
+      "preparedSpells": 7,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 9
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 2
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 0,
+      "preparedSpells": 9,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 10
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 2
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 0,
+      "preparedSpells": 9,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 11
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 0,
+      "preparedSpells": 10,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 12
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 0,
+      "preparedSpells": 10,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 13
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 1
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 0,
+      "preparedSpells": 11,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 14
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 1
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 0,
+      "preparedSpells": 11,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 15
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 2
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 0,
+      "preparedSpells": 12,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 16
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 2
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 0,
+      "preparedSpells": 12,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 17
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 1
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 0,
+      "preparedSpells": 14,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 18
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 1
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 0,
+      "preparedSpells": 14,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 19
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 0,
+      "preparedSpells": 15,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Paladin",
+      "level": 20
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 0,
+      "preparedSpells": 15,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 1
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 2
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 0,
+      "preparedSpells": 2,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 2
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 2
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 0,
+      "preparedSpells": 3,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 3
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 3
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 0,
+      "preparedSpells": 4,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 4
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 3
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 0,
+      "preparedSpells": 5,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 5
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 2
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 0,
+      "preparedSpells": 6,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 6
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 2
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 0,
+      "preparedSpells": 6,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 7
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 0,
+      "preparedSpells": 7,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 8
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 0,
+      "preparedSpells": 7,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 9
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 2
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 0,
+      "preparedSpells": 9,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 10
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 2
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 0,
+      "preparedSpells": 9,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 11
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 0,
+      "preparedSpells": 10,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 12
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 0,
+      "preparedSpells": 10,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 13
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 1
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 0,
+      "preparedSpells": 11,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 14
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 1
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 0,
+      "preparedSpells": 11,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 15
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 2
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 0,
+      "preparedSpells": 12,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 16
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 2
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 0,
+      "preparedSpells": 12,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 17
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 1
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 0,
+      "preparedSpells": 14,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 18
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 1
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 0,
+      "preparedSpells": 14,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 19
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 0,
+      "preparedSpells": 15,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Ranger",
+      "level": 20
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 0,
+      "preparedSpells": 15,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 1
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 2
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 3
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 4
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 5
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 6
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 7
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 8
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 9
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 10
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 11
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 12
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 13
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 14
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 15
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 16
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 17
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 18
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 19
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": true,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Rogue",
+      "level": 20
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {},
+      "maxSpellRing": 0,
+      "cantripsKnown": 0,
+      "preparedSpells": 0,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 1
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 2
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 4,
+      "preparedSpells": 2,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 2
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 3
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 4,
+      "preparedSpells": 4,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 3
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 2
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 4,
+      "preparedSpells": 6,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 4
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 5,
+      "preparedSpells": 7,
+      "newCantripPicks": 1,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 5
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 2
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 5,
+      "preparedSpells": 9,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 6
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 5,
+      "preparedSpells": 10,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 7
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 1
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 5,
+      "preparedSpells": 11,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 8
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 2
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 5,
+      "preparedSpells": 12,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 9
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 1
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 5,
+      "preparedSpells": 14,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 10
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 6,
+      "preparedSpells": 15,
+      "newCantripPicks": 1,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 11
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "maxSpellRing": 6,
+      "cantripsKnown": 6,
+      "preparedSpells": 16,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 12
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "maxSpellRing": 6,
+      "cantripsKnown": 6,
+      "preparedSpells": 16,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 13
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1
+      },
+      "maxSpellRing": 7,
+      "cantripsKnown": 6,
+      "preparedSpells": 17,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 14
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1
+      },
+      "maxSpellRing": 7,
+      "cantripsKnown": 6,
+      "preparedSpells": 17,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 15
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1
+      },
+      "maxSpellRing": 8,
+      "cantripsKnown": 6,
+      "preparedSpells": 18,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 16
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1
+      },
+      "maxSpellRing": 8,
+      "cantripsKnown": 6,
+      "preparedSpells": 18,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 17
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 6,
+      "preparedSpells": 19,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 18
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 1,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 6,
+      "preparedSpells": 20,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 19
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 6,
+      "preparedSpells": 21,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Sorcerer",
+      "level": 20
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 2,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 6,
+      "preparedSpells": 22,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 1
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 1
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 2,
+      "preparedSpells": 2,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 2
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 2
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 2,
+      "preparedSpells": 3,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 3
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "2": 2
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 2,
+      "preparedSpells": 4,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 4
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "2": 2
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 3,
+      "preparedSpells": 5,
+      "newCantripPicks": 1,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 5
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "3": 2
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 3,
+      "preparedSpells": 6,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 6
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "3": 2
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 3,
+      "preparedSpells": 7,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 7
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "4": 2
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 3,
+      "preparedSpells": 8,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 8
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "4": 2
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 3,
+      "preparedSpells": 9,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 9
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "5": 2
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 3,
+      "preparedSpells": 10,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 10
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "5": 2
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 10,
+      "newCantripPicks": 1,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 11
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "5": 3
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 11,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 12
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "5": 3
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 11,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 13
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "5": 3
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 12,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 14
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "5": 3
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 12,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 15
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "5": 3
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 13,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 16
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "5": 3
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 13,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 17
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "5": 4
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 14,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 18
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "5": 4
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 14,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 19
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "5": 4
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 15,
+      "newCantripPicks": 0,
+      "newSpellPicks": 1
+    }
+  },
+  {
+    "input": {
+      "classEn": "Warlock",
+      "level": 20
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "5": 4
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 15,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 1
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 2
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 3,
+      "preparedSpells": 4,
+      "newCantripPicks": 0,
+      "newSpellPicks": 0
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 2
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 3
+      },
+      "maxSpellRing": 1,
+      "cantripsKnown": 3,
+      "preparedSpells": 5,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 3
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 2
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 3,
+      "preparedSpells": 6,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 4
+    },
+    "output": {
+      "proficiencyBonus": 2,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3
+      },
+      "maxSpellRing": 2,
+      "cantripsKnown": 4,
+      "preparedSpells": 7,
+      "newCantripPicks": 1,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 5
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 2
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 4,
+      "preparedSpells": 9,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 6
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3
+      },
+      "maxSpellRing": 3,
+      "cantripsKnown": 4,
+      "preparedSpells": 10,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 7
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 1
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 4,
+      "preparedSpells": 11,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 8
+    },
+    "output": {
+      "proficiencyBonus": 3,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 2
+      },
+      "maxSpellRing": 4,
+      "cantripsKnown": 4,
+      "preparedSpells": 12,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 9
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 1
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 4,
+      "preparedSpells": 14,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 10
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2
+      },
+      "maxSpellRing": 5,
+      "cantripsKnown": 5,
+      "preparedSpells": 15,
+      "newCantripPicks": 1,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 11
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "maxSpellRing": 6,
+      "cantripsKnown": 5,
+      "preparedSpells": 16,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 12
+    },
+    "output": {
+      "proficiencyBonus": 4,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "maxSpellRing": 6,
+      "cantripsKnown": 5,
+      "preparedSpells": 16,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 13
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1
+      },
+      "maxSpellRing": 7,
+      "cantripsKnown": 5,
+      "preparedSpells": 17,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 14
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1
+      },
+      "maxSpellRing": 7,
+      "cantripsKnown": 5,
+      "preparedSpells": 18,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 15
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1
+      },
+      "maxSpellRing": 8,
+      "cantripsKnown": 5,
+      "preparedSpells": 19,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 16
+    },
+    "output": {
+      "proficiencyBonus": 5,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1
+      },
+      "maxSpellRing": 8,
+      "cantripsKnown": 5,
+      "preparedSpells": 21,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 17
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 5,
+      "preparedSpells": 22,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 18
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 1,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 5,
+      "preparedSpells": 23,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 19
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": true,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 5,
+      "preparedSpells": 24,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  },
+  {
+    "input": {
+      "classEn": "Wizard",
+      "level": 20
+    },
+    "output": {
+      "proficiencyBonus": 6,
+      "isAsiLevel": false,
+      "spellSlots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 2,
+        "8": 1,
+        "9": 1
+      },
+      "maxSpellRing": 9,
+      "cantripsKnown": 5,
+      "preparedSpells": 25,
+      "newCantripPicks": 0,
+      "newSpellPicks": 2
+    }
+  }
+]

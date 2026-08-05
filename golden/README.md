@@ -24,6 +24,8 @@ flutter test tool/export_rule_goldens.dart --dart-define=out=golden
 | `pay_from.json` | 10 | `currency_math.dart` 的 `payFrom` |
 | `format_cp.json` | 10 | `currency_math.dart` 的 `formatCp` |
 | `derive_class_resources.json` | 160 | `class_resources.dart` 的 `deriveClassResources`（8 職業 × 1–20 級） |
+| `attack_entries.json` | 10 | `derived_stats.dart` 的 `attackEntries` |
+| `level_tables.json` | 240 | `character_math.dart` 與 `level_up.dart` 的規則表（12 職業 × 1–20 級） |
 | `real_characters.json` | 6 | 真實資料樣本，供新型別定義驗證解析 |
 
 格式一律 `[{desc, input, output}, …]`。`input` 為新實作也吃得到的純資料
@@ -43,11 +45,12 @@ flutter test tool/export_rule_goldens.dart --dart-define=out=golden
 
 誠實列出，不以「已全數對拍」表述：
 
-- **`level_up`**：升級流程含 UI 互動（選子職業、ASI 或專長、法術），純函式部分
-  未獨立匯出。重寫該流程時需另外補
-- **`attackEntries`**（武器攻擊列推導）：依賴裝備的武器機制欄位，案例尚未建構
+- **`applyLevelUp`**：升級流程的編排（依賴玩家對子職業、ASI／專長、法術的選擇）
+  未涵蓋。`level_tables.json` 只凍結了**表格與純推導**——那才是抄漏一格會靜默
+  出錯的部分；編排邏輯隨其頁面移植時需另外補
 - **`syncClassResources`**：升級後的資源差額入帳邏輯（升級不視為休息，已消耗的
   不回復）未涵蓋，只涵蓋了 `deriveClassResources`
+- **`featureArmorViolation`**（著甲條件特性提示）未涵蓋
 - **`real_characters.json` 只含專案擁有者本人的 6 張**。資料表是多租戶的，
   其他 10 位測試者的角色不進版控。切換上線前需對**全部**存活資料跑一次解析
   驗證（tasks 7.1），不能只憑這 6 筆
