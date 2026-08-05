@@ -59,6 +59,12 @@ export const useCharacterStore = create<State & Actions>((set) => ({
 const clamp = (v: number, lo: number, hi: number) =>
   Math.min(Math.max(v, lo), hi);
 
+/** 日誌條目 id。隨機而非時間戳——同一毫秒連建兩筆不會撞。 */
+const newEntryId = () =>
+  Array.from(crypto.getRandomValues(new Uint8Array(8)), (b) =>
+    b.toString(16).padStart(2, '0'),
+  ).join('');
+
 export const characterActions = {
   /**
    * 調整當前 HP。
@@ -183,6 +189,102 @@ export const characterActions = {
       ...c,
       toolProficiencies: c.toolProficiencies.filter((t) => t !== name),
     }));
+  },
+
+  /**
+   * 新增日誌。**第一行為標題、其餘為內文**——與 Flutter 的編輯器一致，
+   * 使用者只面對一個文字區，不必先想標題再想內容。
+   */
+  addJournalEntry(title: string, body: string) {
+    const now = new Date().toISOString();
+    useCharacterStore.getState().update((c) => ({
+      ...c,
+      journalEntries: [
+        ...c.journalEntries,
+        { id: newEntryId(), title, body, createdAt: now, updatedAt: now },
+      ],
+    }));
+  },
+
+  updateJournalEntry(id: string, title: string, body: string) {
+    const now = new Date().toISOString();
+    useCharacterStore.getState().update((c) => ({
+      ...c,
+      journalEntries: c.journalEntries.map((e) =>
+        e.id === id ? { ...e, title, body, updatedAt: now } : e,
+      ),
+    }));
+  },
+
+  removeJournalEntry(id: string) {
+    useCharacterStore.getState().update((c) => ({
+      ...c,
+      journalEntries: c.journalEntries.filter((e) => e.id !== id),
+    }));
+  },
+
+  /**
+   * 切換裝備狀態。
+   *
+   * 裝上非盾牌護甲時**法師護甲自動關閉**（2024：著甲則提前結束）；
+   * 卸甲不自動恢復——那需要重新施法，不是自動的。
+   */
+  toggleEquipped(index: number) {
+    useCharacterStore.getState().update((c) => {
+      const item = c.equipment[index];
+      if (!item) return c;
+      const next = { ...item, equipped: !item.equipped };
+      const donsArmor =
+        next.equipped && next.itemType === 'armor' && next.armorCategory !== 'shield';
+      const equipment = [...c.equipment];
+      equipment[index] = next;
+      return {
+        ...c,
+        equipment,
+        mageArmorActive: donsArmor ? false : c.mageArmorActive,
+      };
+    });
+  },
+
+  addItem(item: Character['equipment'][number]) {
+    useCharacterStore.getState().update((c) => ({
+      ...c,
+      equipment: [...c.equipment, item],
+    }));
+  },
+
+  removeItem(index: number) {
+    useCharacterStore.getState().update((c) => ({
+      ...c,
+      equipment: c.equipment.filter((_, i) => i !== index),
+    }));
+  },
+
+  /**
+   * 使用消耗品：數量 −1。歸零時**非任務物品自清單移除，任務物品保留為 0**
+   * ——任務物品可能還有劇情用途，不該因為用完就消失。
+   */
+  useConsumable(index: number) {
+    useCharacterStore.getState().update((c) => {
+      const item = c.equipment[index];
+      if (!item || item.quantity <= 0) return c;
+      const quantity = item.quantity - 1;
+      if (quantity === 0 && !item.quest) {
+        return { ...c, equipment: c.equipment.filter((_, i) => i !== index) };
+      }
+      const equipment = [...c.equipment];
+      equipment[index] = { ...item, quantity };
+      return { ...c, equipment };
+    });
+  },
+
+  setCurrency(currency: Character['currency']) {
+    useCharacterStore.getState().update((c) => ({ ...c, currency }));
+  },
+
+  /** 法師護甲開關。著甲時由 toggleEquipped 自動關閉。 */
+  setMageArmor(active: boolean) {
+    useCharacterStore.getState().update((c) => ({ ...c, mageArmorActive: active }));
   },
 
   toggleCondition(name: string) {

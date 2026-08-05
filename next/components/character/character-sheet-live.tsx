@@ -4,10 +4,11 @@ import { useEffect, useState, type ReactNode } from 'react';
 
 import type { CatalogItem } from '@/lib/catalog/types';
 import type { Character } from '@/lib/domain/character';
-import { useCharacterStore } from '@/lib/state/character-store';
+import { characterActions, useCharacterStore } from '@/lib/state/character-store';
 import { useCharacterSync } from '@/lib/state/sync';
 import { CharacterSheet } from './character-sheet';
 import { BasicInfoEditor } from './editors/basic-info-editor';
+import { CurrencyEditor, InventoryEditor } from './editors/inventory-editor';
 import { ProficiencyEditor } from './editors/proficiency-editor';
 
 /**
@@ -21,17 +22,22 @@ import { ProficiencyEditor } from './editors/proficiency-editor';
 export function CharacterSheetLive({
   initial,
   tools,
+  catalog = [],
   share,
   persist = true,
 }: {
   initial: Character;
   tools: CatalogItem[];
+  /** 完整物品目錄，供取得物品用；離線時為空陣列。 */
+  catalog?: CatalogItem[];
   share?: ReactNode;
   persist?: boolean;
 }) {
   const load = useCharacterStore((s) => s.load);
   const stored = useCharacterStore((s) => s.character);
-  const [editor, setEditor] = useState<'basic' | 'prof' | null>(null);
+  const [editor, setEditor] = useState<'basic' | 'prof' | 'items' | 'coin' | null>(
+    null,
+  );
 
   useEffect(() => {
     load(initial);
@@ -47,6 +53,14 @@ export function CharacterSheetLive({
         share={share}
         onEditBasic={() => setEditor('basic')}
         onEditProficiency={() => setEditor('prof')}
+        inventory={{
+          c,
+          onEditCurrency: () => setEditor('coin'),
+          onAddItem: () => setEditor('items'),
+          onToggleEquipped: characterActions.toggleEquipped,
+          onUseConsumable: characterActions.useConsumable,
+          onRemoveItem: characterActions.removeItem,
+        }}
       />
       <BasicInfoEditor open={editor === 'basic'} onClose={() => setEditor(null)} />
       <ProficiencyEditor
@@ -54,6 +68,12 @@ export function CharacterSheetLive({
         onClose={() => setEditor(null)}
         tools={tools}
       />
+      <InventoryEditor
+        open={editor === 'items'}
+        onClose={() => setEditor(null)}
+        catalog={catalog}
+      />
+      <CurrencyEditor open={editor === 'coin'} onClose={() => setEditor(null)} />
     </>
   );
 }

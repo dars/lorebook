@@ -125,3 +125,59 @@ describe('休息', () => {
     expect(c().currentHp).toBe(hp);
   });
 });
+
+describe('裝備', () => {
+  const armor = {
+    name: '鏈甲', nameEn: '', type: '', description: '', equipped: false,
+    itemType: 'armor' as const, source: 'catalog' as const, quantity: 1,
+    quest: false, priceCp: 0, catalogRef: '', damage: '', damageType: '',
+    finesse: false, properties: [], armorCategory: 'medium' as const, acBase: 13,
+  };
+
+  beforeEach(() => {
+    useCharacterStore.getState().load({
+      ...base(),
+      mageArmorActive: true,
+      equipment: [
+        armor,
+        { ...armor, name: '盾牌', armorCategory: 'shield', acBase: 0 },
+        { ...armor, name: '治療藥水', itemType: 'consumable', armorCategory: 'none', quantity: 2 },
+        { ...armor, name: '任務信物', itemType: 'gear', armorCategory: 'none', quantity: 1, quest: true },
+      ],
+    });
+  });
+
+  const c = () => useCharacterStore.getState().character!;
+
+  it('穿上非盾牌護甲時法師護甲自動關閉', () => {
+    characterActions.toggleEquipped(0);
+    expect(c().equipment[0].equipped).toBe(true);
+    expect(c().mageArmorActive).toBe(false);
+  });
+
+  it('拿盾牌不影響法師護甲——盾牌不算著甲', () => {
+    characterActions.toggleEquipped(1);
+    expect(c().mageArmorActive).toBe(true);
+  });
+
+  it('卸甲不自動恢復法師護甲——那需要重新施法', () => {
+    characterActions.toggleEquipped(0);
+    characterActions.toggleEquipped(0);
+    expect(c().equipment[0].equipped).toBe(false);
+    expect(c().mageArmorActive).toBe(false);
+  });
+
+  it('消耗品用完自清單移除', () => {
+    characterActions.useConsumable(2);
+    expect(c().equipment[2].quantity).toBe(1);
+    characterActions.useConsumable(2);
+    expect(c().equipment.some((e) => e.name === '治療藥水')).toBe(false);
+  });
+
+  it('任務物品歸零仍保留——可能還有劇情用途', () => {
+    const i = c().equipment.findIndex((e) => e.name === '任務信物');
+    characterActions.useConsumable(i);
+    const item = c().equipment.find((e) => e.name === '任務信物');
+    expect(item?.quantity).toBe(0);
+  });
+});

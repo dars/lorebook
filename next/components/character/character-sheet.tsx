@@ -27,6 +27,7 @@ export function CharacterSheet({
   share,
   onEditBasic,
   onEditProficiency,
+  inventory,
 }: {
   c: Character;
   /** 分享區塊。唯讀檢視不傳，該區塊即不渲染。 */
@@ -34,6 +35,7 @@ export function CharacterSheet({
   /** 編輯入口。唯讀檢視不傳——寫入入口不予渲染，而非渲染後停用。 */
   onEditBasic?: () => void;
   onEditProficiency?: () => void;
+  inventory?: React.ComponentProps<typeof InventoryTab>;
 }) {
   const showSpells = c.spellSlots.length > 0 || c.cantrips.length > 0;
 
@@ -51,7 +53,7 @@ export function CharacterSheet({
       case '法術':
         return <SpellsTab c={c} />;
       case '物品':
-        return <InventoryTab c={c} />;
+        return <InventoryTab c={c} {...inventory} />;
       default:
         return (
           <BiographyTab c={c} onEditProficiency={onEditProficiency} />

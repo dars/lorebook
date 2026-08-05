@@ -100,7 +100,21 @@ function SpellGroup({
   );
 }
 
-export function InventoryTab({ c }: { c: Character }) {
+export function InventoryTab({
+  c,
+  onEditCurrency,
+  onAddItem,
+  onToggleEquipped,
+  onUseConsumable,
+  onRemoveItem,
+}: {
+  c: Character;
+  onEditCurrency?: () => void;
+  onAddItem?: () => void;
+  onToggleEquipped?: (i: number) => void;
+  onUseConsumable?: (i: number) => void;
+  onRemoveItem?: (i: number) => void;
+}) {
   const coins = (['pp', 'gp', 'ep', 'sp', 'cp'] as const).filter(
     (k) => c.currency[k] > 0,
   );
@@ -113,7 +127,12 @@ export function InventoryTab({ c }: { c: Character }) {
 
   return (
     <div className="px-4 pb-10">
-      <CollapsibleSection en="CURRENCY" cn="財富" first>
+      <CollapsibleSection
+        en="CURRENCY"
+        cn="財富"
+        first
+        trailing={onEditCurrency && <EditIcon onClick={onEditCurrency} label="編輯財富" />}
+      >
         <ParchmentCard className="px-4 py-3">
           {coins.length === 0 ? (
             <p className="text-[13px] text-text-secondary">身無分文。</p>
@@ -137,7 +156,11 @@ export function InventoryTab({ c }: { c: Character }) {
         </ParchmentCard>
       </CollapsibleSection>
 
-      <CollapsibleSection en="EQUIPMENT" cn="裝備">
+      <CollapsibleSection
+        en="EQUIPMENT"
+        cn="裝備"
+        trailing={onAddItem && <EditIcon onClick={onAddItem} label="取得物品" />}
+      >
         {c.equipment.length === 0 ? (
           <p className="py-3 text-[13px] text-text-secondary">沒有物品。</p>
         ) : (
@@ -161,11 +184,46 @@ export function InventoryTab({ c }: { c: Character }) {
                     </span>
                   )}
                 </span>
-                {e.quest && (
-                  <span className="shrink-0 rounded-chip border border-border-2 px-2 py-0.5 text-[10px] text-text-secondary">
-                    任務
-                  </span>
-                )}
+                <span className="flex shrink-0 items-center gap-1">
+                  {e.quest && (
+                    <span className="rounded-chip border border-border-2 px-2 py-0.5 text-[10px] text-text-secondary">
+                      任務
+                    </span>
+                  )}
+                  {onToggleEquipped &&
+                    (e.itemType === 'weapon' || e.itemType === 'armor') && (
+                      <button
+                        type="button"
+                        onClick={() => onToggleEquipped(i)}
+                        className={`min-h-9 rounded-chip border px-2 text-[11px] ${
+                          e.equipped
+                            ? 'border-gold text-gold'
+                            : 'border-border-2 text-text-secondary'
+                        }`}
+                      >
+                        {e.equipped ? '已裝備' : '裝備'}
+                      </button>
+                    )}
+                  {onUseConsumable && e.itemType === 'consumable' && (
+                    <button
+                      type="button"
+                      onClick={() => onUseConsumable(i)}
+                      className="min-h-9 rounded-chip border border-border-2 px-2 text-[11px] text-text-secondary"
+                    >
+                      使用
+                    </button>
+                  )}
+                  {onRemoveItem && (
+                    <button
+                      type="button"
+                      onClick={() => onRemoveItem(i)}
+                      aria-label={`移除 ${e.name}`}
+                      className="min-h-9 px-2 text-[11px] text-text-secondary"
+                    >
+                      ×
+                    </button>
+                  )}
+                </span>
               </div>
             ))}
           </ParchmentCard>

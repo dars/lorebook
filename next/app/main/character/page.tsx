@@ -22,6 +22,7 @@ export default async function CharacterTabPage() {
     <CharacterSheetLive
       initial={character}
       tools={tools}
+      catalog={rows}
       share={<SharePanelSection characterId={id} shares={shares} />}
     />
   );
