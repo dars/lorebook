@@ -22,24 +22,14 @@ export default async function LoginPage({
           </p>
         )}
 
-        <div className="mt-2xl flex flex-col gap-md">
-          <form action={signIn.bind(null, 'google', '/')}>
-            <button
-              type="submit"
-              className="w-full cursor-pointer rounded-chip border border-border bg-surface-2 px-lg py-md text-body text-text-primary hover:border-gold"
-            >
-              以 Google 帳號登入
-            </button>
-          </form>
-          <form action={signIn.bind(null, 'apple', '/')}>
-            <button
-              type="submit"
-              className="w-full cursor-pointer rounded-chip border border-border bg-surface-2 px-lg py-md text-body text-text-primary hover:border-gold"
-            >
-              以 Apple 帳號登入
-            </button>
-          </form>
-        </div>
+        <form className="mt-2xl" action={signIn.bind(null, '/')}>
+          <button
+            type="submit"
+            className="w-full cursor-pointer rounded-chip border border-border bg-surface-2 px-lg py-md text-body text-text-primary hover:border-gold"
+          >
+            以 Google 帳號登入
+          </button>
+        </form>
       </div>
     </main>
   );

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -99,23 +98,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 : const Icon(Icons.g_mobiledata, size: 24),
                             label: const Text('以 Google 登入'),
                           ),
-                          if (!kIsWeb &&
-                              defaultTargetPlatform == TargetPlatform.iOS) ...[
-                            const SizedBox(height: AppSpacing.lg),
-                            OutlinedButton.icon(
-                              key: const Key('login-apple'),
-                              onPressed: _isLoading
-                                  ? null
-                                  : () {
-                                      trackEvent('login_click', {
-                                        'method': 'apple',
-                                      });
-                                      _signIn((r) => r.signInWithApple());
-                                    },
-                              icon: const Icon(Icons.apple, size: 24),
-                              label: const Text('以 Apple 登入'),
-                            ),
-                          ],
                         ],
                       ),
                     ),

@@ -38,19 +38,6 @@ class AuthRepository {
       throw AuthException('Google 登入失敗：$e');
     }
   }
-
-  Future<bool> signInWithApple() async {
-    try {
-      return await _client.auth.signInWithOAuth(
-        OAuthProvider.apple,
-        redirectTo: _oauthRedirect,
-      );
-    } on AuthApiException catch (e) {
-      throw AuthException(e.message);
-    } catch (e) {
-      throw AuthException('Apple 登入失敗：$e');
-    }
-  }
 }
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
