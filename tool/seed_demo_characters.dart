@@ -127,7 +127,7 @@ const kDemos = <DemoSpec>[
     alignmentEn: 'Lawful Good',
     // 標準陣列，背景加值 +2 力量 +1 體質
     scores: {'STR': 17, 'DEX': 13, 'CON': 15, 'INT': 10, 'WIS': 12, 'CHA': 8},
-    classSkills: ['體能', '求生'],
+    classSkills: ['運動', '求生'],
     speciesSkills: ['感知'],
     personalityTrait: '我用行伍的規矩過日子，起床、擦劍、站哨。',
     ideal: '守住身後的人，比贏得眼前的仗重要。',

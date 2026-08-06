@@ -190,8 +190,8 @@ void main() {
     // 技能：背景固定技能自動帶入（隱匿/求生）
     expect(find.textContaining('背景 獵人（自動）'), findsOneWidget);
     // 職業區在種族區之前，職業技能用 .first
-    await tester.ensureVisible(find.textContaining('體能 Athletics').first);
-    await tester.tap(find.textContaining('體能 Athletics').first);
+    await tester.ensureVisible(find.textContaining('運動 Athletics').first);
+    await tester.tap(find.textContaining('運動 Athletics').first);
     await tester.pump();
     await tester.ensureVisible(find.textContaining('威嚇 Intimidation').first);
     await tester.tap(find.textContaining('威嚇 Intimidation').first);
@@ -212,7 +212,7 @@ void main() {
     expect(created.backgroundEn, ''); // 自訂背景無英文名
     expect(
       created.skills.where((s) => s.proficient).map((s) => s.name),
-      containsAll(['隱匿', '求生', '體能', '威嚇']),
+      containsAll(['隱匿', '求生', '運動', '威嚇']),
     );
     expect(created.features.map((f) => f.source), contains('背景：獵人'));
     // 自訂背景未設定工具（fixture 留空）→ 不寫入
@@ -320,7 +320,7 @@ Future<void> _walkToCreate(
   await _next(tester); // 能力值（預設標準陣列已套用建議）
 
   // 技能：職業 2 + 種族 1
-  for (final s in ['體能 Athletics', '威嚇 Intimidation']) {
+  for (final s in ['運動 Athletics', '威嚇 Intimidation']) {
     await tester.ensureVisible(find.textContaining(s).first);
     await tester.pumpAndSettle();
     await tester.tap(find.textContaining(s).first);

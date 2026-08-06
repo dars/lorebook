@@ -111,7 +111,7 @@ describe('組裝角色', () => {
 
   it('非施法職業不建法術位、DC 為 0', () => {
     const c = buildCharacter(
-      { ...input, cls: cls('戰士'), classSkills: ['體能', '求生'] },
+      { ...input, cls: cls('戰士'), classSkills: ['運動', '求生'] },
       'x',
     );
     expect(c.spellSlots).toEqual([]);

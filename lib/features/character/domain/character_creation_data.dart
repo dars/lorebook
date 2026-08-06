@@ -80,7 +80,7 @@ class SkillDef {
 }
 
 const kSkills = <SkillDef>[
-  SkillDef('體能', 'Athletics', 'STR'),
+  SkillDef('運動', 'Athletics', 'STR'),
   SkillDef('特技', 'Acrobatics', 'DEX'),
   SkillDef('巧手', 'Sleight of Hand', 'DEX'),
   SkillDef('隱匿', 'Stealth', 'DEX'),
@@ -435,7 +435,7 @@ int level1MaxHp(ClassOption cls, SpeciesOption sp, Map<String, int> mods) =>
     (cls.hitDie + mods['CON']! + sp.hpPerLevel).clamp(1, 999);
 
 const _allSkillNames = [
-  '體能',
+  '運動',
   '特技',
   '巧手',
   '隱匿',
@@ -464,7 +464,7 @@ const kClasses = <ClassOption>[
     saves: ['STR', 'CON'],
     primaryAbilities: ['STR'],
     skillCount: 2,
-    skillChoices: ['馴獸', '體能', '威嚇', '自然', '感知', '求生'],
+    skillChoices: ['馴獸', '運動', '威嚇', '自然', '感知', '求生'],
     description: '〔敘述佔位〕揮舞重武器、以怒火為力量的前線戰士；越受傷越兇猛。（文案待補）',
   ),
   ClassOption(
@@ -516,7 +516,7 @@ const kClasses = <ClassOption>[
     saves: ['STR', 'CON'],
     primaryAbilities: ['STR', 'DEX'],
     skillCount: 2,
-    skillChoices: ['特技', '馴獸', '體能', '歷史', '洞察', '威嚇', '說服', '感知', '求生'],
+    skillChoices: ['特技', '馴獸', '運動', '歷史', '洞察', '威嚇', '說服', '感知', '求生'],
     description: '〔敘述佔位〕精通各式武器與戰技的全能戰鬥者。（文案待補）',
   ),
   ClassOption(
@@ -527,7 +527,7 @@ const kClasses = <ClassOption>[
     saves: ['STR', 'DEX'],
     primaryAbilities: ['DEX', 'WIS'],
     skillCount: 2,
-    skillChoices: ['特技', '體能', '歷史', '洞察', '宗教', '隱匿'],
+    skillChoices: ['特技', '運動', '歷史', '洞察', '宗教', '隱匿'],
     description: '〔敘述佔位〕以氣與徒手武技作戰、身法迅捷的武者。（文案待補）',
   ),
   ClassOption(
@@ -541,7 +541,7 @@ const kClasses = <ClassOption>[
     saves: ['WIS', 'CHA'],
     primaryAbilities: ['STR', 'CHA'],
     skillCount: 2,
-    skillChoices: ['體能', '洞察', '威嚇', '醫藥', '說服', '宗教'],
+    skillChoices: ['運動', '洞察', '威嚇', '醫藥', '說服', '宗教'],
     description: '〔敘述佔位〕立下誓言、半戰半法的聖戰士，能治療與制裁。（文案待補）',
   ),
   ClassOption(
@@ -555,7 +555,7 @@ const kClasses = <ClassOption>[
     saves: ['STR', 'DEX'],
     primaryAbilities: ['DEX', 'WIS'],
     skillCount: 3,
-    skillChoices: ['馴獸', '體能', '洞察', '調查', '自然', '感知', '隱匿', '求生'],
+    skillChoices: ['馴獸', '運動', '洞察', '調查', '自然', '感知', '隱匿', '求生'],
     description: '〔敘述佔位〕通曉荒野、半法的追蹤獵手與神射手。（文案待補）',
   ),
   ClassOption(
@@ -565,7 +565,7 @@ const kClasses = <ClassOption>[
     saves: ['DEX', 'INT'],
     primaryAbilities: ['DEX'],
     skillCount: 4,
-    skillChoices: ['特技', '體能', '欺瞞', '洞察', '威嚇', '調查', '感知', '說服', '巧手', '隱匿'],
+    skillChoices: ['特技', '運動', '欺瞞', '洞察', '威嚇', '調查', '感知', '說服', '巧手', '隱匿'],
     description: '〔敘述佔位〕擅長潛行、技巧與偷襲的多面手。（文案待補）',
   ),
   ClassOption(
@@ -652,7 +652,7 @@ const kBackgrounds = <BackgroundOption>[
     cn: '士兵',
     en: 'Soldier',
     abilities: ['STR', 'DEX', 'CON'],
-    skills: ['體能', '威嚇'],
+    skills: ['運動', '威嚇'],
     toolProficiency: '遊戲組',
     originFeat: '野蠻打擊',
     description: '〔敘述佔位〕受過軍事訓練的戰士，習於紀律與陣列作戰。（文案待補）',

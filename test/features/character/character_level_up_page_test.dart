@@ -40,7 +40,7 @@ Character _char({
     cha: _as(8),
   ),
   skills: const [
-    Skill(name: '體能', abilityType: 'STR', modifier: 5, proficient: true),
+    Skill(name: '運動', abilityType: 'STR', modifier: 5, proficient: true),
   ],
   spellSlots: spellAbility.isEmpty
       ? const []
@@ -211,7 +211,7 @@ void main() {
     final next = container.read(currentCharacterProvider);
     expect(next.level, 4);
     expect(next.abilityScores.str.score, 18);
-    final athletics = next.skills.firstWhere((s) => s.name == '體能');
+    final athletics = next.skills.firstWhere((s) => s.name == '運動');
     expect(athletics.modifier, 4 + 2, reason: 'STR +4、熟練 +2');
   });
 }

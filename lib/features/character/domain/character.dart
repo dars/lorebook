@@ -474,7 +474,7 @@ abstract class Character with _$Character {
           abilityType: 'WIS',
           modifier: 1,
         ),
-        Skill(name: '體能', nameEn: 'Athletics', abilityType: 'STR', modifier: 0),
+        Skill(name: '運動', nameEn: 'Athletics', abilityType: 'STR', modifier: 0),
         Skill(name: '欺瞞', nameEn: 'Deception', abilityType: 'CHA', modifier: 1),
         Skill(
           name: '威嚇',
@@ -726,7 +726,7 @@ abstract class Character with _$Character {
       ),
       skills: [
         Skill(
-          name: '體能',
+          name: '運動',
           nameEn: 'Athletics',
           abilityType: 'STR',
           modifier: 6,

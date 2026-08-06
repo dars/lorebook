@@ -9,7 +9,7 @@
       "hpPerLevel": 0,
       "skillPickCount": 1,
       "skillPickFrom": [
-        "體能",
+        "運動",
         "特技",
         "巧手",
         "隱匿",
@@ -351,7 +351,7 @@
       "skillCount": 2,
       "skillChoices": [
         "馴獸",
-        "體能",
+        "運動",
         "威嚇",
         "自然",
         "感知",
@@ -377,7 +377,7 @@
       ],
       "skillCount": 3,
       "skillChoices": [
-        "體能",
+        "運動",
         "特技",
         "巧手",
         "隱匿",
@@ -474,7 +474,7 @@
       "skillChoices": [
         "特技",
         "馴獸",
-        "體能",
+        "運動",
         "歷史",
         "洞察",
         "威嚇",
@@ -504,7 +504,7 @@
       "skillCount": 2,
       "skillChoices": [
         "特技",
-        "體能",
+        "運動",
         "歷史",
         "洞察",
         "宗教",
@@ -531,7 +531,7 @@
       ],
       "skillCount": 2,
       "skillChoices": [
-        "體能",
+        "運動",
         "洞察",
         "威嚇",
         "醫藥",
@@ -560,7 +560,7 @@
       "skillCount": 3,
       "skillChoices": [
         "馴獸",
-        "體能",
+        "運動",
         "洞察",
         "調查",
         "自然",
@@ -589,7 +589,7 @@
       "skillCount": 4,
       "skillChoices": [
         "特技",
-        "體能",
+        "運動",
         "欺瞞",
         "洞察",
         "威嚇",
@@ -699,7 +699,7 @@
         "CON"
       ],
       "skills": [
-        "體能",
+        "運動",
         "威嚇"
       ],
       "originFeat": "野蠻打擊",
@@ -765,7 +765,7 @@
   ],
   "skills": [
     {
-      "name": "體能",
+      "name": "運動",
       "nameEn": "Athletics",
       "ability": "STR"
     },

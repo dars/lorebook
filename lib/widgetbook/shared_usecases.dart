@@ -80,7 +80,7 @@ Widget entryCardSpellUseCase(BuildContext context) => _pad(
 @widgetbook.UseCase(name: 'Default', type: CompactStatRow)
 Widget compactStatRowUseCase(BuildContext context) => _pad(
   CompactStatRow(
-    labelCN: '體能',
+    labelCN: '運動',
     labelEN: 'Athletics',
     modifier: context.knobs.string(label: 'Modifier', initialValue: '+5'),
     isProficient: context.knobs.boolean(
