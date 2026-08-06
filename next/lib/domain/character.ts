@@ -283,29 +283,7 @@ export const hitDiceTotal = (c: Character) => c.level;
 export const hitDiceRemaining = (c: Character) =>
   Math.min(Math.max(c.level - c.hitDiceUsed, 0), c.level);
 
-/**
- * 技能改名對照：舊名 → 新名。
- *
- * 角色卡把技能名稱**存在自己的文件裡**（建角當下的快照），因此改名不能只改
- * 技能表——既有角色仍帶著舊名。在讀取時正規化，好處是：
- * - 所有使用者的既有角色立刻正確，不必對別人的資料下 UPDATE
- * - 下次儲存時自然寫回新名，資料會自己收斂
- *
- * 對照表在所有既有角色都收斂後可以移除；在那之前留著是無害的。
- */
-const SKILL_RENAMES: Record<string, string> = {
-  // 官方繁中譯名為「運動」（Athletics）。
-  體能: '運動',
-};
-
 /** 解析雲端／快取的角色 JSON。失敗時拋出，由呼叫端決定如何呈現。 */
 export function parseCharacter(json: unknown): Character {
-  const c = Character.parse(json);
-  if (!c.skills.some((s) => SKILL_RENAMES[s.name])) return c;
-  return {
-    ...c,
-    skills: c.skills.map((s) =>
-      SKILL_RENAMES[s.name] ? { ...s, name: SKILL_RENAMES[s.name] } : s,
-    ),
-  };
+  return Character.parse(json);
 }
