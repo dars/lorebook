@@ -35,5 +35,7 @@ export async function signIn(next = '/') {
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
+  // 本機快取的清除在 client 端做——Server Action 碰不到 Cache Storage。
+  // 由 `SignOutButton` 在送出前先通知 service worker，見該元件。
   redirect('/login');
 }

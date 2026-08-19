@@ -1,71 +1,83 @@
-## 1. 前置整理（無行為變化，可獨立驗證）
+## 1. 解除封鎖：收窄 LegacySwCleanup（無新行為，但其他階段全靠它）
 
-- [ ] 1.1 抽出 `hydrateCharacter(Map<String, dynamic>)` 單一入口，內含 `migrateLegacyWeapons` → `backfillClassResources`
-- [ ] 1.2 `CharacterSyncRepository.fetchAll` 與 `CharacterShareRepository.fetchSharedCharacter` 改用 `hydrateCharacter`，移除各自重複的回填呼叫
-- [ ] 1.3 測試：兩個 repository 的回填結果一致（同一份舊格式 JSON 走兩條路徑得到相同角色）
+- [x] 1.1 `components/legacy-sw-cleanup.tsx` 改為只註銷 script URL 屬於
+      Flutter 版（`flutter_service_worker.js`）的 registration
+- [x] 1.2 只刪除 Flutter 建立的 cache key，移除 `caches.keys()` 全清
+- [x] 1.3 只在確實註銷了東西時才 `window.location.reload()`
+- [x] 1.4 測試：只有本應用 SW 時不註銷、不重載；有 Flutter SW 時仍正確清理
 
-## 2. LocalStore 儲存層
+## 2. 認證狀態分流（此階段仍無 SW，但先止血「離線被踢到登入頁」）
 
-- [ ] 2.1 定義 `LocalStore` 介面（read / write / delete / clear，值為 JSON 字串）
-- [ ] 2.2 web 實作：IndexedDB（`package:web` ＋ `dart:js_interop`，不新增相依）
-- [ ] 2.3 原生實作：`path_provider` ＋ JSON 檔；新增 `path_provider` 相依
-- [ ] 2.4 stub/條件匯入接線，比照 `lib/shared/presentation/app_update/`
-- [ ] 2.5 所有操作包上安靜失敗，失敗時退回「無快取」語意而非拋出
-- [ ] 2.6 測試：寫入讀回、讀取不存在的 key 回 null、底層失敗時不拋出
+- [x] 2.1 `lib/supabase/server.ts` 的 `getSessionUser()` 改為能表達
+      已登入／確定未登入／無法確認三種結果
+- [x] 2.2 `app/main/layout.tsx` 僅在「確定未登入」時 redirect
+- [x] 2.3 其餘受保護頁面（`character-select`、`library`、`character-create`、
+      `character-level-up`）同步調整
+- [x] 2.4 「無法確認」時的離線說明畫面
+- [x] 2.5 測試：模擬 auth 請求失敗時不 redirect；確定無 session 時仍 redirect
 
-## 3. 角色讀取快取（唯讀路徑，風險最低）
+## 3. Service worker 骨架（先只碰靜態資產，驗證流程與回退路徑）
 
-- [ ] 3.1 角色清單寫入快取（雲端讀取成功後回寫）
-- [ ] 3.2 啟動時先讀快取並 `replaceAll` 上畫面，再發雲端請求
-- [ ] 3.3 快取讀回套用 `hydrateCharacter`
-- [ ] 3.4 雲端結果回來時，排除已被本機修改的角色再覆蓋
-- [ ] 3.5 測試：有快取時不等網路即有內容；雲端成功後被更新；雲端失敗時保留快取
+- [x] 3.1 `next/public/sw.js`：install / activate / fetch 骨架，cache key 帶
+      build id
+- [x] 3.2 註冊元件，掛在 root layout
+- [x] 3.3 **先做 kill switch**：SW 啟動時檢查停用旗標，開啟時自我註銷並清除快取
+- [x] 3.4 靜態資產（`/_next/static/*`、圖片、字型）採 CacheFirst
+- [x] 3.5 明確排除：Supabase 請求、`/api/*`、`/v/:token`
+- [ ] 3.6 驗證：DevTools 離線後靜態資產仍可取得；開啟停用旗標後 SW 自我移除
 
-## 4. 內容庫快取
+## 4. 導覽與 RSC 的離線回退
 
-- [ ] 4.1 內容庫各 `fetch*` 加入快取讀寫
-- [ ] 4.2 啟動先用快取、連線正常時背景重抓覆蓋（無 TTL）
-- [ ] 4.3 測試：離線時法術／物品清單自快取完整取得
+- [x] 4.1 導覽（document）請求採 NetworkFirst，失敗回退快取
+- [x] 4.2 RSC 請求（`?_rsc=` / `RSC: 1` 標頭）同策略
+- [x] 4.3 回退時於回應加上離線標頭（如 `X-Lorebook-Offline: 1`）與同步時間
+- [x] 4.4 未曾造訪過又離線時，回傳離線說明頁而非瀏覽器錯誤畫面
+- [x] 4.5 換版時整批失效（cache key 含 build id）
+- [ ] 4.6 驗證：連線時造訪角色頁 → 離線重整 → 內容仍在；離線切分頁仍可用
 
-## 5. 雲端版本與衝突偵測
+## 5. 離線狀態的呈現
 
-- [ ] 5.1 讓客戶端取得角色的雲端 `updated_at`（模型欄位或 id→timestamp 對照，依 design Open Question 決議）
-- [ ] 5.2 快取一併記錄每個角色對應的雲端版本
-- [ ] 5.3 推送前比對雲端版本，判定是否為衝突
-- [ ] 5.4 測試：雲端較新時判定為衝突；未較新時不判定
+- [x] 5.1 client 端讀取離線標頭，反映為全域的離線狀態
+- [x] 5.2 角色情境各分頁持續顯示離線標示與最後同步時間（compact 與 expanded 皆可見）
+- [x] 5.3 離線且 `dirty` 時，把 `SyncBadge` 的「未同步」升級為持續且明顯的警示，
+      說明重整會遺失
+- [x] 5.4 離線且無回退內容時的空狀態，與「確實沒有角色」的引導區分
+- [x] 5.5 測試：離線標示的出現與消失；離線空狀態不顯示建立引導為主要出口
 
-## 6. 離線寫入與待推送
+## 6. 登出清除
 
-- [ ] 6.1 角色變更寫入本機快取並標記待推送；標記與角色本體一同持久化
-- [ ] 6.2 `CharacterSyncRepository` 的推送錯誤分為可重試／不可重試
-- [ ] 6.3 `characterSyncControllerProvider` 改為：推送失敗保留待推送標記，不視為終態
-- [ ] 6.4 退避重試（5s / 15s / 60s），成功即清除該角色標記
-- [ ] 6.5 衝突時以本機版本推送，並產生一則待呈現的告知
-- [ ] 6.6 測試：離線編輯後標記存在；重啟後標記仍在；恢復連線後自動推送並清除標記；連續失敗時間隔遞增
+- [x] 6.1 SW 接受 `postMessage` 的清除指令，只刪導覽與 RSC 快取
+- [x] 6.2 `lib/auth/actions.ts` 的 `signOut` 發出該指令
+- [x] 6.3 內容庫與靜態資產不清除
+- [ ] 6.4 驗證：登出後換帳號登入看不到前一帳號的角色；內容庫仍離線可用
 
-## 7. 空狀態分流
+## 7. 與既有更新流程協調
 
-- [ ] 7.1 `character_providers.dart` 的 `Character.mock()` fallback 收斂為僅未登入（訪客試玩）適用
-- [ ] 7.2 已登入 ＋ 離線 ＋ 無快取：離線空狀態畫面
-- [ ] 7.3 已登入 ＋ 連線正常 ＋ 空清單：既有的建立引導
-- [ ] 7.4 測試：四種狀態各自呈現正確，已登入時不再出現範例角色
+- [x] 7.1 SW 偵測到新版時不自行 `skipWaiting`，改為通知 client
+- [x] 7.2 `components/shell/update-prompt.tsx` 接收該通知，沿用現有的提示 UI
+- [x] 7.3 使用者確認後才 `skipWaiting` ＋ 重載
+- [ ] 7.4 驗證：部署新版後只出現一次提示；未確認前不會自行換版
 
-## 8. 狀態呈現
+## 8. 內容庫離線
 
-- [ ] 8.1 由最近一次雲端請求成敗推導連線狀態（不新增偵測相依）
-- [ ] 8.2 角色頁首呈現「離線 · N 項待同步」，持續可見
-- [ ] 8.3 衝突告知的呈現（沿用既有提示元件，勿另造一套）
-- [ ] 8.4 測試：有待同步時顯示、全部推送完成後消失
+- [x] 8.1 確認 `/catalog/*` 的整頁快取是否可行（法術頁 HTML 約 1.4 MB，
+      見 design Open Questions）；若不可行，改為只快取資料並走輕量渲染路徑
+- [ ] 8.2 驗證：離線可查法術與裝備
 
-## 9. 登出清除
+## 9. 驗證與回退準備
 
-- [ ] 9.1 登出／試玩模式清除快取角色與待推送標記，掛在 `resetToSeed()` 同一條路徑
-- [ ] 9.2 內容庫快取不清除
-- [ ] 9.3 測試：登出後換帳號登入看不到前一帳號的角色；內容庫仍在
-
-## 10. 驗證
-
-- [ ] 10.1 `flutter analyze` 與 `flutter test` 全綠
-- [ ] 10.2 `flutter build web` 通過（IndexedDB 為純 web 程式碼，測試蓋不到，需編譯驗證）
-- [ ] 10.3 dev server 手動驗證：DevTools 切離線 → 重整 → 角色與法術仍在 → 扣血 → 恢復連線 → 變更已上雲
-- [ ] 10.4 dev server 手動驗證：登出後本機無殘留
+- [x] 9.1 `npx tsc --noEmit`、`npx eslint .`、`npx vitest run` 全綠
+- [x] 9.2 `npm run build` 通過
+- [ ] 9.3 手動驗證全流程：連線造訪 → DevTools 離線 → 重整 → 角色與內容庫仍在
+      → 扣血出現未同步警示 → 恢復連線 → 變更上雲、警示消失
+- [ ] 9.4 手動驗證：離線時不被導向登入頁
+- [x] 9.5 **回退路徑**：不另做一支「自我註銷版 SW」（兩套機制只會互相打架）。
+      改為三層保險，全部已實作：
+      (a) 環境變數 `SW_DISABLED=1` ＋ 重新部署 → `/api/sw-status` 回
+          `enabled:false`；頁面端與 SW 各自註銷並清快取。`/api/` 永不被
+          SW 攔截，所以這條路在 SW 壞掉時仍然通
+      (b) `safely()` 包住所有策略——策略拋錯就直接連網路，最壞情況是失去
+          離線能力而不是失去網站
+      (c) SW 不自行 `skipWaiting`，壞版本不會自動接管既有分頁
+- [ ] 9.6 **上線前**實際演練一次 (a)：設 `SW_DISABLED=1` 部署，確認開著的分頁
+      會自行移除 SW

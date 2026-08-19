@@ -1,121 +1,178 @@
 ## Context
 
-Web 版已有 service worker 快取 app shell，離線能開啟；但資料層完全沒有本機持久化，離線開起來是空殼。詳細動機見 proposal。
+動機見 proposal。實作上有六項既有事實約束設計，其中前三項是 Next.js 重寫之後
+才出現、Flutter 時期的設計未曾面對的：
 
-實作上有四項既有事實約束設計：
-
-- **`Character` 本身沒有 `updatedAt` 欄位**（只有 `JournalEntry` 有）。雲端的 `updated_at` 由資料庫 trigger 維護，客戶端讀不到也寫不進。衝突偵測若要靠時間戳，得先把它帶進客戶端
-- 角色清單以 `characterListProvider.replaceAll()` 整份取代（`character_providers.dart:501`），沒有逐筆合併的概念
-- `resetToSeed()`（同檔 :507）是登出／試玩模式的既有出口，快取清除要掛在同一條路徑上，否則兩者會不同步
-- 讀入回填鏈（`migrateLegacyWeapons` → `backfillClassResources`）目前在 `CharacterSyncRepository.fetchAll` 與 `CharacterShareRepository.fetchSharedCharacter` **各寫一次**
+- **目前全站沒有任何 service worker。** `components/legacy-sw-cleanup.tsx` 會
+  `getRegistrations()` 後**全部**註銷並清空整個 Cache Storage，接著重載一次。
+  任何新加的 SW 都會在下一次載入時被它殺掉
+- **`/main/*` 全是 `force-dynamic`。** 每次分頁切換都是一次 RSC 請求；沒有網路
+  就沒有畫面。這與 Flutter 版「app shell 已安裝、只差資料」的前提完全不同
+- **Server Component 讀不到 IndexedDB。** 角色資料在伺服器端組進 RSC 輸出，
+  瀏覽器端的儲存對它不可見。「把資料存進 IndexedDB」本身無法讓現有的頁面離線可用
+- `app/main/layout.tsx` 以 `getSessionUser()` 判斷登入，失敗即
+  `redirect('/login')`——離線時等同被登出
+- `Character` **沒有 `updatedAt`**（只有 `JournalEntry` 有）；雲端的
+  `updated_at` 由資料庫 trigger 維護，客戶端讀不到
+- 既有的 `useCharacterSync` 已有 debounce 3 秒推送、`dirty` / `syncError` 狀態，
+  以及 `visibilitychange` 時的 flush。離線狀態的呈現應接在這套之上，不另造一套
 
 ## Goals / Non-Goals
 
 **Goals:**
-- 離線可讀：角色卡、法術說明、物品資料在無網路時完整可用
-- 離線可寫：扣 HP、消法術位、加狀態等戰鬥中的高頻操作照常，恢復連線後自動補推
-- 離線且無快取時，使用者清楚知道「是離線」而不是「資料不見了」
-- 共用裝置上登出即不留痕
+- 離線時 `/main/*` 打得開，顯示最後一次同步的角色卡與內容庫
+- 離線時不被誤判為登出
+- 使用者清楚知道「這是離線的舊資料」以及它有多舊
+- 離線時的編輯不會被誤以為已同步
+- 共用裝置上登出即不留個人資料
 
 **Non-Goals:**
-- 離線建立新角色（離線產生的 id 與雲端併入是另一組問題）
-- 離線編輯自訂背景／homebrew
-- 即時協作
-- 分享檢視頁（`/v/:token`）的離線支援——即時活資料是該功能的刻意設計
+- 離線寫入的持久化與補推（見 proposal 的 Non-Goals）
+- 分享檢視頁的離線支援——即時活資料是該功能的刻意設計
+- 完整的 PWA 離線優先架構（背景同步、periodic sync）
 
 ## Decisions
 
-### D1：儲存採自建 `LocalStore` 抽象，web 走 IndexedDB、原生走檔案
+### D1：先收窄 `LegacySwCleanup`，這是所有其他工作的前置
 
-介面極小：`Future<String?> read(String key)` / `Future<void> write(String key, String value)` / `Future<void> delete(String key)` / `Future<void> clear()`，值一律是 JSON 字串。平台分歧比照 `lib/shared/presentation/app_update/` 的 stub/web 條件匯入。
+改為只註銷 **scope 或 script URL 屬於 Flutter 版**的 registration
+（`flutter_service_worker.js`），並且只清除 Flutter 建立的 cache key，不再
+`caches.keys()` 全清。
 
-- **web**：IndexedDB，透過既有的 `package:web` ＋ `dart:js_interop`，**不新增相依**
-- **原生**：`path_provider` ＋ JSON 檔（新增一個 Flutter 官方套件）
+沒有這一步，後面做什麼都沒用：新 SW 註冊完，下一次載入就被清掉，還會觸發那段
+`window.location.reload()`。這不是「順手整理」，是硬性相依。
 
-**否決 `shared_preferences`**（雖然它已在相依樹裡、看似最省事）：它在 web 上落到 localStorage，而 localStorage 是**同步**的，且 `SharedPreferences.getInstance()` 會在啟動時把**所有**鍵值讀進記憶體。把近 1 MB 的內容庫塞進去，等於每次啟動都同步 parse 1 MB，直接拖慢冷啟動。localStorage 每 origin 5–10 MB 的配額也讓內容庫日後成長沒有餘裕。原生端的 NSUserDefaults 同樣不是為 MB 級資料設計的。
+原本的全清是切換期的合理選擇（當時沒有自己的 SW，寧可錯殺），現在前提變了。
 
-**否決 hive／drift／sqflite**：都要 codegen 或原生編譯，為了一個 key-value 快取不值得。
+### D2：手寫 `public/sw.js`，不引入 `next-pwa` / Serwist
 
-**否決「用 service worker 快取 Supabase 的 REST 回應」**：概念上優雅（不必寫 Dart 端儲存），但 Flutter 每次 build 都會重新產生 `flutter_service_worker.js`，客製會被覆蓋；且跨來源請求不在它的 RESOURCES 內。維護成本遠高於收益。
+範圍很窄——一組快取策略、一個版本號、一個清除入口。手寫大約百來行，且完全掌握
+它的行為。
 
-### D2：讀取採 stale-while-revalidate，快取先上畫面
+**否決 `next-pwa`**：長期未跟上 App Router，且會接管 build 流程。
+**否決 Serwist**：功能完整但引入 workbox 全家桶與 build 整合，為了目前這點範圍
+不成比例，也與專案「不新增相依」的既有偏好衝突（見
+`open-next.config.ts` 對 R2 增量快取的同類判斷）。
 
-啟動流程：讀快取 → 立即 `replaceAll` 上畫面 → 同時發網路請求 → 成功則以雲端結果再次 `replaceAll` 並回寫快取；失敗則保持快取內容並標記為離線。
+若日後要做背景同步與離線寫入，再評估換上 Serwist——那時複雜度才配得上它。
 
-使用者永遠先看到東西，網路只決定它多新。這也順帶改善連線正常時的冷啟動觀感——現在是白畫面等 Supabase。
+### D3：離線可讀靠「快取 RSC／document 回應」，而非把資料搬進 IndexedDB
 
-### D3：離線寫入以「待推送集合」表示，而非完整佇列
+這是本設計最關鍵的取捨。
 
-不記錄「操作序列」，只記錄**哪些角色 id 是髒的**。理由：推送本來就是整份文件 upsert（`data jsonb`），重放個別操作沒有意義；而戰鬥中同一張卡會被改幾十次，逐筆佇列只是浪費。
+兩條路：
 
-髒標記與角色本體一起持久化，App 被殺掉也不會遺失。推送成功才清除。既有的 debounce 推送（`characterSyncControllerProvider`）改為：推送失敗不再是終態，改成標記髒 ＋ 等待重連。
+**(A) SW 快取導覽與 RSC 回應，離線時供應最後一次成功的回應。**
+資料已經烘焙在回應裡，不需要任何 client 端的重新組裝。既有的 Server Component
+一行都不用改。
 
-### D4：衝突以「本機優先」收斂，但必須讓使用者看見
+**(B) 把角色與內容庫存進 IndexedDB，並把頁面改成 client 渲染、離線時自 IndexedDB
+取資料。**
+資料層乾淨，但要把 `/main/*` 從 Server Component 改成 client 渲染，等於推翻
+重寫時「伺服器取資料、client 編輯」的架構決定（design D12），而且會把剛修好的
+首屏延遲重新變成 client 端的請求瀑布。
 
-要衝突，得先讓客戶端拿得到雲端的 `updated_at`——D1 之外的必要改動：`fetchAll` 把它帶進記憶體（`Character` 加欄位或另存一份 id→timestamp 對照，見 Open Questions）。
+**選 (A)。** 唯讀情境下，「最後一次成功的整頁回應」正好就是我們要的語意——
+它是一致的快照，不會出現「角色是新的、內容庫是舊的」這種混搭。(B) 的資料層優勢
+只有在**離線可寫**時才真正兌現（那時需要以資料為單位合併），而可寫已列為
+Non-Goals。等到要做可寫時再引入 IndexedDB，屆時 (A) 仍然是 shell 的基礎。
 
-重連補推時比對：
+策略明細：
 
-- 雲端 `updated_at` ≤ 本機快取記錄的版本 → 直接推，無衝突（絕大多數情況）
-- 雲端較新 → 代表同一個人在別的裝置也改過。**以本機為準推送**，並明確告知「這張卡在別的裝置上也改過，已以此裝置的版本為準」
+| 請求類型 | 策略 | 理由 |
+|---|---|---|
+| 靜態資產（`/_next/static/*`、圖片、字型） | CacheFirst | 內容雜湊命名，不會變 |
+| 導覽（HTML document） | NetworkFirst，失敗回退快取 | 要新的，但沒有就給舊的 |
+| RSC（`?_rsc=` 或 `RSC: 1`） | NetworkFirst，失敗回退快取 | 同上，分頁切換走這條 |
+| Supabase / `/api/*` | 不快取 | 認證與即時性，快取只會製造假象 |
+| `/v/:token`（分享檢視） | 不快取 | 即時活資料是刻意設計 |
 
-本機優先的理由：離線的那台就是當下在桌邊使用的裝置，它的資料反映真實戰況；而另一台的變更多半是誤觸或早先的殘留。**但沉默地覆蓋是不可接受的**——玩家有權知道有東西被蓋掉了。
+### D4：離線的判定沿用「最近一次請求的成敗」，不用 `navigator.onLine`
 
-**否決「以較新的 timestamp 為準」**：離線裝置的時鐘不可信，且「較新」不等於「較正確」。
-**否決「跳出衝突解決 UI 讓使用者逐欄選」**：戰鬥中沒人要做這件事，複雜度也不成比例。
+`navigator.onLine` 只知道有沒有連上網路介面，不知道 Supabase 或我們的 origin
+是否可達；在「連上了咖啡廳 wifi 但還沒過認證頁」這種常見情境會給出錯誤的樂觀
+判斷。
 
-### D5：角色清單為空時分三種狀態，`Character.mock()` 只留給訪客
+由 SW 在回退快取時，於回應加上一個標頭（如 `X-Lorebook-Offline: 1`），client
+據此顯示離線標示。這比在 client 端另外偵測更準——是同一個請求的實際結果。
 
-現況 `character_providers.dart:31` 一律 fallback 到範例角色，離線時會讓使用者以為自己的角色被吃掉了。改為：
+### D5：離線時 auth 失敗不得導向登入頁
 
-| 狀態 | 呈現 |
-|---|---|
-| 未登入（訪客試玩） | 維持現行的範例角色 |
-| 已登入 ＋ 有快取 | 快取內容 |
-| 已登入 ＋ 無快取 ＋ 離線 | 離線空狀態：「目前離線，這台裝置還沒有同步過你的角色」 |
-| 已登入 ＋ 無快取 ＋ 連線正常 | 既有的「還沒有角色」引導 |
+`getSessionUser()` 目前只回 `user | null`，呼叫端無從分辨「確定沒登入」與
+「問不到」。改為能表達第三種狀態（例如回傳 `{ user, reachable }`）。
 
-### D6：回填鏈收斂為單一入口
+`app/main/layout.tsx` 的判斷改為：確定未登入才 redirect；無法確認時，交由 SW
+回退的快取頁面呈現——那份快取本來就只在登入後才產生得出來。
 
-新增 `hydrateCharacter(Map<String, dynamic>)`，內含 `migrateLegacyWeapons` → `backfillClassResources`。雲端讀取、分享讀取、**快取讀取**三處共用。
+這條與 D3 是互補的：D3 讓離線時有頁面可看，D5 確保不會在看到它之前就被踢走。
 
-快取讀取套用回填鏈是必要的，不是順手整理：快取寫入的當下是舊版 App，讀回來的可能是新版 App，中間可能多了需要回填的欄位。少了這一步，升級後讀快取的角色會缺欄位。
+### D6：離線時的編輯必須被明確標示為「未同步」
 
-### D7：內容庫快取無條件背景更新，不做 TTL
+本變更不做離線寫入，但**離線可讀會誘發離線編輯**——使用者看得到角色卡，自然會
+去扣血。目前那些變更活在 zustand store，重整就沒了。
 
-內容庫不到 1 MB 且極少變動。啟動時先用快取，若連線正常就在背景重抓一次覆蓋。不設 TTL——TTL 只會製造「過期了但其實沒變」的無謂請求，以及「還沒過期但已經變了」的陳舊資料。
+離線時 `SyncBadge` 的「未同步」不夠——它平時也會短暫出現。離線且 `dirty` 時
+應升級為持續、明顯的警示，說明變更尚未存下且重整會遺失。
 
-登出時**不清內容庫**：那是 SRD 公開內容、不是個人資料，留著能加速下次登入，也不構成任何洩漏。清除只針對角色與髒標記。
+這是誠實揭露而非解決方案；真正的解法是後續的離線可寫切片。
 
-### D8：連線狀態由請求結果推導，不新增偵測相依
+### D7：登出清除個人快取，內容庫保留
 
-不引入 `connectivity_plus`。`navigator.onLine` 只知道有沒有連上網路介面，不知道 Supabase 是否可達，反而會給出錯誤的樂觀判斷。
+登出時清除導覽與 RSC 的快取項目（那裡面有角色資料），內容庫與靜態資產保留——
+SRD 是公開內容，不構成洩漏，留著能加速下次登入。
 
-以最近一次 Supabase 請求的成敗作為連線狀態，並在有髒標記時於角色頁首顯示「離線 · N 項待同步」。重連偵測用退避重試（失敗後 5s / 15s / 60s 重試推送），成功即恢復。
+掛在 `lib/auth/actions.ts` 的 `signOut` 上，透過 `postMessage` 通知 SW 清除。
+
+### D8：SW 版本與既有的 `UpdatePrompt` 協調，不各更新各的
+
+`components/shell/update-prompt.tsx` 目前輪詢 `/api/version` 判斷有無新版。加入
+SW 之後會有兩套更新機制：SW 的 `updatefound` 與這個輪詢。
+
+以既有的 `UpdatePrompt` 為唯一的使用者介面：SW 偵測到新版時不自行接管，而是
+通知 client，由 `UpdatePrompt` 顯示現有的「有新版本／立即更新」，按下才
+`skipWaiting` 並重載。兩套並存只會出現「提示了但沒更新」或「沒提示就換了」。
 
 ## Risks / Trade-offs
 
-- **快取內容與雲端不一致（別的裝置改過）** → D2 的背景更新會在連線正常時很快覆蓋；離線期間的不一致由 D4 的告知處理
-- **本機優先可能覆蓋另一台裝置的變更** → D4 明確告知；此情境需要同一人在兩台裝置上分別離線編輯同一張卡，罕見
-- **IndexedDB 配額或寫入失敗** → `LocalStore` 所有操作都要能安靜失敗並退回「純網路」的現行行為。快取是最佳化，不是必要路徑；它壞掉不該讓 App 壞掉
-- **共用電腦上的殘留** → 登出清除（D7）。但使用者若不登出就離開，快取仍在——這是瀏覽器 profile 層級的固有問題，非本 change 能解，應在說明中誠實交代
-- **離線寫入讓使用者以為已同步** → 待同步數量必須持續可見（D8），不能只在推送失敗當下閃一次
-- **啟動流程從單一來源變成雙來源** → 兩次 `replaceAll` 之間若使用者已開始編輯，第二次會蓋掉。需確保網路結果回來時，已被本機修改的角色不被覆蓋（以髒標記排除）
+- **快取的 HTML 含個人資料** → Cache Storage 是 per-origin per-profile，與
+  cookie 同級；D7 在登出時清除。但使用者不登出就離開，快取仍在——這是瀏覽器
+  profile 層級的固有問題，非本 change 能解，應在說明中誠實交代
+- **離線看到的是舊資料** → 必須標示最後同步時間（D4）。沒有時間戳的「離線」
+  提示會讓人不知道該不該相信眼前的數字
+- **SW 是全站攔截器，寫錯會讓整站壞掉且難以救回** → 這正是 Flutter SW 造成的
+  故障模式（`LegacySwCleanup` 的註解記了）。必須內建 kill switch：SW 每次啟動
+  先檢查一個遠端旗標或版本，能自我註銷
+- **快取 RSC 回應與 Next 的版本雜湊耦合** → 部署新版後舊的 RSC 快取可能與新的
+  client bundle 不相容。以 build id 當 cache key 的一部分，換版即整批失效
+- **`force-dynamic` 的回應帶 `no-store`** → SW 的 Cache API 可以無視回應標頭
+  自行存放，但要確認不與 Next 的 router cache 打架
+- **離線編輯遺失** → D6 揭露，但揭露不等於解決；若實測發現使用者仍大量在離線時
+  編輯，應提高後續可寫切片的優先序
 
 ## Migration Plan
 
-無資料庫 migration。快取是純附加的本機層：
+無資料庫 migration。分四階段，每階段可獨立驗證與回退：
 
-1. 先落 `LocalStore` ＋ `hydrateCharacter` 收斂（無行為變化，可獨立驗證）
-2. 加讀取快取（D2），此時仍為唯讀路徑，風險最低
-3. 加離線寫入與待推送（D3/D4）
-4. 加狀態呈現（D5/D8）
+1. **D1**：收窄 `LegacySwCleanup`（無新行為，但解除封鎖）
+2. **D5**：auth 失敗與未登入分流（此時仍無 SW，離線仍打不開頁面，但不再誤跳登入）
+3. **D2/D3**：SW 與快取策略。先只快取靜態資產驗證流程，再加導覽與 RSC
+4. **D4/D6/D7/D8**：離線標示、未同步警示、登出清除、更新流程協調
 
-回退：`LocalStore` 全域停用即回到現行行為，不需要清除既有快取（讀不到就是沒有）。
+回退：移除 SW 註冊並發布一版會自我註銷的 SW。**不能只是刪掉檔案**——已安裝在
+使用者瀏覽器裡的 SW 不會因為伺服器上沒有這個檔案就消失。這條必須在上線前就
+準備好。
 
 ## Open Questions
 
-- 雲端 `updated_at` 要加進 `Character` 模型，還是另存 id→timestamp 對照？加進模型較直觀，但那是伺服器管理的欄位，混進領域模型可能造成「客戶端可以改它」的誤解
-- 設定頁是否要提供手動「清除本機快取」？對除錯有用，但也可能被誤按
-- 髒標記的粒度是否需要細到欄位層級，以便未來做真正的合併？首版不需要，但資料結構若一開始就留餘地，日後改動較小
-- 離線期間的日誌（`journal`）與自訂背景是否也該快取？本 change 範圍只含角色與內容庫，但日誌歸屬角色，可能已經隨角色文件一起帶著——需確認 `journal` 的儲存位置
+- SW 的 kill switch 用什麼載體？沿用 `/api/version` 多回一個欄位最省事，但那個
+  端點本身也可能被快取
+- 快取的導覽回應要不要設上限（例如只留最近 N 個角色頁）？目前角色數量不多，
+  但沒有上限的快取長期會膨脹
+- 離線標示放哪裡？`CharacterHeader` 最顯眼，但那裡已有 LEVEL 徽章與同步狀態，
+  再加一項可能過載
+- ~~內容庫頁（`/catalog/*`）的 HTML 高達 1.4 MB（法術），快取整頁 HTML 是否
+  划算？~~ **已決議：整頁快取，不另做輕量路徑。** 實測法術頁 1,427,446 bytes
+  ＋裝備頁 510,258 bytes ＝ 約 1.9 MB。Cache Storage 的配額是可用磁碟的數十
+  百分比，1.9 MB 佔不到千分之一——為此另建一條渲染路徑（且要與 D3 的
+  「不搬 IndexedDB」打架）完全不成比例。兩頁走與其他導覽相同的 NetworkFirst，
+  只是歸在公開快取區、登出不清。
