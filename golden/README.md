@@ -16,6 +16,17 @@ flutter test tool/export_rule_goldens.dart --dart-define=out=golden
 **只在確認現行實作正確的前提下重跑。** golden 的價值來自它凍結了一個已驗證
 的狀態；若新實作對不上就重跑 golden 讓它「通過」，這道防線等於不存在。
 
+### 手動改過的地方
+
+Flutter 端已凍結（`lib/` 退場，不再與 Next 同步），上面那道重跑指令現在跑不起來。
+因此**譯名這類純顯示字串**的修正只能手改。以下逐筆記錄，未列出的一律視為
+「新實作對不上」而非「golden 過期」：
+
+- **2026-08-14　`derive_class_resources.json`：聖騎士「聖療之觸」→「聖療」**（20 處）。
+  內容庫 `class_features` 的官方譯名是「聖療」，規則層卻叫「聖療之觸」，
+  同一個特性在角色卡上因此有兩個名字。改的是 `name` 欄位，
+  **`max` / `recovery` / `formula` 等所有算出來的值都沒有動**。
+
 ## 檔案
 
 | 檔案 | 筆數 | 對應的現行實作 |
