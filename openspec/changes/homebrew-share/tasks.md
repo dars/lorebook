@@ -1,62 +1,86 @@
 # Tasks: homebrew-share
 
-> 首版範圍為自訂背景；`shared_homebrew` 以 `kind` 欄位預留其他 homebrew 型別。
-> 第 5 節（規則版本檢查）相依 `dual-rules-version` 階段二的 `CustomBackground.rulesVersion`，
-> 其餘各節可先行。
+> 首版型別範圍為**自訂背景與自訂子職**（design D9）。
+> 第 7 節（規則版本）全數相依凍結中的 `dual-rules-version`，本 change 不做。
+> 第 9 節（直接套用到角色）為 Open Question，得視情況延後。
 
-## 0. 前置決定
+## 1. 資料庫：主鍵對齊與來源欄位
 
-- [ ] 0.1 定案分享連結路徑前綴（design Open Question 1）：確認與既有 go_router 路由不衝突，且能寫進 universal link / app link 的路徑比對
-- [ ] 0.2 定案撤銷後的呈現文案（design Open Question 2）：「已撤銷」或通用「找不到內容」
-- [ ] 0.3 定案首版是否納入「我發布過的分享」管理清單（design Open Question 4）；傾向僅於自訂背景項目上顯示分享狀態與撤銷入口
+- [ ] 1.1 `supabase/migrations/0007_homebrew_pk_and_source.sql`：`user_backgrounds` 與 `user_subclasses` 的主鍵由 `(id)` 改為 `(user_id, id)`；註解記錄理由（既有資料含 Flutter 時間戳 id，比照 `0002`）
+- [ ] 1.2 同一 migration 新增 `source_token text`、`source_updated_at timestamptz`、`source_note text`（皆 nullable，不回填）
+- [ ] 1.3 套用至 linked 專案，確認 8 筆既有背景的 id 值未變、RLS 與 grant 未受影響
+- [ ] 1.4 更正 `0006_user_subclasses.sql` 開頭關於「`shared_homebrew` 是快照表」的註解（design D4）
+- [ ] 1.5 更正 `custom-subclass` design D3 的同一段論述
 
-## 1. 資料層
+## 2. 資料庫：分享指標表與 RPC
 
-- [ ] 1.1 新增 migration `00xx_shared_homebrew.sql`：建表（`token` text pk、`kind`、`rules_version`、`data jsonb`、`owner_id` → `auth.users`、`created_at`、`revoked_at`），註解說明其 token 存取模型與偏離 own-row 慣例的理由
-- [ ] 1.2 RLS 政策：`select` to `anon, authenticated` 條件 `revoked_at is null`；`insert` / `update` 限 `owner_id = auth.uid()`；grant 僅開放必要動作，不建立任何無 token 的查詢路徑
-- [ ] 1.3 以 SQL 驗證 data-layer spec 的四個場景：有效 token 可讀、無 token 查詢為空、已撤銷不可讀、非擁有者不可發布或撤銷
-- [ ] 1.4 新增 `lib/features/character/data/homebrew_share_repository.dart`：`publish()`、`revoke()`、`fetchByToken()`，例外封裝為 `DataException`（比照既有 repository 慣例），以 Riverpod provider 注入
+- [ ] 2.1 `supabase/migrations/0008_homebrew_shares.sql`：`homebrew_shares` 表（token / owner_id / kind / homebrew_id / label / created_at / revoked_at）
+- [ ] 2.2 RLS：`revoke all` from `anon` 與 `authenticated`；`insert` 與撤銷用 `update` 限 `owner_id = auth.uid()`
+- [ ] 2.3 `public.get_shared_homebrew(p_token text)`（`SECURITY DEFINER`）：依 `kind` 分派至來源表，回傳 `(status, kind, data, source_updated_at)`；狀態機 `not_found` / `revoked` / `deleted` / `ok`。**不含 `rules_version`**（design D4）
+- [ ] 2.4 migration 註解明文其偏離 own-row 慣例的理由與約束（比照 `0005`）
+- [ ] 2.5 驗證：以 anon 直接查表遭拒；以 anon 呼叫 RPC 可取得內容；RPC 不回傳 `owner_id`
 
-## 2. token 與 id
+## 3. 型別註冊表與資料層
 
-- [ ] 2.1 新增 token 產生工具：128-bit 密碼學安全隨機（`Random.secure()`）→ base64url，22 字元
-- [ ] 2.2 `custom_background_edit_page.dart:75` 的 id 產生由 `DateTime.now().microsecondsSinceEpoch` 改為隨機值；既有時間戳 id 資料列不遷移
-- [ ] 2.3 測試：token 與 id 的隨機性與長度、既有時間戳 id 的資料列仍可正常讀寫
+- [ ] 3.1 `lib/homebrew/types.ts`：`HomebrewKind` 與註冊表（來源表名、Zod schema、內容區塊元件、收藏寫入函式）
+- [ ] 3.2 `lib/homebrew/share-actions.ts`：發布（產 token、建立指標）、撤銷、查詢自己某內容的分享狀態
+- [ ] 3.3 `lib/homebrew/fetch.ts`：依 token 呼叫 RPC，回傳判別聯集型別（依 status 分支）
+- [ ] 3.4 `lib/homebrew/collect-actions.ts`：收藏——驗證（與手動建立同一 schema）→ 產新 id → 寫入收藏者的來源表，含 `source_token` / `source_updated_at` / `source_note`
+- [ ] 3.5 `lib/backgrounds/actions.ts`、`lib/subclasses/actions.ts`：讀寫新欄位；確認 upsert 僅於實際儲存時發生（design D6 的風險）
 
-## 3. 發布與撤銷 UI
+## 4. 統一檢視頁
 
-- [ ] 3.1 自訂背景項目新增分享入口（僅自己擁有者顯示）
-- [ ] 3.2 分享頁：顯示連結（可複製）、QR code、發布時間、「持有連結者皆可檢視」明示、撤銷入口
-- [ ] 3.3 QR code 產生（本機繪製，新增 `qr_flutter` 相依；確認無網路呼叫）
-- [ ] 3.4 撤銷流程：確認後寫 `revoked_at`，UI 更新分享狀態；驗證原始自訂背景完全不受影響
-- [ ] 3.5 「重新發布」：產生新 token 的快照（舊 token 維持原狀或由使用者另行撤銷）
+- [ ] 4.1 `app/h/[token]/page.tsx`：SSR 取內容，未登入可讀
+- [ ] 4.2 `components/homebrew/homebrew-view.tsx`：骨架（型別標示、名稱、最後更新時間、行動區、顯示文字免責說明）
+- [ ] 4.3 四種狀態的呈現：不存在／已撤銷／來源已刪除／正常
+- [ ] 4.4 `components/homebrew/background-body.tsx`：技能／工具／裝備／起源專長
+- [ ] 4.5 `components/homebrew/subclass-body.tsx`：母職業與各等級特性
+- [ ] 4.6 外來文字一律純文字呈現，不進 5etools 標記渲染路徑（含測試）
 
-## 4. 匯入流程
+## 5. 收藏流程
 
-- [ ] 4.1 `lib/app/router.dart` 新增匯入路由（token 為路徑參數），可由 deep link 進入
-- [ ] 4.2 universal link（`apple-app-site-association`）與 app link（`assetlinks.json`）設定與網域驗證檔部署；未裝 App 時落到 web 版同一頁
-- [ ] 4.3 匯入預覽頁：顯示名稱、規則版本、技能與其他機制欄位；未登入亦可檢視
-- [ ] 4.4 匯入驗證：欄位白名單、長度上限、技能／專長值合法性，比照手動建立的驗證規則；失敗顯示具體原因且不寫入
-- [ ] 4.5 外來文字一律純文字呈現，確認不進入 5etools 標記渲染路徑
-- [ ] 4.6 匯入寫入：新隨機 id、自己的 `user_id`，寫入 `user_backgrounds`；同名同版本時顯示重複提示但不阻擋
-- [ ] 4.7 未登入匯入：導向登入，登入後回到同一 token 的匯入預覽（token 於流程中保留）
-- [ ] 4.8 撤銷後開啟連結的呈現（依 0.2 定案）
+- [ ] 5.1 「收進我的資料庫」按鈕：未登入導向登入並於登入後保留 token 返回
+- [ ] 5.2 收藏成功後的回饋與「前往我的資料庫」入口
+- [ ] 5.3 驗證失敗的錯誤呈現（具體原因，不寫入任何資料）
+- [ ] 5.4 收藏確認時的備註輸入（選填，一行；design D7）
+- [ ] 5.5 已收藏過同一 token 時的提示（Open Question：傾向允許但提示）
+- [ ] 5.6 測試：兩個不同使用者收藏同一 token 皆成功且各得不同 id
 
-## 5. 規則版本（相依 dual-rules-version 階段二）
+## 6. 我的資料庫（`/library`）
 
-- [ ] 5.1 發布時將 `CustomBackground.rulesVersion` 寫入快照的 `rules_version`
-- [ ] 5.2 匯入預覽顯示規則版本；版本與匯入情境不符時阻擋並說明，不做任何自動轉換
-- [ ] 5.3 測試：跨版本匯入被阻擋且未寫入任何資料
+- [ ] 6.1 `app/library/page.tsx`：SSR 取回所有型別的自訂內容
+- [ ] 6.2 `components/homebrew/library.tsx`：型別分區塊，各區塊沿用既有 manager 的清單與 `EditorSheet`
+- [ ] 6.3 `app/custom-backgrounds/page.tsx`、`app/custom-subclasses/page.tsx` 改為導向 `/library`
+- [ ] 6.4 `app/main/system/page.tsx`：兩條自訂連結收斂為「我的資料庫」
+- [ ] 6.5 空狀態：尚無任何自創內容時說明可自建或收藏他人分享
 
-## 6. 測試與驗收
+## 7. 分享入口、來源標示、更新副本
 
-- [ ] 6.1 repository 測試：發布 / 依 token 取回 / 撤銷後取回為空 / 非擁有者不可撤銷
-- [ ] 6.2 匯入流程測試：複製語意（新 id、新擁有者）、匯入後與來源脫鉤、驗證失敗不寫入、同名提示
-- [ ] 6.3 安全性測試：無 token 查詢無結果、快照內容不觸發標記渲染、超長欄位被拒
-- [ ] 6.4 實機驗證：兩個帳號實測「A 發布 → B 掃碼 → B 匯入 → A 撤銷 → B 那份仍可用」；手機與平板版型各一次
-- [ ] 6.5 `flutter test` 全綠、`flutter analyze` 無告警
+- [ ] 7.1 各型別區塊的分享入口（產生連結、QR、複製）
+- [ ] 7.2 分享狀態顯示與撤銷入口
+- [ ] 7.3 清單項的備註行（即來源標記，無另外的徽章）；留空時顯示空狀態文字；可就地編輯；不限制編輯／刪除／再分享
+- [ ] 7.4 偵測來源已更新（來源 `updated_at` > 本地 `source_updated_at`）並提示
+- [ ] 7.5 「更新副本」＝刪除＋重收，**保留 `source_note`**；本地已編輯（`updated_at` > `created_at`）時先警告
+- [ ] 7.6 QR 產生複用 `character-share` 的本機繪製元件，確認無外部請求
 
-## 7. 收尾
+## 8. 規則版本（**全節相依 `dual-rules-version`，本 change 不做**）
 
-- [ ] 7.1 更新 CLAUDE.md 或 README 的內容政策段落：載明點對點分享的邊界與「不提供公開索引」
-- [ ] 7.2 確認 design Open Questions 皆已結案；未結案者轉為新 change 或記錄為 Non-Goal
+> Next.js 端目前無任何 `rulesVersion` 欄位。首版**不顯示**規則版本——顯示恆為
+> 「5r」的推定值在今日正確，但 5e 上線後所有既有分享都會標錯且無從分辨。
+
+- [ ] 8.1 RPC 回傳值加入 `rules_version`
+- [ ] 8.2 檢視頁顯示規則版本
+- [ ] 8.3 收藏時的版本不符阻擋
+
+## 9. 直接套用到角色（Open Question，可延後）
+
+- [ ] 9.1 檢視頁取得角色上下文
+- [ ] 9.2 各型別的規則判定（子職：3 級且母職業相符）
+- [ ] 9.3 規則不允許時不渲染該行動（非停用狀態）
+
+## 10. 驗證與收尾
+
+- [ ] 10.1 `npm run lint` 與 `tsc --noEmit` 通過
+- [ ] 10.2 端到端手動驗證：A 發布 → B 未登入檢視 → B 登入收藏 → A 修改 → B 看到提示並更新副本 → A 撤銷 → B 的副本不受影響
+- [ ] 10.3 確認無任何列舉路徑（App 內與 RPC 皆然）
+- [ ] 10.4 更新 `openspec/specs` 主規格（archive 時同步）
