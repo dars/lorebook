@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import { EditorSheet, FieldLabel } from '@/components/ui/editor-sheet';
@@ -43,13 +43,16 @@ const EMPTY: CustomBackground = {
 
 export function BackgroundManager({
   initial,
+  embedded,
 }: {
   initial: CustomBackground[];
+  embedded?: boolean;
 }) {
   const [list, setList] = useState(initial);
   const [editing, setEditing] = useState<CustomBackground | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<CustomBackground | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const uid = useId();
 
   const save = async () => {
     if (!editing || !isValid(editing)) return;
@@ -80,8 +83,8 @@ export function BackgroundManager({
   ) => setEditing((e) => (e ? { ...e, [k]: v } : e));
 
   return (
-    <main className="mx-auto w-full max-w-[700px] flex-1 px-4 pb-10">
-      <SectionTitle en="CUSTOM BACKGROUNDS" cn="自訂背景" first />
+    <Wrap embedded={embedded}>
+      <SectionTitle en="CUSTOM BACKGROUNDS" cn="自訂背景" first={!embedded} />
 
       <ParchmentCard className="mb-4 px-4 py-3">
         <div className="text-[13px] font-semibold text-text-primary">
@@ -93,12 +96,16 @@ export function BackgroundManager({
           <li>· 一個起源專長</li>
           <li>· 可選一項工具熟練</li>
         </ul>
-        <p className="mt-2 text-[11px] text-text-secondary">
+        <p className="mt-2 text-[12px] text-text-secondary">
           這是規則書的限制，不是這個 App 自訂的。
         </p>
       </ParchmentCard>
 
-      {error && <p className="mb-3 text-[13px] text-danger">{error}</p>}
+      {error && (
+        <p role="alert" className="mb-3 text-[13px] text-danger">
+          {error}
+        </p>
+      )}
 
       <div className="flex flex-col gap-2">
         {list.map((b) => (
@@ -149,8 +156,12 @@ export function BackgroundManager({
       >
         {editing && (
           <>
-            <FieldLabel>名稱</FieldLabel>
+            <FieldLabel htmlFor={`${uid}-name`}>名稱</FieldLabel>
             <input
+              id={`${uid}-name`}
+              name="backgroundName"
+              autoComplete="off"
+              spellCheck={false}
               value={editing.name}
               onChange={(e) => set('name', e.target.value)}
               maxLength={NAME_MAX}
@@ -244,6 +255,9 @@ export function BackgroundManager({
               {editing.originFeatCustom ? (
                 <>
                   <input
+                    aria-label="自訂起源專長名稱"
+                    autoComplete="off"
+                    spellCheck={false}
                     value={editing.originFeat}
                     onChange={(e) => set('originFeat', e.target.value)}
                     maxLength={ORIGIN_FEAT_NAME_MAX}
@@ -251,14 +265,15 @@ export function BackgroundManager({
                     className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
                   />
                   <textarea
+                    aria-label="自訂起源專長說明"
                     value={editing.originFeatDescription}
                     onChange={(e) => set('originFeatDescription', e.target.value)}
                     maxLength={ORIGIN_FEAT_DESC_MAX}
                     rows={3}
-                    placeholder="說明（選填）：這個專長做什麼"
+                    placeholder="說明（選填）：這個專長做什麼…"
                     className="mt-2 w-full rounded-card border border-border bg-surface-2 p-3 text-[13px] text-text-primary"
                   />
-                  <p className="mt-1 text-[11px] text-text-secondary">
+                  <p className="mt-1 text-[12px] text-text-secondary">
                     自訂專長僅為顯示文字，不會產生規則效果——數值請自行與 DM 確認。
                   </p>
                 </>
@@ -283,8 +298,12 @@ export function BackgroundManager({
             </div>
 
             <div className="mt-4">
-              <FieldLabel>工具熟練（選填）</FieldLabel>
+              <FieldLabel htmlFor={`${uid}-tool`}>工具熟練（選填）</FieldLabel>
               <input
+                id={`${uid}-tool`}
+                name="toolProficiency"
+                autoComplete="off"
+                spellCheck={false}
                 value={editing.toolProficiency}
                 onChange={(e) => set('toolProficiency', e.target.value)}
                 maxLength={20}
@@ -299,6 +318,8 @@ export function BackgroundManager({
       <EditorSheet
         open={confirmDelete !== null}
         title="刪除自訂背景？"
+        saveLabel="刪除"
+        saveTone="danger"
         onClose={() => setConfirmDelete(null)}
         onSave={() => confirmDelete && remove(confirmDelete)}
       >
@@ -310,6 +331,22 @@ export function BackgroundManager({
           </span>
         </p>
       </EditorSheet>
+    </Wrap>
+  );
+}
+
+/** 獨立頁時自帶 <main> 與限寬；內嵌於收藏紀錄頁時只出內容。 */
+function Wrap({
+  embedded,
+  children,
+}: {
+  embedded?: boolean;
+  children: React.ReactNode;
+}) {
+  if (embedded) return <>{children}</>;
+  return (
+    <main id="main-content" className="mx-auto w-full max-w-[700px] flex-1 px-4 pb-10">
+      {children}
     </main>
   );
 }

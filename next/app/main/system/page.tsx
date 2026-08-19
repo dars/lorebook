@@ -1,27 +1,24 @@
 import Link from 'next/link';
 
+import { ThemeSwitch } from '@/components/shell/theme-switch';
 import { ParchmentCard } from '@/components/ui/decorations';
-import { signOut } from '@/lib/auth/actions';
+import { SignOutButton } from '@/components/shell/sign-out-button';
 import { getCurrentCharacterId } from '@/lib/characters/current';
 import { fetchMyCharacter } from '@/lib/characters/fetch';
-import { createClient } from '@/lib/supabase/server';
+import { getSessionUser } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * 設定分頁，對照 Flutter 端的 `SystemPage`：
  * 角色（顯示當前、切換）／帳號（顯示 email、登出）／關於（版本與授權聲明）。
- *
- * 外觀主題那張卡暫不移植——目前只有深色主題，給一個只有一個選項的切換器
- * 是假的選擇。待淺色主題移植後再補。
  */
 export default async function SystemPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const id = await getCurrentCharacterId();
+  // 兩者都已在 layout 取過，cache() 讓這裡直接命中同一份，不再多打一趟。
+  const [user, id] = await Promise.all([
+    getSessionUser(),
+    getCurrentCharacterId(),
+  ]);
   const { character } = id
     ? await fetchMyCharacter(id)
     : { character: null };
@@ -31,46 +28,49 @@ export default async function SystemPage() {
       <ParchmentCard className="p-4">
         <h2 className="text-[14px] font-semibold text-text-primary">角色</h2>
         {character && (
-          <p className="mt-3 text-[13px] text-text-light">
+          <p className="mt-3 text-small text-text-light">
             當前：{character.name}・{character.className} {character.level}
           </p>
         )}
         <Link
           href="/character-select"
-          className="mt-4 flex min-h-11 items-center justify-center rounded-card border border-border text-[13px] text-text-primary"
+          className="mt-4 flex min-h-11 items-center justify-center rounded-card border border-border text-small text-text-primary"
         >
           切換角色
         </Link>
+      </ParchmentCard>
+
+      {/* 自創與收藏的內容集中在一處，不在設定頁逐型別各列一條連結——
+          型別會長（背景、子職、種族、法術…），設定頁不該變成清單。 */}
+      <ParchmentCard className="p-4">
+        <h2 className="text-[14px] font-semibold text-text-primary">收藏紀錄</h2>
+        <p className="mt-2 text-[12px] leading-relaxed text-text-secondary">
+          自己建立的與從他人分享收藏來的自創內容——背景、子職業。
+        </p>
         <Link
-          href="/custom-backgrounds"
-          className="mt-2 flex min-h-11 items-center justify-center rounded-card border border-border text-[13px] text-text-primary"
+          href="/library"
+          className="mt-4 flex min-h-11 items-center justify-center rounded-card border border-gold text-small text-gold"
         >
-          自訂背景
+          開啟收藏紀錄
         </Link>
-        <Link
-          href="/custom-subclasses"
-          className="mt-2 flex min-h-11 items-center justify-center rounded-card border border-border text-[13px] text-text-primary"
-        >
-          自訂子職業
-        </Link>
+      </ParchmentCard>
+
+      <ParchmentCard className="p-4">
+        <h2 className="text-[14px] font-semibold text-text-primary">外觀主題</h2>
+        <div className="mt-3">
+          <ThemeSwitch />
+        </div>
       </ParchmentCard>
 
       <ParchmentCard className="p-4">
         <h2 className="text-[14px] font-semibold text-text-primary">帳號</h2>
-        <p className="mt-3 text-[13px] text-text-light">{user?.email}</p>
-        <form action={signOut}>
-          <button
-            type="submit"
-            className="mt-4 flex min-h-11 w-full items-center justify-center rounded-card border border-danger text-[13px] text-danger"
-          >
-            登出
-          </button>
-        </form>
+        <p className="mt-3 text-small text-text-light">{user?.email}</p>
+        <SignOutButton />
       </ParchmentCard>
 
       <ParchmentCard className="p-4">
         <h2 className="text-[14px] font-semibold text-text-primary">關於</h2>
-        <p className="mt-3 text-[13px] text-text-light">Lorebook v0.1.0</p>
+        <p className="mt-3 text-small text-text-light">Lorebook v0.1.0</p>
         <p className="mt-1 text-[12px] text-text-secondary">
           D&amp;D 5.5e（2024）角色卡管理工具
         </p>
