@@ -1,16 +1,8 @@
 # Miscellaneous
-*.class
 *.log
-*.pyc
 *.swp
 .DS_Store
-.atom/
-.build/
-.buildlog/
 .history
-.svn/
-.swiftpm/
-migrate_working_dir/
 
 # IntelliJ related
 *.iml
@@ -23,41 +15,24 @@ migrate_working_dir/
 # is commented out by default.
 #.vscode/
 
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
-.dart_tool/
-.flutter-plugins-dependencies
-.pub-cache/
-.pub/
-/build/
-/coverage/
-
-# Symbolication related
-app.*.symbols
-
-# Obfuscation related
-app.*.map.json
-
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
-
 # Environment secrets
+#
+# .env.json 是已退場的 Flutter 端所用；檔案可能仍留在開發者本機且含 Supabase
+# 金鑰，這條保留著避免它變成待提交的未追蹤檔。
 .env.json
 .env
 
-# Generated code (freezed / json_serializable) — run `dart run build_runner build`
-*.freezed.dart
-*.g.dart
-
 # Supabase CLI link artifacts
 supabase/.temp/
-.wrangler/
 
-# Cloudflare Workers 的本機環境變數（含 Supabase 金鑰）
+# Cloudflare / Next.js
+.wrangler/
 next/.dev.vars
 next/.open-next/
 next/.next/
 next/node_modules/
+next/.env.local
+
+# 根目錄不該有 node_modules——這裡出現的一律是工具留下的空殼（例如 .vite），
+# 不是相依套件；相依裝在 next/ 底下。
+/node_modules/

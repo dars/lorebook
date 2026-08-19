@@ -1,8 +1,0 @@
-${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/app_links.framework
-${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/device_info_plus.framework
-${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/image_picker_ios.framework
-${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/package_info_plus.framework
-${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/passkeys_darwin.framework
-${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/shared_preferences_foundation.framework
-${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ua_client_hints.framework
-${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/url_launcher_ios.framework

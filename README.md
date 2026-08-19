@@ -1,6 +1,7 @@
 # Lorebook
 
-支援 iOS / Android 的 Flutter App（手機與平板版型自適應）。核心功能為 D&D 5.5e（2024 版規則）跑團角色卡，附帶世界觀筆記功能。
+**Web-only** 的 D&D 5.5e（2024 版規則）跑團角色卡，附帶世界觀筆記功能。
+同一份 codebase 適配手機與桌機版型。
 
 ## 內容範圍
 
@@ -11,22 +12,26 @@
 
 ## 開發
 
+實作在 `next/`（Next.js 16 + React 19 + TypeScript）。
+
 ```bash
-flutter pub get
+cd next
+npm install
 
-# 需帶 Supabase 環境設定執行（否則為離線模式）
-flutter run -d <device_id> --dart-define-from-file=.env.json
+# dev server（埠號固定 8087；.dev.vars 必須先載入，否則每頁 500）
+set -a && . ./.dev.vars && set +a && npm run dev
 
-flutter test
-flutter analyze
+npx tsc --noEmit && npx eslint . && npx vitest run
+npm run build
 ```
 
+部署一律手動走 wrangler，git push 不會部署：
+
+```bash
+cd next && npm run build && npx wrangler deploy
+```
+
+> 已退場的 Flutter 實作（根目錄 `lib/`、`test/` 與各平台目錄）已刪除。行為對照見
+> `golden/`（規則輸出的凍結快照）與 `docs/flutter-parity.md`（移植落差清單）。
+
 更多指令與架構說明見 [CLAUDE.md](CLAUDE.md)；內容資料庫說明見 [designs/SUPABASE.md](designs/SUPABASE.md)。
-
-## 授權聲明（Attribution）
-
-本作品收錄之遊戲規則內容取自 System Reference Document 5.2（"SRD 5.2"），著作權為 Wizards of the Coast LLC 所有，依 [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/legalcode)（CC-BY-4.0）授權使用。
-
-> This work includes material from the System Reference Document 5.2 ("SRD 5.2") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.
-
-繁體中文翻譯為本專案之衍生創作，同樣依 CC-BY-4.0 授權。App 程式碼之授權另計。
