@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { CharacterAvatar } from '@/components/character/character-avatar';
 import type { Character } from '@/lib/domain/character';
 
 /**
@@ -28,7 +29,7 @@ export function CharacterHeader({ c }: { c: Character }) {
           <div className="font-display truncate text-[16px] font-bold text-text-primary">
             {c.name}
           </div>
-          <div className="truncate text-[11px] text-text-secondary">
+          <div className="truncate text-[12px] text-text-secondary">
             {[c.species, c.className].filter(Boolean).join(' · ')} {c.level}
           </div>
         </div>
@@ -39,24 +40,7 @@ export function CharacterHeader({ c }: { c: Character }) {
 }
 
 function Avatar({ c }: { c: Character }) {
-  if (c.portraitUrl) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element -- 外部 Storage URL
-      <img
-        src={c.portraitUrl}
-        alt=""
-        className="size-9 shrink-0 rounded-full border-[1.5px] border-gold object-cover"
-        style={{
-          objectPosition: `${c.portraitCenterX * 100}% ${c.portraitCenterY * 100}%`,
-        }}
-      />
-    );
-  }
-  return (
-    <span className="font-display flex size-9 shrink-0 items-center justify-center rounded-full border-[1.5px] border-gold text-[16px] font-bold text-text-primary">
-      {c.name.slice(0, 1)}
-    </span>
-  );
+  return <CharacterAvatar c={c} size={36} />;
 }
 
 function LevelBadge({
@@ -66,32 +50,39 @@ function LevelBadge({
   level: number;
   interactive: boolean;
 }) {
-  const inner = (
-    <>
-      <span className="font-label text-[9px] font-semibold tracking-[1px] text-text-secondary">
-        LEVEL
-      </span>
-      <span
-        className={`font-display font-bold leading-none text-text-primary ${
-          interactive ? 'text-[26px]' : 'text-[28px]'
-        }`}
-      >
-        {level}
-      </span>
-    </>
-  );
-
   if (!interactive) {
-    return <span className="flex flex-col items-center">{inner}</span>;
+    return (
+      <span className="flex flex-col items-center">
+        <span className="font-label text-[10px] font-semibold tracking-[1px] text-text-secondary">
+          LEVEL
+        </span>
+        <span className="font-display text-[28px] font-bold leading-none text-text-primary">
+          {level}
+        </span>
+      </span>
+    );
   }
-  // 可升級：金框膠囊標示可互動，與純顯示自然區分；觸控目標 ≥48px。
+
+  // 可升級：金框膠囊 ＋ **向上箭頭圖示**標示可互動。少了那個圖示，框線本身
+  // 不足以說明「這裡按了會發生什麼」——原版是靠它把「可升級」講出來的。
+  // 框線用 55% 透明度（同 Flutter），全不透明會比角色名還搶眼。
   return (
     <Link
       href="/character-level-up"
       aria-label="升級"
-      className="flex min-h-12 flex-col items-center justify-center rounded-[10px] border border-gold px-3 py-0.5"
+      className="flex min-h-12 flex-col items-center justify-center rounded-[10px] border border-gold/55 px-3 py-0.5 hover:border-gold hover:bg-gold/10"
     >
-      {inner}
+      <span className="flex items-center gap-1">
+        <span className="font-label text-[10px] font-semibold tracking-[1px] text-text-secondary">
+          LEVEL
+        </span>
+        <svg viewBox="0 0 24 24" className="size-3 fill-gold" aria-hidden>
+          <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m1 15h-2v-6H7.5L12 6.5 16.5 11H13z" />
+        </svg>
+      </span>
+      <span className="font-display text-[26px] font-bold leading-none text-text-primary">
+        {level}
+      </span>
     </Link>
   );
 }

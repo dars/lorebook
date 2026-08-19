@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { createClient } from '@/lib/supabase/server';
+import { getAuthState } from '@/lib/supabase/server';
 
 // 依賴 session，不得靜態預渲染——建置時既沒有 cookie 也沒有環境變數。
 export const dynamic = 'force-dynamic';
@@ -12,12 +12,11 @@ export const dynamic = 'force-dynamic';
  * 而不是停在 create-next-app 的樣板上。
  */
 export default async function Home() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const auth = await getAuthState();
 
-  if (!user) redirect('/login');
+  // 只有確定未登入才去登入頁。無法確認（離線）時一律往主畫面送——
+  // 那裡的 layout 會呈現離線畫面，而登入頁在離線時是死路。
+  if (auth.status === 'unauthenticated') redirect('/login');
 
   // 登入後直接進角色清單——首頁沒有其他內容時，多一次點擊只是阻礙。
   redirect('/main/character');

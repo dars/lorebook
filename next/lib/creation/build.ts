@@ -64,6 +64,43 @@ export function bonusMap(
   return m;
 }
 
+/**
+ * 背景加值的預設指派：+2 給職業主屬性、+1 優先給體質。
+ *
+ * 這是新手最容易卡住的一步——不知道法師該把 +2 放智力。先幫他排好，
+ * 排完仍可自己改；比留三個空按鈕在那裡讓人猜好得多。
+ *
+ * 主屬性不在背景的候選裡時退回候選第一項（背景與職業不搭的組合仍要能建）。
+ */
+export function autofillBonus(
+  cls: ClassOption,
+  background: BackgroundOption,
+): { mode: BonusMode; plus2: string; plus1: string } {
+  const cands = background.abilities;
+  const plus2 = cls.primaryAbilities.find((a) => cands.includes(a)) ?? cands[0];
+  const plus1 =
+    cands.find((a) => a !== plus2 && a === 'CON') ??
+    cands.find((a) => a !== plus2) ??
+    plus2;
+  return { mode: '2/1', plus2, plus1 };
+}
+
+/**
+ * 標準陣列的「套用建議」：依優先序把 15/14/13/12/10/8 排下去。
+ *
+ * 優先序＝職業主屬性 → 體質 → 敏捷 → 其餘照固定順序補滿。體質與敏捷排在
+ * 主屬性之後，是因為它們決定 HP 與 AC，對任何職業都不會白給。
+ */
+export function recommendArray(cls: ClassOption): Record<string, number> {
+  const priority: string[] = [];
+  for (const list of [cls.primaryAbilities, ['CON', 'DEX'], ABILITY_ORDER]) {
+    for (const a of list) if (!priority.includes(a)) priority.push(a);
+  }
+  return Object.fromEntries(
+    priority.slice(0, 6).map((code, i) => [code, STANDARD_ARRAY[i]]),
+  );
+}
+
 /** 最終分數 = 基礎 + 背景加值，上限 20。 */
 export const finalScore = (base: number, bonus: number) =>
   Math.min(Math.max(base + bonus, 0), 20);
@@ -170,9 +207,10 @@ export function buildCharacter(input: CreationInput, id: string): Character {
       name: background.originFeat,
       nameEn: '',
       description: background.originFeatDescription,
-      source: background.originFeatCustom
-        ? `背景：${background.cn}・自訂`
-        : `背景：${background.cn}`,
+      source: `背景：${background.cn}`,
+      // 判斷的是專長本身是否自創——以自訂背景選了 SRD 的起源專長時，那個
+      // 專長仍是 SRD 的。背景是自訂的這件事由 backgroundIsCustom 表達。
+      isCustom: background.originFeatCustom,
     },
   ];
 
@@ -186,6 +224,7 @@ export function buildCharacter(input: CreationInput, id: string): Character {
     level: 1,
     background: background.cn,
     backgroundEn: background.en,
+    backgroundIsCustom: background.isCustom,
     alignment: input.alignment ?? '',
     alignmentEn: input.alignmentEn ?? '',
     creatureType: 'Humanoid',

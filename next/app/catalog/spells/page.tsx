@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 
 import { ftFlattenEntries, ftFormatCastingTime, ftFormatRange } from '@/lib/catalog/fivetools';
 import { fetchSpells } from '@/lib/catalog/fetch';
+import { spellSchoolCn } from '@/lib/catalog/schools';
+import { CatalogFilter } from '@/components/catalog/catalog-filter';
 import { Chip, EmptyHint, Section } from '@/components/character/primitives';
 
 /**
@@ -10,6 +12,10 @@ import { Chip, EmptyHint, Section } from '@/components/character/primitives';
  * **全部條目一次渲染，不分頁。** 339 條在 SSR 下的 HTML 約數百 KB，一次送
  * 完換到的是「Ctrl+F 搜得到全部」與「不需 JS 即可瀏覽」——對一份查詢用的
  * 參考資料，那比分頁重要得多。分頁反而讓「這個效果在哪個法術」變難查。
+ *
+ * 上方的名稱過濾是**漸進增強**：只在既有 DOM 上切換 `hidden`，不重新產生
+ * 清單，因此上面那兩件事都還成立。條目本身用 `.catalog-entry` 的
+ * `content-visibility` 省下畫面外的排版成本——那不影響 ⌘F。
  *
  * 這與分享頁不同：內容庫是公開的 SRD 內容，可被索引也應該被索引。
  */
@@ -34,7 +40,7 @@ export default async function SpellCatalogPage() {
 
   if (error) {
     return (
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6">
+      <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-4 py-6">
         <h1 className="font-display text-title text-gold">法術目錄</h1>
         <EmptyHint text={`目前無法載入內容庫（${error}）。稍後重新整理再試。`} />
       </main>
@@ -50,12 +56,12 @@ export default async function SpellCatalogPage() {
   const levels = [...byLevel.keys()].sort((a, b) => a - b);
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-10">
+    <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-4 pb-10">
       <header className="pt-5">
         <h1 className="font-display text-title text-gold">法術目錄</h1>
         <p className="mt-2 text-small text-text-secondary">
-          SRD 5.2（CC-BY-4.0）· 共 {rows.length} 條 · 用瀏覽器的尋找功能（⌘F）
-          可直接搜尋全部內容
+          SRD 5.2（CC-BY-4.0）· 下方搜尋只比對名稱；要搜規則內文請用瀏覽器的
+          尋找功能（⌘F），整份內容都在這一頁上
         </p>
       </header>
 
@@ -64,6 +70,7 @@ export default async function SpellCatalogPage() {
           <a
             key={lv}
             href={`#lv${lv}`}
+            data-section-link={`lv${lv}`}
             className="whitespace-nowrap text-small text-text-secondary hover:text-gold"
           >
             {LEVEL_LABEL(lv)}
@@ -71,10 +78,17 @@ export default async function SpellCatalogPage() {
         ))}
       </nav>
 
+      <CatalogFilter placeholder="搜尋法術名稱（中／英文）…" total={rows.length} unit="條">
       {levels.map((lv) => (
         <Section key={lv} id={`lv${lv}`} title={LEVEL_LABEL(lv)}>
           {byLevel.get(lv)!.map((s) => (
-            <details key={s.id} className="border-b border-border-2 py-2">
+            <details
+              key={s.id}
+              // 過濾用的 haystack 先在伺服器端算好轉小寫，client 只做 includes。
+              // 中英學派都放進 haystack：使用者可能搜「塑能」也可能搜「evocation」。
+              data-search={`${s.name} ${s.eng_name ?? ''} ${s.school_name ?? ''} ${spellSchoolCn(s.school, '')}`.toLowerCase()}
+              className="catalog-entry border-b border-border-2 py-2"
+            >
               <summary className="cursor-pointer text-body">
                 <span className="text-text-primary">{s.name}</span>
                 {s.eng_name && (
@@ -82,9 +96,9 @@ export default async function SpellCatalogPage() {
                     {s.eng_name}
                   </span>
                 )}
-                {s.school_name && (
+                {(s.school || s.school_name) && (
                   <span className="ml-2 text-tiny text-section-label">
-                    {s.school_name}
+                    {spellSchoolCn(s.school, s.school_name)}
                   </span>
                 )}
                 {s.concentration && (
@@ -109,6 +123,7 @@ export default async function SpellCatalogPage() {
           ))}
         </Section>
       ))}
+      </CatalogFilter>
     </main>
   );
 }

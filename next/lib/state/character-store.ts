@@ -27,7 +27,9 @@ type State = {
 };
 
 type Actions = {
-  /** 自伺服器載入（覆蓋本機狀態）。 */
+  /**
+   * 自伺服器載入。**本機有未推送的變更時不覆蓋**——見實作處的說明。
+   */
   load: (c: Character) => void;
   /** 就地修改並標記為待推送。 */
   update: (fn: (c: Character) => Character) => void;
@@ -41,7 +43,24 @@ export const useCharacterStore = create<State & Actions>((set) => ({
   dirty: false,
   syncError: null,
 
-  load: (c) => set({ character: c, dirty: false, syncError: null }),
+  /**
+   * 載入角色。**同一張卡且本機有未推送的變更時，保留本機版本。**
+   *
+   * 掛載 `DecisionView` / `CharacterSheetLive` 的元件都會在 effect 裡呼叫這個。
+   * 切分頁會讓它們卸載重掛（試玩頁是條件渲染、主畫面是換路由），於是又 load
+   * 一次 initial——沒有這道保護的話，剛卸下的裝備、剛扣的血會在切分頁時被
+   * 還原成伺服器版本。
+   *
+   * 試玩模式（不推雲端）會永遠是 dirty，所以第一次之後的 load 一律略過；
+   * 正式模式則只在 debounce 尚未推送完的那幾秒內保護，推送成功後 dirty 清掉，
+   * 下次 load 就會正常吃伺服器的新資料。
+   */
+  load: (c) =>
+    set((s) =>
+      s.character?.id === c.id && s.dirty
+        ? s
+        : { character: c, dirty: false, syncError: null },
+    ),
 
   update: (fn) =>
     set((s) => (s.character ? { character: fn(s.character), dirty: true } : s)),
@@ -85,6 +104,20 @@ export const characterActions = {
         currentHp: clamp(c.currentHp - (damage - absorbed), 0, c.maxHp),
       };
     });
+  },
+
+  /**
+   * 直接把生命值還原成某個狀態，供「復原」使用。
+   *
+   * 不能靠反向 `adjustHp` 復原：扣血會先吃掉臨時 HP，而治療不補臨時 HP，
+   * 所以 −5 之後 +5 拿不回被吸收的那幾點。復原必須還原快照。
+   */
+  setHitPoints(currentHp: number, tempHp: number) {
+    useCharacterStore.getState().update((c) => ({
+      ...c,
+      currentHp: clamp(currentHp, 0, c.maxHp),
+      tempHp: Math.max(0, tempHp),
+    }));
   },
 
   /** 設定臨時 HP。2024 規則：不疊加，取較高者由呼叫端決定後傳入。 */
@@ -155,6 +188,23 @@ export const characterActions = {
     deity: string;
   }) {
     useCharacterStore.getState().update((c) => ({ ...c, ...v }));
+  },
+
+  /**
+   * 其人其事：背景故事與性格標籤。
+   *
+   * 與 `setPersonality` 分成兩支，是為了讓**寫入範圍等於編輯範圍**——傳記頁
+   * 的兩個區塊各有各的編輯面板（同 Flutter），從性格那邊存檔不該順手把背景
+   * 故事也重寫一遍。同一份值重寫看不出問題，但欄位級的同步合併會分不出
+   * 「使用者真的改了」與「只是被一起帶上」。
+   */
+  setAbout(v: { backstory: string; personalityTags: string[] }) {
+    useCharacterStore.getState().update((c) => ({ ...c, ...v }));
+  },
+
+  /** 性格四欄：特質／理念／羈絆／缺陷。 */
+  setPersonality(personality: Character['personality']) {
+    useCharacterStore.getState().update((c) => ({ ...c, personality }));
   },
 
   addLanguage(name: string) {
@@ -250,6 +300,13 @@ export const characterActions = {
     useCharacterStore.getState().update((c) => ({
       ...c,
       equipment: [...c.equipment, item],
+    }));
+  },
+
+  updateItem(index: number, item: Character['equipment'][number]) {
+    useCharacterStore.getState().update((c) => ({
+      ...c,
+      equipment: c.equipment.map((x, i) => (i === index ? item : x)),
     }));
   },
 

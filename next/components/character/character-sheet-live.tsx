@@ -1,14 +1,19 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState, type ReactNode } from 'react';
 
 import type { CatalogItem } from '@/lib/catalog/types';
 import type { Character } from '@/lib/domain/character';
+import { needsSubclassPick } from '@/lib/rules/level-up';
 import { characterActions, useCharacterStore } from '@/lib/state/character-store';
 import { useCharacterSync } from '@/lib/state/sync';
 import { CharacterSheet } from './character-sheet';
 import { BasicInfoEditor } from './editors/basic-info-editor';
-import { CurrencyEditor, InventoryEditor } from './editors/inventory-editor';
+import { AboutEditor, PersonalityEditor } from './editors/biography-editor';
+import { CurrencyCalculator } from './editors/currency-calculator';
+import { ItemEditor } from './editors/item-editor';
+import { InventoryEditor } from './editors/inventory-editor';
 import { PortraitEditor } from './editors/portrait-editor';
 import { ProficiencyEditor } from './editors/proficiency-editor';
 
@@ -36,9 +41,19 @@ export function CharacterSheetLive({
 }) {
   const load = useCharacterStore((s) => s.load);
   const stored = useCharacterStore((s) => s.character);
-  const [editor, setEditor] = useState<'basic' | 'prof' | 'items' | 'coin' | 'portrait' | null>(
-    null,
-  );
+  const [editor, setEditor] = useState<
+    | 'basic'
+    | 'prof'
+    | 'items'
+    | 'coin'
+    | 'portrait'
+    | 'custom-item'
+    | 'about'
+    | 'personality'
+    | null
+  >(null);
+  // 編輯既有物品時帶索引；null＝新增。
+  const [editingItem, setEditingItem] = useState<number | null>(null);
 
   useEffect(() => {
     load(initial);
@@ -49,11 +64,35 @@ export function CharacterSheetLive({
 
   return (
     <>
+      {/* 補選子職的入口。掛在角色卡而不是升級對話框裡（Flutter 的位置）：
+          20 級角色的 LEVEL 徽章不可點，藏在那裡等於還是進不去。
+          試玩模式不顯示——訪客的角色寫不回雲端。 */}
+      {persist && needsSubclassPick(c) && (
+        <div className="mx-auto mt-3 w-full max-w-[700px] px-4">
+          <div className="rounded-card border border-gold/55 bg-gold/10 px-4 py-3">
+            <p className="text-[13px] text-text-primary">
+              這個角色還沒有子職。
+            </p>
+            <p className="mt-1 text-[12px] leading-relaxed text-text-secondary">
+              升級當時內容庫離線，子職那一步被跳過了。補選後會一併補上到
+              {c.level} 級為止的子職特性。
+            </p>
+            <Link
+              href="/character-level-up?mode=subclass"
+              className="mt-2 flex min-h-11 items-center justify-center rounded-chip border border-gold text-[13px] font-bold text-gold hover:bg-gold/10"
+            >
+              補選子職
+            </Link>
+          </div>
+        </div>
+      )}
       <CharacterSheet
         c={c}
         share={share}
         onEditBasic={() => setEditor('basic')}
         onEditProficiency={() => setEditor('prof')}
+        onEditAbout={() => setEditor('about')}
+        onEditPersonality={() => setEditor('personality')}
         onEditPortrait={persist ? () => setEditor('portrait') : undefined}
         inventory={{
           c,
@@ -61,10 +100,22 @@ export function CharacterSheetLive({
           onAddItem: () => setEditor('items'),
           onToggleEquipped: characterActions.toggleEquipped,
           onUseConsumable: characterActions.useConsumable,
-          onRemoveItem: characterActions.removeItem,
+          onAddCustomItem: () => {
+            setEditingItem(null);
+            setEditor('custom-item');
+          },
+          onEditItem: (i: number) => {
+            setEditingItem(i);
+            setEditor('custom-item');
+          },
         }}
       />
       <BasicInfoEditor open={editor === 'basic'} onClose={() => setEditor(null)} />
+      <AboutEditor open={editor === 'about'} onClose={() => setEditor(null)} />
+      <PersonalityEditor
+        open={editor === 'personality'}
+        onClose={() => setEditor(null)}
+      />
       <ProficiencyEditor
         open={editor === 'prof'}
         onClose={() => setEditor(null)}
@@ -75,7 +126,25 @@ export function CharacterSheetLive({
         onClose={() => setEditor(null)}
         catalog={catalog}
       />
-      <CurrencyEditor open={editor === 'coin'} onClose={() => setEditor(null)} />
+      <CurrencyCalculator open={editor === 'coin'} onClose={() => setEditor(null)} />
+      <ItemEditor
+        open={editor === 'custom-item'}
+        initial={editingItem === null ? null : c.equipment[editingItem]}
+        onClose={() => setEditor(null)}
+        onSave={(item) => {
+          if (editingItem === null) characterActions.addItem(item);
+          else characterActions.updateItem(editingItem, item);
+          setEditor(null);
+        }}
+        onDelete={
+          editingItem === null
+            ? undefined
+            : () => {
+                characterActions.removeItem(editingItem);
+                setEditor(null);
+              }
+        }
+      />
       {/* 試玩不提供立繪上傳：訪客沒有帳號，Storage 寫入會被擋。 */}
       {persist && (
         <PortraitEditor open={editor === 'portrait'} onClose={() => setEditor(null)} />

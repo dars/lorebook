@@ -56,38 +56,3 @@ export function ToggleChip({
   );
 }
 
-/** 點數型資源（法術位、狂暴次數）：一格一次，點擊消耗或回復。 */
-export function Pips({
-  total,
-  used,
-  onChange,
-  label,
-}: {
-  total: number;
-  used: number;
-  onChange: (delta: number) => void;
-  label: string;
-}) {
-  return (
-    <div className="flex flex-wrap items-center gap-1">
-      {Array.from({ length: total }, (_, i) => {
-        const spent = i < used;
-        return (
-          <button
-            key={i}
-            type="button"
-            // 點已消耗的格子＝回復，點未消耗的＝消耗。方向由格子本身決定，
-            // 不需要另外的加減按鈕。
-            onClick={() => onChange(spent ? 1 : -1)}
-            aria-label={`${label} 第 ${i + 1} 格，${spent ? '已消耗，點擊回復' : '未消耗，點擊消耗'}`}
-            className={`h-6 w-6 rounded-full border ${
-              spent
-                ? 'border-crystal-empty bg-crystal-empty'
-                : 'border-gold bg-crystal-active'
-            }`}
-          />
-        );
-      })}
-    </div>
-  );
-}

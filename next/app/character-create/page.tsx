@@ -4,7 +4,8 @@ import { redirect } from 'next/navigation';
 import { CreateWizard } from '@/components/creation/create-wizard';
 import { fetchCustomBackgrounds } from '@/lib/backgrounds/actions';
 import { fetchSpells } from '@/lib/catalog/fetch';
-import { createClient } from '@/lib/supabase/server';
+import { OfflineNotice } from '@/components/shell/offline-notice';
+import { getAuthState } from '@/lib/supabase/server';
 
 export const metadata: Metadata = { title: '建立角色｜Lorebook' };
 export const dynamic = 'force-dynamic';
@@ -14,18 +15,16 @@ export const dynamic = 'force-dynamic';
  * 擋在那裡等於內容庫一有問題就不能建角。
  */
 export default async function CharacterCreatePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect('/login');
+  const auth = await getAuthState();
+  if (auth.status === 'unauthenticated') redirect('/login');
+  if (auth.status === 'unknown') return <OfflineNotice />;
 
   const { rows } = await fetchSpells();
   // 只有 0 與 1 環用得到——339 筆全傳會讓 HTML 多出數百 KB。
   const spells = rows.filter((s) => s.level <= 1);
 
   // 自訂背景與內建並列。轉為 BackgroundOption 的形狀——建角流程不必區分來源，
-  // 選取後一律快照進角色卡。
+  // 選取後一律快照進角色卡。`isCustom` 僅供角色卡標示用，不影響任何推導。
   const { backgrounds } = await fetchCustomBackgrounds();
   const custom = backgrounds.map((b) => ({
     cn: b.name,
@@ -37,6 +36,7 @@ export default async function CharacterCreatePage() {
     originFeatCustom: b.originFeatCustom,
     originFeatDescription: b.originFeatDescription,
     description: b.description,
+    isCustom: true,
   }));
 
   return <CreateWizard spells={spells} customBackgrounds={custom} />;

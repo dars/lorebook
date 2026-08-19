@@ -77,6 +77,40 @@ export function planFor(
   };
 }
 
+/**
+ * 需要補選子職：3 級以上卻沒有子職。
+ *
+ * 只會在升級當下內容庫離線、子職那一步被跳過時發生。沒有補選入口的話這個
+ * 角色就**永遠**沒有子職——下次升級的 `pickSubclass` 已經是 false，
+ * 那一步不會再出現。
+ */
+export const needsSubclassPick = (c: Character) =>
+  c.level >= 3 && c.subclass.trim() === '' && c.customSubclass == null;
+
+/**
+ * 補選子職：只寫入子職與其特性，**不動等級與任何數值**。
+ *
+ * 與 `applyLevelUp` 分開是因為它們做的是不同的事——補選不是升級，
+ * 走升級那條路會把等級也加上去。
+ */
+export function applySubclassPick(
+  c: Character,
+  choices: {
+    subclass: string;
+    subclassEn?: string;
+    features?: Character['features'];
+    customSubclass?: Character['customSubclass'];
+  },
+): Character {
+  return {
+    ...c,
+    subclass: choices.subclass,
+    subclassEn: choices.subclassEn ?? '',
+    features: [...c.features, ...(choices.features ?? [])],
+    customSubclass: choices.customSubclass ?? c.customSubclass,
+  };
+}
+
 const KEYS: [string, keyof AbilityScores][] = [
   ['STR', 'str'], ['DEX', 'dex'], ['CON', 'con'],
   ['INT', 'int_'], ['WIS', 'wis'], ['CHA', 'cha'],

@@ -14,7 +14,9 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-16 py-5">
+    // data-section 供內容庫的過濾器辨識區段（整段沒命中就收起來）。
+    // 其他用途只是多一個不影響任何事的屬性。
+    <section id={id} data-section={id} className="scroll-mt-16 py-5">
       <h2 className="mb-3 flex items-baseline gap-2 border-b border-border-2 pb-2">
         {titleEn && (
           <span className="font-display text-tiny tracking-widest text-section-label">

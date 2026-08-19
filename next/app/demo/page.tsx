@@ -17,7 +17,7 @@ export const metadata: Metadata = {
  */
 export default function DemoPage() {
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-10">
+    <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-4 pb-10">
       <h1 className="pt-5 font-display text-title text-gold">試玩</h1>
       <p className="mt-2 text-small leading-relaxed text-text-secondary">
         以下角色可直接操作——扣血、消耗法術位、切換狀態、展開特性說明。

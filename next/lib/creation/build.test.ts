@@ -3,11 +3,14 @@ import { describe, expect, it } from 'vitest';
 import { BACKGROUNDS, CLASSES, SPECIES } from './data';
 import {
   POINT_BUY_BUDGET,
+  STANDARD_ARRAY,
+  autofillBonus,
   buildCharacter,
   bonusMap,
   level1MaxHp,
   level1UnarmoredAc,
   pointsSpent,
+  recommendArray,
   skillTakenBy,
 } from './build';
 
@@ -36,6 +39,58 @@ describe('配點規則', () => {
 
     const each = bonusMap(b, '1/1/1');
     expect(b.abilities.every((a) => each[a] === 1)).toBe(true);
+  });
+});
+
+describe('建議配點', () => {
+  it('+2 落在職業主屬性——法師配賢者是智力', () => {
+    const r = autofillBonus(cls('法師'), bg('賢者'));
+    expect(cls('法師').primaryAbilities).toContain(r.plus2);
+    expect(r.plus2).toBe('INT');
+    expect(r.mode).toBe('2/1');
+  });
+
+  it('+1 優先給體質', () => {
+    const b = bg('賢者');
+    if (b.abilities.includes('CON')) {
+      expect(autofillBonus(cls('法師'), b).plus1).toBe('CON');
+    }
+    // 候選裡沒有體質時退而求其次，但一定不會與 +2 同一項。
+    const r = autofillBonus(cls('法師'), b);
+    expect(r.plus1).not.toBe(r.plus2);
+  });
+
+  it('主屬性不在背景候選裡時退回候選第一項，不會給出空值', () => {
+    for (const c of CLASSES) {
+      for (const b of BACKGROUNDS) {
+        const r = autofillBonus(c, b);
+        expect(b.abilities).toContain(r.plus2);
+        expect(r.plus2).toBeTruthy();
+        expect(r.plus1).toBeTruthy();
+      }
+    }
+  });
+
+  it('套用建議：六項剛好用掉標準陣列的六個值', () => {
+    const r = recommendArray(cls('法師'));
+    expect(Object.values(r).sort((a, b) => b - a)).toEqual(
+      [...STANDARD_ARRAY].sort((a, b) => b - a),
+    );
+  });
+
+  it('最高的 15 給主屬性，體質與敏捷排在其後', () => {
+    const r = recommendArray(cls('法師'));
+    expect(r.INT).toBe(15);
+    expect(r.CON).toBe(14);
+    expect(r.DEX).toBe(13);
+  });
+
+  it('每個職業都排得出完整六項', () => {
+    for (const c of CLASSES) {
+      const r = recommendArray(c);
+      expect(Object.keys(r)).toHaveLength(6);
+      expect(r[c.primaryAbilities[0]]).toBe(15);
+    }
   });
 });
 
@@ -142,5 +197,59 @@ describe('技能重複來源的禁選', () => {
 
   it('未被占用時可選', () => {
     expect(skillTakenBy('醫藥', b, [], [], 'class')).toBeNull();
+  });
+});
+
+describe('自創來源標示', () => {
+  const input = {
+    name: '測試者',
+    species: species('矮人'),
+    cls: cls('牧師'),
+    background: bg('侍僧'),
+    base: { STR: 12, DEX: 10, CON: 14, INT: 12, WIS: 15, CHA: 8 },
+    bonusMode: '2/1' as const,
+    plus2: 'WIS',
+    plus1: 'INT',
+    classSkills: ['醫藥', '歷史'],
+    speciesSkills: [],
+  };
+
+  it('SRD 背景不標示為自訂', () => {
+    const c = buildCharacter(input, 'x');
+    expect(c.backgroundIsCustom).toBe(false);
+    expect(c.features.every((f) => !f.isCustom)).toBe(true);
+  });
+
+  it('自訂背景標示於角色，其 SRD 起源專長不標示', () => {
+    // 自訂背景可以選 SRD 的起源專長——那個專長仍是 SRD 的，只有背景是自創的。
+    const custom = { ...bg('侍僧'), cn: '我的背景', isCustom: true };
+    const c = buildCharacter({ ...input, background: custom }, 'x');
+    expect(c.backgroundIsCustom).toBe(true);
+    const feat = c.features.find((f) => f.source.startsWith('背景：'))!;
+    expect(feat.isCustom).toBe(false);
+  });
+
+  it('自訂起源專長標示於特性', () => {
+    const custom = {
+      ...bg('侍僧'),
+      cn: '我的背景',
+      isCustom: true,
+      originFeat: '我發明的專長',
+      originFeatCustom: true,
+    };
+    const c = buildCharacter({ ...input, background: custom }, 'x');
+    const feat = c.features.find((f) => f.name === '我發明的專長')!;
+    expect(feat.isCustom).toBe(true);
+  });
+
+  it('來源字串不再承載自訂語意——不含「・自訂」後綴', () => {
+    const custom = {
+      ...bg('侍僧'),
+      cn: '我的背景',
+      isCustom: true,
+      originFeatCustom: true,
+    };
+    const c = buildCharacter({ ...input, background: custom }, 'x');
+    expect(c.features.every((f) => !f.source.includes('自訂'))).toBe(true);
   });
 });

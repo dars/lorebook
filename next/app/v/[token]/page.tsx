@@ -52,7 +52,7 @@ export default async function SharedCharacterPage({ params }: Props) {
   }
 
   return (
-    <main className="mx-auto w-full max-w-[1100px] flex-1">
+    <main id="main-content" className="mx-auto w-full max-w-[1100px] flex-1">
       {/* 不傳 share：唯讀檢視不渲染分享區塊（對照 Flutter 的 ReadOnlyScope）。 */}
       <CharacterSheet c={result.character} />
       <FetchedAt at={result.fetchedAt} />
@@ -89,7 +89,7 @@ const MESSAGES: Record<string, { title: string; body: string }> = {
 function Unavailable({ status }: { status: string }) {
   const m = MESSAGES[status] ?? MESSAGES.error;
   return (
-    <main className="flex flex-1 items-center justify-center p-4">
+    <main id="main-content" className="flex flex-1 items-center justify-center p-4">
       <div className="w-full max-w-sm rounded-card border border-border bg-surface-1 p-6 text-center">
         <h1 className="font-display text-heading text-gold">{m.title}</h1>
         <p className="mt-3 text-small leading-relaxed text-text-light">

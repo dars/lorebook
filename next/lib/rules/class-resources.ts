@@ -104,7 +104,10 @@ export const CLASS_RESOURCE_RULES: Rule[] = [
   },
   {
     classEn: 'Paladin',
-    name: '聖療之觸',
+    // 內容庫 `class_features` 的官方譯名是「聖療」。這裡原本叫「聖療之觸」，
+    // 於是同一個特性在角色卡上有兩個名字：特性區寫「聖療」、資源區寫
+    // 「聖療之觸」。以內容庫為準。
+    name: '聖療',
     nameEn: 'Lay on Hands',
     formula: 'levelTimes',
     param: 5,

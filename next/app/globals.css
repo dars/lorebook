@@ -1,12 +1,17 @@
 @import "tailwindcss";
 
 /*
- * 設計 token，逐值移植自 Flutter 端的 lib/app/theme/。
+ * 設計 token，最初逐值移植自 Flutter 端的 lib/app/theme/。
  *
- * **色票不得漂移**：重寫換的是交付方式，不是視覺。任何調整都應先改 Flutter
- * 端或 designs.pen，再同步過來，否則兩邊會各自演化。
+ * **原本的規則是「色票不得漂移」，已於 2026-08-12 解除。** 那條規則在移植期
+ * 是對的，但後來造成一個具體的壞結果：淺色主題只覆寫了底色、前景色沿用深色
+ * 主題的值，gold 在羊皮紙上只有 1.99:1，而「不得漂移」讓人不敢動它。
  *
- * 對照來源：
+ * 現在的準則是：**以好看與可讀為準，不以與 Flutter 一致為準。** Flutter 端已
+ * 凍結（見根目錄 CLAUDE.md），不再回頭同步。調整時仍請在該值旁註明理由與
+ * 對比數值，讓下一個人知道它為什麼是這樣。
+ *
+ * 原始對照來源（仍可作為設計語言的參考）：
  *   app_colors.dart    → --color-*
  *   app_spacing.dart   → Tailwind 數值尺度 / --radius-*
  *   dnd_colors.dart    → --color-damage-*
@@ -18,12 +23,31 @@
   --color-primary: #6b4e3e;
   --color-primary-dark: #4b3766;
   --color-gold: #c9a84c;
-  --color-gold-dim: #8b6e2a;
-  --color-success: #2e7d32;
-  --color-danger: #c0392b;
+  /*
+   * gold-dim／success／danger 的值比 Flutter 端亮一階。原值（#8b6e2a /
+   * #2e7d32 / #c0392b）在深色底上只有 3.3–3.0:1，低於 AA 的 4.5——而它們
+   * 分別是 entry-card 的說明內文、計算機的加項、以及**所有錯誤訊息**的顏色，
+   * 最需要讀得清楚的東西反而最看不清。
+   *
+   * 調法是保持色相與飽和、只把明度提到剛好達標，因此仍是同一組顏色。
+   * 淺色主題在下方另有一套覆寫，不受這裡影響。
+   */
+  --color-gold-dim: #a58332; /* 4.53:1，原 #8b6e2a 為 3.35 */
+  --color-success: #399a3d; /* 4.51:1，原 #2e7d32 為 3.15 */
+  --color-danger: #d96356; /* 4.51:1，原 #c0392b 為 2.97 */
 
-  /* ── 深色主題（主視覺）───────────────────
-   * Flutter 端深淺兩套都有，但深色是這個 App 的識別。淺色待有需求再補。
+  /*
+   * 實心金底按鈕（`bg-gold-solid` ＋ 近黑字）專用，**兩個主題都不變**。
+   *
+   * 淺色主題把 --color-gold 壓暗成可讀的深黃銅（見下方），那個值當文字很好，
+   * 當實心底色卻會讓近黑的字掉到 3.2:1。實心底需要的是「亮到能襯深色字」，
+   * 與「暗到能在淺底上被讀出來」是相反的需求，因此拆成兩個 token。
+   */
+  --color-gold-solid: #c9a84c;
+
+  /* ── 深色主題（主視覺，預設）─────────────
+   * 深色是這個 App 的識別；淺色為 :root[data-theme="light"] 覆寫，
+   * 值取自 Flutter 端 app_colors.dart 的 light theme（羊皮紙）。
    */
   --color-surface-0: #1c1610;
   --color-surface-1: #2a1f0e;
@@ -33,7 +57,8 @@
   --color-text-primary: #e8d9b5;
   --color-text-secondary: #a08b62;
   --color-text-light: #c9b48a;
-  --color-section-label: #8b7340;
+  /* 同上：原 #8b7340 在 surface-1 上只有 3.55:1，而區段小標本來就只有 10px。 */
+  --color-section-label: #9f8449; /* 4.51:1 */
 
   /* ── HP 與法術位 ───────────────────────── */
   --color-hp-full: #c0392b;
@@ -114,6 +139,72 @@
   --breakpoint-expanded: 840px;
 }
 
+/**
+ * 淺色主題：以 data-theme 覆寫 @theme 產生的 CSS 變數。
+ *
+ * 用屬性而非 media query 當唯一來源——設定頁有「深色／淺色／系統」三態，
+ * 「系統」由 JS 讀 prefers-color-scheme 後同樣寫入 data-theme，
+ * 這樣三種模式走同一條路徑，不會出現兩套規則互相打架。
+ */
+:root[data-theme='light'] {
+  /* 原生控制項（捲軸、下拉選單、日期選擇器、autofill 底色）吃的是
+   * color-scheme，不是我們的色票。淺色主題若漏了這行，畫面是羊皮紙、
+   * 捲軸與下拉卻仍是深色。 */
+  color-scheme: light;
+
+  --color-surface-0: #faf7f2;
+  --color-surface-1: #f3efe6;
+  --color-surface-2: #eee6d2;
+  --color-border: #e0d9c7;
+  --color-border-2: #e8e0cc;
+  --color-text-primary: #1e1e1e;
+  --color-text-light: #6b5d46;
+  --color-hp-bar-bg: #e2cccc;
+  --color-crystal-empty: #ded3bb;
+
+  /*
+   * ── 前景色：淺色主題必須自己一套 ──────────────────────
+   *
+   * 原本只覆寫了底色與少數文字色，其餘（gold、danger、success、傷害類型、
+   * 臨時 HP）沿用深色主題的值——那些顏色是為了「在近黑底上發亮」調的，
+   * 放到羊皮紙底上全部糊掉。實測對比（對 surface-1 #f3efe6）：
+   *
+   *   gold #c9a84c ......... 1.99:1   ← 所有關鍵數值與選中態都是這個顏色
+   *   damage-radiant ....... 1.48:1
+   *   temp-hp .............. 2.07:1
+   *   text-secondary ....... 3.14:1
+   *
+   * 4.5:1 是 WCAG AA 的內文門檻。以下的值一律**保持原色相**、只壓明度，
+   * 讓淺色看起來仍是同一套色系，只是換了一邊的底。
+   *
+   * 注意：這使淺色主題與 Flutter 端的 app_colors.dart 分歧。Flutter 實作
+   * 已凍結（見根目錄 CLAUDE.md），不再回頭同步；designs.pen 若要跟進，
+   * 以這裡的值為準。
+   */
+  --color-gold: #755c20; /* 5.53:1，text-gold／border-gold／fill-gold 共用 */
+  --color-gold-dim: #7a6535; /* 4.89:1 */
+  --color-section-label: #7d6224; /* 5.02:1 */
+  --color-text-secondary: #6b665f; /* 4.96:1 */
+  --color-danger: #b33326; /* 5.35:1 */
+  --color-success: #2a6e2d; /* 5.44:1 */
+
+  /* 傷害類型與臨時 HP：同色相壓暗到 ≥4.5:1。 */
+  --color-temp-hp: #216e98;
+  --color-damage-fire: #a64e1f;
+  --color-damage-cold: #1f6ba8;
+  --color-damage-lightning: #206f90;
+  --color-damage-thunder: #6a55c8;
+  --color-damage-acid: #576f34;
+  --color-damage-poison: #467236;
+  --color-damage-necrotic: #5c6d44;
+  --color-damage-radiant: #7d6511;
+  --color-damage-psychic: #8d44c2;
+  /* 物理／力場／中性刻意共用主題金色，跟著 --color-gold 一起變暗。 */
+  --color-damage-force: #755c20;
+  --color-damage-physical: #755c20;
+  --color-damage-neutral: #755c20;
+}
+
 html {
   color-scheme: dark;
 }
@@ -121,4 +212,202 @@ html {
 body {
   background: var(--color-surface-0);
   color: var(--color-text-primary);
+}
+
+/**
+ * ── 互動基礎樣式 ────────────────────────────────────────
+ *
+ * 以下都是 **web 才有的狀態**，Flutter 端沒有對應概念（沒有滑鼠焦點環、
+ * 沒有雙擊縮放、沒有 tap highlight），因此不算「色票漂移」——它們一律
+ * 取用既有 token，不引入新顏色。
+ */
+
+/*
+ * 焦點環：整個 App 原本沒有任何焦點樣式，鍵盤操作只能靠瀏覽器預設環，
+ * 在深色羊皮紙底上幾乎看不見。用 gold 統一，與選中態的視覺語言一致。
+ *
+ * 用 :focus-visible 而非 :focus——滑鼠點按鈕不該留下焦點環。
+ */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/*
+ * 觸控行為：
+ * - manipulation 關掉雙擊縮放的判定，省去每次點擊約 300ms 的等待。
+ *   跑團中連點 HP ±1、法術位點格都是連續點擊，這個延遲很有感。
+ * - tap highlight 預設是系統藍色方塊，在暗金色調上很突兀；改成金色淡影。
+ */
+a,
+button,
+label,
+select,
+summary,
+textarea,
+input,
+[role='button'] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: color-mix(in srgb, var(--color-gold) 22%, transparent);
+}
+
+/*
+ * 等寬數字：display 字體（Cinzel）就是這個 App 用來放數值的字體——HP、AC、
+ * 等級、幣量、能力值。比例數字會讓 10→9、100→99 時整串跟著位移，扣血時
+ * 特別明顯；等寬讓數字在原地換。
+ */
+.font-display {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * 滑鼠回饋：原本全站只有 5 個 hover 樣式，桌機（expanded 版型是支援目標）
+ * 上按鈕與純文字毫無區別。
+ *
+ * 用 brightness 而非改顏色，是為了守住「色票不得漂移」：它對任何底色都
+ * 成立，不必為上百顆按鈕各挑一個 hover 色，也不會引入新色票。
+ * 只在真正有滑鼠的裝置上生效，觸控裝置不會殘留 hover 態。
+ */
+@media (hover: hover) and (pointer: fine) {
+  a,
+  summary,
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    transition: filter 120ms ease-out;
+  }
+  a:hover,
+  summary:hover,
+  button:not(:disabled):hover,
+  [role='button']:not([aria-disabled='true']):hover {
+    filter: brightness(1.18);
+  }
+}
+
+/*
+ * <details> 的展開三角形。
+ *
+ * 瀏覽器預設的 marker 又大又黑、字級跟著內文跑，跟這個 App 的其他指示符
+ * （EntryCard 的 ▾、區段標題的 ⌄）完全不是同一套東西。統一在這裡畫：
+ * 5.5×8 的小三角、text-secondary、展開時轉 90°。
+ *
+ * 寫在全域而非各處自己畫——現在有五處 <details>（特長、升級、內容庫的
+ * 法術與物品…），各自實作遲早只會改到其中一兩處。
+ */
+summary {
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+summary::before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-right: 0.5rem;
+  /* 三角形的視覺重心偏下，-1px 讓它對齊中文字的視覺中線。 */
+  vertical-align: -1px;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 5.5px solid var(--color-text-secondary);
+  transition: transform 150ms ease-out;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+/*
+ * 分頁切換的進場動畫（expanded 版型的角色卡右欄）。
+ *
+ * compact 版型的換頁是 SwipeTabs 的橫向捲動，本身就有位移；expanded 的右欄
+ * 在頁面流裡、由整頁捲動，不適合關進捲動容器（見 character-sheet.tsx 的說明），
+ * 所以改用進場動畫補上「換了一頁」的訊號。
+ *
+ * 只做位移不做高度過場：右欄各分頁高度差好幾百 px，animate 高度會讓整頁跟著
+ * 抽動一下，比沒有動畫更吵。
+ *
+ * 減少動態效果由下方的全域規則一併中和，這裡不必再各自處理。
+ */
+@keyframes tab-enter-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+}
+@keyframes tab-enter-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+}
+.tab-enter-right {
+  animation: tab-enter-from-right 180ms ease-out;
+}
+.tab-enter-left {
+  animation: tab-enter-from-left 180ms ease-out;
+}
+
+/* 尊重系統的「減少動態效果」。 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * 藏起捲軸，但保留捲動能力。
+ *
+ * 給滑動式分頁用：那裡的橫向捲動是「換頁」的手勢，不是要給人拉的捲軸——
+ * 露出來會看起來像壞掉。而且在 macOS 的常駐捲軸下，橫向捲軸會佔掉容器的
+ * 垂直空間，內容因此高出一點點，又連帶長出一條垂直捲軸。
+ *
+ * 分頁標籤本身就是導覽的可見入口，藏掉捲軸不會讓人找不到路。
+ */
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+ * 內容庫目錄的單一條目。
+ *
+ * 那兩頁刻意一次送出全部條目（⌘F 才搜得到全部、沒有 JS 也能看），代價是
+ * 數百個節點的排版與繪製。`content-visibility: auto` 讓瀏覽器跳過畫面外的
+ * 部分——但**不影響 ⌘F**：尋找功能會強制渲染被跳過的內容，這正是它與
+ * 「用 JS 過濾掉 DOM」的關鍵差別。
+ *
+ * `contain-intrinsic-size` 用 `auto <length>`：先以 44px 估算，實際渲染過
+ * 之後改記真實高度，捲動時捲軸不會忽長忽短。
+ */
+.catalog-entry {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 44px;
+}
+
+/*
+ * 跳至主要內容：鍵盤與螢幕閱讀器使用者不必逐一 tab 過導覽列。
+ * 平時視覺隱藏，取得焦點才浮出。
+ */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-chip);
+  background: var(--color-surface-1);
+  padding: 0.5rem 0.75rem;
+  font-size: var(--text-small);
+  color: var(--color-gold);
+}
+.skip-link:focus {
+  transform: translateY(0);
 }

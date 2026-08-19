@@ -3,42 +3,13 @@
 import { useRef, useState } from 'react';
 
 import { EditorSheet } from '@/components/ui/editor-sheet';
+import { removePortrait, uploadPortrait } from '@/lib/characters/portrait';
 import { characterActions, useCharacterStore } from '@/lib/state/character-store';
-import { createClient } from '@/lib/supabase/client';
 
 /**
- * 立繪上傳，對照 Flutter 端的 `PortraitService`。
- *
- * 儲存慣例照搬：`portraits/{user_id}/{character_id}.jpg`，**覆蓋制**；
- * 公開讀 bucket。固定路徑代表 CDN 會快取舊圖，因此回傳的 URL 帶版本參數。
- *
- * 上傳前在瀏覽器端壓到 1024px 寬的 JPEG：手機拍的原圖動輒數 MB，直接上傳
- * 會讓每次載入角色卡都拖著它。Flutter 端由 image_picker 的 maxWidth 處理，
- * web 沒有等價選項，改用 canvas。
+ * 立繪上傳的面板。壓縮與儲存慣例在 `lib/characters/portrait.ts`，
+ * 與建角流程共用同一份。
  */
-const MAX_WIDTH = 1024;
-const JPEG_QUALITY = 0.85;
-
-async function compress(file: File): Promise<Blob> {
-  const bitmap = await createImageBitmap(file);
-  const scale = Math.min(1, MAX_WIDTH / bitmap.width);
-  const w = Math.round(bitmap.width * scale);
-  const h = Math.round(bitmap.height * scale);
-
-  const canvas = document.createElement('canvas');
-  canvas.width = w;
-  canvas.height = h;
-  canvas.getContext('2d')!.drawImage(bitmap, 0, 0, w, h);
-  bitmap.close();
-
-  return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      (b) => (b ? resolve(b) : reject(new Error('影像處理失敗'))),
-      'image/jpeg',
-      JPEG_QUALITY,
-    );
-  });
-}
 
 export function PortraitEditor({
   open,
@@ -58,23 +29,7 @@ export function PortraitEditor({
     setBusy(true);
     setError(null);
     try {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error('未登入，無法上傳');
-
-      const blob = await compress(file);
-      const path = `${user.id}/${c.id}.jpg`;
-
-      const { error: upErr } = await supabase.storage
-        .from('portraits')
-        .upload(path, blob, { contentType: 'image/jpeg', upsert: true });
-      if (upErr) throw new Error(upErr.message);
-
-      const { data } = supabase.storage.from('portraits').getPublicUrl(path);
-      // 固定路徑覆蓋制：版本參數讓 CDN 與瀏覽器快取失效。
-      characterActions.setPortrait(`${data.publicUrl}?v=${Date.now()}`);
+      characterActions.setPortrait(await uploadPortrait(c.id, file));
       onClose();
     } catch (e) {
       setError(e instanceof Error ? e.message : '上傳失敗');
@@ -85,16 +40,15 @@ export function PortraitEditor({
 
   const remove = async () => {
     setBusy(true);
+    setError(null);
     try {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        await supabase.storage.from('portraits').remove([`${user.id}/${c.id}.jpg`]);
-      }
+      await removePortrait(c.id);
       characterActions.setPortrait('');
       onClose();
+    } catch (e) {
+      // 原本沒有 catch：離線按「移除」會靜靜什麼都不發生，圖還在，
+      // 使用者不知道發生什麼事，主控台則多一個 unhandled rejection。
+      setError(e instanceof Error ? e.message : '移除失敗');
     } finally {
       setBusy(false);
     }
@@ -111,6 +65,7 @@ export function PortraitEditor({
         ref={input}
         type="file"
         accept="image/*"
+        aria-label="選擇角色圖檔"
         className="hidden"
         onChange={(e) => {
           const f = e.target.files?.[0];
@@ -119,7 +74,11 @@ export function PortraitEditor({
         }}
       />
 
-      {error && <p className="mt-3 text-[13px] text-danger">{error}</p>}
+      {error && (
+        <p role="alert" className="mt-3 text-[13px] text-danger">
+          {error}
+        </p>
+      )}
 
       <div className="mt-4 flex flex-col gap-2">
         <button
@@ -153,6 +112,7 @@ export function PortraitEditor({
             min={1}
             max={3}
             step={0.05}
+            aria-label="取景縮放"
             value={c.portraitScale}
             onChange={(e) =>
               characterActions.setPortraitFraming({ scale: Number(e.target.value) })
@@ -167,6 +127,7 @@ export function PortraitEditor({
             min={0}
             max={1}
             step={0.01}
+            aria-label="取景水平"
             value={c.portraitCenterX}
             onChange={(e) =>
               characterActions.setPortraitFraming({ x: Number(e.target.value) })
@@ -181,6 +142,7 @@ export function PortraitEditor({
             min={0}
             max={1}
             step={0.01}
+            aria-label="取景垂直"
             value={c.portraitCenterY}
             onChange={(e) =>
               characterActions.setPortraitFraming({ y: Number(e.target.value) })

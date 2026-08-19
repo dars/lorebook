@@ -3,18 +3,29 @@
 import { useState } from 'react';
 
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
+import { EditorSheet } from '@/components/ui/editor-sheet';
 import type { CatalogSpell } from '@/lib/catalog/types';
+import {
+  ftFlattenEntries,
+  ftFormatCastingTime,
+  ftFormatRange,
+} from '@/lib/catalog/fivetools';
+import { spellSchoolCn } from '@/lib/catalog/schools';
 import { createCharacter } from '@/lib/creation/actions';
 import {
+  autofillBonus,
   bonusMap,
   buildCharacter,
   pointsSpent,
   POINT_BUY_BUDGET,
+  recommendArray,
   skillTakenBy,
   type BonusMode,
 } from '@/lib/creation/build';
 import {
+  ABILITY_LABEL,
   ABILITY_ORDER,
+  abilityLabels,
   BACKGROUNDS,
   type BackgroundOption,
   CLASSES,
@@ -22,7 +33,19 @@ import {
   SPECIES,
   isCaster,
 } from '@/lib/creation/data';
+import { ALIGNMENTS, alignmentEnFor } from '@/lib/creation/alignments';
+import { AbilityHexChart } from '@/components/character/ability-hex-chart';
+import { uploadPortrait } from '@/lib/characters/portrait';
+import {
+  DescCard,
+  OptionChips,
+  StatChip,
+  TraitChip,
+} from './option-picker';
+import { PortraitPicker } from './portrait-picker';
+import { useFormDraft } from '@/lib/hooks/use-form-draft';
 import { newCharacterId } from '@/lib/creation/id';
+import { spellFromCatalog } from '@/lib/creation/spell-from-catalog';
 import type { Spell } from '@/lib/domain/character';
 import { AbilityStep, type Method } from './ability-step';
 
@@ -34,9 +57,11 @@ import { AbilityStep, type Method } from './ability-step';
  * 才被擋，那只會讓人不知道少了什麼。
  */
 
-const ABILITY_LABEL: Record<string, string> = {
-  STR: '力量', DEX: '敏捷', CON: '體質',
-  INT: '智力', WIS: '感知', CHA: '魅力',
+/** 體型的中文。資料是英文原值，但整個流程其餘部分都是中文。 */
+const SIZE_LABEL: Record<string, string> = {
+  Small: '小型',
+  Medium: '中型',
+  Large: '大型',
 };
 
 export function CreateWizard({
@@ -48,7 +73,13 @@ export function CreateWizard({
   customBackgrounds?: BackgroundOption[];
 }) {
   const [step, setStep] = useState(0);
+  // 角色 id 一次產生後固定：角色圖要在建立前就以它為檔名上傳，每次 render
+  // 重抽一個新的會讓圖與角色對不起來。
+  const [characterId] = useState(newCharacterId);
   const [name, setName] = useState('');
+  const [alignment, setAlignment] = useState('');
+  // File 不進草稿——它序列化不進 localStorage，硬存只會得到一個空物件。
+  const [portraitFile, setPortraitFile] = useState<File | null>(null);
   const [speciesCn, setSpeciesCn] = useState<string | null>(null);
   const [sizeChoice, setSizeChoice] = useState<string | null>(null);
   const [classCn, setClassCn] = useState<string | null>(null);
@@ -66,6 +97,7 @@ export function CreateWizard({
   const [selSpells, setSelSpells] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [portraitWarning, setPortraitWarning] = useState<string | null>(null);
 
   const species = SPECIES.find((s) => s.cn === speciesCn) ?? null;
   const cls = CLASSES.find((c) => c.cn === classCn) ?? null;
@@ -129,20 +161,18 @@ export function CreateWizard({
 
   const toSpell = (name: string, level: number): Spell => {
     const s = spells.find((x) => x.name === name);
-    return {
-      name,
-      nameEn: s?.eng_name ?? '',
-      level,
-      description: '',
-      upgrade: '',
-      damage: '',
-      damageType: '',
-      range: '',
-      castingTime: '1 action',
-      castKind: 'action',
-      prepared: true,
-      concentration: s?.concentration ?? false,
-    };
+    // 查不到只會發生在清單與選取不同步時（正常路徑下選項就是從 spells 來的）。
+    // 留個名字讓角色仍建得起來，但不要編造施法時間——寫死 action 會讓行動頁
+    // 的附贈／反應分組全錯。
+    if (!s) {
+      return {
+        name, nameEn: '', level,
+        description: '', upgrade: '', damage: '', damageType: '', range: '',
+        castingTime: '', castKind: 'other',
+        prepared: true, concentration: false,
+      };
+    }
+    return spellFromCatalog(s);
   };
 
   const preview = () =>
@@ -162,25 +192,106 @@ export function CreateWizard({
             speciesSkills,
             cantrips: selCantrips.map((n) => toSpell(n, 0)),
             spells: selSpells.map((n) => toSpell(n, 1)),
+            alignment,
+            alignmentEn: alignmentEnFor(alignment),
           },
-          newCharacterId(),
+          characterId,
         )
       : null;
 
+  /**
+   * 草稿。**只存使用者的選擇**，不存 `steps` / `preview()` 這類推導值——
+   * 那些會隨規則資料演進，存下來只會在資料更新後變成過期的快照。
+   */
+  const draft = {
+    step, name, alignment, speciesCn, sizeChoice, classCn, bgCn,
+    bonusMode, plus2, plus1, method, base,
+    classSkills, speciesSkills, selCantrips, selSpells,
+  };
+  // 還沒動任何東西就不必保存，也不該攔截離開。
+  const started = name.trim().length > 0 || speciesCn !== null || step > 0;
+  const { pending, accept, discard, clear } = useFormDraft({
+    key: 'lorebook-draft-create',
+    value: draft,
+    active: started && !busy,
+  });
+
+  const resume = (d: typeof draft) => {
+    setStep(d.step);
+    setName(d.name);
+    setAlignment(d.alignment ?? '');
+    setSpeciesCn(d.speciesCn);
+    setSizeChoice(d.sizeChoice);
+    setClassCn(d.classCn);
+    setBgCn(d.bgCn);
+    setBonusMode(d.bonusMode);
+    setPlus2(d.plus2);
+    setPlus1(d.plus1);
+    setMethod(d.method);
+    setBase(d.base);
+    setClassSkills(d.classSkills);
+    setSpeciesSkills(d.speciesSkills);
+    setSelCantrips(d.selCantrips);
+    setSelSpells(d.selSpells);
+    accept();
+  };
+
   const submit = async () => {
-    const c = preview();
+    let c = preview();
     if (!c) return;
     setBusy(true);
+
+    // 角色圖在這裡才上傳（同 Flutter）。**失敗不擋建角**——辛苦填完七步
+    // 卻因為一張圖傳不上去而全部作廢是不合理的；改成建好之後再補。
+    if (portraitFile) {
+      try {
+        c = { ...c, portraitUrl: await uploadPortrait(characterId, portraitFile) };
+      } catch {
+        setPortraitWarning('角色圖上傳失敗，角色仍會建立——可稍後於角色頁補傳。');
+      }
+    }
+
     const r = await createCharacter(c);
     if (r.error) {
       setError(r.error);
       setBusy(false);
+      return;
     }
-    // 成功時 Server Action 會 redirect，不需要在此處理。
+    // 成功時 Server Action 會 redirect，程式不會回到這裡；草稿在送出前就清掉，
+    // 失敗的話上面已經 return，`active` 會隨 busy 復原而繼續保存。
+    clear();
   };
 
   return (
-    <main className="mx-auto w-full max-w-[700px] flex-1 px-4 pb-32">
+    // 限寬 1000 而非 700：選項改成會換行的 chip 之後，寬螢幕一行放得下
+    // 十幾個職業，硬壓成窄欄只是把它們擠成好幾列、又留下大片空白。
+    // Flutter 端完全不限寬，那在 1440 上會把說明文字拉成超長的一行。
+    <main id="main-content" className="mx-auto w-full max-w-[1000px] flex-1 px-4 pb-32">
+      {pending && (
+        <div className="mt-4 rounded-card border border-gold bg-gold/10 px-3 py-2.5">
+          <p className="text-[13px] text-text-primary">
+            有一份未完成的建角草稿
+            {pending.name.trim() && `（${pending.name.trim()}）`}。
+          </p>
+          <div className="mt-2 flex gap-2">
+            <button
+              type="button"
+              onClick={() => resume(pending)}
+              className="min-h-11 flex-1 rounded-chip border border-gold text-[13px] font-bold text-gold"
+            >
+              繼續填寫
+            </button>
+            <button
+              type="button"
+              onClick={discard}
+              className="min-h-11 flex-1 rounded-chip border border-border text-[13px] text-text-secondary"
+            >
+              重新開始
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="pt-5">
         <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
           步驟 {Math.min(step + 1, steps.length)} / {steps.length} · {current}
@@ -197,23 +308,42 @@ export function CreateWizard({
 
       <div className="mt-5">
         {current === '基本' && (
-          <>
+          // 夠寬就把角色圖擺到左邊，與名稱／陣營／種族並排。單欄時圖是 4:5 的
+          // 直式，會把下面的欄位整個推到摺線以下——第一步就要捲才看得到名稱。
+          <div className="grid gap-x-6 gap-y-4 medium:grid-cols-[200px_minmax(0,1fr)] medium:items-start">
+            <PortraitPicker file={portraitFile} onPick={setPortraitFile} />
+            <div>
             <SectionTitle en="NAME" cn="名稱" first />
             <input
+              aria-label="角色名稱"
+              name="characterName"
+              autoComplete="off"
+              spellCheck={false}
               value={name}
               onChange={(e) => setName(e.target.value)}
               maxLength={30}
               placeholder="你的角色叫什麼？"
               className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
             />
-            <SectionTitle en="SPECIES" cn="物種" />
-            <OptionList
-              options={SPECIES.map((s) => ({
-                key: s.cn,
-                title: s.cn,
-                sub: s.en,
-                desc: s.traits.map((t) => t.name).join('、'),
-              }))}
+            <SectionTitle en="ALIGNMENT" cn="陣營" />
+            <select
+              aria-label="陣營"
+              value={alignment}
+              onChange={(e) => setAlignment(e.target.value)}
+              className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary medium:w-auto medium:min-w-60"
+            >
+              <option value="">未定</option>
+              {ALIGNMENTS.map(([cn, en]) => (
+                <option key={cn} value={cn}>
+                  {cn}（{en}）
+                </option>
+              ))}
+            </select>
+
+            <SectionTitle en="SPECIES" cn="種族" />
+            <OptionChips
+              ariaLabel="種族"
+              options={SPECIES.map((s) => ({ key: s.cn, label: s.cn }))}
               selected={speciesCn}
               onSelect={(k) => {
                 setSpeciesCn(k);
@@ -221,71 +351,156 @@ export function CreateWizard({
                 setSpeciesSkills([]);
               }}
             />
+            {species && (
+              <DescCard
+                title={species.cn}
+                titleEn={species.en}
+                description={species.description}
+                chips={
+                  <>
+                    <StatChip label="速度" value={species.speed} />
+                    <StatChip
+                      label="體型"
+                      value={SIZE_LABEL[species.size] ?? species.size}
+                    />
+                    {species.darkvisionFt > 0 && (
+                      <StatChip label="黑暗視覺" value={`${species.darkvisionFt} 尺`} />
+                    )}
+                  </>
+                }
+                traits={species.traits.map((t) => (
+                  <TraitChip
+                    key={t.name}
+                    name={t.name}
+                    nameEn={t.nameEn}
+                    description={t.description}
+                  />
+                ))}
+              />
+            )}
             {species && species.sizeChoices.length > 1 && (
               <>
                 <SectionTitle en="SIZE" cn="體型" />
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {species.sizeChoices.map((s) => (
                     <button
                       key={s}
                       type="button"
                       onClick={() => setSizeChoice(s)}
-                      className={`min-h-11 flex-1 rounded-card border text-[13px] ${
+                      className={`min-h-11 rounded-chip border px-5 text-[14px] ${
                         (sizeChoice ?? species.size) === s
-                          ? 'border-gold bg-gold/10 text-gold'
-                          : 'border-border-2 text-text-secondary'
+                          ? 'border-gold bg-gold/15 font-semibold text-gold'
+                          : 'border-border-2 bg-surface-1 text-text-primary hover:border-gold/50'
                       }`}
                     >
-                      {s}
+                      {SIZE_LABEL[s] ?? s}
                     </button>
                   ))}
                 </div>
               </>
             )}
-          </>
+            </div>
+          </div>
         )}
 
         {current === '職業' && (
-          <OptionList
-            options={CLASSES.map((c) => ({
-              key: c.cn,
-              title: c.cn,
-              sub: c.en,
-              desc: `生命骰 d${c.hitDie}・${isCaster(c) ? `施法（${ABILITY_LABEL[c.spellAbility]}）` : '非施法'}・選 ${c.skillCount} 技能`,
-            }))}
-            selected={classCn}
-            onSelect={(k) => {
-              setClassCn(k);
-              setClassSkills([]);
-              setSelCantrips([]);
-              setSelSpells([]);
-            }}
-          />
+          <>
+            <OptionChips
+              ariaLabel="職業"
+              options={CLASSES.map((c) => ({ key: c.cn, label: c.cn }))}
+              selected={classCn}
+              onSelect={(k) => {
+                setClassCn(k);
+                setClassSkills([]);
+                setSelCantrips([]);
+                setSelSpells([]);
+                // 換職業一併清空能力值：先照法師配好點再改成野蠻人，留著的
+                // 數值是為上一個職業排的，而且不會有任何提示。
+                setBase(Object.fromEntries(ABILITY_ORDER.map((a) => [a, null])));
+              }}
+            />
+            {cls && (
+              <DescCard
+                title={cls.cn}
+                titleEn={cls.en}
+                description={cls.description}
+                chips={
+                  <>
+                    <StatChip label="生命骰" value={`d${cls.hitDie}`} />
+                    <StatChip label="主屬性" value={abilityLabels(cls.primaryAbilities)} />
+                    <StatChip label="豁免" value={abilityLabels(cls.saves)} />
+                    <StatChip label="技能" value={`選 ${cls.skillCount}`} />
+                    <StatChip
+                      label="施法"
+                      value={
+                        isCaster(cls) ? ABILITY_LABEL[cls.spellAbility] : '非施法職業'
+                      }
+                    />
+                  </>
+                }
+              />
+            )}
+          </>
         )}
 
         {current === '背景' && (
           <>
-            <OptionList
+            <OptionChips
+              ariaLabel="背景"
               options={allBackgrounds.map((b) => ({
                 key: b.cn,
-                title: b.cn + (b.originFeatCustom || !b.en ? '（自訂）' : ''),
-                sub: b.en,
-                desc: `${b.skills.join('、')}・${b.originFeat}${b.toolProficiency ? `・${b.toolProficiency}` : ''}`,
+                label: b.cn + (b.isCustom ? '（自訂）' : ''),
               }))}
               selected={bgCn}
               onSelect={(k) => {
                 setBgCn(k);
-                setPlus2(null);
-                setPlus1(null);
                 setClassSkills([]);
+                // 換背景也清種族技能：新背景的固定技能可能與已選的種族技能
+                // 重疊，留著會白白浪費一個名額而且不會被擋。
+                setSpeciesSkills([]);
+                const nb = allBackgrounds.find((b) => b.cn === k);
+                // 先幫他排好 +2／+1，排完仍可自己改。留三顆空按鈕在那裡，
+                // 新手只能猜法師該把 +2 放哪。
+                if (nb && cls) {
+                  const a = autofillBonus(cls, nb);
+                  setBonusMode(a.mode);
+                  setPlus2(a.plus2);
+                  setPlus1(a.plus1);
+                } else {
+                  setPlus2(null);
+                  setPlus1(null);
+                }
               }}
             />
             {bg && (
               <>
+                <DescCard
+                  title={bg.cn + (bg.isCustom ? '（自訂）' : '')}
+                  titleEn={bg.en}
+                  description={bg.description}
+                  chips={
+                    <>
+                      <StatChip label="技能" value={bg.skills.join('、')} />
+                      <StatChip label="起源專長" value={bg.originFeat} />
+                      {bg.toolProficiency && (
+                        <StatChip label="工具" value={bg.toolProficiency} />
+                      )}
+                      <StatChip
+                        label="能力候選"
+                        value={abilityLabels(bg.abilities)}
+                      />
+                    </>
+                  }
+                />
                 <SectionTitle en="ABILITY BONUS" cn="能力加值" />
                 <p className="mb-2 text-[12px] text-text-secondary">
                   背景給 {bg.abilities.map((a) => ABILITY_LABEL[a]).join('、')}{' '}
                   三項中的加值，二選一種分配方式。
+                  {cls && (
+                    <span className="block text-text-primary/70">
+                      已依 {cls.cn} 的主屬性排好，可自行更動。
+                    </span>
+                  )}
                 </p>
                 <div className="flex gap-2">
                   {(['2/1', '1/1/1'] as const).map((m) => (
@@ -343,12 +558,21 @@ export function CreateWizard({
           </>
         )}
 
-        {current === '能力值' && (
+        {current === '能力值' && cls && (
           <AbilityStep
+            cls={cls}
             method={method}
             onMethod={(m) => {
               setMethod(m);
-              setBase(Object.fromEntries(ABILITY_ORDER.map((a) => [a, m === 'buy' ? 8 : null])));
+              // 切到標準陣列直接套用建議（同 Flutter）——面對六個空下拉是
+              // 最容易在這一步卡住的地方。購點全 8 起跳，擲骰留空等使用者填。
+              setBase(
+                m === 'array'
+                  ? recommendArray(cls)
+                  : Object.fromEntries(
+                      ABILITY_ORDER.map((a) => [a, m === 'buy' ? 8 : null]),
+                    ),
+              );
             }}
             base={base}
             onBase={setBase}
@@ -357,33 +581,77 @@ export function CreateWizard({
         )}
 
         {current === '技能' && cls && bg && species && (
-          <>
-            <SectionTitle en="CLASS" cn={`職業（選 ${cls.skillCount}）`} first />
-            <SkillPicker
-              names={cls.skillChoices}
-              selected={classSkills}
-              max={cls.skillCount}
-              taken={(n) => skillTakenBy(n, bg, classSkills, speciesSkills, 'class')}
-              onToggle={setClassSkills}
-            />
-            {species.skillPickCount > 0 && (
-              <>
-                <SectionTitle
-                  en="SPECIES"
-                  cn={`${species.cn}（選 ${species.skillPickCount}）`}
-                />
-                <SkillPicker
-                  names={species.skillPickFrom}
-                  selected={speciesSkills}
-                  max={species.skillPickCount}
-                  taken={(n) =>
-                    skillTakenBy(n, bg, classSkills, speciesSkills, 'species')
-                  }
-                  onToggle={setSpeciesSkills}
-                />
-              </>
-            )}
-          </>
+          // 三欄：職業／種族／自動取得。單欄時人類的 18 項種族技能會把這一步
+          // 拉成三個畫面高，三欄之後各欄都短得多，也讓「還有哪些來源」一眼看完。
+          <div className="grid gap-x-6 expanded:grid-cols-3">
+            <div>
+              <SectionTitle
+                en="CLASS"
+                cn={`職業（選 ${classSkills.length}/${cls.skillCount}）`}
+                first
+              />
+              <SkillPicker
+                names={cls.skillChoices}
+                selected={classSkills}
+                max={cls.skillCount}
+                taken={(n) => skillTakenBy(n, bg, classSkills, speciesSkills, 'class')}
+                onToggle={setClassSkills}
+              />
+            </div>
+            <div>
+              {species.skillPickCount > 0 && (
+                <>
+                  <SectionTitle
+                    en="SPECIES"
+                    cn={`${species.cn}（選 ${speciesSkills.length}/${species.skillPickCount}）`}
+                    first
+                  />
+                  <SkillPicker
+                    names={species.skillPickFrom}
+                    selected={speciesSkills}
+                    max={species.skillPickCount}
+                    taken={(n) =>
+                      skillTakenBy(n, bg, classSkills, speciesSkills, 'species')
+                    }
+                    onToggle={setSpeciesSkills}
+                  />
+                </>
+              )}
+            </div>
+            {/* 自動取得的兩區。沒有它們，使用者會以為技能就只有上面選的那幾個，
+                也從頭到尾不知道自己的豁免熟練是什麼。 */}
+            <div>
+              <SectionTitle en="FROM BACKGROUND" cn="背景已給" first />
+              <div className="flex flex-wrap gap-1.5">
+                {bg.skills.map((n) => (
+                  <span
+                    key={n}
+                    className="rounded-chip border border-gold/40 bg-gold/10 px-3 py-1.5 text-[13px] text-gold"
+                  >
+                    {n}
+                  </span>
+                ))}
+              </div>
+              <p className="mt-1.5 text-[12px] text-text-secondary">
+                背景固定給這些，不佔上面的選取名額。
+              </p>
+
+              <SectionTitle en="SAVING THROWS" cn="豁免熟練" />
+              <div className="flex flex-wrap gap-1.5">
+                {cls.saves.map((a) => (
+                  <span
+                    key={a}
+                    className="rounded-chip border border-gold/40 bg-gold/10 px-3 py-1.5 text-[13px] text-gold"
+                  >
+                    {ABILITY_LABEL[a] ?? a}
+                  </span>
+                ))}
+              </div>
+              <p className="mt-1.5 text-[12px] text-text-secondary">
+                由 {cls.cn} 固定給予。
+              </p>
+            </div>
+          </div>
         )}
 
         {current === '法術' && cls && (
@@ -394,24 +662,42 @@ export function CreateWizard({
               </p>
             ) : (
               <>
-                <SectionTitle en="CANTRIPS" cn={`戲法（選 ${cls.cantripsKnown}）`} first />
-                <SpellPicker
-                  options={spells.filter(
-                    (s) => s.level === 0 && s.classes.includes(cls.en),
-                  )}
-                  selected={selCantrips}
-                  max={cls.cantripsKnown}
-                  onToggle={setSelCantrips}
-                />
-                <SectionTitle en="SPELLS" cn={`一環法術（選 ${cls.preparedSpells}）`} />
-                <SpellPicker
-                  options={spells.filter(
-                    (s) => s.level === 1 && s.classes.includes(cls.en),
-                  )}
-                  selected={selSpells}
-                  max={cls.preparedSpells}
-                  onToggle={setSelSpells}
-                />
+                {/* 聖騎士與遊俠在 2024 規則下**沒有戲法**（法術從一環開始）。
+                    無條件渲染會給他們一個空的「戲法 0/0」標題，底下什麼都沒有。 */}
+                {cls.cantripsKnown > 0 && (
+                  <>
+                    <SectionTitle
+                      en="CANTRIPS"
+                      cn={`戲法（已選 ${selCantrips.length}/${cls.cantripsKnown}）`}
+                      first
+                    />
+                    <SpellPicker
+                      options={spells.filter(
+                        (s) => s.level === 0 && s.classes.includes(cls.en),
+                      )}
+                      selected={selCantrips}
+                      max={cls.cantripsKnown}
+                      onToggle={setSelCantrips}
+                    />
+                  </>
+                )}
+                {cls.preparedSpells > 0 && (
+                  <>
+                    <SectionTitle
+                      en="SPELLS"
+                      cn={`一環法術（已選 ${selSpells.length}/${cls.preparedSpells}）`}
+                      first={cls.cantripsKnown === 0}
+                    />
+                    <SpellPicker
+                      options={spells.filter(
+                        (s) => s.level === 1 && s.classes.includes(cls.en),
+                      )}
+                      selected={selSpells}
+                      max={cls.preparedSpells}
+                      onToggle={setSelSpells}
+                    />
+                  </>
+                )}
               </>
             )}
           </>
@@ -420,10 +706,20 @@ export function CreateWizard({
         {current === '確認' && <Confirm c={preview()} />}
       </div>
 
-      {error && <p className="mt-3 text-[13px] text-danger">{error}</p>}
+      {portraitWarning && (
+        <p role="alert" className="mt-3 text-[13px] text-text-light">
+          {portraitWarning}
+        </p>
+      )}
 
-      <div className="fixed inset-x-0 bottom-0 border-t border-border-2 bg-surface-0 p-4">
-        <div className="mx-auto flex max-w-[700px] gap-2">
+      {error && (
+        <p role="alert" className="mt-3 text-[13px] text-danger">
+          {error}
+        </p>
+      )}
+
+      <div className="fixed inset-x-0 bottom-0 border-t border-border-2 bg-surface-0 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="mx-auto flex max-w-[1000px] gap-2">
           {step > 0 && (
             <button
               type="button"
@@ -445,7 +741,18 @@ export function CreateWizard({
           ) : (
             <button
               type="button"
-              onClick={() => setStep((s) => s + 1)}
+              onClick={() => {
+                // 首次進入「能力值」就先套好建議（同 Flutter 的 `_initAbilities`）。
+                // 不這樣做的話，這一步的開場畫面是六個空下拉，而使用者這時
+                // 還不知道自己的職業該把高點數放哪——這是整個流程最容易卡住的地方。
+                // 只在「還沒動過」時套用，回上一步再回來不會蓋掉已改的值。
+                const next = steps[step + 1];
+                if (next === '能力值' && cls && ABILITY_ORDER.every((a) => base[a] === null)) {
+                  setMethod('array');
+                  setBase(recommendArray(cls));
+                }
+                setStep((s) => s + 1);
+              }}
               disabled={!canNext}
               className="min-h-12 flex-2 rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold disabled:opacity-40"
             >
@@ -455,42 +762,6 @@ export function CreateWizard({
         </div>
       </div>
     </main>
-  );
-}
-
-function OptionList({
-  options,
-  selected,
-  onSelect,
-}: {
-  options: { key: string; title: string; sub: string; desc: string }[];
-  selected: string | null;
-  onSelect: (k: string) => void;
-}) {
-  return (
-    <div className="flex flex-col gap-2">
-      {options.map((o) => (
-        <button key={o.key} type="button" onClick={() => onSelect(o.key)} className="text-left">
-          <ParchmentCard
-            className={`px-4 py-3 ${selected === o.key ? 'border-gold' : ''}`}
-          >
-            <div className="flex items-baseline gap-2">
-              <span className="text-[15px] font-semibold text-text-primary">
-                {o.title}
-              </span>
-              <span className="font-label text-[11px] text-text-primary/45">
-                {o.sub}
-              </span>
-            </div>
-            {o.desc && (
-              <p className="mt-1 text-[12px] leading-relaxed text-text-secondary">
-                {o.desc}
-              </p>
-            )}
-          </ParchmentCard>
-        </button>
-      ))}
-    </div>
   );
 }
 
@@ -530,9 +801,9 @@ function SkillPicker({
             <span className={`text-[13px] ${on ? 'text-gold' : 'text-text-primary'}`}>
               {n}
             </span>
-            <span className="font-label text-[11px] text-text-primary/40">{en}</span>
+            <span className="font-label text-[11px] text-text-primary/70">{en}</span>
             {by && (
-              <span className="ml-auto text-[11px] text-text-secondary">（{by}）</span>
+              <span className="ml-auto text-[12px] text-text-secondary">（{by}）</span>
             )}
           </button>
         );
@@ -541,6 +812,11 @@ function SkillPicker({
   );
 }
 
+/**
+ * 法術選取。**每一項都可以點開看內容**——在幾十個只有名字的 chip 裡挑，
+ * 等於要使用者憑法術名猜效果。詳情走對話框而不是就地展開，避免清單在
+ * 展開時整個跳動。
+ */
 function SpellPicker({
   options,
   selected,
@@ -552,82 +828,231 @@ function SpellPicker({
   max: number;
   onToggle: (v: string[]) => void;
 }) {
+  const [detail, setDetail] = useState<CatalogSpell | null>(null);
   return (
-    <div className="flex flex-wrap gap-1.5">
-      {options.map((s) => {
-        const on = selected.includes(s.name);
-        const disabled = !on && selected.length >= max;
-        return (
-          <button
-            key={s.id}
-            type="button"
-            disabled={disabled}
-            onClick={() =>
-              onToggle(on ? selected.filter((x) => x !== s.name) : [...selected, s.name])
-            }
-            className={`min-h-11 rounded-chip border px-3 text-[12px] disabled:opacity-30 ${
-              on ? 'border-gold bg-gold/10 text-gold' : 'border-border-2 text-text-secondary'
-            }`}
-          >
-            {s.name}
-          </button>
-        );
-      })}
-    </div>
+    <>
+      <div className="grid gap-1.5 medium:grid-cols-2 expanded:grid-cols-3">
+        {options.map((s) => {
+          const on = selected.includes(s.name);
+          const disabled = !on && selected.length >= max;
+          return (
+            <div
+              key={s.id}
+              className={`flex items-center rounded-card border ${
+                on ? 'border-gold bg-gold/10' : 'border-border-2 bg-surface-1'
+              } ${disabled ? 'opacity-40' : ''}`}
+            >
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={() =>
+                  onToggle(
+                    on ? selected.filter((x) => x !== s.name) : [...selected, s.name],
+                  )
+                }
+                // items-center 而非 items-baseline：容器有 min-h-11，而
+                // baseline 會把整行推到交叉軸起點，多出來的高度全落在文字下方
+                // ——文字貼頂、ⓘ 偏低。中英文的基線對齊改由內層那一段負責。
+                className="flex min-h-11 min-w-0 flex-1 items-center gap-1.5 px-3 text-left"
+              >
+                <span className="flex min-w-0 flex-1 items-baseline gap-1.5">
+                  <span
+                    className={`truncate text-[13px] ${on ? 'text-gold' : 'text-text-primary'}`}
+                  >
+                    {s.name}
+                  </span>
+                  {s.eng_name && (
+                    <span className="font-label truncate text-[10px] text-text-secondary">
+                      {s.eng_name}
+                    </span>
+                  )}
+                </span>
+                {s.concentration && (
+                  <span className="shrink-0 text-[10px] text-text-secondary">
+                    專注
+                  </span>
+                )}
+              </button>
+              <button
+                type="button"
+                aria-label={`${s.name} 的說明`}
+                onClick={() => setDetail(s)}
+                className="flex size-11 shrink-0 items-center justify-center text-[13px] text-text-secondary hover:text-gold"
+              >
+                ⓘ
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      <EditorSheet
+        open={detail !== null}
+        title={detail?.name ?? ''}
+        closeLabel="關閉"
+        onClose={() => setDetail(null)}
+      >
+        {detail && (
+          <>
+            <div className="font-label -mt-2 text-[11px] text-text-secondary">
+              {detail.eng_name}
+            </div>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              <StatChip
+                label="環數"
+                value={detail.level === 0 ? '戲法' : `${detail.level} 環`}
+              />
+              {(detail.school || detail.school_name) && (
+                <StatChip
+                  label="學派"
+                  value={spellSchoolCn(detail.school, detail.school_name)}
+                />
+              )}
+              <StatChip
+                label="施法"
+                value={ftFormatCastingTime(detail.casting_time)}
+              />
+              <StatChip label="射程" value={ftFormatRange(detail.range)} />
+              {detail.concentration && <StatChip label="專注" value="需要" />}
+              {detail.ritual && <StatChip label="儀式" value="可" />}
+            </div>
+            <p className="mt-3 whitespace-pre-wrap text-[13px] leading-relaxed text-text-light">
+              {ftFlattenEntries(detail.entries) || '這個法術沒有說明文字。'}
+            </p>
+          </>
+        )}
+      </EditorSheet>
+    </>
   );
 }
 
 /** 確認頁顯示的是**實際會存下的角色**，不是另外算一次的預覽。 */
 function Confirm({ c }: { c: ReturnType<typeof buildCharacter> | null }) {
   if (!c) return <p className="text-[13px] text-danger">資料不完整，請回前面的步驟檢查。</p>;
+
+  const score = (a: string) =>
+    c.abilityScores[
+      (a === 'INT' ? 'int_' : a.toLowerCase()) as keyof typeof c.abilityScores
+    ];
+  const caster = c.spellcastingAbility !== '';
+
+  // 施法者在這裡看不到自己的法術 DC 與命中，就得建完再回頭查一次。
+  const stats: [string, string][] = [
+    ['生命值', `${c.maxHp}`],
+    ['護甲等級', `${c.ac}`],
+    ['先攻', fmtMod(c.initiative)],
+    ['熟練加值', fmtMod(c.proficiencyBonus)],
+    ['被動察覺', `${c.passivePerception}`],
+    ...(caster
+      ? ([
+          ['法術 DC', `${c.spellDc}`],
+          ['法術命中', fmtMod(c.spellAttack)],
+        ] as [string, string][])
+      : []),
+  ];
+
   return (
-    <div className="flex flex-col gap-2">
-      <ParchmentCard className="px-4 py-3">
-        <div className="text-[18px] font-bold text-gold">{c.name}</div>
-        <div className="mt-1 text-[13px] text-text-light">
-          {c.species} · {c.className} {c.level} 級 · {c.background}
-        </div>
+    // 六角圖擺左邊，與步驟四一致——同一張圖在流程裡跳邊會讓人要重新找它。
+    <div className="grid gap-3 expanded:grid-cols-[320px_minmax(0,1fr)]">
+      {/* self-start：卡片預設會被 grid 拉到與右欄等高，圖下方留一大塊空白。 */}
+      <ParchmentCard className="flex self-start justify-center px-4 py-3">
+        <AbilityHexChart
+          size={300}
+          scores={Object.fromEntries(
+            ABILITY_ORDER.map((a) => [a, score(a).score]),
+          )}
+        />
       </ParchmentCard>
-      <div className="grid grid-cols-3 gap-2">
-        {[
-          ['生命值', `${c.maxHp}`],
-          ['護甲等級', `${c.ac}`],
-          ['被動察覺', `${c.passivePerception}`],
-        ].map(([k, v]) => (
-          <ParchmentCard key={k} className="py-3">
-            <div className="flex flex-col items-center">
-              <span className="font-display text-[22px] font-bold text-gold">{v}</span>
-              <span className="mt-0.5 text-[10px] text-text-primary/55">{k}</span>
-            </div>
-          </ParchmentCard>
-        ))}
-      </div>
-      <ParchmentCard className="px-4 py-3">
-        <div className="grid grid-cols-3 gap-2">
-          {ABILITY_ORDER.map((a) => {
-            const s = c.abilityScores[
-              (a === 'INT' ? 'int_' : a.toLowerCase()) as keyof typeof c.abilityScores
-            ];
-            return (
-              <span key={a} className="flex items-baseline justify-between">
-                <span className="text-[12px] text-text-secondary">{ABILITY_LABEL[a]}</span>
-                <span className="text-[15px] font-bold text-gold">
-                  {s.score}
-                  <span className="ml-1 text-[11px] text-text-secondary">
-                    ({s.modifier >= 0 ? '+' : ''}{s.modifier})
+
+      <div className="flex flex-col gap-3">
+        <ParchmentCard className="px-4 py-3">
+          <div className="font-display text-[20px] font-bold text-gold">{c.name}</div>
+          <div className="mt-1 text-[13px] text-text-light">
+            {[c.species, `${c.className} ${c.level}`, c.background, c.alignment]
+              .filter(Boolean)
+              .join(' · ')}
+          </div>
+        </ParchmentCard>
+
+        <div className="grid grid-cols-3 gap-2 medium:grid-cols-4">
+          {stats.map(([k, v]) => (
+            <ParchmentCard key={k} className="py-3">
+              <div className="flex flex-col items-center">
+                <span className="font-display text-[22px] font-bold text-gold">{v}</span>
+                <span className="mt-0.5 text-center text-[12px] text-text-primary/70">
+                  {k}
+                </span>
+              </div>
+            </ParchmentCard>
+          ))}
+        </div>
+
+        <ParchmentCard className="px-4 py-3">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 medium:grid-cols-3">
+            {ABILITY_ORDER.map((a) => {
+              const s = score(a);
+              return (
+                <span key={a} className="flex items-baseline justify-between">
+                  <span className="text-[12px] text-text-secondary">
+                    {ABILITY_LABEL[a]}
+                  </span>
+                  <span className="text-[15px] font-bold text-gold">
+                    {s.score}
+                    <span className="ml-1 text-[12px] text-text-secondary">
+                      ({fmtMod(s.modifier)})
+                    </span>
                   </span>
                 </span>
-              </span>
-            );
-          })}
-        </div>
-      </ParchmentCard>
-      <ParchmentCard className="px-4 py-3">
-        <div className="text-[12px] text-text-secondary">熟練技能</div>
-        <div className="mt-1 text-[13px] text-text-light">
-          {c.skills.filter((s) => s.proficient).map((s) => s.name).join('、') || '無'}
-        </div>
-      </ParchmentCard>
+              );
+            })}
+          </div>
+        </ParchmentCard>
+
+        <ParchmentCard className="px-4 py-3">
+          <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
+            熟練技能
+          </div>
+          <div className="mt-1 text-[13px] leading-relaxed text-text-light">
+            {c.skills.filter((s) => s.proficient).map((s) => s.name).join('、') || '無'}
+          </div>
+          <div className="font-label mt-3 text-[10px] tracking-[1.5px] text-section-label">
+            豁免熟練
+          </div>
+          <div className="mt-1 text-[13px] text-text-light">
+            {ABILITY_ORDER.filter((a) => score(a).proficientSave)
+              .map((a) => ABILITY_LABEL[a])
+              .join('、') || '無'}
+          </div>
+        </ParchmentCard>
+
+        {/* 剛選完法術就看不到自己選了什麼，等於沒得核對。 */}
+        {(c.cantrips.length > 0 || c.spells.length > 0) && (
+          <ParchmentCard className="px-4 py-3">
+            {c.cantrips.length > 0 && (
+              <>
+                <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
+                  戲法
+                </div>
+                <div className="mt-1 text-[13px] text-text-light">
+                  {c.cantrips.map((s) => s.name).join('、')}
+                </div>
+              </>
+            )}
+            {c.spells.length > 0 && (
+              <>
+                <div className="font-label mt-3 text-[10px] tracking-[1.5px] text-section-label">
+                  一環法術（已準備）
+                </div>
+                <div className="mt-1 text-[13px] text-text-light">
+                  {c.spells.map((s) => s.name).join('、')}
+                </div>
+              </>
+            )}
+          </ParchmentCard>
+        )}
+      </div>
     </div>
   );
 }
+
+const fmtMod = (n: number) => `${n >= 0 ? '+' : ''}${n}`;

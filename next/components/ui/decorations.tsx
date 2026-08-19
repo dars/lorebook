@@ -103,14 +103,17 @@ export function InfoField({
   label,
   value,
   valueEn = '',
+  badge,
 }: {
   label: string;
   value: string;
   valueEn?: string;
+  /** 值後方的附加標示（如「自訂」）。 */
+  badge?: ReactNode;
 }) {
   return (
     <div>
-      <div className="font-label text-[9px] tracking-[1.5px] text-section-label">
+      <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
         {label}
       </div>
       <div className="mt-1">
@@ -118,10 +121,11 @@ export function InfoField({
           {value}
         </span>
         {valueEn && (
-          <span className="font-label ml-1.5 text-[11px] text-text-primary/45">
+          <span className="font-label ml-1.5 text-[11px] text-text-primary/70">
             {valueEn}
           </span>
         )}
+        {badge && <span className="ml-1.5">{badge}</span>}
       </div>
     </div>
   );

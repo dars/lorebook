@@ -1,102 +1,141 @@
+'use client';
+
 import { CollapsibleSection } from '@/components/ui/collapsible-section';
 import { ParchmentCard } from '@/components/ui/decorations';
 import { EditIcon } from '@/components/ui/editor-sheet';
 import type { Character } from '@/lib/domain/character';
-import { formatCp } from '@/lib/rules/currency';
+import { featureArmorViolation } from '@/lib/rules/ac';
+import { SpellCard } from '../spell-card';
+import { Treasury } from '../coins';
+import { CustomBadge } from '../custom-badge';
 
 /** 法術／物品／傳記三個分頁。版面語彙與其他分頁一致（區段標題＋卡片）。 */
 
 export function SpellsTab({ c }: { c: Character }) {
+  const prepared = RING_LEVELS.map((lv) => ({
+    lv,
+    spells: c.spells.filter((s) => s.level === lv),
+  })).filter((g) => g.spells.length > 0);
+
   return (
     <div className="px-4 pb-10">
       <CollapsibleSection en="SPELLCASTING" cn="施法" first>
-        <div className="flex gap-2">
-          {[
-            { v: `${c.spellDc}`, s: '法術 DC' },
-            { v: c.spellAttack >= 0 ? `+${c.spellAttack}` : `${c.spellAttack}`, s: '法術命中' },
-            { v: c.spellcastingAbility || '—', s: '施法屬性' },
-          ].map((x) => (
-            <ParchmentCard key={x.s} className="flex-1 py-3">
-              <div className="flex flex-col items-center">
-                <span className="font-display text-[22px] font-bold text-gold">
-                  {x.v}
-                </span>
-                <span className="mt-0.5 text-[10px] text-text-primary/55">
-                  {x.s}
-                </span>
-              </div>
-            </ParchmentCard>
-          ))}
-        </div>
+        <SpellcastingCard c={c} />
       </CollapsibleSection>
 
-      {c.spellSlots.length > 0 && (
-        <CollapsibleSection en="SLOTS" cn="法術位">
-          <ParchmentCard className="px-4 py-1">
-            {c.spellSlots.map((s, i) => (
-              <div
-                key={s.level}
-                className={`flex items-center justify-between py-2 ${i > 0 ? 'border-t border-border/40' : ''}`}
-              >
-                <span className="text-[13px] text-text-primary">
-                  {s.level} 環
-                </span>
-                <span className="text-[15px] font-semibold text-gold">
-                  {s.total - s.used}/{s.total}
-                </span>
-              </div>
+      {c.cantrips.length > 0 && (
+        <CollapsibleSection en="CANTRIPS" cn="戲法">
+          <div className="flex flex-col gap-2">
+            {c.cantrips.map((s, i) => (
+              <SpellCard key={`${s.name}-${i}`} spell={s} badge="戲" />
             ))}
-          </ParchmentCard>
+          </div>
         </CollapsibleSection>
       )}
 
-      <SpellGroup title="CANTRIPS" cn="戲法" spells={c.cantrips} />
-      <SpellGroup title="SPELLS" cn="法術" spells={c.spells} />
+      {/* 已備法術：2024 的施法者是「準備」而非「習得即可用」。
+          環數在區段**內部**用小膠囊分組，不是每一環各開一個可收合區段——
+          後者在高階施法者身上會變成九個標題疊在一起。 */}
+      {prepared.length > 0 && (
+        <CollapsibleSection en="SPELLBOOK" cn="已備法術">
+          {prepared.map(({ lv, spells }) => (
+            <div key={lv} className="mb-3">
+              <span className="mb-1.5 inline-flex items-baseline gap-1.5 rounded-chip border border-border-2 px-2 py-0.5">
+                <span className="text-[12px] text-text-primary">{lv} 環</span>
+                <span className="font-label text-[10px] text-text-secondary">
+                  {RING_EN[lv]}
+                </span>
+              </span>
+              <div className="flex flex-col gap-2">
+                {spells.map((s, i) => (
+                  <SpellCard key={`${s.name}-${i}`} spell={s} badge={`${lv}`} emphasize />
+                ))}
+              </div>
+            </div>
+          ))}
+        </CollapsibleSection>
+      )}
     </div>
   );
 }
 
-function SpellGroup({
-  title,
-  cn,
-  spells,
-}: {
-  title: string;
-  cn: string;
-  spells: Character['spells'];
-}) {
-  if (spells.length === 0) return null;
+/** 施法屬性的英文碼 → 中文名。卡片上大字顯示中文，英文碼退到副標。 */
+const ABILITY_CN: Record<string, string> = {
+  STR: '力量', DEX: '敏捷', CON: '體質',
+  INT: '智力', WIS: '感知', CHA: '魅力',
+};
+
+const RING_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const RING_EN: Record<number, string> = {
+  1: 'First Level', 2: 'Second Level', 3: 'Third Level',
+  4: 'Fourth Level', 5: 'Fifth Level', 6: 'Sixth Level',
+  7: 'Seventh Level', 8: 'Eighth Level', 9: 'Ninth Level',
+};
+
+/**
+ * 施法能力卡，對照 Flutter 端 spells_tab 的頂部卡。
+ *
+ * **一張整合卡而非三張並排的小卡**：施法屬性、豁免 DC、法術命中是同一組
+ * 互相關聯的數值（DC 與命中都由屬性推導），拆成三張獨立卡片會讓它們看起來
+ * 像三件不相干的事。下緣以細線隔出每日法術位上限。
+ */
+function SpellcastingCard({ c }: { c: Character }) {
+  const abilityCn = ABILITY_CN[c.spellcastingAbility] ?? c.spellcastingAbility;
+  const cols = [
+    {
+      en: 'ABILITY',
+      v: abilityCn || '—',
+      sub: c.spellcastingAbility ? `施法屬性 ${c.spellcastingAbility}` : '施法屬性',
+    },
+    { en: 'SAVE DC', v: `${c.spellDc}`, sub: '法術豁免' },
+    {
+      en: 'ATTACK',
+      v: c.spellAttack >= 0 ? `+${c.spellAttack}` : `${c.spellAttack}`,
+      sub: '法術命中',
+    },
+  ];
+
   return (
-    <CollapsibleSection en={title} cn={cn}>
-      <ParchmentCard className="px-4">
-        {spells.map((s, i) => (
-          <details
-            key={`${s.name}-${i}`}
-            className={`py-2 ${i > 0 ? 'border-t border-border/40' : ''}`}
-          >
-            <summary className="cursor-pointer">
-              <span className="text-[14px] text-text-primary">{s.name}</span>
-              <span className="font-label ml-1.5 text-[10px] text-text-primary/40">
-                {s.nameEn}
+    <ParchmentCard className="px-4 py-3">
+      <div className="flex items-stretch">
+        {cols.map((x, i) => (
+          <div key={x.en} className="flex flex-1 items-center">
+            {i > 0 && <span className="mr-3 h-10 w-px bg-border/40" />}
+            <span className="flex flex-1 flex-col items-center">
+              <span className="font-label text-[10px] tracking-[1.5px] text-section-label">
+                {x.en}
               </span>
-              {s.concentration && (
-                <span className="ml-1.5 text-[10px] text-gold">專注</span>
-              )}
-              {s.damage && (
-                <span className="ml-1.5 text-[12px] text-text-secondary">
-                  {s.damage} {s.damageType}
-                </span>
-              )}
-            </summary>
-            {s.description && (
-              <p className="mt-2 whitespace-pre-wrap text-[13px] leading-relaxed text-text-light">
-                {s.description}
-              </p>
-            )}
-          </details>
+              <span className="font-display mt-0.5 text-[24px] font-bold leading-none text-gold">
+                {x.v}
+              </span>
+              <span className="mt-1 text-[12px] text-text-primary/70">{x.sub}</span>
+            </span>
+          </div>
         ))}
-      </ParchmentCard>
-    </CollapsibleSection>
+      </div>
+
+      {c.spellSlots.length > 0 && (
+        <>
+          <div className="my-3 h-px bg-border/40" />
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <span className="text-[13px] text-text-secondary">每日法術位上限</span>
+            <span className="flex flex-wrap items-baseline gap-3">
+              {c.spellSlots.map((s) => (
+                <span key={s.level} className="text-[13px] tabular-nums text-text-primary">
+                  {s.level} 環
+                  <span className="font-display ml-1 font-bold text-gold">×{s.total}</span>
+                </span>
+              ))}
+            </span>
+          </div>
+          {/* 上限與當下剩餘是兩回事，說清楚剩餘在哪裡看，免得以為這裡的數字
+              不會變。 */}
+          <p className="mt-1 text-[12px] text-text-secondary">
+            即時消耗於「行動」頁追蹤
+          </p>
+        </>
+      )}
+    </ParchmentCard>
   );
 }
 
@@ -106,127 +145,61 @@ export function InventoryTab({
   onAddItem,
   onToggleEquipped,
   onUseConsumable,
-  onRemoveItem,
+  onAddCustomItem,
+  onEditItem,
 }: {
   c: Character;
   onEditCurrency?: () => void;
   onAddItem?: () => void;
   onToggleEquipped?: (i: number) => void;
   onUseConsumable?: (i: number) => void;
-  onRemoveItem?: (i: number) => void;
+  onAddCustomItem?: () => void;
+  onEditItem?: (i: number) => void;
 }) {
-  const coins = (['pp', 'gp', 'ep', 'sp', 'cp'] as const).filter(
-    (k) => c.currency[k] > 0,
-  );
-  const totalCp =
-    c.currency.cp +
-    c.currency.sp * 10 +
-    c.currency.ep * 50 +
-    c.currency.gp * 100 +
-    c.currency.pp * 1000;
-
   return (
     <div className="px-4 pb-10">
-      <CollapsibleSection
-        en="CURRENCY"
-        cn="財富"
-        first
-        trailing={onEditCurrency && <EditIcon onClick={onEditCurrency} label="編輯財富" />}
-      >
-        <ParchmentCard className="px-4 py-3">
-          {coins.length === 0 ? (
-            <p className="text-[13px] text-text-secondary">身無分文。</p>
-          ) : (
-            <div className="flex flex-wrap items-baseline gap-3">
-              {coins.map((k) => (
-                <span key={k} className="text-[15px] text-text-primary">
-                  <span className="font-display font-bold text-gold">
-                    {c.currency[k]}
-                  </span>
-                  <span className="font-label ml-1 text-[11px] text-text-primary/50">
-                    {k}
-                  </span>
-                </span>
-              ))}
-              <span className="ml-auto text-[11px] text-text-secondary">
-                合計 {formatCp(totalCp)}
-              </span>
-            </div>
-          )}
+      {/* TREASURY：五種幣別一律全列（含 0），點卡片開資產計算機。
+          唯讀（分享檢視）時不傳 onTap——金額仍顯示，但不能編輯。 */}
+      <CollapsibleSection en="TREASURY" cn="財富" first>
+        <ParchmentCard className="px-0 py-0">
+          <Treasury currency={c.currency} onTap={onEditCurrency} />
         </ParchmentCard>
       </CollapsibleSection>
 
       <CollapsibleSection
         en="EQUIPMENT"
         cn="裝備"
-        trailing={onAddItem && <EditIcon onClick={onAddItem} label="取得物品" />}
+        trailing={
+          onAddItem && (
+            <span className="flex items-center gap-2">
+              {onAddCustomItem && (
+                <button
+                  type="button"
+                  onClick={onAddCustomItem}
+                  className="min-h-9 text-[12px] text-gold"
+                >
+                  ＋ 自訂
+                </button>
+              )}
+              <EditIcon onClick={onAddItem} label="取得物品" />
+            </span>
+          )
+        }
       >
         {c.equipment.length === 0 ? (
-          <p className="py-3 text-[13px] text-text-secondary">沒有物品。</p>
+          // 空狀態要指出下一步在哪。唯讀（分享檢視）沒有入口可指，就只陳述事實。
+          <p className="py-3 text-[13px] leading-relaxed text-text-secondary">
+            {onAddItem
+              ? '還沒有任何物品。點右上角的取得物品自目錄挑選，或用「＋ 自訂」新增自製品項。'
+              : '沒有物品。'}
+          </p>
         ) : (
-          <ParchmentCard className="px-4">
-            {c.equipment.map((e, i) => (
-              <div
-                key={`${e.name}-${i}`}
-                className={`flex items-baseline justify-between gap-3 py-2 ${i > 0 ? 'border-t border-border/40' : ''}`}
-              >
-                <span>
-                  {e.equipped && <span className="mr-1 text-gold">▸</span>}
-                  <span className="text-[14px] text-text-primary">{e.name}</span>
-                  {e.quantity > 1 && (
-                    <span className="ml-1 text-[12px] text-text-secondary">
-                      ×{e.quantity}
-                    </span>
-                  )}
-                  {e.description && (
-                    <span className="block text-[12px] text-text-secondary">
-                      {e.description}
-                    </span>
-                  )}
-                </span>
-                <span className="flex shrink-0 items-center gap-1">
-                  {e.quest && (
-                    <span className="rounded-chip border border-border-2 px-2 py-0.5 text-[10px] text-text-secondary">
-                      任務
-                    </span>
-                  )}
-                  {onToggleEquipped &&
-                    (e.itemType === 'weapon' || e.itemType === 'armor') && (
-                      <button
-                        type="button"
-                        onClick={() => onToggleEquipped(i)}
-                        className={`min-h-9 rounded-chip border px-2 text-[11px] ${
-                          e.equipped
-                            ? 'border-gold text-gold'
-                            : 'border-border-2 text-text-secondary'
-                        }`}
-                      >
-                        {e.equipped ? '已裝備' : '裝備'}
-                      </button>
-                    )}
-                  {onUseConsumable && e.itemType === 'consumable' && (
-                    <button
-                      type="button"
-                      onClick={() => onUseConsumable(i)}
-                      className="min-h-9 rounded-chip border border-border-2 px-2 text-[11px] text-text-secondary"
-                    >
-                      使用
-                    </button>
-                  )}
-                  {onRemoveItem && (
-                    <button
-                      type="button"
-                      onClick={() => onRemoveItem(i)}
-                      aria-label={`移除 ${e.name}`}
-                      className="min-h-9 px-2 text-[11px] text-text-secondary"
-                    >
-                      ×
-                    </button>
-                  )}
-                </span>
-              </div>
-            ))}
-          </ParchmentCard>
+          <EquipmentGroups
+            equipment={c.equipment}
+            onToggleEquipped={onToggleEquipped}
+            onUseConsumable={onUseConsumable}
+            onEditItem={onEditItem}
+          />
         )}
       </CollapsibleSection>
     </div>
@@ -236,20 +209,34 @@ export function InventoryTab({
 export function BiographyTab({
   c,
   onEditProficiency,
+  onEditAbout,
+  onEditPersonality,
 }: {
   c: Character;
   onEditProficiency?: () => void;
+  /** 其人其事（背景故事＋性格標籤）。與性格分開，兩個區塊各開各的面板。 */
+  onEditAbout?: () => void;
+  onEditPersonality?: () => void;
 }) {
   return (
     <div className="px-4 pb-10">
-      <CollapsibleSection en="ABOUT" cn="其人其事" first>
+      <CollapsibleSection
+        en="ABOUT"
+        cn="其人其事"
+        first
+        trailing={
+          onEditAbout && <EditIcon onClick={onEditAbout} label="編輯其人其事" />
+        }
+      >
         <ParchmentCard className="px-4 py-3">
           {c.backstory ? (
             <p className="whitespace-pre-wrap text-[14px] leading-relaxed text-text-light">
               「{c.backstory}」
             </p>
           ) : (
-            <p className="text-[13px] text-text-secondary">尚未描述。</p>
+            <p className="text-[13px] text-text-secondary">
+              尚未撰寫背景故事{onEditAbout ? '，點右上角編輯' : ''}。
+            </p>
           )}
           {c.personalityTags.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
@@ -266,8 +253,26 @@ export function BiographyTab({
         </ParchmentCard>
       </CollapsibleSection>
 
-      <CollapsibleSection en="PERSONALITY" cn="性格">
-        <ParchmentCard className="px-4">
+      <CollapsibleSection
+        en="PERSONALITY"
+        cn="性格"
+        trailing={
+          onEditPersonality && (
+            <EditIcon onClick={onEditPersonality} label="編輯性格" />
+          )
+        }
+      >
+        <ParchmentCard className="px-4 py-1">
+          {![
+            c.personality.traits,
+            c.personality.ideals,
+            c.personality.bonds,
+            c.personality.flaws,
+          ].some(Boolean) && (
+            <p className="py-2 text-[13px] text-text-secondary">
+              尚未描述性格{onEditPersonality ? '，點右上角編輯' : ''}。
+            </p>
+          )}
           {(
             [
               ['特質', c.personality.traits],
@@ -293,21 +298,34 @@ export function BiographyTab({
 
       <CollapsibleSection en="FEATURES & TRAITS" cn="特長">
         <ParchmentCard className="px-4">
-          {c.features.map((f, i) => (
+          {c.features.map((f, i) => {
+            // 當下的裝備讓這條特性失效時要講出來——不然使用者會照著它算 AC。
+            const violation = featureArmorViolation(c, f);
+            return (
             <details
               key={`${f.name}-${i}`}
               className={`py-2 ${i > 0 ? 'border-t border-border/40' : ''}`}
             >
               <summary className="cursor-pointer">
-                <span className="text-[14px] text-text-primary">{f.name}</span>
+                <span
+                  className={`text-[14px] ${violation ? 'text-text-secondary line-through' : 'text-text-primary'}`}
+                >
+                  {f.name}
+                </span>
                 {f.nameEn && (
-                  <span className="font-label ml-1.5 text-[10px] text-text-primary/40">
+                  <span className="font-label ml-1.5 text-[10px] text-text-primary/70">
                     {f.nameEn}
                   </span>
                 )}
                 {f.source && (
-                  <span className="ml-1.5 text-[10px] text-section-label">
+                  <span className="ml-1.5 text-[12px] text-section-label">
                     {f.source}
+                  </span>
+                )}
+                {f.isCustom && <CustomBadge className="ml-1.5" />}
+                {violation && (
+                  <span className="ml-1.5 rounded-chip border border-danger/60 bg-danger/10 px-1.5 py-0.5 text-[10px] font-semibold text-danger">
+                    {violation}
                   </span>
                 )}
               </summary>
@@ -321,7 +339,8 @@ export function BiographyTab({
                 </p>
               )}
             </details>
-          ))}
+            );
+          })}
         </ParchmentCard>
       </CollapsibleSection>
 
@@ -336,8 +355,8 @@ export function BiographyTab({
       >
         <ParchmentCard className="px-4 py-1">
           {c.languages.length === 0 && c.toolProficiencies.length === 0 ? (
-            <p className="py-2 text-[13px] text-text-secondary">
-              尚未有語言或工具熟練。
+            <p className="py-2 text-[13px] leading-relaxed text-text-secondary">
+              尚未有語言或工具熟練{onEditProficiency ? '，點右上角編輯新增' : ''}。
             </p>
           ) : (
             <>
@@ -363,5 +382,223 @@ function ProfRow({ label, items }: { label: string; items: string[] }) {
       </span>
       <span className="text-[13px] text-text-light">{items.join(' · ')}</span>
     </div>
+  );
+}
+
+/**
+ * 裝備清單，依「已裝備／攜帶中」分組，對照 Flutter 的 `inventory_tab`。
+ *
+ * **一列只出現一個控制項。** 前一版把裝備／使用／編輯／刪除四顆都塞進列裡，
+ * 擠到手機上「刪除」貼著「編輯」；我改成「點列展開才出現四顆按鈕」，
+ * 結果把原版一眼可辨的東西（類型圖示、副標、分組）也一起藏掉了——那是把
+ * 症狀當病因。原版不擠的真正原因是它**只顯示當下相關的那一個**：
+ *
+ * - 武器／護甲 → 裝備切換
+ * - 消耗品 → 使用
+ * - 其餘 → 沒有控制項
+ *
+ * 編輯走「點整列」，刪除放在編輯面板裡（最不可逆的動作不該在列上待命）。
+ */
+function EquipmentGroups({
+  equipment,
+  onToggleEquipped,
+  onUseConsumable,
+  onEditItem,
+}: {
+  equipment: Character['equipment'];
+  onToggleEquipped?: (i: number) => void;
+  onUseConsumable?: (i: number) => void;
+  onEditItem?: (i: number) => void;
+}) {
+  // 保留原索引：所有回呼都以物品欄的索引為準。
+  const indexed = equipment.map((item, i) => ({ item, i }));
+  const groups = [
+    { cn: '已裝備', en: 'EQUIPPED', icon: 'shield' as const, rows: indexed.filter((x) => x.item.equipped) },
+    { cn: '攜帶中', en: 'CARRIED', icon: 'pack' as const, rows: indexed.filter((x) => !x.item.equipped) },
+  ].filter((g) => g.rows.length > 0);
+
+  return (
+    <div className="flex flex-col gap-3">
+      {groups.map((g) => (
+        <div key={g.en}>
+          {/* 只有一組時仍出標題——「這些都還沒穿上」本身就是資訊。 */}
+          <div className="mb-1.5 flex items-center gap-1.5">
+            <GroupIcon name={g.icon} />
+            <span className="text-[12px] text-text-primary">{g.cn}</span>
+            <span className="font-label text-[10px] tracking-[1px] text-text-secondary">
+              {g.en}
+            </span>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            {g.rows.map(({ item, i }) => (
+              <EquipmentRow
+                key={`${item.name}-${i}`}
+                item={item}
+                onEdit={onEditItem && (() => onEditItem(i))}
+                onToggleEquipped={
+                  onToggleEquipped &&
+                  (item.itemType === 'weapon' || item.itemType === 'armor')
+                    ? () => onToggleEquipped(i)
+                    : undefined
+                }
+                onUse={
+                  onUseConsumable && item.itemType === 'consumable'
+                    ? () => onUseConsumable(i)
+                    : undefined
+                }
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EquipmentRow({
+  item,
+  onToggleEquipped,
+  onUse,
+  onEdit,
+}: {
+  item: Character['equipment'][number];
+  onToggleEquipped?: () => void;
+  onUse?: () => void;
+  onEdit?: () => void;
+}) {
+  // 副標：優先用物品自帶的顯示字串，沒有就由機制欄位湊一句。
+  // 「一把劍」與「一把 1d8 劈砍的劍」在跑團中不是同一個資訊量。
+  const subtitle =
+    item.type ||
+    [
+      ITEM_TYPE_CN[item.itemType],
+      item.damage && `${item.damage}${item.damageType ? ` ${item.damageType}` : ''}`,
+      item.acBase > 0 && `AC ${item.acBase}`,
+    ]
+      .filter(Boolean)
+      .join('・');
+
+  const body = (
+    <>
+      <ItemIcon type={item.itemType} />
+      <span className="min-w-0 flex-1 text-left">
+        <span className="flex items-baseline gap-1.5">
+          <span className="truncate text-[14px] text-text-primary">{item.name}</span>
+          {item.quantity > 1 && (
+            <span className="shrink-0 text-[12px] tabular-nums text-text-secondary">
+              ×{item.quantity}
+            </span>
+          )}
+          {item.quest && (
+            <span className="shrink-0 rounded-chip border border-border-2 px-1.5 text-[10px] text-text-secondary">
+              任務
+            </span>
+          )}
+        </span>
+        {item.nameEn && (
+          <span className="font-label block truncate text-[11px] text-text-primary/70">
+            {item.nameEn}
+          </span>
+        )}
+        {subtitle && (
+          <span className="block truncate text-[12px] text-text-secondary">
+            {subtitle}
+          </span>
+        )}
+      </span>
+    </>
+  );
+
+  return (
+    <div className="flex items-center gap-3 rounded-[10px] border border-border bg-surface-1 px-3 py-2.5">
+      {/* 點整列＝編輯。控制項是**同層的兄弟節點**而非巢狀——
+          button 裡不能再放 button，那是無效的 HTML 也會吃掉點擊。 */}
+      {onEdit ? (
+        <button
+          type="button"
+          onClick={onEdit}
+          aria-label={`編輯 ${item.name}`}
+          className="flex min-w-0 flex-1 items-center gap-3"
+        >
+          {body}
+        </button>
+      ) : (
+        <div className="flex min-w-0 flex-1 items-center gap-3">{body}</div>
+      )}
+
+      {onToggleEquipped && (
+        // 對照 Flutter：**20px 的 radio 圖示**，不是帶外框的按鈕。
+        // 外框會讓它在列上比名稱還搶眼——它只是狀態指示，不是主要動作。
+        // 視覺 20px、可點區以偽元素補到 44px。
+        <button
+          type="button"
+          onClick={onToggleEquipped}
+          aria-pressed={item.equipped}
+          aria-label={item.equipped ? `卸下 ${item.name}` : `裝備 ${item.name}`}
+          className="relative shrink-0 before:absolute before:-inset-3 before:content-['']"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            className={`size-5 ${item.equipped ? 'fill-gold' : 'fill-text-secondary'}`}
+            aria-hidden
+          >
+            {item.equipped ? (
+              <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10m0-5a10 10 0 1 0 0 20 10 10 0 0 0 0-20m0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16" />
+            ) : (
+              <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16" />
+            )}
+          </svg>
+        </button>
+      )}
+
+      {onUse && (
+        <button
+          type="button"
+          onClick={onUse}
+          className="min-h-9 shrink-0 rounded-chip border border-border-2 px-3 text-[12px] text-text-primary hover:border-gold/60"
+        >
+          使用
+        </button>
+      )}
+    </div>
+  );
+}
+
+const ITEM_TYPE_CN: Record<string, string> = {
+  weapon: '武器',
+  armor: '護甲',
+  gear: '裝備',
+  consumable: '消耗品',
+};
+
+/** 物品類型圖示——一眼分辨劍／甲／雜物／藥水，比讀文字快。 */
+function ItemIcon({ type }: { type: string }) {
+  const paths: Record<string, string> = {
+    weapon: 'M6.9 20.6 3.4 17l9.9-9.9 3.5 3.5zM14.7 5.6 18.4 2 22 5.6l-3.6 3.7zM2 22l2-4.4L6.4 20z',
+    armor: 'M12 2 4 5v6c0 4.5 3.4 8.7 8 11 4.6-2.3 8-6.5 8-11V5zm0 2.2 6 2.2v4.6c0 3.4-2.5 6.8-6 8.8-3.5-2-6-5.4-6-8.8V6.4z',
+    consumable:
+      'M9 2v2h1v3.6L5.5 16A3 3 0 0 0 8.2 20.4h7.6A3 3 0 0 0 18.5 16L14 7.6V4h1V2zm3 2h0v4.1l1.2 2.4h-2.4L12 8.1zm-3.3 9h6.6l1.9 3.6a1 1 0 0 1-.9 1.5H8.2a1 1 0 0 1-.9-1.5z',
+    gear: 'M4 6h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1m1 2v10h14V8zm3-5h8v2H8z',
+  };
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="size-5 shrink-0 fill-text-secondary"
+      aria-hidden
+    >
+      <path d={paths[type] ?? paths.gear} />
+    </svg>
+  );
+}
+
+function GroupIcon({ name }: { name: 'shield' | 'pack' }) {
+  const d =
+    name === 'shield'
+      ? 'M12 2 4 5v6c0 4.5 3.4 8.7 8 11 4.6-2.3 8-6.5 8-11V5z'
+      : 'M9 2h6a2 2 0 0 1 2 2v2h3a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h3V4a2 2 0 0 1 2-2m0 4h6V4H9z';
+  return (
+    <svg viewBox="0 0 24 24" className="size-3.5 shrink-0 fill-section-label" aria-hidden>
+      <path d={d} />
+    </svg>
   );
 }

@@ -1,3 +1,5 @@
+import { cache } from 'react';
+
 import { Character, parseCharacter } from '@/lib/domain/character';
 import { createClient } from '@/lib/supabase/server';
 
@@ -34,7 +36,14 @@ export async function fetchMyCharacters(): Promise<ListResult> {
   return { characters, error: null };
 }
 
-export async function fetchMyCharacter(
+/**
+ * 以 `cache()` 包起來：`app/main/layout.tsx` 要角色資料畫頁首，其下的每個
+ * page 也要同一份。沒有記憶化的話，每切一次分頁就對同一列查兩遍。
+ *
+ * 只在同一個請求內共用，因此不會有「改完資料還讀到舊值」的問題——
+ * 寫入走 Server Action，那是另一個請求。
+ */
+export const fetchMyCharacter = cache(async function fetchMyCharacter(
   id: string,
 ): Promise<{ character: Character | null; error: string | null }> {
   const supabase = await createClient();
@@ -53,4 +62,4 @@ export async function fetchMyCharacter(
   } catch {
     return { character: null, error: '這張角色卡的資料無法解析' };
   }
-}
+});

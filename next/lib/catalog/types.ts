@@ -53,7 +53,12 @@ export const CatalogItem = z.object({
   armor_category: z.string().nullish().transform((v) => v ?? null),
   ac_base: z.number().int().nullish().transform((v) => v ?? null),
   // 陣列而非字串（實查 v_items：['array','null']）——一件武器可有多個精通。
-  mastery: z.array(z.string()).nullish().transform((v) => v ?? []),
+  // 上游值帶書源後綴（`Sap|XPHB`），在這裡就砍掉：留著會讓所有以精通名查表的
+  // 地方都查不到（譯名、效果說明），而且症狀是「安靜地少一張卡」不會報錯。
+  mastery: z
+    .array(z.string())
+    .nullish()
+    .transform((v) => (v ?? []).map((m) => m.split('|')[0])),
   entries: z.array(z.unknown()).nullish().transform((v) => v ?? []),
 });
 

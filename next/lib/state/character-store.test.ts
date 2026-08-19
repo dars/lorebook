@@ -1,7 +1,19 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { parseCharacter } from '@/lib/domain/character';
+import { type Character, parseCharacter } from '@/lib/domain/character';
 import { characterActions, useCharacterStore } from './character-store';
+
+/**
+ * 測試用的載入：先 clear 再 load。
+ *
+ * `load` 會保護「同一張卡且有未推送變更」的本機狀態（切分頁不該還原編輯），
+ * 所以測試之間若不先清空，第二次以後的 load 都會被略過、狀態互相污染。
+ */
+const loadFresh = (c: Character) => {
+  const store = useCharacterStore.getState();
+  store.clear();
+  store.load(c);
+};
 
 const base = () =>
   parseCharacter({
@@ -21,7 +33,9 @@ const base = () =>
   });
 
 describe('角色編輯動作', () => {
-  beforeEach(() => useCharacterStore.getState().load(base()));
+  // 先 clear 再 load：`load` 現在會保護「同一張卡且有未推送變更」的本機狀態，
+  // 直接 load 同一個 id 會被略過，測試之間就會互相污染。
+  beforeEach(() => loadFresh(base()));
 
   const c = () => useCharacterStore.getState().character!;
 
@@ -83,7 +97,7 @@ describe('角色編輯動作', () => {
 
 describe('休息', () => {
   beforeEach(() => {
-    useCharacterStore.getState().load({
+    loadFresh({
       ...base(),
       level: 6,
       currentHp: 5,
@@ -118,7 +132,7 @@ describe('休息', () => {
   });
 
   it('生命骰用完就不再減——不擲骰、不自動改 HP', () => {
-    useCharacterStore.getState().load({ ...base(), level: 2, hitDiceUsed: 2 });
+    loadFresh({ ...base(), level: 2, hitDiceUsed: 2 });
     const hp = c().currentHp;
     characterActions.useHitDie();
     expect(c().hitDiceUsed).toBe(2);
@@ -135,7 +149,7 @@ describe('裝備', () => {
   };
 
   beforeEach(() => {
-    useCharacterStore.getState().load({
+    loadFresh({
       ...base(),
       mageArmorActive: true,
       equipment: [
@@ -179,5 +193,35 @@ describe('裝備', () => {
     characterActions.useConsumable(i);
     const item = c().equipment.find((e) => e.name === '任務信物');
     expect(item?.quantity).toBe(0);
+  });
+});
+
+describe('載入不覆蓋未推送的變更', () => {
+  it('同一張卡且有未推送變更時，load 保留本機版本', () => {
+    // 切分頁會讓 DecisionView / CharacterSheetLive 卸載重掛並再 load 一次
+    // initial。沒有這道保護，剛卸下的裝備、剛扣的血會在切分頁時被還原。
+    loadFresh(base());
+    characterActions.adjustHp(-5);
+    const local = useCharacterStore.getState().character!.currentHp;
+
+    useCharacterStore.getState().load(base());
+    expect(useCharacterStore.getState().character!.currentHp).toBe(local);
+  });
+
+  it('推送成功後（dirty 清掉）就會吃新的伺服器資料', () => {
+    loadFresh(base());
+    characterActions.adjustHp(-5);
+    useCharacterStore.getState().markSynced();
+
+    useCharacterStore.getState().load({ ...base(), currentHp: 17 });
+    expect(useCharacterStore.getState().character!.currentHp).toBe(17);
+  });
+
+  it('換一張卡一律載入，不受 dirty 影響', () => {
+    loadFresh(base());
+    characterActions.adjustHp(-5);
+
+    useCharacterStore.getState().load({ ...base(), id: 'c2', name: '另一隻' });
+    expect(useCharacterStore.getState().character!.name).toBe('另一隻');
   });
 });

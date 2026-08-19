@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import type { Character } from '@/lib/domain/character';
@@ -22,4 +23,28 @@ export async function updateCharacter(
 
   if (error) return { error: error.message };
   redirect('/main/character');
+}
+
+/**
+ * 刪除角色：雲端軟刪除（`deleted_at`），成功才自清單消失。
+ *
+ * 軟刪除而非硬刪：多裝置下硬刪會被其他裝置的同步「復活」，tombstone 不會。
+ * **一律帶 user_id 條件**——RLS 是最後一道防線，不是唯一一道。
+ */
+export async function deleteCharacter(id: string): Promise<{ error: string | null }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: '需要登入' };
+
+  const { error } = await supabase
+    .from('user_characters')
+    .update({ deleted_at: new Date().toISOString() })
+    .eq('user_id', user.id)
+    .eq('id', id);
+
+  if (error) return { error: error.message };
+  revalidatePath('/character-select');
+  return { error: null };
 }

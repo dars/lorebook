@@ -11,7 +11,7 @@ export default async function LoginPage({
   const { error } = await searchParams;
 
   return (
-    <main className="flex min-h-full flex-1 items-center justify-center p-4">
+    <main id="main-content" className="flex min-h-full flex-1 items-center justify-center p-4">
       <div className="w-full max-w-sm rounded-card border border-border bg-surface-1 p-6">
         <h1 className="font-display text-title text-gold">Lorebook</h1>
         <p className="mt-2 text-small text-text-secondary">

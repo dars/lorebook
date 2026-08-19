@@ -63,6 +63,8 @@ export const BackgroundOption = z.object({
   originFeatCustom: z.boolean(),
   originFeatDescription: z.string(),
   description: z.string(),
+  /** 這個選項本身是不是使用者自訂的背景。內建資料無此欄位，預設 false。 */
+  isCustom: z.boolean().default(false),
 });
 
 const SkillDef = z.object({
@@ -97,3 +99,15 @@ export type BackgroundOption = z.infer<typeof BackgroundOption>;
 export type SkillDef = z.infer<typeof SkillDef>;
 
 export const isCaster = (c: ClassOption) => c.spellAbility !== '';
+
+/**
+ * 能力代碼 → 中文。集中在這裡是因為它原本在建角精靈、能力值步驟、六角圖
+ * 各抄了一份——同一個對照表散成三份，改譯名時漏掉哪一份都不會有編譯錯誤。
+ */
+export const ABILITY_LABEL: Record<string, string> = {
+  STR: '力量', DEX: '敏捷', CON: '體質',
+  INT: '智力', WIS: '感知', CHA: '魅力',
+};
+
+export const abilityLabels = (codes: string[]) =>
+  codes.map((c) => ABILITY_LABEL[c] ?? c).join('/');

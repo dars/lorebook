@@ -25,6 +25,51 @@ export const wieldingShield = (c: Character) =>
     (e) => e.equipped && e.itemType === 'armor' && e.armorCategory === 'shield',
   );
 
+export const wearingHeavyArmor = (c: Character) =>
+  c.equipment.some(
+    (e) => e.equipped && e.itemType === 'armor' && e.armorCategory === 'heavy',
+  );
+
+/** 角色是否已知法師護甲——決定行動頁的開關要不要出現。 */
+export const knowsMageArmor = (c: Character) =>
+  c.spells.some((s) => s.nameEn === 'Mage Armor');
+
+/**
+ * SRD 5.2 中帶「無甲／非重甲」條件的職業特性對照，移植自 Flutter 端的
+ * `featureArmorViolation`。條件不滿足時回傳提示文字，滿足回傳 null。
+ *
+ * 刻意是**固定清單**而非通用條件引擎：SRD 範圍內就這幾條，寫成引擎要先發明
+ * 一套條件語法，而那套語法沒有第二個使用者。
+ *
+ * 沒有這個提示的後果不是「少個標示」——武僧穿上鎧甲後清單仍原樣列著
+ * 「無甲防禦」，使用者會照著它算 AC。
+ */
+export function featureArmorViolation(
+  c: Character,
+  f: { nameEn: string },
+): string | null {
+  const armored = wearingArmor(c);
+  const shield = wieldingShield(c);
+  switch (f.nameEn) {
+    case 'Unarmored Defense':
+      // 野蠻人持盾仍有效，武僧不行——兩者的差別是這裡最容易漏掉的一條。
+      if (c.classNameEn === 'Monk') {
+        if (armored || shield) return armored ? '著甲中失效' : '持盾中失效';
+      } else if (armored) {
+        return '著甲中失效';
+      }
+      return null;
+    case 'Martial Arts':
+    case 'Unarmored Movement':
+      if (armored || shield) return armored ? '著甲中失效' : '持盾中失效';
+      return null;
+    case 'Fast Movement':
+      return wearingHeavyArmor(c) ? '著重甲中失效' : null;
+    default:
+      return null;
+  }
+}
+
 /** 已裝備的身體護甲（不含盾牌）。 */
 export function equippedBodyArmor(c: Character): Equipment | undefined {
   return c.equipment.find(

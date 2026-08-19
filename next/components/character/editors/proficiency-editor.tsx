@@ -81,7 +81,7 @@ export function ProficiencyEditor({
         ) : (
           [...grouped.entries()].map(([sub, items]) => (
             <div key={sub}>
-              <div className="mb-1 mt-1.5 text-[11px] text-gold-dim">{sub}</div>
+              <div className="mb-1 mt-1.5 text-[12px] text-gold-dim">{sub}</div>
               <Candidates
                 items={items
                   .map((i) => i.name)
@@ -172,6 +172,9 @@ function FreeText({
   return (
     <div className="mt-2 flex gap-2">
       <input
+        aria-label={placeholder}
+        autoComplete="off"
+        spellCheck={false}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={(e) => {
