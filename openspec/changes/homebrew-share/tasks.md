@@ -48,11 +48,17 @@
 
 ## 6. 我的資料庫（`/library`）
 
-- [ ] 6.1 `app/library/page.tsx`：SSR 取回所有型別的自訂內容
-- [ ] 6.2 `components/homebrew/library.tsx`：型別分區塊，各區塊沿用既有 manager 的清單與 `EditorSheet`
-- [ ] 6.3 `app/custom-backgrounds/page.tsx`、`app/custom-subclasses/page.tsx` 改為導向 `/library`
-- [ ] 6.4 `app/main/system/page.tsx`：兩條自訂連結收斂為「我的資料庫」
-- [ ] 6.5 空狀態：尚無任何自創內容時說明可自建或收藏他人分享
+> **已完成（2026-08-20）。** 兩處與本節原文不同：UI 名稱定為**「收藏紀錄」**
+> 而非「我的資料庫」（「資料庫」在這個 App 裡已被 SRD 內容庫佔用），路由
+> `/library` 不變；型別區塊不另建 `components/homebrew/library.tsx`，改為讓
+> 既有的 `BackgroundManager` / `SubclassManager` 多一個 `embedded` 模式，
+> 由 page 直接排列——包一層只為了轉呼叫同兩個元件沒有意義。
+
+- [x] 6.1 `app/library/page.tsx`：SSR 取回所有型別的自訂內容
+- [x] 6.2 ~~`components/homebrew/library.tsx`~~ → 兩個 manager 的 `embedded` 模式
+- [x] 6.3 `app/custom-backgrounds/page.tsx`、`app/custom-subclasses/page.tsx` 改為導向 `/library`
+- [x] 6.4 `app/main/system/page.tsx`：兩條自訂連結收斂為「收藏紀錄」
+- [x] 6.5 空狀態：尚無任何自創內容時說明可自建或收藏他人分享
 
 ## 7. 分享入口、來源標示、更新副本
 
