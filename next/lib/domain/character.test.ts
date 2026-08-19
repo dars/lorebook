@@ -64,3 +64,27 @@ describe('缺欄位以預設值補齊（舊角色比新欄位早存在）', () =
     expect(() => Character.parse({ name: '無 id' })).toThrow();
   });
 });
+
+describe('自創來源旗標的既有資料相容', () => {
+  const real = golden('real_characters.json') as Record<string, unknown>[];
+
+  it('不含新欄位的既有文件解析成功，旗標預設為否', () => {
+    const c = parseCharacter(real[0]);
+    expect(c.backgroundIsCustom).toBe(false);
+    expect(c.features.every((f) => f.isCustom === false)).toBe(true);
+  });
+
+  it('明確帶旗標時如實保留，不被預設值蓋掉', () => {
+    const c = Character.parse({
+      ...real[0],
+      backgroundIsCustom: true,
+      features: [
+        { name: '我的特性', source: '子職：烈焰學派', isCustom: true },
+        { name: 'SRD 特性', source: '職業：戰士 Lv3' },
+      ],
+    });
+    expect(c.backgroundIsCustom).toBe(true);
+    expect(c.features[0].isCustom).toBe(true);
+    expect(c.features[1].isCustom).toBe(false);
+  });
+});

@@ -135,6 +135,17 @@ export const CharacterFeature = z.object({
   nameEn: z.string().default(''),
   source: z.string().default(''),
   description: z.string().default(''),
+  /**
+   * 內容是否為使用者自創（自訂子職的特性、自訂的起源專長）。
+   *
+   * 曾以來源字串的後綴 `・自訂` 承載這個語意，但那是給人看的慣例——UI 無法
+   * 據以做呈現決策，措辭一改標示就靜默消失。`source` 現在只承載來源敘述。
+   *
+   * 判斷的是**內容**是否自創，不是「來自自訂容器」：以自訂背景選了 SRD 的
+   * 起源專長時，那個專長仍是 SRD 的，此處為 false——背景是自訂的這件事由
+   * `backgroundIsCustom` 表達，不必在特性上重複一次。
+   */
+  isCustom: z.boolean().default(false),
 });
 
 export const ClassResource = z.object({
@@ -206,6 +217,19 @@ export const Character = z.object({
   level: z.number().int().default(1),
   background: z.string().default(''),
   backgroundEn: z.string().default(''),
+  /**
+   * 背景是否來自使用者自訂。純標示，不參與任何推導。
+   *
+   * **只記旗標，不記來源 id**：角色卡上的自創內容一律是快照，而 id 唯一的
+   * 用途就是回查來源——那正是快照哲學禁止的事（來源可能已被刪除）。留一個
+   * id 在這裡只會誘使日後有人寫出回查的程式碼。
+   *
+   * **既有角色不回填**：唯一的線索是「背景名稱是否出現在該使用者的
+   * user_backgrounds 中」，但那會在使用者自訂了一個與 SRD 同名的背景時誤判，
+   * 也會在他刪掉那個自訂背景後失效。沒標示只是少了資訊，標錯會讓 DM 誤判。
+   * 這是刻意的取捨，不是待修的 bug——請不要改成猜測式回填。
+   */
+  backgroundIsCustom: z.boolean().default(false),
   alignment: z.string().default(''),
   alignmentEn: z.string().default(''),
   deity: z.string().default(''),

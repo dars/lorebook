@@ -1,4 +1,5 @@
 import type { Character } from '@/lib/domain/character';
+import { CustomBadge } from './custom-badge';
 
 /**
  * 立繪卡：角色頁最具識別度的元件。
@@ -38,11 +39,13 @@ export function PortraitCard({
             style={{ objectPosition, scale: c.portraitScale }}
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-display text-[72px] text-white/10">
-              {c.name.slice(0, 1)}
-            </span>
-          </div>
+          // 無圖時的「未知人像」，與 Flutter overview_tab 相同（BoxFit.cover）。
+          // eslint-disable-next-line @next/next/no-img-element -- 靜態佔位圖
+          <img
+            src="/images/unknown.jpg"
+            alt=""
+            className="absolute inset-0 size-full object-cover"
+          />
         )}
 
         {/* 底部漸層：自中段開始加深，確保文字可讀。 */}
@@ -71,6 +74,7 @@ export function PortraitCard({
                 .filter(Boolean)
                 .join(' ')}
               {c.subclass && ` · ${c.subclass}`}
+              {c.customSubclass && <CustomBadge className="ml-1.5" />}
             </p>
           )}
           <h1 className="mt-1.5 text-[44px] font-bold leading-[1.05] text-white">
@@ -83,9 +87,17 @@ export function PortraitCard({
           )}
           {(c.background || c.alignment || c.deity) && (
             <p className="mt-2.5 text-[14px] text-white/85">
-              {[c.background, c.alignment, c.deity && `${c.deity}信徒`]
+              {c.background}
+              {c.backgroundIsCustom && <CustomBadge className="ml-1.5" />}
+              {/* 徽章是元素，不能再用 join(' · ')——分隔符改由各項自帶。 */}
+              {[c.alignment, c.deity && `${c.deity}信徒`]
                 .filter(Boolean)
-                .join(' · ')}
+                .map((s, i) => (
+                  <span key={i}>
+                    {(c.background || i > 0) && ' · '}
+                    {s}
+                  </span>
+                ))}
             </p>
           )}
         </div>

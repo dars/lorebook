@@ -4,6 +4,7 @@ import { CollapsibleSection } from '@/components/ui/collapsible-section';
 import { InfoField, ParchmentCard } from '@/components/ui/decorations';
 import { EditIcon } from '@/components/ui/editor-sheet';
 import type { Character } from '@/lib/domain/character';
+import { CustomBadge } from '../custom-badge';
 import { PortraitCard } from '../portrait-card';
 
 /**
@@ -39,6 +40,7 @@ export function OverviewTab({
         label: 'BACKGROUND · 背景',
         value: c.background,
         valueEn: c.backgroundEn,
+        badge: c.backgroundIsCustom ? <CustomBadge /> : undefined,
       },
     ],
   ];
@@ -94,7 +96,7 @@ export function OverviewTab({
                 <span className="font-display mt-1 text-[22px] font-bold text-gold">
                   {s.value}
                 </span>
-                <span className="mt-0.5 text-[10px] text-text-primary/55">
+                <span className="mt-0.5 text-[12px] text-text-primary/70">
                   {s.sub}
                 </span>
               </div>
