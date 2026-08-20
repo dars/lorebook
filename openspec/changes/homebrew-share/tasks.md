@@ -26,7 +26,7 @@
 - [x] 3.2 `lib/homebrew/share-actions.ts`：發布（產 token、建立指標）、撤銷、查詢自己某內容的分享狀態
 - [x] 3.3 `lib/homebrew/fetch.ts`：依 token 呼叫 RPC，回傳判別聯集型別（依 status 分支）
 - [x] 3.4 `lib/homebrew/collect-actions.ts`：收藏——驗證（與手動建立同一 schema）→ 產新 id → 寫入收藏者的來源表，含 `source_token` / `source_updated_at` / `source_note`
-- [x] 3.5 `lib/backgrounds/actions.ts`、`lib/subclasses/actions.ts`：寫入端已就緒——upsert 的 payload **不含 source_\***，因此編輯收藏而來的那份不會抹掉來源標記（交易內實測確認）；upsert 與軟刪除改為明確帶 `user_id`。**讀取端（把 source_\* 撈出來給收藏紀錄頁）留到第 7 節**，那裡才有東西要顯示
+- [x] 3.5 `lib/backgrounds/actions.ts`、`lib/subclasses/actions.ts`：寫入端已就緒——upsert 的 payload **不含 source_\***，因此編輯收藏而來的那份不會抹掉來源標記（交易內實測確認）；upsert 與軟刪除改為明確帶 `user_id`。讀取端見 `lib/homebrew/library.ts`（第 7 節）——與建角用的 `fetchCustomBackgrounds` 分開：那邊問「有哪些選項可選」，這邊問「我手上這幾份的狀態」
 
 ## 4. 統一檢視頁
 
@@ -62,12 +62,12 @@
 
 ## 7. 分享入口、來源標示、更新副本
 
-- [ ] 7.1 各型別區塊的分享入口（產生連結、QR、複製）
-- [ ] 7.2 分享狀態顯示與撤銷入口
-- [ ] 7.3 清單項的備註行（即來源標記，無另外的徽章）；留空時顯示空狀態文字；可就地編輯；不限制編輯／刪除／再分享
-- [ ] 7.4 偵測來源已更新（來源 `updated_at` > 本地 `source_updated_at`）並提示
-- [ ] 7.5 「更新副本」＝刪除＋重收，**保留 `source_note`**；本地已編輯（`updated_at` > `created_at`）時先警告
-- [ ] 7.6 QR 產生複用 `character-share` 的本機繪製元件，確認無外部請求
+- [x] 7.1 各型別區塊的分享入口（產生連結、QR、複製）
+- [x] 7.2 分享狀態顯示與撤銷入口
+- [x] 7.3 清單項的備註行（即來源標記，無另外的徽章）；留空時顯示空狀態文字；可就地編輯；不限制編輯／刪除／再分享
+- [x] 7.4 偵測來源已更新（來源 `updated_at` > 本地 `source_updated_at`）並提示
+- [x] 7.5 「更新副本」＝刪除＋重收，**保留 `source_note`**；本地已編輯（`updated_at` > `created_at`）時先警告
+- [x] 7.6 QR 產生複用 `character-share` 的本機繪製元件，確認無外部請求
 
 ## 8. 規則版本（**全節相依 `dual-rules-version`，本 change 不做**）
 

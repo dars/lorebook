@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import { EditorSheet } from '@/components/ui/editor-sheet';
@@ -29,9 +29,17 @@ import {
 export function SubclassManager({
   initial,
   embedded,
+  extras,
 }: {
   initial: CustomSubclass[];
   embedded?: boolean;
+  /**
+   * 每一項的附加列（來源備註、分享入口、更新提示），以 id 為鍵。
+   *
+   * 傳 ReactNode 而非 render function：這是 client 元件，而組裝那些附加列
+   * 需要伺服器端才拿得到的來源與分享狀態——函式跨不過那條界線，元素可以。
+   */
+  extras?: Record<string, ReactNode>;
 }) {
   const [list, setList] = useState(initial);
   const [editing, setEditing] = useState<CustomSubclass | null>(null);
@@ -121,6 +129,7 @@ export function SubclassManager({
               {classCn(s.classEn)}・{s.features.length} 個特性（
               {[...new Set(s.features.map((f) => f.level))].sort((a, b) => a - b).join('/')} 級）
             </p>
+            {extras?.[s.id]}
           </ParchmentCard>
         ))}
       </div>

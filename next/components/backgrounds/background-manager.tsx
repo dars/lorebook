@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { type ReactNode, useId, useState } from 'react';
 
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import { EditorSheet, FieldLabel } from '@/components/ui/editor-sheet';
@@ -44,9 +44,17 @@ const EMPTY: CustomBackground = {
 export function BackgroundManager({
   initial,
   embedded,
+  extras,
 }: {
   initial: CustomBackground[];
   embedded?: boolean;
+  /**
+   * 每一項的附加列（來源備註、分享入口、更新提示），以 id 為鍵。
+   *
+   * 傳 ReactNode 而非 render function：這是 client 元件，而組裝那些附加列
+   * 需要伺服器端才拿得到的來源與分享狀態——函式跨不過那條界線，元素可以。
+   */
+  extras?: Record<string, ReactNode>;
 }) {
   const [list, setList] = useState(initial);
   const [editing, setEditing] = useState<CustomBackground | null>(null);
@@ -135,6 +143,7 @@ export function BackgroundManager({
               {b.originFeatCustom && '（自訂）'}
               {b.toolProficiency && `・${b.toolProficiency}`}
             </p>
+            {extras?.[b.id]}
           </ParchmentCard>
         ))}
       </div>
