@@ -86,7 +86,7 @@
 
 ## 10. 驗證與收尾
 
-- [ ] 10.1 `npm run lint` 與 `tsc --noEmit` 通過
+- [x] 10.1 `npx eslint .`、`npx tsc --noEmit`、`npx vitest run`（648 測試）皆通過
 - [ ] 10.2 端到端手動驗證：A 發布 → B 未登入檢視 → B 登入收藏 → A 修改 → B 看到提示並更新副本 → A 撤銷 → B 的副本不受影響
-- [ ] 10.3 確認無任何列舉路徑（App 內與 RPC 皆然）
+- [x] 10.3 確認無任何列舉路徑：`get_shared_homebrew` 的唯一參數是 `p_token`（與 `get_shared_character` 相同）；`anon` 對 `homebrew_shares` 沒有任何 grant；App 內三處用到該表的查詢全部帶 `owner_id = auth.uid()`，沒有「列出所有分享」這種路徑
 - [ ] 10.4 更新 `openspec/specs` 主規格（archive 時同步）
