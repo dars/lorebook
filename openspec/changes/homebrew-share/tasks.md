@@ -6,19 +6,19 @@
 
 ## 1. 資料庫：主鍵對齊與來源欄位
 
-- [ ] 1.1 `supabase/migrations/0007_homebrew_pk_and_source.sql`：`user_backgrounds` 與 `user_subclasses` 的主鍵由 `(id)` 改為 `(user_id, id)`；註解記錄理由（既有資料含 Flutter 時間戳 id，比照 `0002`）
-- [ ] 1.2 同一 migration 新增 `source_token text`、`source_updated_at timestamptz`、`source_note text`（皆 nullable，不回填）
-- [ ] 1.3 套用至 linked 專案，確認 8 筆既有背景的 id 值未變、RLS 與 grant 未受影響
-- [ ] 1.4 更正 `0006_user_subclasses.sql` 開頭關於「`shared_homebrew` 是快照表」的註解（design D4）
-- [ ] 1.5 更正 `custom-subclass` design D3 的同一段論述
+- [x] 1.1 `supabase/migrations/0007_homebrew_pk_and_source.sql`：`user_backgrounds` 與 `user_subclasses` 的主鍵由 `(id)` 改為 `(user_id, id)`；註解記錄理由（既有資料含 Flutter 時間戳 id，比照 `0002`）
+- [x] 1.2 同一 migration 新增 `source_token text`、`source_updated_at timestamptz`、`source_note text`（皆 nullable，不回填）
+- [x] 1.3 套用至 linked 專案，確認既有背景的 id 值未變（實際 9 筆，提案寫的 8 筆是當時的數量）、RLS 與 grant 未受影響
+- [x] 1.4 更正 `0006_user_subclasses.sql` 開頭關於「`shared_homebrew` 是快照表」的註解（design D4）
+- [x] 1.5 更正 `custom-subclass` design D3 的同一段論述
 
 ## 2. 資料庫：分享指標表與 RPC
 
-- [ ] 2.1 `supabase/migrations/0008_homebrew_shares.sql`：`homebrew_shares` 表（token / owner_id / kind / homebrew_id / label / created_at / revoked_at）
-- [ ] 2.2 RLS：`revoke all` from `anon` 與 `authenticated`；`insert` 與撤銷用 `update` 限 `owner_id = auth.uid()`
-- [ ] 2.3 `public.get_shared_homebrew(p_token text)`（`SECURITY DEFINER`）：依 `kind` 分派至來源表，回傳 `(status, kind, data, source_updated_at)`；狀態機 `not_found` / `revoked` / `deleted` / `ok`。**不含 `rules_version`**（design D4）
-- [ ] 2.4 migration 註解明文其偏離 own-row 慣例的理由與約束（比照 `0005`）
-- [ ] 2.5 驗證：以 anon 直接查表遭拒；以 anon 呼叫 RPC 可取得內容；RPC 不回傳 `owner_id`
+- [x] 2.1 `supabase/migrations/0008_homebrew_shares.sql`：`homebrew_shares` 表（token / owner_id / kind / homebrew_id / label / created_at / revoked_at）
+- [x] 2.2 RLS：照 `character_shares` 的模式——own-row 四條 policy ＋ `grant` 給 `authenticated`、`revoke all` from `anon`。原文的「`revoke all` from `anon` **與 `authenticated`**」自相矛盾（全撤銷後擁有者連 insert 都做不了），依 design D4「比照 `character_shares` 存取模型」解讀：對**檢視者**完全不可讀，擁有者仍能建立、查看與撤銷自己的分享
+- [x] 2.3 `public.get_shared_homebrew(p_token text)`（`SECURITY DEFINER`）：依 `kind` 分派至來源表，回傳 `(status, kind, data, source_updated_at)`；狀態機 `not_found` / `revoked` / `deleted` / `ok`。**不含 `rules_version`**（design D4）
+- [x] 2.4 migration 註解明文其偏離 own-row 慣例的理由與約束（比照 `0005`）
+- [x] 2.5 驗證：以 anon 直接查表遭拒；以 anon 呼叫 RPC 可取得內容；RPC 不回傳 `owner_id`
 
 ## 3. 型別註冊表與資料層
 

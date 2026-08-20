@@ -7,8 +7,9 @@
 --
 -- 刻意不做通用的 user_homebrew（kind 欄位）：每種 homebrew 的提升欄位不同
 -- （背景沒有 class_en），通用表只能把它們都塞進 jsonb，查詢反而變差。
--- shared_homebrew 用 kind 是對的，因為那是快照表——所有型別在那裡都只是
--- 不可變的 JSON，沒有各自的查詢需求。來源表與快照表的取捨不同。
+-- 分享表（0008 的 homebrew_shares）用 kind 則是對的，但理由不是「那是快照
+-- 表」——分享指向作者當下的資料，那張表存的是指標，kind 決定的是**去哪張
+-- 來源表查**。詳見 0008 檔頭與 openspec homebrew-share design D4。
 
 create table if not exists public.user_subclasses (
   id          text primary key,                 -- 客戶端產生
