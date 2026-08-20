@@ -8,7 +8,14 @@ import { signIn } from '@/lib/auth/actions';
 export default async function LoginPage({
   searchParams,
 }: PageProps<'/login'>) {
-  const { error } = await searchParams;
+  const { error, next } = await searchParams;
+
+  // 登入後要回哪裡。只接受站內相對路徑——`//evil.example` 在瀏覽器眼中是
+  // 協定相對的絕對網址，放行就是一個 open redirect。
+  const back =
+    typeof next === 'string' && next.startsWith('/') && !next.startsWith('//')
+      ? next
+      : '/';
 
   return (
     <main id="main-content" className="flex min-h-full flex-1 items-center justify-center p-4">
@@ -24,7 +31,7 @@ export default async function LoginPage({
           </p>
         )}
 
-        <form className="mt-6" action={signIn.bind(null, '/')}>
+        <form className="mt-6" action={signIn.bind(null, back)}>
           <button
             type="submit"
             className="w-full cursor-pointer rounded-chip border border-border bg-surface-2 px-4 py-3 text-body text-text-primary hover:border-gold"

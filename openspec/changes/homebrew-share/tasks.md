@@ -25,8 +25,8 @@
 - [x] 3.1 `lib/homebrew/types.ts`：`HomebrewKind` 與註冊表（來源表名、Zod schema、內容區塊元件、收藏寫入函式）
 - [x] 3.2 `lib/homebrew/share-actions.ts`：發布（產 token、建立指標）、撤銷、查詢自己某內容的分享狀態
 - [x] 3.3 `lib/homebrew/fetch.ts`：依 token 呼叫 RPC，回傳判別聯集型別（依 status 分支）
-- [ ] 3.4 `lib/homebrew/collect-actions.ts`：收藏——驗證（與手動建立同一 schema）→ 產新 id → 寫入收藏者的來源表，含 `source_token` / `source_updated_at` / `source_note`
-- [ ] 3.5 `lib/backgrounds/actions.ts`、`lib/subclasses/actions.ts`：讀寫新欄位；確認 upsert 僅於實際儲存時發生（design D6 的風險）
+- [x] 3.4 `lib/homebrew/collect-actions.ts`：收藏——驗證（與手動建立同一 schema）→ 產新 id → 寫入收藏者的來源表，含 `source_token` / `source_updated_at` / `source_note`
+- [x] 3.5 `lib/backgrounds/actions.ts`、`lib/subclasses/actions.ts`：寫入端已就緒——upsert 的 payload **不含 source_\***，因此編輯收藏而來的那份不會抹掉來源標記（交易內實測確認）；upsert 與軟刪除改為明確帶 `user_id`。**讀取端（把 source_\* 撈出來給收藏紀錄頁）留到第 7 節**，那裡才有東西要顯示
 
 ## 4. 統一檢視頁
 
@@ -39,12 +39,12 @@
 
 ## 5. 收藏流程
 
-- [ ] 5.1 「收進我的資料庫」按鈕：未登入導向登入並於登入後保留 token 返回
-- [ ] 5.2 收藏成功後的回饋與「前往我的資料庫」入口
-- [ ] 5.3 驗證失敗的錯誤呈現（具體原因，不寫入任何資料）
-- [ ] 5.4 收藏確認時的備註輸入（選填，一行；design D7）
-- [ ] 5.5 已收藏過同一 token 時的提示（Open Question：傾向允許但提示）
-- [ ] 5.6 測試：兩個不同使用者收藏同一 token 皆成功且各得不同 id
+- [x] 5.1 「收進我的資料庫」按鈕：未登入導向登入並於登入後保留 token 返回
+- [x] 5.2 收藏成功後的回饋與「前往我的資料庫」入口
+- [x] 5.3 驗證失敗的錯誤呈現（具體原因，不寫入任何資料）
+- [x] 5.4 收藏確認時的備註輸入（選填，一行；design D7）
+- [x] 5.5 已收藏過同一 token 時的提示。**已定：允許，只提示**——DM 的用法是「核准時自己收一份」當存證，作者改過再收一份，兩份並存正是他要的；擋掉會讓「留一份舊版本」變成做不到的事
+- [x] 5.6 測試：兩個不同使用者收藏同一 token 皆成功且各得不同 id
 
 ## 6. 我的資料庫（`/library`）
 

@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
 
+import { CollectPanel } from '@/components/homebrew/collect-panel';
 import { HomebrewView } from '@/components/homebrew/homebrew-view';
+import { countCollected } from '@/lib/homebrew/collect-actions';
 import { fetchSharedHomebrew } from '@/lib/homebrew/fetch';
 import { HOMEBREW_KIND } from '@/lib/homebrew/types';
+import { getAuthState } from '@/lib/supabase/server';
 
 /**
  * 自創內容的分享檢視。
@@ -47,10 +50,24 @@ export default async function SharedHomebrewPage({ params }: Props) {
 
   if (result.status !== 'ok') return <Unavailable status={result.status} />;
 
+  // 認證失敗不影響檢視——連結本身就是授權，登入與否只決定「能不能收藏」。
+  // 離線時 getAuthState 會回 unknown，那時當作未登入處理即可（頂多多按一次
+  // 登入），不能反過來把人擋在內容之外。
+  const auth = await getAuthState();
+  const signedIn = auth.status === 'authenticated';
+
   return (
     <HomebrewView
       content={result.content}
       sourceUpdatedAt={result.sourceUpdatedAt}
+      actions={
+        <CollectPanel
+          token={token}
+          kind={result.content.kind}
+          signedIn={signedIn}
+          alreadyCollected={signedIn ? await countCollected(token) : 0}
+        />
+      }
     />
   );
 }

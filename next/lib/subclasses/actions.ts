@@ -41,15 +41,23 @@ export async function upsertCustomSubclass(
   if (!parsed.success) return { error: '子職資料格式有誤' };
 
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: '需要登入' };
+
+  // source_* 不在 payload 裡——收藏而來的那份被編輯時，來源標記要留著
+  // （見 lib/backgrounds/actions.ts 同一處的說明）。
   const { error } = await supabase.from('user_subclasses').upsert({
     id: s.id,
+    user_id: user.id,
     name: s.name,
     class_en: s.classEn,
     data: parsed.data,
   });
 
   if (error) return { error: error.message };
-  revalidatePath('/custom-subclasses');
+  revalidatePath('/library');
   return { error: null };
 }
 
@@ -63,12 +71,18 @@ export async function deleteCustomSubclass(
   id: string,
 ): Promise<{ error: string | null }> {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: '需要登入' };
+
   const { error } = await supabase
     .from('user_subclasses')
     .update({ deleted_at: new Date().toISOString() })
-    .eq('id', id);
+    .eq('id', id)
+    .eq('user_id', user.id);
 
   if (error) return { error: error.message };
-  revalidatePath('/custom-subclasses');
+  revalidatePath('/library');
   return { error: null };
 }

@@ -37,8 +37,13 @@ type KindDef = {
    * 來卻收不了，那是說不通的；而更寬鬆則會讓收藏成為繞過驗證的後門。
    */
   schema: z.ZodType;
-  /** 提升欄位 name 的取法——寫入來源表時要一併帶上。 */
-  nameOf: (data: unknown) => string;
+  /**
+   * 寫入來源表時要一併帶上的提升欄位（清單查詢用，不必下載整份文件）。
+   *
+   * 各型別不同——背景只有 name，子職還有 class_en——所以放在註冊表裡由
+   * 型別自己說，而不是在收藏流程裡 if 一次。
+   */
+  columns: (data: unknown) => Record<string, string>;
 };
 
 export const HOMEBREW_KIND: Record<HomebrewKind, KindDef> = {
@@ -46,13 +51,16 @@ export const HOMEBREW_KIND: Record<HomebrewKind, KindDef> = {
     label: '背景',
     table: 'user_backgrounds',
     schema: CustomBackground,
-    nameOf: (d) => (d as CustomBackground).name,
+    columns: (d) => ({ name: (d as CustomBackground).name }),
   },
   subclass: {
     label: '子職業',
     table: 'user_subclasses',
     schema: CustomSubclass,
-    nameOf: (d) => (d as CustomSubclass).name,
+    columns: (d) => ({
+      name: (d as CustomSubclass).name,
+      class_en: (d as CustomSubclass).classEn,
+    }),
   },
 };
 
