@@ -111,3 +111,6 @@ export const ABILITY_LABEL: Record<string, string> = {
 
 export const abilityLabels = (codes: string[]) =>
   codes.map((c) => ABILITY_LABEL[c] ?? c).join('/');
+
+/** 職業英文名 → 中文。自訂子職以英文名為關聯鍵，顯示時一律經過這裡。 */
+export const classCn = (en: string) => CLASSES.find((c) => c.en === en)?.cn ?? en;

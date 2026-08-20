@@ -19,7 +19,7 @@ export function generateShareToken(): string {
     .replaceAll('=', '');
 }
 
-/** 分享連結的路徑前綴。與 homebrew 分享（規劃中的 `/s/`）刻意錯開。 */
+/** 分享連結的路徑前綴。與自創內容分享的 `/h`（`lib/homebrew/types.ts`）錯開。 */
 export const SHARE_PATH_PREFIX = '/v';
 
 export const shareLinkFor = (origin: string, token: string) =>

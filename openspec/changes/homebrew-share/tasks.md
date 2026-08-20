@@ -22,20 +22,20 @@
 
 ## 3. 型別註冊表與資料層
 
-- [ ] 3.1 `lib/homebrew/types.ts`：`HomebrewKind` 與註冊表（來源表名、Zod schema、內容區塊元件、收藏寫入函式）
-- [ ] 3.2 `lib/homebrew/share-actions.ts`：發布（產 token、建立指標）、撤銷、查詢自己某內容的分享狀態
-- [ ] 3.3 `lib/homebrew/fetch.ts`：依 token 呼叫 RPC，回傳判別聯集型別（依 status 分支）
+- [x] 3.1 `lib/homebrew/types.ts`：`HomebrewKind` 與註冊表（來源表名、Zod schema、內容區塊元件、收藏寫入函式）
+- [x] 3.2 `lib/homebrew/share-actions.ts`：發布（產 token、建立指標）、撤銷、查詢自己某內容的分享狀態
+- [x] 3.3 `lib/homebrew/fetch.ts`：依 token 呼叫 RPC，回傳判別聯集型別（依 status 分支）
 - [ ] 3.4 `lib/homebrew/collect-actions.ts`：收藏——驗證（與手動建立同一 schema）→ 產新 id → 寫入收藏者的來源表，含 `source_token` / `source_updated_at` / `source_note`
 - [ ] 3.5 `lib/backgrounds/actions.ts`、`lib/subclasses/actions.ts`：讀寫新欄位；確認 upsert 僅於實際儲存時發生（design D6 的風險）
 
 ## 4. 統一檢視頁
 
-- [ ] 4.1 `app/h/[token]/page.tsx`：SSR 取內容，未登入可讀
-- [ ] 4.2 `components/homebrew/homebrew-view.tsx`：骨架（型別標示、名稱、最後更新時間、行動區、顯示文字免責說明）
-- [ ] 4.3 四種狀態的呈現：不存在／已撤銷／來源已刪除／正常
-- [ ] 4.4 `components/homebrew/background-body.tsx`：技能／工具／裝備／起源專長
-- [ ] 4.5 `components/homebrew/subclass-body.tsx`：母職業與各等級特性
-- [ ] 4.6 外來文字一律純文字呈現，不進 5etools 標記渲染路徑（含測試）
+- [x] 4.1 `app/h/[token]/page.tsx`：SSR 取內容，未登入可讀
+- [x] 4.2 `components/homebrew/homebrew-view.tsx`：骨架（型別標示、名稱、最後更新時間、行動區、顯示文字免責說明）
+- [x] 4.3 四種狀態的呈現：不存在／已撤銷／來源已刪除／正常
+- [x] 4.4 `components/homebrew/background-body.tsx`：技能／工具／裝備／起源專長
+- [x] 4.5 `components/homebrew/subclass-body.tsx`：母職業與各等級特性
+- [x] 4.6 外來文字一律純文字呈現，不進 5etools 標記渲染路徑（含測試）
 
 ## 5. 收藏流程
 

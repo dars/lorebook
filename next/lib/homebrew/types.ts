@@ -1,0 +1,89 @@
+import type { z } from 'zod';
+
+import { CustomBackground } from '@/lib/backgrounds/types';
+import { CustomSubclass } from '@/lib/subclasses/types';
+
+/**
+ * 自創內容（homebrew）的型別註冊表。
+ *
+ * 分享、檢視、收藏這三條路徑對每種型別做的事其實一樣——查哪張表、用哪個
+ * schema 驗、標題怎麼寫。把差異集中在這裡，新增型別就是加一筆，而不是在
+ * 三個地方各加一個 if（見 openspec homebrew-share design D8）。
+ *
+ * 首版只有背景與子職（D10）。自訂種族解凍後在此加一筆、在 0008 的 kind
+ * check 加一個值、補一個內容區塊元件即可。
+ */
+
+export const HOMEBREW_KINDS = ['background', 'subclass'] as const;
+export type HomebrewKind = (typeof HOMEBREW_KINDS)[number];
+
+/**
+ * 內容本體。以 kind 作判別欄位——取到內容的地方幾乎都要依型別分支，
+ * 判別聯集讓 TypeScript 替我們確認每個分支都處理到了。
+ */
+export type HomebrewContent =
+  | { kind: 'background'; data: CustomBackground }
+  | { kind: 'subclass'; data: CustomSubclass };
+
+type KindDef = {
+  /** 型別標示，檢視頁與收藏紀錄共用。 */
+  label: string;
+  /** 來源表。收藏是寫進收藏者自己的這張表。 */
+  table: 'user_backgrounds' | 'user_subclasses';
+  /**
+   * 驗證用的 schema，與**手動建立時完全相同**。
+   *
+   * SHALL NOT 對外來內容更嚴格（D11）：同一份資料自己建得起來、別人分享過
+   * 來卻收不了，那是說不通的；而更寬鬆則會讓收藏成為繞過驗證的後門。
+   */
+  schema: z.ZodType;
+  /** 提升欄位 name 的取法——寫入來源表時要一併帶上。 */
+  nameOf: (data: unknown) => string;
+};
+
+export const HOMEBREW_KIND: Record<HomebrewKind, KindDef> = {
+  background: {
+    label: '背景',
+    table: 'user_backgrounds',
+    schema: CustomBackground,
+    nameOf: (d) => (d as CustomBackground).name,
+  },
+  subclass: {
+    label: '子職業',
+    table: 'user_subclasses',
+    schema: CustomSubclass,
+    nameOf: (d) => (d as CustomSubclass).name,
+  },
+};
+
+export const isHomebrewKind = (v: unknown): v is HomebrewKind =>
+  typeof v === 'string' && (HOMEBREW_KINDS as readonly string[]).includes(v);
+
+/**
+ * 把 RPC 回來的 (kind, data) 轉成內容本體，形狀不對就回 null。
+ *
+ * 認不得的 kind 也回 null——舊版 App 開到新型別的連結時，那與「內容壞掉」
+ * 對使用者是同一件事：這個連結現在給不出東西。
+ */
+export function parseHomebrew(
+  kind: unknown,
+  data: unknown,
+): HomebrewContent | null {
+  if (!isHomebrewKind(kind)) return null;
+
+  const parsed = HOMEBREW_KIND[kind].schema.safeParse(data);
+  if (!parsed.success) return null;
+
+  return kind === 'background'
+    ? { kind, data: parsed.data as CustomBackground }
+    : { kind, data: parsed.data as CustomSubclass };
+}
+
+/**
+ * 分享連結的路徑前綴。與角色卡分享的 `/v` 錯開——兩者的檢視頁完全不同，
+ * 共用前綴只會讓路由多一層判斷。
+ */
+export const HOMEBREW_SHARE_PATH_PREFIX = '/h';
+
+export const homebrewLinkFor = (origin: string, token: string) =>
+  `${origin}${HOMEBREW_SHARE_PATH_PREFIX}/${token}`;

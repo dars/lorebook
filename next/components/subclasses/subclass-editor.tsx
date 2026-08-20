@@ -3,7 +3,7 @@
 import { useId } from 'react';
 
 import { FieldLabel } from '@/components/ui/editor-sheet';
-import { CLASSES } from '@/lib/creation/data';
+import { CLASSES, classCn } from '@/lib/creation/data';
 import {
   FEATURE_DESC_MAX,
   FEATURE_NAME_MAX,
@@ -32,8 +32,9 @@ export const emptySubclass = (classEn = ''): CustomSubclass => ({
   features: [],
 });
 
-export const classCn = (en: string) =>
-  CLASSES.find((c) => c.en === en)?.cn ?? en;
+// 檢視頁（Server Component）也要這個對照，因此本體放在 lib/creation/data.ts；
+// 這裡轉出一份，既有的 import 路徑不必跟著改。
+export { classCn };
 
 export function SubclassEditor({
   value,
