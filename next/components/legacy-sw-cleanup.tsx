@@ -31,7 +31,35 @@ export function LegacySwCleanup() {
         );
         if (legacy.length === 0) return;
 
-        await Promise.all(legacy.map((r) => r.unregister()));
+        // **不能無條件 unregister。**
+        //
+        // 切換上線後實測到的真實狀態是「一個 registration，兩個 worker」：
+        //
+        //     active:  flutter_service_worker.js   ← Flutter 的舊實例
+        //     waiting: sw.js?v=<build>             ← 我們的 SW，已安裝在排隊
+        //
+        // 我們的 SW 註冊時就把 registration 的 script URL 換成了 `/sw.js`，
+        // 但它依 sw.js 檔頭第 4 點不自行 skipWaiting，於是排隊等 active 讓位；
+        // 而 active 是 Flutter 的實例，只有在所有受控分頁關閉後才會讓位。
+        // 結果是永久卡住：離線功能不生效，且沒有任何錯誤訊息。
+        //
+        // 此時呼叫 `unregister()` 會連 waiting 裡的自家 SW 一起殺掉——正是本檔
+        // 開頭警告過的誤殺，只是換了一個更隱蔽的形態。所以要分兩種情況：
+        for (const r of legacy) {
+          const waiting = r.waiting;
+          if (waiting && !isLegacyRegistration(waiting.scriptURL)) {
+            // 自家 SW 已在排隊：讓它接管就好，registration 本身要留著。
+            // 這裡不必顧慮 sw.js 第 4 點「跑團中途自動重載」的風險——
+            // 那條顧慮的前提是 active 為我們自己的舊版本，而這裡的 active
+            // 是一個已經沒有快取、只會空轉的死 SW。
+            waiting.postMessage({ type: 'skip-waiting' });
+          } else {
+            // 純粹的舊 registration，沒有自家 SW 在排隊：直接註銷。
+            // 註銷要等所有受控分頁關閉才真正生效，`public/flutter_service_worker.js`
+            // 的墓碑是這條路徑的補強（從 SW 內部註銷不受該限制）。
+            await r.unregister();
+          }
+        }
 
         if ('caches' in window) {
           const keys = await caches.keys();
