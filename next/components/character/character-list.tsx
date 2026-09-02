@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 import { CharacterAvatar } from '@/components/character/character-avatar';
 import { ParchmentCard } from '@/components/ui/decorations';
@@ -15,7 +16,13 @@ import type { Character } from '@/lib/domain/character';
  * 刪除在 Flutter 是長按觸發——web 沒有長按的通用手勢，改為卡片右側的刪除鈕。
  * 行為相同：二次確認、雲端軟刪除成功才自清單移除。
  */
-export function CharacterList({ initial }: { initial: Character[] }) {
+export function CharacterList({
+  initial,
+  mode = 'owned',
+}: {
+  initial: Character[];
+  mode?: 'owned' | 'demo';
+}) {
   const [list, setList] = useState(initial);
   const [confirming, setConfirming] = useState<Character | null>(null);
   const [busy, setBusy] = useState(false);
@@ -44,7 +51,9 @@ export function CharacterList({ initial }: { initial: Character[] }) {
 
   return (
     <>
-      <p className="pb-2 text-[12px] text-text-secondary">點選進入角色卡</p>
+      <p className="pb-2 text-[12px] text-text-secondary">
+        {mode === 'demo' ? '選一位冒險者開始試玩' : '點選進入角色卡'}
+      </p>
       {error && (
         <p role="alert" className="pb-2 text-[13px] text-danger">
           {error}
@@ -57,8 +66,11 @@ export function CharacterList({ initial }: { initial: Character[] }) {
             key={c.id}
             className="flex items-center gap-3 px-4 py-3 hover:border-gold/60"
           >
-            <form action={selectCharacter.bind(null, c.id)} className="min-w-0 flex-1">
-              <button type="submit" className="flex w-full items-center gap-3 text-left">
+            {mode === 'demo' ? (
+              <Link
+                href={`/demo/${c.id}`}
+                className="flex min-h-12 min-w-0 flex-1 items-center gap-3 text-left"
+              >
                 <CharacterAvatar c={c} size={48} />
                 <span className="min-w-0 flex-1">
                   <span className="font-display block truncate text-[16px] font-bold text-text-primary">
@@ -76,16 +88,43 @@ export function CharacterList({ initial }: { initial: Character[] }) {
                     {c.level}
                   </span>
                 </span>
-              </button>
-            </form>
-            <button
-              type="button"
-              onClick={() => setConfirming(c)}
-              aria-label={`刪除 ${c.name}`}
-              className="min-h-11 shrink-0 px-2 text-[12px] text-text-secondary hover:text-danger"
-            >
-              刪除
-            </button>
+                <span className="min-h-11 shrink-0 content-center px-2 text-[12px] text-gold">
+                  試玩&nbsp;→
+                </span>
+              </Link>
+            ) : (
+              <>
+                <form action={selectCharacter.bind(null, c.id)} className="min-w-0 flex-1">
+                  <button type="submit" className="flex w-full items-center gap-3 text-left">
+                    <CharacterAvatar c={c} size={48} />
+                    <span className="min-w-0 flex-1">
+                      <span className="font-display block truncate text-[16px] font-bold text-text-primary">
+                        {c.name}
+                      </span>
+                      <span className="block truncate text-[12px] text-text-secondary">
+                        {[c.species, c.className, c.subclass].filter(Boolean).join(' · ')}
+                      </span>
+                    </span>
+                    <span className="flex shrink-0 flex-col items-center">
+                      <span className="font-label text-[10px] font-semibold tracking-[1px] text-text-secondary">
+                        LEVEL
+                      </span>
+                      <span className="font-display text-[24px] font-bold leading-none text-text-primary">
+                        {c.level}
+                      </span>
+                    </span>
+                  </button>
+                </form>
+                <button
+                  type="button"
+                  onClick={() => setConfirming(c)}
+                  aria-label={`刪除 ${c.name}`}
+                  className="min-h-11 shrink-0 px-2 text-[12px] text-text-secondary hover:text-danger"
+                >
+                  刪除
+                </button>
+              </>
+            )}
           </ParchmentCard>
         ))}
       </div>

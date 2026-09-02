@@ -29,7 +29,14 @@ import { useCharacterSync } from '@/lib/state/sync';
 
 const sign = (n: number) => (n >= 0 ? `+${n}` : `${n}`);
 
-export function DecisionView({ initial }: { initial: Character }) {
+export function DecisionView({
+  initial,
+  persist = true,
+}: {
+  initial: Character;
+  /** false＝試玩模式：狀態只留在本機，不顯示雲端同步狀態。 */
+  persist?: boolean;
+}) {
   const load = useCharacterStore((s) => s.load);
   const stored = useCharacterStore((s) => s.character);
   const dirty = useCharacterStore((s) => s.dirty);
@@ -38,7 +45,7 @@ export function DecisionView({ initial }: { initial: Character }) {
   useEffect(() => {
     load(initial);
   }, [initial, load]);
-  useCharacterSync();
+  useCharacterSync(persist);
 
   const [pickConcentration, setPickConcentration] = useState(false);
   const [editTempHp, setEditTempHp] = useState(false);
@@ -58,10 +65,10 @@ export function DecisionView({ initial }: { initial: Character }) {
         en="STATUS"
         cn="狀態"
         first
-        trailing={<SyncBadge dirty={dirty} error={syncError} />}
+        trailing={persist ? <SyncBadge dirty={dirty} error={syncError} /> : undefined}
       >
         <ParchmentCard className="p-3">
-          <div className="flex items-center">
+          <div className="flex flex-wrap items-center">
             <HpColumn
               c={c}
               onAdjust={adjustHp}
@@ -96,10 +103,10 @@ export function DecisionView({ initial }: { initial: Character }) {
               </span>
             </div>
 
-            <span className="mx-2 h-[100px] w-px bg-border/40" />
+            <span className="mx-2 hidden h-[100px] w-px bg-border/40 medium:block" />
 
             {/* 專注 */}
-            <div className="flex flex-1 flex-col items-center">
+            <div className="mt-3 flex w-full flex-col items-center border-t border-border/40 pt-3 medium:mt-0 medium:w-auto medium:flex-1 medium:border-t-0 medium:pt-0">
               <span className="font-label text-[10px] tracking-[1.5px] text-section-label">
                 CONCENTRATION
               </span>

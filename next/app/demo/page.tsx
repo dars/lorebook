@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { CharacterList } from '@/components/character/character-list';
+import { SectionTitle } from '@/components/ui/decorations';
 import { DEMO_CHARACTERS } from '@/lib/demo/characters';
 
 export const metadata: Metadata = {
@@ -17,40 +19,23 @@ export const metadata: Metadata = {
  */
 export default function DemoPage() {
   return (
-    <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-4 pb-10">
-      <h1 className="pt-5 font-display text-title text-gold">試玩</h1>
-      <p className="mt-2 text-small leading-relaxed text-text-secondary">
+    <main id="main-content" className="mx-auto w-full max-w-[700px] flex-1 px-4 pb-10">
+      <h1 className="pt-6 font-display text-[28px] font-bold text-gold">Lorebook</h1>
+      <SectionTitle en="CHARACTERS" cn="選擇角色" />
+
+      <p className="pb-4 text-small leading-relaxed text-text-secondary">
         以下角色可直接操作——扣血、消耗法術位、切換狀態、展開特性說明。
         變更只存在這次瀏覽，離開就還原，不需要帳號。
       </p>
 
-      <ul className="mt-4">
-        {DEMO_CHARACTERS.map((c) => (
-          <li key={c.id}>
-            <Link
-              href={`/demo/${c.id}`}
-              className="flex items-baseline justify-between gap-3 border-b border-border-2 py-3 hover:text-gold"
-            >
-              <span>
-                <span className="text-body text-text-primary">{c.name}</span>
-                <span className="ml-2 text-small text-text-secondary">
-                  {c.species} · {c.className}
-                </span>
-              </span>
-              <span className="shrink-0 text-small text-gold">
-                {c.spellSlots.length > 0 ? '施法者' : '戰鬥型'}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <CharacterList initial={DEMO_CHARACTERS} mode="demo" />
 
-      <p className="mt-6 text-small text-text-secondary">
-        想保存自己的角色？
-        <Link href="/login" className="ml-1 text-gold underline">
-          登入後建立
-        </Link>
-      </p>
+      <Link
+        href="/login"
+        className="mt-4 flex min-h-12 items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
+      >
+        登入並建立自己的角色
+      </Link>
     </main>
   );
 }

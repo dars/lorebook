@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { CharacterSheetLive } from '@/components/character/character-sheet-live';
 import { DecisionView } from '@/components/decision/decision-view';
+import { DemoSettings } from '@/components/demo/demo-settings';
 import { JournalView } from '@/components/journal/journal-view';
 import { CharacterHeader } from '@/components/shell/character-header';
 import { OfflineBanner } from '@/components/shell/offline-banner';
@@ -18,12 +19,14 @@ import type { Character } from '@/lib/domain/character';
  * 雲端（persist=false），走路由會重新掛載並 `load(initial)`，把玩家剛扣的血
  * 還原。
  *
- * 少了「設定」——那頁是登出、主題、自創內容庫，對沒有帳號的訪客都無意義。
+ * 設定頁只保留訪客有意義的角色切換、主題與登入入口；帳號、登出、收藏紀錄
+ * 仍只出現在正式版。
  */
 const DEMO_TABS: NavItem[] = [
   { path: 'decision', label: '行動', icon: 'wand' },
   { path: 'character', label: '角色', icon: 'person' },
   { path: 'journal', label: '旅程', icon: 'book' },
+  { path: 'system', label: '設定', icon: 'gear' },
 ];
 
 export function DemoShell({ character }: { character: Character }) {
@@ -41,7 +44,9 @@ export function DemoShell({ character }: { character: Character }) {
           id="main-content"
           className="flex-1 pb-[calc(6rem+env(safe-area-inset-bottom))]"
         >
-          {tab === 'decision' && <DecisionView initial={character} />}
+          {tab === 'decision' && (
+            <DecisionView initial={character} persist={false} />
+          )}
           {/* 試玩不提供分享：訪客的角色不存在雲端，連結無從指向。 */}
           {tab === 'character' && (
             <CharacterSheetLive initial={character} tools={[]} persist={false} />
@@ -49,6 +54,7 @@ export function DemoShell({ character }: { character: Character }) {
           {tab === 'journal' && (
             <JournalView initial={character} persist={false} />
           )}
+          {tab === 'system' && <DemoSettings character={character} />}
         </main>
       </div>
       <BookmarkTabBar items={DEMO_TABS} active={tab} onSelect={setTab} />
