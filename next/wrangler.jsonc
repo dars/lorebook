@@ -12,6 +12,14 @@
   // global_fetch_strictly_public：讓 worker 內的 fetch 走公開網路語意，
   //   與 Next.js 對 fetch 的假設一致
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // 保留 workers.dev 子網域當備援測試網址。**必須明寫**——一旦設定了 routes，
+  // wrangler 預設會把 workers.dev 關掉（部署時只以警告告知），正式網域出問題時
+  // 就沒有第二條路可以驗。
+  "workers_dev": true,
+  // 自訂網域。原本掛在 `lorebook` Pages 專案上，切換到 Workers 後改綁這裡。
+  // custom_domain 會自動建立 DNS 記錄與憑證；同名網域不能同時綁在 Pages 與
+  // Worker 上，所以必須先在 Pages 專案移除才能 deploy 成功。
+  "routes": [{ "pattern": "lorebook.code4soul.dev", "custom_domain": true }],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
