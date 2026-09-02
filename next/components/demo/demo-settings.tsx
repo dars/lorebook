@@ -5,6 +5,16 @@ import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import type { Character } from '@/lib/domain/character';
 
 /** 試玩專用設定：保留正式版有意義的角色切換與主題，不出現帳號專屬功能。 */
+/*
+ * 這個元件的 `<Link>` 全部 `prefetch={false}`。
+ *
+ * Next 的 Link 預設會自動預取視窗內的目標，而這頁的連結一進畫面就全在
+ * 視窗內——其中「法術目錄」與「裝備目錄」還會去查內容庫。實測是一進設定頁
+ * 就在背景打四個 RSC 請求，每個都經過 middleware 的
+ * `supabase.auth.getUser()`（一趟到 Supabase 的跨海往返），使用者要等的那份
+ * 資料得跟它們搶線。同樣的理由見 `components/shell/nav.tsx` 檔頭。
+ */
+
 export function DemoSettings({ character }: { character: Character }) {
   return (
     <div className="mx-auto flex w-full max-w-[700px] flex-col gap-4 px-4 py-2">
@@ -20,6 +30,7 @@ export function DemoSettings({ character }: { character: Character }) {
         </p>
         <Link
           href="/demo"
+          prefetch={false}
           className="mt-4 flex min-h-11 items-center justify-center rounded-card border border-gold text-small font-semibold text-gold"
         >
           切換試玩角色
@@ -40,6 +51,7 @@ export function DemoSettings({ character }: { character: Character }) {
         </p>
         <Link
           href="/login"
+          prefetch={false}
           className="mt-4 flex min-h-11 items-center justify-center rounded-card border border-border text-small text-text-primary"
         >
           登入 Lorebook

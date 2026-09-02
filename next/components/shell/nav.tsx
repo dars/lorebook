@@ -35,6 +35,21 @@ const ICONS: Record<string, string> = {
   gear: 'M19.14 12.94a7.07 7.07 0 0 0 0-1.88l2.03-1.58a.5.5 0 0 0 .12-.61l-1.92-3.32a.5.5 0 0 0-.59-.22l-2.39.96a7.06 7.06 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.5-.41h-3.84a.5.5 0 0 0-.5.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 0 0-.59.22L2.7 8.87a.5.5 0 0 0 .12.61l2.03 1.58a7.07 7.07 0 0 0 0 1.88L2.82 14.5a.5.5 0 0 0-.12.61l1.92 3.32c.13.22.39.3.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.25.41.5.41h3.84c.25 0 .46-.17.5-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.5.5 0 0 0-.12-.61zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2',
 };
 
+/*
+ * 導覽列的 Link **一律 `prefetch={false}`**。
+ *
+ * 這兩個元件（Rail 與底部膠囊列）由 layout 同時渲染、用 CSS 決定顯示哪一個，
+ * 所以 DOM 裡永遠有兩份相同的連結。Next 的 Link 預設會自動預取視窗內的目標，
+ * 而導覽列是常駐元素——四個目標永遠在視窗內，於是每次 router 狀態變動就重取
+ * 一輪，實測是**一次導覽觸發 8 個背景 RSC 請求**（4 路徑 × 2 份導覽）。
+ *
+ * 每個 RSC 請求都會經過 middleware 的 `supabase.auth.getUser()`，那是一趟到
+ * Supabase（ap-southeast-2）的跨海往返。結果是使用者真正想去的那一頁，得跟
+ * 七個沒人要的預取請求搶同一條線——症狀是點分頁後空等好幾秒。
+ *
+ * 關掉自動預取不影響 hover／點擊時的預取，實際點下去的體感不變。
+ */
+
 function NavIcon({ name, className }: { name: string; className: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden>
@@ -84,7 +99,7 @@ export function BookmarkTabBar({ items, active, onSelect }: NavProps = {}) {
               {body}
             </button>
           ) : (
-            <Link key={d.path} href={d.path} className={cls}>
+            <Link key={d.path} href={d.path} prefetch={false} className={cls}>
               {body}
             </Link>
           );
@@ -137,7 +152,7 @@ export function NavRail({ items, active, onSelect }: NavProps = {}) {
             {body}
           </button>
         ) : (
-          <Link key={d.path} href={d.path} className={`group ${cls}`}>
+          <Link key={d.path} href={d.path} prefetch={false} className={`group ${cls}`}>
             {body}
           </Link>
         );
