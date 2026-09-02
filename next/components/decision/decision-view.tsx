@@ -293,12 +293,14 @@ export function DecisionView({
               subtitle="職業能力"
               onConfirm={() => characterActions.shortRest()}
               confirm="短休將回復標記為短休的職業資源。"
+              doneHint="短休資源已回復"
             />
             <RestButton
               title="長休"
               subtitle="完全恢復"
               onConfirm={() => characterActions.longRest()}
               confirm="長休將回滿 HP、法術位、職業資源，清除臨時 HP，降低 1 級力竭，並回復一半生命骰。"
+              doneHint="HP、法術位與資源已回滿，專注已結束"
             />
           </div>
         </ParchmentCard>
@@ -448,6 +450,14 @@ function ChecksPanel({ c }: { c: Character }) {
   } | null>(null);
   const tabs = ['能力', '豁免', '技能'];
 
+  // 切頁時清掉選取。以 `分頁:名稱` 當鍵已避免跨頁誤選，但選取結果顯示在分頁
+  // **上方**、不隨分頁切換——切過去之後畫面會是「豁免分頁 ＋ 力量檢定結果」，
+  // 讀起來像「力量豁免」。三個分頁都有同名項目，這種誤讀不會被察覺。
+  const changeTab = (i: number) => {
+    setTab(i);
+    setSelected(null);
+  };
+
   // 英文用全名而非 STR/DEX 縮寫：這一列是**雙標**（中文大、英文小），
   // 與區段標題「CHECKS 檢定」是同一套語彙，縮寫在那個位置讀起來像代碼。
   const abilities: [keyof Character['abilityScores'], string, string][] = [
@@ -518,12 +528,12 @@ function ChecksPanel({ c }: { c: Character }) {
       <CharacterTabBar
         tabs={tabs}
         current={tab}
-        onChange={setTab}
+        onChange={changeTab}
         variant="segment"
       />
       {/* autoHeight：三頁高度差很多（技能 18 列、能力 6 列）。固定高度會在
           頁面中間變成一個小捲動框，取最高頁則讓能力頁下面空掉一大截。 */}
-      <SwipeTabs current={tab} onSettle={setTab} autoHeight>
+      <SwipeTabs current={tab} onSettle={changeTab} autoHeight>
         {byTab.map((rows, i) => (
           // 每一項自己一張卡（而非一張大卡切細線）：跑團時是「找某一項」
           // 而不是「讀完整份」，各自成塊才掃得快。
@@ -580,14 +590,41 @@ function RestButton({
   title,
   subtitle,
   confirm,
+  doneHint,
   onConfirm,
 }: {
   title: string;
   subtitle: string;
   confirm: string;
+  /** 完成後的一行摘要——說明「實際發生了什麼」，不只是「成功了」。 */
+  doneHint: string;
   onConfirm: () => void;
 }) {
   const [asking, setAsking] = useState(false);
+  // 休息完成後的回饋。長休的效果散在畫面各處（HP 條、法術位、資源、生命骰），
+  // 沒有回饋時畫面只是靜靜地變了，使用者無從確定「剛才那下有沒有生效」——
+  // 尤其資源本來就滿的時候，畫面根本沒有任何變化。
+  // 用就地訊息而非全域 toast：與上面的就地確認同一個位置，視線不必移動。
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (!done) return;
+    const t = setTimeout(() => setDone(false), 3000);
+    return () => clearTimeout(t);
+  }, [done]);
+
+  if (done) {
+    return (
+      <output
+        // aria-live：這則訊息是操作結果，螢幕閱讀器要念出來。
+        aria-live="polite"
+        className="flex min-h-14 flex-1 flex-col items-center justify-center rounded-card border border-gold bg-gold/[0.06] px-2 text-center"
+      >
+        <span className="text-[13px] text-gold">已完成{title}</span>
+        <span className="text-[11px] text-text-secondary">{doneHint}</span>
+      </output>
+    );
+  }
 
   if (asking) {
     return (
@@ -606,6 +643,7 @@ function RestButton({
             onClick={() => {
               onConfirm();
               setAsking(false);
+              setDone(true);
             }}
             className="min-h-9 flex-1 rounded-chip border border-gold bg-gold/10 text-[12px] text-gold"
           >
