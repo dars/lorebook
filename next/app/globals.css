@@ -214,6 +214,150 @@ body {
   color: var(--color-text-primary);
 }
 
+/* ── 登入頁：典籍封面 ────────────────────────────────── */
+.login-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 26% 42%, color-mix(in srgb, var(--color-gold) 10%, transparent), transparent 29rem),
+    linear-gradient(115deg, var(--color-surface-0) 0 56%, color-mix(in srgb, var(--color-surface-1) 82%, black) 56% 100%);
+}
+.login-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.28;
+  background-image:
+    repeating-linear-gradient(96deg, transparent 0 19px, color-mix(in srgb, var(--color-gold) 5%, transparent) 20px),
+    repeating-linear-gradient(3deg, transparent 0 33px, color-mix(in srgb, var(--color-text-primary) 3%, transparent) 34px);
+  mask-image: linear-gradient(to right, black, transparent 70%);
+}
+.login-stage::after {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--color-gold) 22%, transparent);
+}
+.login-hero, .login-entry {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(3.5rem, 7vw, 7rem);
+}
+.login-hero { width: 58%; flex-direction: column; }
+.login-entry { width: 42%; }
+.login-hero-copy { align-self: flex-start; }
+.login-kicker, .login-panel-eyebrow {
+  font-family: var(--font-label);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  color: var(--color-section-label);
+}
+.login-kicker { display: flex; align-items: center; gap: 0.75rem; }
+.login-kicker::before { content: ''; width: 2rem; height: 1px; background: var(--color-gold); }
+.login-wordmark {
+  margin-top: 0.75rem;
+  font-size: clamp(3.25rem, 7vw, 6.75rem);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+  color: var(--color-gold);
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--color-text-primary) 30%, transparent), 0 18px 45px color-mix(in srgb, black 55%, transparent);
+}
+.login-motto { margin-top: 1.25rem; font-size: 1rem; letter-spacing: 0.12em; color: var(--color-text-light); }
+.lorebook-sigil {
+  width: min(34vw, 390px);
+  margin: clamp(2rem, 5vh, 4rem) auto;
+  color: var(--color-gold);
+  filter: drop-shadow(0 0 34px color-mix(in srgb, var(--color-gold) 14%, transparent));
+}
+.sigil-orbit { stroke: currentColor; stroke-width: .7; stroke-dasharray: 2 7; opacity: .55; }
+.sigil-orbit-inner { stroke-dasharray: 1 10; opacity: .22; }
+.sigil-die { fill: color-mix(in srgb, var(--color-surface-1) 64%, transparent); stroke: currentColor; stroke-width: 1.15; }
+.sigil-facet { fill: color-mix(in srgb, var(--color-gold) 4%, transparent); }
+.sigil-facet-glow { fill: color-mix(in srgb, var(--color-gold) 9%, transparent); }
+.sigil-lines { stroke: currentColor; stroke-width: .65; opacity: .66; }
+.sigil-runes { stroke: currentColor; stroke-width: 1; opacity: .7; }
+.sigil-node { fill: currentColor; opacity: .8; }
+.sigil-core-ring { stroke: currentColor; stroke-width: .6; stroke-dasharray: 1 4; opacity: .58; }
+.sigil-core { fill: color-mix(in srgb, var(--color-gold) 24%, transparent); stroke: currentColor; stroke-width: .9; }
+.sigil-core-cut { fill: var(--color-surface-0); stroke: currentColor; stroke-width: .6; }
+.sigil-number { fill: currentColor; font-family: var(--font-display); font-size: 8px; letter-spacing: .24em; opacity: .76; }
+.login-features { display: flex; align-self: stretch; justify-content: space-between; border-top: 1px solid var(--color-border-2); padding-top: 1rem; }
+.login-features p { font-size: var(--text-small); letter-spacing: .12em; color: var(--color-text-light); }
+.login-features span { margin-right: .55rem; font-family: var(--font-display); color: var(--color-gold-dim); }
+.login-panel {
+  position: relative;
+  width: min(100%, 430px);
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface-1) 88%, transparent);
+  padding: clamp(2rem, 4vw, 3.5rem);
+  box-shadow: 0 28px 90px color-mix(in srgb, black 32%, transparent), inset 0 0 40px color-mix(in srgb, var(--color-gold) 3%, transparent);
+  backdrop-filter: blur(9px);
+}
+.login-panel-corners { position: absolute; inset: 7px; pointer-events: none; border: 1px solid var(--color-border-2); }
+.login-panel-corners::before, .login-panel-corners::after { content: '◆'; position: absolute; top: -8px; left: 50%; transform: translateX(-50%); padding: 0 7px; background: var(--color-surface-1); color: var(--color-gold-dim); font-size: 9px; }
+.login-panel-corners::after { top: auto; bottom: -8px; }
+.login-panel h2 { margin-top: .65rem; font-size: clamp(1.25rem, 2vw, 1.55rem); }
+.login-primary-button, .login-demo-link {
+  position: relative;
+  display: flex;
+  min-height: 52px;
+  width: 100%;
+  align-items: center;
+  gap: .75rem;
+  border: 1px solid var(--color-gold);
+  padding: .8rem 1rem;
+}
+.login-primary-button { cursor: pointer; background: var(--color-gold-solid); color: var(--color-surface-0); font-weight: 700; box-shadow: 0 8px 24px color-mix(in srgb, var(--color-gold) 12%, transparent); }
+.login-primary-button::before { content: ''; position: absolute; inset: 3px; border: 1px solid color-mix(in srgb, var(--color-surface-0) 20%, transparent); pointer-events: none; }
+.login-divider { display: flex; align-items: center; gap: .75rem; margin: 1.25rem 0; font-size: var(--text-tiny); color: var(--color-text-secondary); }
+.login-divider::before, .login-divider::after { content: ''; height: 1px; flex: 1; background: var(--color-border-2); }
+.login-demo-link { justify-content: space-between; border-color: var(--color-border); color: var(--color-text-primary); }
+.login-demo-link strong { display: block; font-size: var(--text-body); font-weight: 600; }
+.login-demo-link small { display: block; margin-top: .2rem; font-size: var(--text-small); color: var(--color-text-secondary); }
+.login-edition { position: absolute; right: 2rem; bottom: 1.75rem; font-size: 9px; letter-spacing: .2em; color: var(--color-section-label); writing-mode: vertical-rl; }
+
+@media (max-width: 839px) {
+  .login-stage { display: block; background: radial-gradient(circle at 50% 24%, color-mix(in srgb, var(--color-gold) 11%, transparent), transparent 21rem), var(--color-surface-0); }
+  .login-hero, .login-entry { width: 100%; padding: 0 1.25rem; }
+  .login-hero { padding-top: 4.5rem; }
+  .login-hero-copy { align-self: center; text-align: center; }
+  .login-kicker { justify-content: center; }
+  .login-kicker::before { display: none; }
+  .login-wordmark { font-size: clamp(3rem, 15vw, 5rem); }
+  .login-motto { font-size: .86rem; }
+  .lorebook-sigil { width: min(58vw, 260px); margin: 1.5rem auto; }
+  .login-features { display: none; }
+  .login-entry { padding-bottom: 4.5rem; }
+  .login-panel { max-width: 430px; padding: 2rem; }
+  .login-edition { display: none; }
+}
+@media (min-width: 840px) and (max-height: 800px) {
+  .login-hero, .login-entry { padding-block: 2.25rem; }
+  .login-wordmark { font-size: clamp(3.25rem, 6vw, 5.4rem); }
+  .login-motto { margin-top: .8rem; }
+  .lorebook-sigil { width: min(25vw, 275px); margin-block: 1rem; }
+  .login-panel { padding-block: 2.25rem; }
+  .login-edition { bottom: 1.25rem; }
+}
+@media (max-width: 420px) {
+  .login-stage::after { inset: 8px; }
+  .login-hero { padding-top: 2.75rem; }
+  .login-motto { letter-spacing: .06em; }
+  .lorebook-sigil { width: 170px; margin-block: .65rem; }
+  .login-entry { padding-bottom: 2.75rem; }
+  .login-panel { padding: 1.5rem 1.4rem; }
+  .login-panel h2 { margin-top: .45rem; }
+  .login-panel .mt-7 { margin-top: 1.25rem; }
+}
+
 /**
  * ── 互動基礎樣式 ────────────────────────────────────────
  *
