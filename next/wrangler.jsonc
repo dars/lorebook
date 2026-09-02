@@ -16,6 +16,9 @@
   // wrangler 預設會把 workers.dev 關掉（部署時只以警告告知），正式網域出問題時
   // 就沒有第二條路可以驗。
   "workers_dev": true,
+  // 關閉 Preview URLs：開啟 workers.dev 後 wrangler 會預設一併啟用，
+  // 那會讓每次部署都多出一個可公開存取的網址。要驗新版用 workers.dev 就夠。
+  "preview_urls": false,
   // 自訂網域。原本掛在 `lorebook` Pages 專案上，切換到 Workers 後改綁這裡。
   // custom_domain 會自動建立 DNS 記錄與憑證；同名網域不能同時綁在 Pages 與
   // Worker 上，所以必須先在 Pages 專案移除才能 deploy 成功。
