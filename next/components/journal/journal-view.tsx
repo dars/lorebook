@@ -72,7 +72,11 @@ export function JournalView({
 
   return (
     // 桌機吃得下兩欄——日誌卡是短摘要，單欄限寬 700 會在寬螢幕上留下大片空白。
-    <div className="mx-auto w-full max-w-[1100px] px-4">
+    <div
+      className={`mx-auto w-full px-4 ${
+        entries.length <= 1 ? 'max-w-[700px]' : 'max-w-[1100px]'
+      }`}
+    >
       <SectionTitle en="JOURNAL" cn="旅程筆記" first />
 
       {/* 試玩模式才提醒。HP 與裝備同樣只活在這次瀏覽，但那些是隨手可重做的
@@ -88,7 +92,9 @@ export function JournalView({
           尚未建立任何日誌。<br />點下方的「＋」開始記錄你的冒險。
         </p>
       ) : (
-        <div className="grid gap-3 expanded:grid-cols-2">
+        <div
+          className={`grid gap-3 ${entries.length > 1 ? 'expanded:grid-cols-2' : ''}`}
+        >
           {entries.map((e) => (
             <ParchmentCard key={e.id} className="p-4">
               <button
@@ -113,7 +119,7 @@ export function JournalView({
               <button
                 type="button"
                 onClick={() => setConfirmDelete(e.id)}
-                className="mt-2 min-h-9 text-[12px] text-text-secondary"
+                className="mt-2 min-h-11 text-[12px] text-text-secondary"
               >
                 刪除
               </button>

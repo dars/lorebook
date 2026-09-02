@@ -26,7 +26,7 @@ export function PortraitCard({
 
   return (
     <div className="mx-auto w-full max-w-[420px]">
-      <div className="relative aspect-4/5 overflow-hidden rounded-character-header border border-border bg-linear-to-b from-[#2E2418] via-[#1E160C] to-[#14110C]">
+      <div className="relative aspect-square overflow-hidden rounded-character-header border border-border bg-linear-to-b from-[#2E2418] via-[#1E160C] to-[#14110C] medium:aspect-4/5">
         {c.portraitUrl ? (
           // 立繪為 Supabase Storage 的任意外部 URL，且需要 object-position
           // 取景；next/image 的最佳化在此無用武之地（來源已是壓縮好的上傳圖），
@@ -77,7 +77,7 @@ export function PortraitCard({
               {c.customSubclass && <CustomBadge className="ml-1.5" />}
             </p>
           )}
-          <h1 className="mt-1.5 text-[44px] font-bold leading-[1.05] text-white">
+          <h1 className="mt-1.5 text-[36px] font-bold leading-[1.05] text-white medium:text-[44px]">
             {c.name}
           </h1>
           {c.nameEn && (
