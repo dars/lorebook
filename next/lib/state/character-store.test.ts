@@ -121,6 +121,19 @@ describe('休息', () => {
     expect(c().currentHp).toBe(5);
   });
 
+  // 專注會被長休打斷是規則行為（長休包含睡眠）。漏掉的話玩家會帶著一個早該
+  // 結束的專注法術繼續跑，而畫面上看起來完全正常——沒有任何徵兆可循。
+  it('長休結束專注，短休不動它', () => {
+    characterActions.setConcentration('祝福術');
+    expect(c().concentrationSpell).toBe('祝福術');
+
+    characterActions.shortRest();
+    expect(c().concentrationSpell).toBe('祝福術');
+
+    characterActions.longRest();
+    expect(c().concentrationSpell).toBeNull();
+  });
+
   it('長休全回、清臨時 HP、力竭 −1、回一半生命骰', () => {
     characterActions.longRest();
     expect(c().currentHp).toBe(20);

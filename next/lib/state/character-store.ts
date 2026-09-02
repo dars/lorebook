@@ -143,7 +143,11 @@ export const characterActions = {
 
   /**
    * 長休：HP 全滿、法術位全滿、職業資源全滿、臨時 HP 清空、力竭 −1、
-   * 回復一半生命骰（最少 1）。
+   * 回復一半生命骰（最少 1），**並結束專注**。
+   *
+   * 專注會被長休打斷是規則行為（長休包含睡眠，維持不了專注），不是 UI 便利
+   * ——漏掉的話玩家會帶著一個早該結束的專注法術繼續跑，而畫面上看起來完全
+   * 正常。短休不清：規則上短休不會自動中斷專注。
    */
   longRest() {
     useCharacterStore.getState().update((c) => {
@@ -152,6 +156,7 @@ export const characterActions = {
         ...c,
         currentHp: c.maxHp,
         tempHp: 0,
+        concentrationSpell: null,
         spellSlots: c.spellSlots.map((s) => ({ ...s, used: 0 })),
         resources: c.resources.map((r) => ({ ...r, current: r.max })),
         exhaustionLevel: clamp(c.exhaustionLevel - 1, 0, 6),
