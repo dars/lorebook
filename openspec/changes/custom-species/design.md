@@ -1,29 +1,32 @@
 ## Context
 
-種族在建角流程裡由 `SpeciesOption`（`character_creation_data.dart:73`）描述，`kSpecies` 是寫死的 8 個 SRD 種族。這個型別的欄位本身就是一組**已經收斂過的規則軌道**：
+> **2026-09-03 解凍更新**：本節與 D3／D4／D4d／D8 原本依據 Flutter 實作撰寫，
+> 該端已於 2026-08-20 移除。以下改為 Next 實作的依據；**產品判斷與軌道設計未變**。
+
+種族在建角流程裡由 `SpeciesOption`（`next/lib/creation/data.ts:20`，zod schema）描述，`SPECIES` 是自 JSON 解析的 9 個 SRD 種族常數。這個型別的欄位本身就是一組**已經收斂過的規則軌道**：
 
 | 欄位 | 型別 | 現況取值 |
 |---|---|---|
-| `cn` / `en` | String | 中英名 |
-| `speed` | String | 全部為 `'30ft'` |
-| `size` | String | `'Medium'`／`'Small'`（半身人、侏儒為 Small） |
-| `darkvision` | bool | 8 個裡 6 個為 true |
-| `hpPerLevel` | int | 僅矮人為 1，其餘 0 |
-| `skillPickCount` | int | 人類、精靈為 1，其餘 0 |
-| `skillPickFrom` | List\<String\> | 人類為全 18 技能、精靈為洞察／感知／求生 |
-| `sizeChoices` | List\<String\> | 人類與提夫林可選 Medium／Small |
-| `traits` | List\<String\> | 純顯示文字，標題與摘要黏成一串，如 `'矮人堅毅 +1HP/級'` |
-| `description` | String | 佔位文案 |
+| `cn` / `en` | string | 中英名 |
+| `speed` | string | 全部為 `'30ft'` |
+| `size` | string | `'Medium'`／`'Small'`（半身人、侏儒為 Small） |
+| `darkvisionFt` | number | 9 個裡 6 個為非 0（60 或 120） |
+| `hpPerLevel` | number | 僅矮人為 1，其餘 0 |
+| `skillPickCount` | number | 人類、精靈為 1，其餘 0 |
+| `skillPickFrom` | string[] | 人類為全 18 技能、精靈為洞察／感知／求生 |
+| `sizeChoices` | string[] | 人類與提夫林可選 Medium／Small |
+| `traits` | `SpeciesTrait[]` | 名稱＋說明的結構化條目（`feature-descriptions` 的成果，已移植） |
+| `description` | string | 敘述文案 |
 
 三個消費點：
 
-1. **建角步驟 2**（`character_create_page.dart:584-620`）：以 `s.cn` 產生選單，選取後 `kSpecies.firstWhere((s) => s.cn == cn)`；有多個體型時顯示選擇列；敘述卡顯示速度／體型／黑暗視覺與 traits
-2. **建角送出**（同檔 380-400）：`sp.cn`／`sp.en` 寫入 `Character.species`／`speciesEn`，`size` 取 `_sizeChoice ?? sp.size`，`speed` 取 `sp.speed`，種族技能併入 `profSkills`
-3. **升級**（`level_up.dart:82`）：`kSpecies.where((s) => s.cn == c.species)` 反查取 `hpPerLevel`
+1. **建角種族步驟**（`components/creation/create-wizard.tsx:102`）：`SPECIES.find((s) => s.cn === speciesCn)`；有多個體型時顯示選擇列；敘述卡顯示速度／體型／黑暗視覺與 traits
+2. **建角送出**：`cn`／`en` 寫入 `Character.species`／`speciesEn`，體型取所選、速度取 `speed`，種族技能併入技能熟練
+3. **升級**（`components/level-up/level-up-view.tsx:63`）：`SPECIES.find((s) => s.cn === initial.species)?.hpPerLevel ?? 0`
 
-第 3 點是既有缺陷，見 D3。
+第 3 點是既有缺陷，見 D3——**Flutter 端的同一個缺陷在重寫時被原封不動移植過來了**，寫法幾乎逐字對應。
 
-自訂背景（archived `2026-07-10-custom-backgrounds`）已建立完整的 homebrew 模式：`user_backgrounds` 文件模式表、`CustomBackground` freezed model ＋ `toBackgroundOption()` 轉接、repository ＋ Notifier、獨立編輯頁與路由、建角步驟的合併供給與「（自訂）」標識。本 change 沿用整套，不發明新模式。
+自訂背景與自訂子職已建立完整的 homebrew 模式：`user_backgrounds`／`user_subclasses` 文件模式表、zod schema、server actions、管理元件（含 `embedded` 模式）、`/library` 收藏紀錄頁的區塊化呈現、建角步驟的合併供給與「（自訂）」標識，以及 `lib/homebrew/types.ts` 的 `HOMEBREW_KIND` 註冊表（分享／檢視／收藏三條路徑共用）。本 change 沿用整套，不發明新模式。
 
 ## Goals / Non-Goals
 
@@ -78,32 +81,44 @@ SHALL NOT 驗證：這個種族是否過強、traits 的文字是否描述了不
 
 ### D3：每級額外 HP 快照進角色，升級不再反查種族清單
 
-`LevelUpPlan.forCharacter` 目前這樣取值：
+`LevelUpView` 目前這樣取值：
 
-```dart
-final species = kSpecies.where((s) => s.cn == c.species).toList();
-// ...
-speciesHpPerLevel: species.isEmpty ? 0 : species.first.hpPerLevel,
+```ts
+// components/level-up/level-up-view.tsx:63
+const speciesHpPerLevel =
+  SPECIES.find((s) => s.cn === initial.species)?.hpPerLevel ?? 0;
 ```
 
-自訂種族不在 `kSpecies` 裡 → `species.isEmpty` → **回 0**。矮人式的「每級 +1 HP」對自訂種族會在升級時靜默消失，而且角色主人不會收到任何提示。
+自訂種族不在 `SPECIES` 裡 → `find` 回 `undefined` → **回 0**。矮人式的「每級 +1 HP」對自訂種族會在升級時靜默消失，而且角色主人不會收到任何提示。
 
-改為：`Character` 新增 `speciesHpPerLevel` 欄位，建角時自所選種族（內建或自訂）寫入；`forCharacter` 直接讀該欄位。
+改為：`Character`（`lib/domain/character.ts`）新增 `speciesHpPerLevel` 欄位，建角時自所選種族（內建或自訂）寫入；`level-up-view` 直接讀該欄位。
 
 - **為什麼是快照而不是查表**：整個專案的角色卡都是建卡時快照（背景、職業特性皆然），刪改自訂種族不影響既有角色。若改成升級時反查自訂種族清單，會出現「使用者把自訂種族的 HP 從 1 改成 2，既有角色下次升級突然變壯」，語意混亂；而且未登入時查不到自訂清單，升級行為會依連線狀態而異。
-- **既有角色的回填**：新增一次性回填函式，依中文種族名自 `kSpecies` 補齊此欄位，於雲端讀入時與 `migrateLegacyWeapons`、`backfillClassResources` 同一條鏈套用。既有角色全是內建種族，名稱一定查得到；查不到則回 0（與現況行為相同，不會更糟）。
+- **既有角色的回填**：新增一次性回填函式，依中文種族名自 `SPECIES` 補齊此欄位，於雲端讀入時與既有的資料形狀遷移同一條鏈套用。既有角色全是內建種族，名稱一定查得到；查不到則回 0（與現況行為相同，不會更糟）。
 - **這個修正對內建種族也有價值**：升級邏輯不再依賴「角色的中文種族名必須與常數清單一字不差」這個脆弱前提。
 
 ### D4：合併供給，且自訂種族的行為與內建完全一致
 
-建角種族步驟的選項為「`kSpecies` ＋ 該使用者的自訂種族」，自訂項以「名稱（自訂）」標識。選取自訂種族後：敘述卡、體型選擇列、種族技能勾選、送出時寫入角色的欄位，全部與內建走同一段程式碼。
+建角種族步驟的選項為「`SPECIES` ＋ 該使用者的自訂種族」，自訂項以「名稱（自訂）」標識。選取自訂種族後：敘述卡、體型選擇列、種族技能勾選、送出時寫入角色的欄位，全部與內建走同一段程式碼。
 
-實作手段是 `CustomSpecies.toSpeciesOption()` 轉接——與 `CustomBackground.toBackgroundOption()` 同一招。建角流程只認得 `SpeciesOption`，不需要知道它從哪來。
+實作手段是把 `CustomSpecies` 轉成 `SpeciesOption` 後併入陣列——與自訂背景同一招：
+
+```ts
+// create-wizard.tsx:104 既有的自訂背景合併
+const allBackgrounds = [...BACKGROUNDS, ...customBackgrounds];
+// 選項標籤：b.cn + (b.isCustom ? '（自訂）' : '')
+```
+
+建角流程只認得 `SpeciesOption`，不需要知道它從哪來。
 
 - **好處**：新增自訂種族**不會**在建角流程裡長出第二條分支，行為一致是型別保證的而不是靠測試盯著。
 - `en` 留空的處理比照自訂背景：角色快照的 `speciesEn` 為空字串。
 
-### D4d：特性的形狀與互動由 `feature-descriptions` 定義
+### D4d：特性的形狀與互動由 `feature-descriptions` 定義（**相依已解除**）
+
+> **2026-09-03**：`feature-descriptions` 已 archived，且成果隨 Next 重寫移植完成
+> ——`lib/creation/data.ts` 的 `SpeciesOption.traits` 已是 `z.array(SpeciesTrait)`。
+> 下述相依不再是排序限制，本節保留作為「特性形狀由誰定義」的記錄。
 
 種族特性的結構化（`SpeciesTrait`：名稱／英文名／說明）、內建種族說明的補齊、以及「清單只顯示名稱、點擊出說明」的呈現，全部屬於 `feature-descriptions` change，**本 change 不重複定義**。
 
@@ -135,10 +150,60 @@ speciesHpPerLevel: species.isEmpty ? 0 : species.first.hpPerLevel,
 
 ### D8：id 直接用隨機值
 
-新建的自訂種族 id 以 `generateShareToken()`（128-bit 隨機、base64url 22 字元，`lib/shared/util/random_token.dart`）產生。
+新建的自訂種族 id 以 `generateShareToken()`（128-bit 隨機，`next/lib/share/token.ts`）產生。
 
 - 自訂背景當初用 `DateTime.now().microsecondsSinceEpoch`，時間戳可枚舉；`homebrew-share` 的 design 已認定這是不該存在的問題。新型別沒有相容包袱，直接做對。
 - id 僅為識別，不參與任何權限判斷；即便如此，可枚舉的識別碼本身就沒有存在的理由。
+
+### D9：新增「有限次數能力」軌道，產出角色卡 resource
+
+> **2026-09-03 新增。** 原設計把所有特性一律當顯示文字；掃過 SRD 9 個種族的
+> 33 條特性後，發現其中一類重複出現且**已有現成機制可用**，值得從文字升格為軌道。
+
+SRD 種族特性依機制歸類（33 條）：
+
+| 模式 | 條數 | 例子 |
+|---|---|---|
+| 速度／體型 | 9／9 | 全部種族 |
+| 黑暗視覺 | 6 | 侏儒/提夫林/精靈/龍裔 60ft、獸人/矮人 120ft |
+| **有限次數能力** | **6** | 不屈毅力、腎上腺素爆發、石工直覺、巨人血統、巨大形體、血系法術 |
+| 豁免優勢 | 5 | 侏儒狡黠、勇毅、矮人韌性、妖精血統、魁梧體格 |
+| 血系／傳承選擇 | 5 | 侏儒血系、魔裔傳承、精靈血系、龍族血統、巨人血統 |
+| 傷害抗性 | 3 | 矮人（毒素）、龍裔（依血統） |
+| 技能熟練 | 2 | 多才多藝、敏銳感官 |
+| 每級額外 HP | 1 | 矮人堅毅 |
+| 獨特規則 | 5 | 幸運重擲 1、半身人靈巧、天生隱匿、出神、吐息武器 |
+
+那 6 條「有限次數能力」是同一個形狀——**次數 ＋ 回復時機**：
+
+```
+不屈毅力       1 次 / 長休
+腎上腺素爆發   熟練加值次 / 短休或長休
+石工直覺       熟練加值次 / 長休
+巨大形體       1 次 / 長休
+```
+
+而角色卡的 `resources` 欄位已經是這個形狀（`{ name, current, max, recovery: 'short' | 'long', display, dieFaces, unit }`），`lib/rules/class-resources.ts` 已在處理短休／長休的回復，行動頁的資源區塊、pips 互動、休息回饋也都現成。**自訂種族的這類特性產生一筆 resource 即可，不需要新機制。**
+
+軌道形狀：
+
+| 欄位 | 輸入方式 | 界限 |
+|---|---|---|
+| 能力名稱 | 文字 | 必填、長度上限 |
+| 次數 | 選單 | 1 / 2 / 3 / **熟練加值** |
+| 回復時機 | 二選一 | 短休／長休 |
+| 說明 | 多行文字 | 選填、長度上限 |
+
+- **為什麼「熟練加值」要當一個選項而不是數字**：SRD 有 3 條特性是「次數 = 熟練加值」，寫死數字會在升級後失準——玩家 5 級時熟練加值變 3，App 卻還顯示 2 次，而且沒有任何徵兆。這與 D3 要修的缺陷是同一類問題（把會隨等級變動的值當成常數）。
+- **與 D3 的快照語意一致**：能力定義在建角時快照進角色的 `resources`，之後刪改自訂種族不影響既有角色。次數若為「熟練加值」，快照的是**這個意圖**而非當下的數字，由既有的資源計算在每次讀取時求值。
+
+**維持為純文字的三類**（不開軌道）：
+
+- **豁免優勢**（5 條）——數量雖多，但 App 的豁免只顯示加值、沒有「優勢」的數值表示，做了也無處呈現
+- **血系／傳承選擇**（5 條）——每個種族的表結構都不同（提夫林是法術表、龍裔是傷害型別表、歌利亞是增益表），抽象成通用 schema 的成本遠高於收益
+- **獨特規則**（5 條）——幸運重擲、吐息武器是擲骰當下的判斷，而本 App 明確不代擲骰，這些本來就只需要被讀到
+
+**傷害抗性維持原判不開軌道**（Risks 已記錄該取捨）：3／9 的覆蓋率不足以推翻「特性先當顯示文字」的既定原則，且抗性目前在角色卡上沒有消費點——不像 `resources` 那樣有現成的呈現與互動。日後要結構化是獨立的一步。
 
 ## Risks / Trade-offs
 
@@ -169,4 +234,12 @@ speciesHpPerLevel: species.isEmpty ? 0 : species.first.hpPerLevel,
 
 1. 速度級距是否需要涵蓋 45ft 以上？SRD 內沒有，但自創種族可能想要。傾向先給 20–40ft，有需求再加。
 2. 特性（traits）條目數上限設多少？內建種族最多 4 條，傾向上限 8 條。
-3. 自訂種族的管理入口除了建角流程內，是否需要在系統設定頁提供一個總覽清單？自訂背景目前也只有建角流程內的入口，傾向維持一致，待兩種型別都成熟後再一併考慮。
+3. ~~自訂種族的管理入口除了建角流程內，是否需要在系統設定頁提供一個總覽清單？~~
+   **已有答案（2026-09-03）**：`/library` 收藏紀錄頁就是那個總覽，自訂背景與自訂子職
+   都已在該頁以區塊呈現（`background-manager` / `subclass-manager` 的 `embedded` 模式）。
+   自訂種族加一個區塊即可，不需要新的資訊架構。
+
+4. **建角流程內要不要能就地新增／編輯自訂種族？** `docs/flutter-parity.md` 把
+   「建角流程不能就地新增／編輯自訂背景」列為仍缺的落差，種族會遇到同一個問題。
+   若要做，需先定形式：整頁跳到 `/library`（建角草稿要保住）或就地開面板。
+   傾向就地面板——建角是有進度的流程，跳走再回來即使草稿沒掉，心理上也斷了。
