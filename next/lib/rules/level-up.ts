@@ -195,8 +195,11 @@ export function applyLevelUp(
 
 /**
  * 升級後同步職業資源：上限與骰面重算，**已消耗的差額入帳**而非回滿
- * （升級不視為休息）；規則表新出現的資源以滿額加入；非規則表管理的既有
- * 資源（自訂）原樣保留。
+ * （升級不視為休息）；規則表新出現的資源以滿額加入。
+ *
+ * 規則表管不到的資源（自訂種族的有限次數能力）原樣保留，除非它標了
+ * `scaling: 'proficiency'`——那是「次數等於熟練加值」的意圖，數字本來就
+ * 該隨等級走（custom-species D9）。
  */
 export function syncClassResources(
   existing: ClassResource[],
@@ -208,10 +211,21 @@ export function syncClassResources(
   const result: ClassResource[] = [];
   const matched = new Set<string>();
 
+  const pb = proficiencyBonusFor(level);
+
   for (const e of existing) {
     const d = derived.find((x) => x.nameEn === e.nameEn);
     if (!d) {
-      result.push(e); // 自訂資源原樣保留
+      if (e.scaling === 'proficiency' && e.max !== pb) {
+        // 與職業資源同樣的差額入帳：升級不是休息，已經用掉的不會回來。
+        result.push({
+          ...e,
+          max: pb,
+          current: Math.min(Math.max(e.current + (pb - e.max), 0), pb),
+        });
+        continue;
+      }
+      result.push(e); // 其餘自訂資源原樣保留
       continue;
     }
     matched.add(d.nameEn);

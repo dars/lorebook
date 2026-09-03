@@ -12,10 +12,35 @@ import raw from './creation-data.json';
  * 資料更新時重跑匯出器，不要手改這份 JSON。
  */
 
-const SpeciesTrait = z.object({
+/**
+ * 種族特性：名稱＋英文名＋說明。
+ *
+ * 匯出的內建資料三個欄位都在，選填的預設值是給自訂種族用的——同一個形狀
+ * 兩邊共用，自訂種族不另立特性型別（openspec custom-species D4d）。
+ */
+export const SpeciesTrait = z.object({
   name: z.string(),
-  nameEn: z.string(),
-  description: z.string(),
+  nameEn: z.string().default(''),
+  description: z.string().default(''),
+});
+
+/**
+ * 有限次數能力：次數 ＋ 回復時機（custom-species D9）。
+ *
+ * 選用該種族建角時展開為角色卡的資源項目。內建種族的資料尚未標記這一類
+ * 特性（仍在 traits 的文字裡），因此目前只有自訂種族會有值。
+ */
+export const SpeciesAbility = z.object({
+  name: z.string(),
+  /** 1／2／3 或 'proficiency'（熟練加值，隨等級變動）。 */
+  uses: z.union([
+    z.literal(1),
+    z.literal(2),
+    z.literal(3),
+    z.literal('proficiency'),
+  ]),
+  recovery: z.enum(['short', 'long']),
+  description: z.string().default(''),
 });
 
 export const SpeciesOption = z.object({
@@ -31,7 +56,11 @@ export const SpeciesOption = z.object({
   skillPickFrom: z.array(z.string()),
   sizeChoices: z.array(z.string()),
   traits: z.array(SpeciesTrait),
+  /** 有限次數能力。內建資料無此欄位，預設為空。 */
+  abilities: z.array(SpeciesAbility).default([]),
   description: z.string(),
+  /** 這個選項本身是不是使用者自訂的種族。內建資料無此欄位，預設 false。 */
+  isCustom: z.boolean().default(false),
 });
 
 export const ClassOption = z.object({
@@ -93,6 +122,8 @@ export const LANGUAGES = parsed.languages;
 export const ABILITY_ORDER = parsed.abilityOrder;
 export const PROFICIENCY_ENTRY_MAX = parsed.proficiencyEntryMax;
 
+export type SpeciesTrait = z.infer<typeof SpeciesTrait>;
+export type SpeciesAbility = z.infer<typeof SpeciesAbility>;
 export type SpeciesOption = z.infer<typeof SpeciesOption>;
 export type ClassOption = z.infer<typeof ClassOption>;
 export type BackgroundOption = z.infer<typeof BackgroundOption>;
@@ -108,6 +139,15 @@ export const ABILITY_LABEL: Record<string, string> = {
   STR: '力量', DEX: '敏捷', CON: '體質',
   INT: '智力', WIS: '感知', CHA: '魅力',
 };
+
+/** 體型的中文。資料是英文原值（Small/Medium/Large），畫面一律中文。 */
+export const SIZE_LABEL: Record<string, string> = {
+  Small: '小型',
+  Medium: '中型',
+  Large: '大型',
+};
+
+export const sizeCn = (size: string) => SIZE_LABEL[size] ?? size;
 
 export const abilityLabels = (codes: string[]) =>
   codes.map((c) => ABILITY_LABEL[c] ?? c).join('/');

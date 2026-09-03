@@ -23,7 +23,7 @@ import {
 /**
  * 自訂子職管理。
  *
- * 表單本體在 `SubclassEditor`——升級流程的「就地建一個」共用同一份。
+ * 表單本體在 `SubclassEditor`。
  */
 
 export function SubclassManager({

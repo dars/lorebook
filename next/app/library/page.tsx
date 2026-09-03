@@ -5,6 +5,7 @@ import { BackgroundManager } from '@/components/backgrounds/background-manager';
 import { HomebrewItemMeta } from '@/components/homebrew/item-meta';
 import { OfflineNotice } from '@/components/shell/offline-notice';
 import { BackButton } from '@/components/ui/back-button';
+import { SpeciesManager } from '@/components/species/species-manager';
 import { SubclassManager } from '@/components/subclasses/subclass-manager';
 import { fetchLibrary, findOutdated } from '@/lib/homebrew/library';
 import { listHomebrewShares } from '@/lib/homebrew/share-actions';
@@ -62,6 +63,9 @@ export default async function LibraryPage() {
   const subclasses = items.flatMap((i) =>
     i.content.kind === 'subclass' ? [i.content.data] : [],
   );
+  const species = items.flatMap((i) =>
+    i.content.kind === 'species' ? [i.content.data] : [],
+  );
 
   const empty = items.length === 0;
 
@@ -102,6 +106,7 @@ export default async function LibraryPage() {
       </header>
 
       <div className="grid items-start gap-7 expanded:grid-cols-2">
+        <SpeciesManager initial={species} embedded extras={extras} />
         <BackgroundManager initial={backgrounds} embedded extras={extras} />
         <SubclassManager initial={subclasses} embedded extras={extras} />
       </div>

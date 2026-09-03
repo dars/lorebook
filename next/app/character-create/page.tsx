@@ -5,6 +5,8 @@ import { CreateWizard } from '@/components/creation/create-wizard';
 import { fetchCustomBackgrounds } from '@/lib/backgrounds/actions';
 import { fetchSpells } from '@/lib/catalog/fetch';
 import { OfflineNotice } from '@/components/shell/offline-notice';
+import { fetchCustomSpecies } from '@/lib/species/actions';
+import { toSpeciesOption } from '@/lib/species/types';
 import { getAuthState } from '@/lib/supabase/server';
 
 export const metadata: Metadata = { title: '建立角色｜Lorebook' };
@@ -39,5 +41,18 @@ export default async function CharacterCreatePage() {
     isCustom: true,
   }));
 
-  return <CreateWizard spells={spells} customBackgrounds={custom} />;
+  // 自訂種族同理。轉成 SpeciesOption 之後建角流程就不必知道它從哪來——
+  // 敘述卡、體型選擇、種族技能全部走與內建同一段程式碼（D4）。
+  const { species, error: speciesError } = await fetchCustomSpecies();
+
+  return (
+    <CreateWizard
+      spells={spells}
+      customBackgrounds={custom}
+      customSpecies={species.map(toSpeciesOption)}
+      // 取不到自訂種族（離線）與「一個都還沒建」是兩件事，種族步驟的提示
+      // 不同：前者要說「離線不可用」，後者要指路去建立。
+      customSpeciesOffline={speciesError !== null}
+    />
+  );
 }

@@ -155,6 +155,19 @@ export const ClassResource = z.object({
   max: z.number().int().default(0),
   recovery: ResourceRecovery.default('long'),
   display: ResourceDisplay.default('pips'),
+  /**
+   * 上限怎麼隨等級走。**省略＝固定值**。
+   *
+   * 只有 'proficiency'（等於熟練加值）需要標記：職業資源的上限由
+   * `class-resources.ts` 的規則表依等級算，不需要這個欄位；自訂種族的能力
+   * 沒有規則表可查，所以把**意圖**存進角色卡，由升級時重算（custom-species
+   * D9）。寫死數字的話，玩家 5 級時熟練加值變 3、App 卻還顯示 2 次，而且
+   * 沒有任何徵兆。
+   *
+   * 刻意不給 default：職業資源的形狀是 golden 快照的既有契約，替 160 筆
+   * 都補上一個永遠是 'fixed' 的欄位只是噪音。
+   */
+  scaling: z.enum(['fixed', 'proficiency']).optional(),
   /** display === 'dice' 時的骰面（如吟遊激勵 d8 → 8）。 */
   dieFaces: z.number().int().default(0),
   /** display === 'number' 時的單位。 */
@@ -182,6 +195,16 @@ export const Character = z.object({
 
   species: z.string().default(''),
   speciesEn: z.string().default(''),
+  /**
+   * 種族的每級額外 HP（矮人堅毅 = 1），**建角時快照**。
+   *
+   * 升級不以種族名反查內建清單：自訂種族查不到會靜默回 0，每級 +1 HP 就
+   * 這樣消失且不會有任何提示（custom-species D3）。快照也讓「改了自訂種族
+   * 之後既有角色突然變壯」不會發生——與整份角色卡的快照語意一致。
+   *
+   * 本欄位之前建立的角色由 `lib/characters/backfill.ts` 依種族名補齊。
+   */
+  speciesHpPerLevel: z.number().int().default(0),
   className: z.string().default(''),
   classNameEn: z.string().default(''),
   subclass: z.string().default(''),

@@ -3,23 +3,12 @@
 import { useState } from 'react';
 
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
-import { EditorSheet } from '@/components/ui/editor-sheet';
-import {
-  SubclassEditor,
-  emptySubclass,
-} from '@/components/subclasses/subclass-editor';
+import { AppLink } from '@/components/ui/app-link';
 import { updateCharacter } from '@/lib/characters/actions';
-import { SPECIES } from '@/lib/creation/data';
 import { useFormDraft } from '@/lib/hooks/use-form-draft';
-import { newCharacterId } from '@/lib/creation/id';
 import type { Character } from '@/lib/domain/character';
 import type { CatalogClassFeature, CatalogSubclass } from '@/lib/catalog/types';
-import { upsertCustomSubclass } from '@/lib/subclasses/actions';
-import {
-  type CustomSubclass,
-  cleanFeatures,
-  validate as validateSubclass,
-} from '@/lib/subclasses/types';
+import type { CustomSubclass } from '@/lib/subclasses/types';
 import { ftFlattenEntries } from '@/lib/catalog/fivetools';
 import { applyLevelUp, applySubclassPick, planFor } from '@/lib/rules/level-up';
 
@@ -60,9 +49,10 @@ export function LevelUpView({
   catalogOffline: boolean;
 }) {
   const subclassOnly = mode === 'subclass';
-  const speciesHpPerLevel =
-    SPECIES.find((s) => s.cn === initial.species)?.hpPerLevel ?? 0;
-  const plan = planFor(initial, speciesHpPerLevel);
+  // 種族的每級額外 HP 讀角色卡上的快照，不以種族名反查 SPECIES——自訂種族
+  // 查不到會回 0，每級 +1 HP 就這樣靜默消失（custom-species D3）。舊角色的
+  // 這個欄位由 lib/characters/backfill.ts 於讀入時補齊。
+  const plan = planFor(initial, initial.speciesHpPerLevel);
 
   const [hpMode, setHpMode] = useState<'average' | 'roll'>('average');
   const [roll, setRoll] = useState<number | ''>('');
@@ -73,32 +63,8 @@ export function LevelUpView({
   // 那是他的子職（與自訂起源專長同一原則）。
   const [subclass, setSubclass] = useState<CatalogSubclass | null>(null);
   const [customSubclass, setCustomSubclass] = useState<CustomSubclass | null>(null);
-  // 就地建立的自訂子職會加進這份清單——玩家通常是升到 3 級發現沒得選才想
-  // 自訂，要他離開升級流程去設定頁建好再回來，中途填的 HP 選擇都會丟掉。
-  const [customList, setCustomList] = useState(customSubclasses);
-  const [drafting, setDrafting] = useState<CustomSubclass | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const draftProblem = drafting ? validateSubclass(drafting) : null;
-
-  // 建好即選取——玩家按「建立」的意圖就是要用它，不該再讓他回清單點一次。
-  const saveDraft = async () => {
-    if (!drafting || draftProblem) return;
-    const s: CustomSubclass = {
-      ...drafting,
-      id: drafting.id || newCharacterId(),
-      name: drafting.name.trim(),
-      features: cleanFeatures(drafting.features),
-    };
-    const r = await upsertCustomSubclass(s);
-    if (r.error) return setError(r.error);
-    setCustomList((prev) => [...prev, s]);
-    setCustomSubclass(s);
-    setSubclass(null);
-    setDrafting(null);
-    setError(null);
-  };
 
   const asi: Record<string, number> = !plan.hasAsi
     ? {}
@@ -121,7 +87,7 @@ export function LevelUpView({
       picked
     : !plan.pickSubclass ||
       picked ||
-      (catalogOffline && customList.length === 0);
+      (catalogOffline && customSubclasses.length === 0);
   // 子職特性的累積上限：升級時取目標等級，補選時取角色**現有**等級——
   // 5 級才回來補的人，1–5 級的子職特性要一次補齊。
   const subclassThrough = subclassOnly ? initial.level : plan.targetLevel;
@@ -345,7 +311,8 @@ export function LevelUpView({
         )}
         <p className="mt-3 text-[12px] text-text-secondary">
           最大生命值 {initial.maxHp} → <span className="text-gold">{preview.maxHp}</span>
-          {speciesHpPerLevel > 0 && `（含${initial.species}每級 +${speciesHpPerLevel}）`}
+          {plan.speciesHpPerLevel > 0 &&
+            `（含${initial.species}每級 +${plan.speciesHpPerLevel}）`}
         </p>
       </ParchmentCard>
 
@@ -402,16 +369,16 @@ export function LevelUpView({
       {showSubclass && (
         <>
           <SectionTitle en="SUBCLASS" cn="子職業" />
-          {subclasses.length === 0 && customList.length === 0 && (
+          {subclasses.length === 0 && customSubclasses.length === 0 && (
             <ParchmentCard className="mb-2 px-4 py-3">
               <p className="text-[12px] leading-relaxed text-text-secondary">
                 {subclassOnly
-                  ? '子職清單目前無法取得（內容庫離線）。連線後再回來補選，或在這裡自己建一個。'
-                  : '子職清單目前無法取得（內容庫離線）。可先完成升級，之後再自角色頁補選——數值不受影響。也可以在這裡自己建一個。'}
+                  ? '子職清單目前無法取得（內容庫離線）。連線後再回來補選。'
+                  : '子職清單目前無法取得（內容庫離線）。可先完成升級，之後再自角色頁補選——數值不受影響。'}
               </p>
             </ParchmentCard>
           )}
-          {(subclasses.length > 0 || customList.length > 0) && (
+          {(subclasses.length > 0 || customSubclasses.length > 0) && (
             <div className="flex flex-col gap-2">
               {subclasses.map((s) => (
                 <button
@@ -438,7 +405,7 @@ export function LevelUpView({
                 </button>
               ))}
 
-              {customList.map((s) => (
+              {customSubclasses.map((s) => (
                 <button
                   key={s.id}
                   type="button"
@@ -476,15 +443,17 @@ export function LevelUpView({
             </div>
           )}
 
-          <button
-            type="button"
-            onClick={() => setDrafting(emptySubclass(initial.classNameEn))}
-            className="mt-2 flex min-h-12 w-full items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
-          >
-            ＋ 建立自訂子職
-          </button>
-          <p className="mt-1.5 text-[12px] leading-relaxed text-text-secondary">
-            SRD 每個職業只收錄一個子職。自己設計的子職請與 DM 確認後使用。
+          {/* 自創內容的編輯一律在收藏紀錄，升級流程不長出編輯器（見
+              docs/flutter-parity.md 的〈設計決定〉）。這裡只指路——不指路的話，
+              沒有子職可選的人會以為這個 App 不支援自創。
+              升級的選擇由 use-form-draft 的草稿保全接住，離開再回來不會白填。 */}
+          <p className="mt-2 text-[12px] leading-relaxed text-text-secondary">
+            SRD 每個職業只收錄一個子職。想用自創或他人分享的子職，先到
+            <AppLink href="/library" className="mx-1 text-gold underline">
+              收藏紀錄
+            </AppLink>
+            建立或收藏，再回來這裡選用——這一頁的選擇會留著。自己設計的子職請與
+            DM 確認後使用。
           </p>
         </>
       )}
@@ -582,23 +551,6 @@ export function LevelUpView({
         </div>
       </div>
 
-      {/* 母職業鎖定為角色的職業——建角後不得換職業，子職編輯更不該是那個入口。 */}
-      <EditorSheet
-        open={drafting !== null}
-        title="建立自訂子職"
-        onClose={() => setDrafting(null)}
-        onSave={saveDraft}
-        saveEnabled={draftProblem === null}
-      >
-        {drafting && (
-          <>
-            <SubclassEditor value={drafting} onChange={setDrafting} lockClass />
-            {draftProblem && (
-              <p className="mt-3 text-[12px] text-danger">{draftProblem}</p>
-            )}
-          </>
-        )}
-      </EditorSheet>
     </main>
   );
 }

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { CustomSpecies, toSpeciesOption } from '@/lib/species/types';
 import { BACKGROUNDS, CLASSES, SPECIES } from './data';
 import {
   POINT_BUY_BUDGET,
@@ -251,5 +252,81 @@ describe('自創來源標示', () => {
     };
     const c = buildCharacter({ ...input, background: custom }, 'x');
     expect(c.features.every((f) => !f.source.includes('自訂'))).toBe(true);
+  });
+});
+
+describe('以自訂種族建角（custom-species）', () => {
+  const stoneborn = toSpeciesOption(
+    CustomSpecies.parse({
+      id: 'sp1',
+      name: '石裔',
+      speedFt: 25,
+      sizeMode: 'choice',
+      darkvisionFt: 60,
+      hpPerLevel: 1,
+      skillPickCount: 1,
+      skillPickFrom: ['運動', '求生', '自然'],
+      abilities: [
+        { name: '石工直覺', uses: 'proficiency', recovery: 'long' },
+        { name: '石膚', uses: 2, recovery: 'short' },
+      ],
+    }),
+  );
+
+  const input = {
+    name: '測試者',
+    species: stoneborn,
+    cls: cls('戰士'),
+    background: bg('侍僧'),
+    base: { STR: 15, DEX: 12, CON: 14, INT: 10, WIS: 13, CHA: 8 },
+    bonusMode: '2/1' as const,
+    plus2: 'WIS',
+    plus1: 'INT',
+    classSkills: ['運動', '威嚇'],
+    speciesSkills: ['求生'],
+    sizeChoice: 'Small',
+  };
+
+  it('種族快照的是名稱與數值，不回查來源', () => {
+    const c = buildCharacter(input, 'x');
+    expect(c.species).toBe('石裔');
+    expect(c.speciesEn).toBe('');
+    expect(c.speed).toBe('25ft');
+    expect(c.size).toBe('Small');
+  });
+
+  it('每級額外 HP 快照進角色——升級不再以種族名反查', () => {
+    const c = buildCharacter(input, 'x');
+    expect(c.speciesHpPerLevel).toBe(1);
+    expect(c.maxHp).toBe(10 + 2 + 1); // d10 + 體質 2 + 種族 1
+  });
+
+  it('種族技能與職業技能一併寫入熟練', () => {
+    const c = buildCharacter(input, 'x');
+    const prof = c.skills.filter((s) => s.proficient).map((s) => s.name);
+    expect(prof).toContain('求生');
+    expect(prof).toContain('威嚇');
+  });
+
+  it('有限次數能力展開為角色卡資源，回復時機照填的走', () => {
+    const c = buildCharacter(input, 'x');
+    const stonework = c.resources.find((r) => r.name === '石工直覺')!;
+    const skin = c.resources.find((r) => r.name === '石膚')!;
+
+    // 1 級的熟練加值是 2——但存的是「等於熟練加值」這個意圖，不是 2。
+    expect(stonework.max).toBe(2);
+    expect(stonework.current).toBe(2);
+    expect(stonework.scaling).toBe('proficiency');
+    expect(stonework.recovery).toBe('long');
+
+    expect(skin.max).toBe(2);
+    expect(skin.recovery).toBe('short');
+    // 固定次數不標記——省略即固定。
+    expect(skin.scaling).toBeUndefined();
+  });
+
+  it('內建種族不產生種族資源', () => {
+    const c = buildCharacter({ ...input, species: species('矮人') }, 'x');
+    expect(c.resources.every((r) => r.scaling === undefined)).toBe(true);
   });
 });

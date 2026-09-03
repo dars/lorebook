@@ -1,3 +1,4 @@
+import { backfillSpeciesHpPerLevel } from '@/lib/characters/backfill';
 import { Character, parseCharacter } from '@/lib/domain/character';
 import raw from './characters.json';
 
@@ -12,7 +13,9 @@ import raw from './characters.json';
  * 新手，新使用者實際會看到的樣子）、牧師（戲法＋準備法術＋法術 DC）。
  */
 export const DEMO_CHARACTERS: Character[] = (raw as unknown[]).map((c) =>
-  parseCharacter(c),
+  // 匯出的種子資料沒有 speciesHpPerLevel（矮人的布蕾妲會少每級 1 HP）——
+  // 與雲端讀入走同一支回填，而不是手改那份 JSON。
+  parseCharacter(backfillSpeciesHpPerLevel(c)),
 );
 
 export const findDemoCharacter = (id: string): Character | undefined =>

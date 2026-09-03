@@ -2,6 +2,7 @@ import { cache } from 'react';
 
 import { Character, parseCharacter } from '@/lib/domain/character';
 import { createClient } from '@/lib/supabase/server';
+import { backfillSpeciesHpPerLevel } from './backfill';
 
 /**
  * 讀取登入者自己的角色。
@@ -27,7 +28,9 @@ export async function fetchMyCharacters(): Promise<ListResult> {
   const characters: Character[] = [];
   for (const row of data ?? []) {
     try {
-      characters.push(parseCharacter((row as { data: unknown }).data));
+      characters.push(
+        parseCharacter(backfillSpeciesHpPerLevel((row as { data: unknown }).data)),
+      );
     } catch {
       // 單一角色解析失敗不該讓整份清單消失——跳過並繼續。
       // 這在資料形狀演進期特別重要：一張壞卡不等於全部不能用。
@@ -58,7 +61,12 @@ export const fetchMyCharacter = cache(async function fetchMyCharacter(
   if (!data) return { character: null, error: null };
 
   try {
-    return { character: parseCharacter((data as { data: unknown }).data), error: null };
+    return {
+      character: parseCharacter(
+        backfillSpeciesHpPerLevel((data as { data: unknown }).data),
+      ),
+      error: null,
+    };
   } catch {
     return { character: null, error: '這張角色卡的資料無法解析' };
   }

@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import { HOMEBREW_KIND, type HomebrewContent } from '@/lib/homebrew/types';
 import { BackgroundBody } from './background-body';
+import { SpeciesBody } from './species-body';
 import { SubclassBody } from './subclass-body';
 
 /**
@@ -51,11 +52,9 @@ export function HomebrewView({
         )}
       </ParchmentCard>
 
-      {content.kind === 'background' ? (
-        <BackgroundBody b={content.data} />
-      ) : (
-        <SubclassBody s={content.data} />
-      )}
+      {content.kind === 'background' && <BackgroundBody b={content.data} />}
+      {content.kind === 'subclass' && <SubclassBody s={content.data} />}
+      {content.kind === 'species' && <SpeciesBody s={content.data} />}
 
       {actions && <div className="mt-5">{actions}</div>}
 

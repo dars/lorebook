@@ -1,6 +1,7 @@
 import type { z } from 'zod';
 
 import { CustomBackground } from '@/lib/backgrounds/types';
+import { CustomSpecies } from '@/lib/species/types';
 import { CustomSubclass } from '@/lib/subclasses/types';
 
 /**
@@ -10,11 +11,11 @@ import { CustomSubclass } from '@/lib/subclasses/types';
  * schema 驗、標題怎麼寫。把差異集中在這裡，新增型別就是加一筆，而不是在
  * 三個地方各加一個 if（見 openspec homebrew-share design D8）。
  *
- * 首版只有背景與子職（D10）。自訂種族解凍後在此加一筆、在 0008 的 kind
- * check 加一個值、補一個內容區塊元件即可。
+ * 首版只有背景與子職（D10）；自訂種族於 custom-species 加入——如上所述，
+ * 那次改動就是這裡一筆、0009 的 kind check 一個值、一個內容區塊元件。
  */
 
-export const HOMEBREW_KINDS = ['background', 'subclass'] as const;
+export const HOMEBREW_KINDS = ['background', 'subclass', 'species'] as const;
 export type HomebrewKind = (typeof HOMEBREW_KINDS)[number];
 
 /**
@@ -23,13 +24,14 @@ export type HomebrewKind = (typeof HOMEBREW_KINDS)[number];
  */
 export type HomebrewContent =
   | { kind: 'background'; data: CustomBackground }
-  | { kind: 'subclass'; data: CustomSubclass };
+  | { kind: 'subclass'; data: CustomSubclass }
+  | { kind: 'species'; data: CustomSpecies };
 
 type KindDef = {
   /** 型別標示，檢視頁與收藏紀錄共用。 */
   label: string;
   /** 來源表。收藏是寫進收藏者自己的這張表。 */
-  table: 'user_backgrounds' | 'user_subclasses';
+  table: 'user_backgrounds' | 'user_subclasses' | 'user_species';
   /**
    * 驗證用的 schema，與**手動建立時完全相同**。
    *
@@ -62,6 +64,12 @@ export const HOMEBREW_KIND: Record<HomebrewKind, KindDef> = {
       class_en: (d as CustomSubclass).classEn,
     }),
   },
+  species: {
+    label: '種族',
+    table: 'user_species',
+    schema: CustomSpecies,
+    columns: (d) => ({ name: (d as CustomSpecies).name }),
+  },
 };
 
 export const isHomebrewKind = (v: unknown): v is HomebrewKind =>
@@ -82,9 +90,14 @@ export function parseHomebrew(
   const parsed = HOMEBREW_KIND[kind].schema.safeParse(data);
   if (!parsed.success) return null;
 
-  return kind === 'background'
-    ? { kind, data: parsed.data as CustomBackground }
-    : { kind, data: parsed.data as CustomSubclass };
+  switch (kind) {
+    case 'background':
+      return { kind, data: parsed.data as CustomBackground };
+    case 'subclass':
+      return { kind, data: parsed.data as CustomSubclass };
+    case 'species':
+      return { kind, data: parsed.data as CustomSpecies };
+  }
 }
 
 /**

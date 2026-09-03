@@ -1,4 +1,4 @@
-import type { Character, Spell } from '@/lib/domain/character';
+import type { Character, ClassResource, Spell } from '@/lib/domain/character';
 import { Character as CharacterSchema } from '@/lib/domain/character';
 import { abilityModifier, spellAttackFor, spellSaveDcFor } from '@/lib/rules/ability';
 import { deriveClassResources } from '@/lib/rules/class-resources';
@@ -219,6 +219,7 @@ export function buildCharacter(input: CreationInput, id: string): Character {
     name: name.trim(),
     species: species.cn,
     speciesEn: species.en,
+    speciesHpPerLevel: species.hpPerLevel,
     className: cls.cn,
     classNameEn: cls.en,
     level: 1,
@@ -248,7 +249,39 @@ export function buildCharacter(input: CreationInput, id: string): Character {
     // 2024 角色至少會通用語（規則上來自種族與背景，兩者目前皆未建模語言來源）。
     languages: ['通用語'],
     toolProficiencies: background.toolProficiency ? [background.toolProficiency] : [],
-    resources: deriveClassResources(cls.en, 1, abilityScores),
+    resources: [
+      ...deriveClassResources(cls.en, 1, abilityScores),
+      ...speciesResources(species, PB),
+    ],
     hitDieFaces: cls.hitDie,
+  });
+}
+
+/**
+ * 種族的有限次數能力 → 角色卡資源（custom-species D9）。
+ *
+ * 次數為「熟練加值」時存 `scaling: 'proficiency'` 而非當下的數字：那個值會
+ * 隨等級變動，寫死會在 5 級悄悄失準。實際的重算在 `syncClassResources`。
+ *
+ * 內建種族目前沒有這類標記（特性仍是文字），因此實務上只有自訂種族會產出。
+ */
+export function speciesResources(
+  species: SpeciesOption,
+  pb: number,
+): ClassResource[] {
+  return species.abilities.map((a) => {
+    const max = a.uses === 'proficiency' ? pb : a.uses;
+    return {
+      name: a.name,
+      nameEn: '',
+      current: max,
+      max,
+      recovery: a.recovery,
+      display: 'pips' as const,
+      dieFaces: 0,
+      unit: '',
+      // 固定次數不標記——省略即固定（見 domain 的 ClassResource.scaling）。
+      ...(a.uses === 'proficiency' ? { scaling: 'proficiency' as const } : {}),
+    };
   });
 }

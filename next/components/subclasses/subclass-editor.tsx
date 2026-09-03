@@ -16,12 +16,9 @@ import {
 /**
  * 自訂子職的編輯表單本體（不含 EditorSheet 外框與儲存邏輯）。
  *
- * 抽出來是為了兩個進入點共用：設定頁的管理介面，以及升級流程 3 級選子職
- * 時的「就地建一個」——玩家通常是**升到 3 級發現沒得選**才想自訂，要他先
- * 離開升級流程去設定頁建好再回來，中途填的 HP 選擇都會丟掉。
- *
- * `lockClass` 用於升級流程：母職業由角色決定，不可更換（換母職業會影響
- * 生命骰、熟練、法術等一整串數值，那不是子職編輯該做的事）。
+ * 只有收藏紀錄頁會用到——自創內容的編輯一律在那裡，升級流程不長出編輯器
+ * （見 docs/flutter-parity.md 的〈設計決定〉）。曾經有過的「升級時就地建一個」
+ * 連同它的 `lockClass` 已移除。
  */
 export const emptySubclass = (classEn = ''): CustomSubclass => ({
   id: '',
@@ -39,12 +36,9 @@ export { classCn };
 export function SubclassEditor({
   value,
   onChange,
-  lockClass = false,
 }: {
   value: CustomSubclass;
   onChange: (next: CustomSubclass) => void;
-  /** true 時母職業固定不可改，僅顯示。 */
-  lockClass?: boolean;
 }) {
   const uid = useId();
 
@@ -97,33 +91,22 @@ export function SubclassEditor({
 
       <div className="mt-4">
         <FieldLabel>母職業</FieldLabel>
-        {lockClass ? (
-          <div className="flex min-h-11 items-center rounded-chip border border-border-2 bg-surface-2 px-3">
-            <span className="text-[14px] text-text-primary">
-              {classCn(value.classEn)}
-            </span>
-            <span className="ml-auto text-[12px] text-text-secondary">
-              依角色職業
-            </span>
-          </div>
-        ) : (
-          <div className="grid grid-cols-3 gap-1.5">
-            {CLASSES.map((c) => (
-              <button
-                key={c.en}
-                type="button"
-                onClick={() => pickClass(c.en)}
-                className={`min-h-11 rounded-chip border text-[12px] ${
-                  value.classEn === c.en
-                    ? 'border-gold bg-gold/10 text-gold'
-                    : 'border-border-2 text-text-secondary'
-                }`}
-              >
-                {c.cn}
-              </button>
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-3 gap-1.5">
+          {CLASSES.map((c) => (
+            <button
+              key={c.en}
+              type="button"
+              onClick={() => pickClass(c.en)}
+              className={`min-h-11 rounded-chip border text-[12px] ${
+                value.classEn === c.en
+                  ? 'border-gold bg-gold/10 text-gold'
+                  : 'border-border-2 text-text-secondary'
+              }`}
+            >
+              {c.cn}
+            </button>
+          ))}
+        </div>
       </div>
 
       {value.levels.length > 0 && (

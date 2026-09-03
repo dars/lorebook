@@ -3,7 +3,6 @@
 import { useState } from 'react';
 
 import { AppLink } from '@/components/ui/app-link';
-
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import { EditorSheet } from '@/components/ui/editor-sheet';
 import type { CatalogSpell } from '@/lib/catalog/types';
@@ -33,7 +32,9 @@ import {
   CLASSES,
   SKILLS,
   SPECIES,
+  type SpeciesOption,
   isCaster,
+  sizeCn,
 } from '@/lib/creation/data';
 import { ALIGNMENTS, alignmentEnFor } from '@/lib/creation/alignments';
 import { AbilityHexChart } from '@/components/character/ability-hex-chart';
@@ -59,20 +60,19 @@ import { AbilityStep, type Method } from './ability-step';
  * 才被擋，那只會讓人不知道少了什麼。
  */
 
-/** 體型的中文。資料是英文原值，但整個流程其餘部分都是中文。 */
-const SIZE_LABEL: Record<string, string> = {
-  Small: '小型',
-  Medium: '中型',
-  Large: '大型',
-};
-
 export function CreateWizard({
   spells,
   customBackgrounds = [],
+  customSpecies = [],
+  customSpeciesOffline = false,
 }: {
   spells: CatalogSpell[];
   /** 自訂背景，與內建並列供選擇。 */
   customBackgrounds?: BackgroundOption[];
+  /** 自訂種族，與內建並列供選擇。已轉為 SpeciesOption——流程不區分來源。 */
+  customSpecies?: SpeciesOption[];
+  /** 自訂種族取不到（離線）。與「一個都還沒建」不同，提示也不同。 */
+  customSpeciesOffline?: boolean;
 }) {
   const [step, setStep] = useState(0);
   // 角色 id 一次產生後固定：角色圖要在建立前就以它為檔名上傳，每次 render
@@ -101,7 +101,8 @@ export function CreateWizard({
   const [error, setError] = useState<string | null>(null);
   const [portraitWarning, setPortraitWarning] = useState<string | null>(null);
 
-  const species = SPECIES.find((s) => s.cn === speciesCn) ?? null;
+  const allSpecies = [...SPECIES, ...customSpecies];
+  const species = allSpecies.find((s) => s.cn === speciesCn) ?? null;
   const cls = CLASSES.find((c) => c.cn === classCn) ?? null;
   const allBackgrounds = [...BACKGROUNDS, ...customBackgrounds];
   const bg = allBackgrounds.find((b) => b.cn === bgCn) ?? null;
@@ -343,9 +344,16 @@ export function CreateWizard({
             </select>
 
             <SectionTitle en="SPECIES" cn="種族" />
+            <SpeciesHint
+              hasCustom={customSpecies.length > 0}
+              offline={customSpeciesOffline}
+            />
             <OptionChips
               ariaLabel="種族"
-              options={SPECIES.map((s) => ({ key: s.cn, label: s.cn }))}
+              options={allSpecies.map((s) => ({
+                key: s.cn,
+                label: s.cn + (s.isCustom ? '（自訂）' : ''),
+              }))}
               selected={speciesCn}
               onSelect={(k) => {
                 setSpeciesCn(k);
@@ -355,7 +363,7 @@ export function CreateWizard({
             />
             {species && (
               <DescCard
-                title={species.cn}
+                title={species.cn + (species.isCustom ? '（自訂）' : '')}
                 titleEn={species.en}
                 description={species.description}
                 chips={
@@ -363,21 +371,35 @@ export function CreateWizard({
                     <StatChip label="速度" value={species.speed} />
                     <StatChip
                       label="體型"
-                      value={SIZE_LABEL[species.size] ?? species.size}
+                      value={sizeCn(species.size)}
                     />
                     {species.darkvisionFt > 0 && (
                       <StatChip label="黑暗視覺" value={`${species.darkvisionFt} 尺`} />
                     )}
                   </>
                 }
-                traits={species.traits.map((t) => (
-                  <TraitChip
-                    key={t.name}
-                    name={t.name}
-                    nameEn={t.nameEn}
-                    description={t.description}
-                  />
-                ))}
+                traits={[
+                  // 有限次數能力也列進特性區——它們建角後會佔一格資源，
+                  // 選之前就該看得到，而不是建完才發現多了兩格。
+                  ...species.abilities.map((a) => (
+                    <TraitChip
+                      key={`ability-${a.name}`}
+                      name={`${a.name}（${
+                        a.uses === 'proficiency' ? '熟練加值' : a.uses
+                      } 次／${a.recovery === 'short' ? '短休' : '長休'}）`}
+                      nameEn=""
+                      description={a.description}
+                    />
+                  )),
+                  ...species.traits.map((t) => (
+                    <TraitChip
+                      key={t.name}
+                      name={t.name}
+                      nameEn={t.nameEn}
+                      description={t.description}
+                    />
+                  )),
+                ]}
               />
             )}
             {species && species.sizeChoices.length > 1 && (
@@ -395,7 +417,7 @@ export function CreateWizard({
                           : 'border-border-2 bg-surface-1 text-text-primary hover:border-gold/50'
                       }`}
                     >
-                      {SIZE_LABEL[s] ?? s}
+                      {sizeCn(s)}
                     </button>
                   ))}
                 </div>
@@ -942,6 +964,41 @@ function SpellPicker({
 }
 
 /** 確認頁顯示的是**實際會存下的角色**，不是另外算一次的預覽。 */
+/**
+ * 種族步驟的一行提示。
+ *
+ * 沒有任何自訂種族時**要指路**——自創內容的編輯一律在收藏紀錄（見
+ * docs/flutter-parity.md 的〈設計決定〉），不指路的話使用者會以為這個 App
+ * 不支援自創。離開再回來由 use-form-draft 的草稿保全接住，不必另存。
+ *
+ * 離線是另一回事：那時「去建立」也做不到，說了只會讓人白跑一趟。
+ */
+function SpeciesHint({
+  hasCustom,
+  offline,
+}: {
+  hasCustom: boolean;
+  offline: boolean;
+}) {
+  if (offline) {
+    return (
+      <p className="mb-3 text-[12px] leading-relaxed text-text-secondary">
+        自訂種族目前取不到（離線）——內建種族仍可照常建角。
+      </p>
+    );
+  }
+  if (hasCustom) return null;
+  return (
+    <p className="mb-3 text-[12px] leading-relaxed text-text-secondary">
+      想用自創種族？先到
+      <AppLink href="/library" className="mx-1 text-gold underline">
+        收藏紀錄
+      </AppLink>
+      建立，再回來這裡選用——這一步填到哪裡會留著。
+    </p>
+  );
+}
+
 function Confirm({ c }: { c: ReturnType<typeof buildCharacter> | null }) {
   if (!c) return <p className="text-[13px] text-danger">資料不完整，請回前面的步驟檢查。</p>;
 

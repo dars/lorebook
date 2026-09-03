@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { backfillSpeciesHpPerLevel } from '@/lib/characters/backfill';
 import { Character, parseCharacter } from '@/lib/domain/character';
 import { createAnonClient } from '@/lib/supabase/server';
 
@@ -46,7 +47,9 @@ export async function fetchSharedCharacter(
   try {
     return {
       status: 'ok',
-      character: parseCharacter(row.data),
+      // 與主人端走同一支回填：兩邊不一致的話，分享檢視顯示的升級資訊會與
+      // 角色主人看到的不同（custom-species tasks 3.4）。
+      character: parseCharacter(backfillSpeciesHpPerLevel(row.data)),
       // 規格要求顯示資料時點——檢視者才知道自己看到的是何時的狀態。
       fetchedAt: Date.now(),
     };

@@ -55,6 +55,15 @@ describe('parseHomebrew', () => {
     expect(r?.kind === 'background' && r.data.originFeatCustom).toBe(false);
   });
 
+  const species = {
+    id: 'sp1',
+    name: '石裔',
+    speedFt: 25,
+    sizeMode: 'small',
+    traits: [{ name: '石膚', description: '{@damage 1d4} 的鈍擊抗性' }],
+    abilities: [{ name: '石工直覺', uses: 'proficiency', recovery: 'long' }],
+  };
+
   it('子職：特性說明原樣保留，標記不被解析也不被剝除', () => {
     const r = parseHomebrew('subclass', subclass);
     expect(r?.kind === 'subclass' && r.data.features[0].description).toBe(
@@ -62,8 +71,19 @@ describe('parseHomebrew', () => {
     );
   });
 
+  it('種族：特性與能力原樣保留，選填欄位補預設值', () => {
+    const r = parseHomebrew('species', species);
+    expect(r?.kind).toBe('species');
+    expect(r?.kind === 'species' && r.data.traits[0].description).toBe(
+      '{@damage 1d4} 的鈍擊抗性',
+    );
+    // 沒填的英文名、每級額外 HP 走 schema 的 default，不因此被擋下。
+    expect(r?.kind === 'species' && r.data.nameEn).toBe('');
+    expect(r?.kind === 'species' && r.data.hpPerLevel).toBe(0);
+  });
+
   it('認不得的 kind 回 null——舊版開到新型別的連結不該當掉', () => {
-    expect(parseHomebrew('species', { id: 'x', name: 'y' })).toBeNull();
+    expect(parseHomebrew('feat', { id: 'x', name: 'y' })).toBeNull();
     expect(parseHomebrew(undefined, background)).toBeNull();
   });
 
