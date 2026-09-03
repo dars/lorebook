@@ -80,22 +80,19 @@ export function SubclassManager({
     <Wrap embedded={embedded}>
       <SectionTitle en="CUSTOM SUBCLASSES" cn="自訂子職業" first={!embedded} />
 
-      <ParchmentCard className="mb-4 px-4 py-3">
-        <div className="text-[13px] font-semibold text-text-primary">
-          2024 版的子職業結構
-        </div>
-        <ul className="mt-2 flex flex-col gap-1 text-[12px] leading-relaxed text-text-secondary">
-          <li>· 3 級取得子職，之後在特定等級再獲得特性</li>
-          <li>
-            · 特性的等級<strong className="text-text-light">依職業而異</strong>，
-            選定母職業後會自動列出
-          </li>
-          <li>· 同一等級可以有多個特性</li>
-        </ul>
-        <p className="mt-2 text-[12px] text-text-secondary">
-          這是規則書的結構，不是這個 App 自訂的。
-        </p>
-      </ParchmentCard>
+      {embedded ? (
+        <details className="mb-4 rounded-card border border-border-2 bg-surface-1 px-4 py-2.5">
+          <summary className="cursor-pointer py-1 text-[12px] text-text-secondary">
+            查看 2024 子職業結構
+          </summary>
+          <SubclassRules />
+        </details>
+      ) : (
+        <ParchmentCard className="mb-4 px-4 py-3">
+          <div className="text-[13px] font-semibold text-text-primary">2024 版的子職業結構</div>
+          <SubclassRules />
+        </ParchmentCard>
+      )}
 
       {error && (
         <p role="alert" className="mb-3 text-[13px] text-danger">
@@ -103,24 +100,31 @@ export function SubclassManager({
         </p>
       )}
 
+      {list.length === 0 && (
+        <div className="mb-3 rounded-card border border-dashed border-border px-4 py-6 text-center">
+          <p className="text-[13px] text-text-light">尚未收藏子職業</p>
+          <p className="mt-1 text-[12px] text-text-secondary">建立一個子職業，記錄專屬的成長路線。</p>
+        </div>
+      )}
+
       <div className="flex flex-col gap-2">
         {list.map((s) => (
           <ParchmentCard key={s.id} className="px-4 py-3">
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-center gap-2">
               <span className="flex-1 text-[15px] font-semibold text-text-primary">
                 {s.name}
               </span>
               <button
                 type="button"
                 onClick={() => setEditing(s)}
-                className="min-h-9 text-[12px] text-gold"
+                className="min-h-11 rounded-chip border border-border-2 px-3 text-[12px] text-gold"
               >
                 編輯
               </button>
               <button
                 type="button"
                 onClick={() => setConfirmDelete(s)}
-                className="min-h-9 text-[12px] text-text-secondary"
+                className="min-h-11 rounded-chip px-2 text-[12px] text-text-secondary hover:text-danger"
               >
                 刪除
               </button>
@@ -186,10 +190,25 @@ function Wrap({
   embedded?: boolean;
   children: React.ReactNode;
 }) {
-  if (embedded) return <>{children}</>;
+  if (embedded) return <section className="min-w-0">{children}</section>;
   return (
     <main id="main-content" className="mx-auto w-full max-w-[700px] flex-1 px-4 pb-10">
       {children}
     </main>
+  );
+}
+
+function SubclassRules() {
+  return (
+    <>
+      <ul className="mt-2 flex flex-col gap-1 text-[12px] leading-relaxed text-text-secondary">
+        <li>· 3 級取得子職，之後在特定等級再獲得特性</li>
+        <li>
+          · 特性的等級<strong className="text-text-light">依職業而異</strong>，選定母職業後會自動列出
+        </li>
+        <li>· 同一等級可以有多個特性</li>
+      </ul>
+      <p className="mt-2 text-[12px] text-text-secondary">這是規則書的結構，不是這個 App 自訂的。</p>
+    </>
   );
 }

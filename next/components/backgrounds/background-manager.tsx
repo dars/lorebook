@@ -94,20 +94,19 @@ export function BackgroundManager({
     <Wrap embedded={embedded}>
       <SectionTitle en="CUSTOM BACKGROUNDS" cn="自訂背景" first={!embedded} />
 
-      <ParchmentCard className="mb-4 px-4 py-3">
-        <div className="text-[13px] font-semibold text-text-primary">
-          2024 版的背景建構規則
-        </div>
-        <ul className="mt-2 flex flex-col gap-1 text-[12px] leading-relaxed text-text-secondary">
-          <li>· 三個能力值加值候選（建角時分配 +2/+1 或三項各 +1）</li>
-          <li>· 兩個固定技能熟練</li>
-          <li>· 一個起源專長</li>
-          <li>· 可選一項工具熟練</li>
-        </ul>
-        <p className="mt-2 text-[12px] text-text-secondary">
-          這是規則書的限制，不是這個 App 自訂的。
-        </p>
-      </ParchmentCard>
+      {embedded ? (
+        <details className="mb-4 rounded-card border border-border-2 bg-surface-1 px-4 py-2.5">
+          <summary className="cursor-pointer py-1 text-[12px] text-text-secondary">
+            查看 2024 背景建構規則
+          </summary>
+          <BackgroundRules />
+        </details>
+      ) : (
+        <ParchmentCard className="mb-4 px-4 py-3">
+          <div className="text-[13px] font-semibold text-text-primary">2024 版的背景建構規則</div>
+          <BackgroundRules />
+        </ParchmentCard>
+      )}
 
       {error && (
         <p role="alert" className="mb-3 text-[13px] text-danger">
@@ -115,24 +114,31 @@ export function BackgroundManager({
         </p>
       )}
 
+      {list.length === 0 && (
+        <div className="mb-3 rounded-card border border-dashed border-border px-4 py-6 text-center">
+          <p className="text-[13px] text-text-light">尚未收藏背景</p>
+          <p className="mt-1 text-[12px] text-text-secondary">建立一個自訂背景，作為角色故事的起點。</p>
+        </div>
+      )}
+
       <div className="flex flex-col gap-2">
         {list.map((b) => (
           <ParchmentCard key={b.id} className="px-4 py-3">
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-center gap-2">
               <span className="flex-1 text-[15px] font-semibold text-text-primary">
                 {b.name}
               </span>
               <button
                 type="button"
                 onClick={() => setEditing(b)}
-                className="min-h-9 text-[12px] text-gold"
+                className="min-h-11 rounded-chip border border-border-2 px-3 text-[12px] text-gold"
               >
                 編輯
               </button>
               <button
                 type="button"
                 onClick={() => setConfirmDelete(b)}
-                className="min-h-9 text-[12px] text-text-secondary"
+                className="min-h-11 rounded-chip px-2 text-[12px] text-text-secondary hover:text-danger"
               >
                 刪除
               </button>
@@ -352,10 +358,24 @@ function Wrap({
   embedded?: boolean;
   children: React.ReactNode;
 }) {
-  if (embedded) return <>{children}</>;
+  if (embedded) return <section className="min-w-0">{children}</section>;
   return (
     <main id="main-content" className="mx-auto w-full max-w-[700px] flex-1 px-4 pb-10">
       {children}
     </main>
+  );
+}
+
+function BackgroundRules() {
+  return (
+    <>
+      <ul className="mt-2 flex flex-col gap-1 text-[12px] leading-relaxed text-text-secondary">
+        <li>· 三個能力值加值候選（建角時分配 +2/+1 或三項各 +1）</li>
+        <li>· 兩個固定技能熟練</li>
+        <li>· 一個起源專長</li>
+        <li>· 可選一項工具熟練</li>
+      </ul>
+      <p className="mt-2 text-[12px] text-text-secondary">這是規則書的限制，不是這個 App 自訂的。</p>
+    </>
   );
 }

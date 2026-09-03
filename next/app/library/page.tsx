@@ -4,8 +4,8 @@ import { redirect } from 'next/navigation';
 import { BackgroundManager } from '@/components/backgrounds/background-manager';
 import { HomebrewItemMeta } from '@/components/homebrew/item-meta';
 import { OfflineNotice } from '@/components/shell/offline-notice';
+import { BackButton } from '@/components/ui/back-button';
 import { SubclassManager } from '@/components/subclasses/subclass-manager';
-import { SectionTitle } from '@/components/ui/decorations';
 import { fetchLibrary, findOutdated } from '@/lib/homebrew/library';
 import { listHomebrewShares } from '@/lib/homebrew/share-actions';
 import { getAuthState } from '@/lib/supabase/server';
@@ -68,17 +68,43 @@ export default async function LibraryPage() {
   return (
     <main
       id="main-content"
-      className="mx-auto w-full max-w-[700px] flex-1 px-4 pb-10"
+      className="mx-auto w-full max-w-[1100px] flex-1 px-4 pb-12"
     >
-      <SectionTitle en="MY LIBRARY" cn="收藏紀錄" first />
-      <p className="mb-4 text-[12px] leading-relaxed text-text-secondary">
-        自己建立的、以及從他人分享收藏來的自創內容都在這裡，建角與升級時會與
-        SRD 選項並列。
-        {empty && '目前還沒有任何內容——從下面各區塊新增一個，或開啟別人給你的分享連結。'}
-      </p>
+      <header className="pb-6 pt-5">
+        <div className="flex items-center justify-between gap-4">
+          {/* 收藏紀錄有多個入口（設定頁、分享頁收藏後），返回目的地不能寫死。 */}
+          <BackButton fallback="/main/system" />
+          <span className="font-label text-[9px] tracking-[2px] text-section-label">
+            PERSONAL ARCHIVE
+          </span>
+        </div>
 
-      <BackgroundManager initial={backgrounds} embedded extras={extras} />
-      <SubclassManager initial={subclasses} embedded extras={extras} />
+        <div className="mt-2 border-y border-border-2 py-5 expanded:flex expanded:items-end expanded:justify-between expanded:gap-10">
+          <div>
+            <p className="font-label text-[10px] font-bold tracking-[2px] text-section-label">
+              MY LIBRARY
+            </p>
+            <h1 className="mt-1 font-display text-[30px] font-bold text-gold expanded:text-[36px]">
+              收藏紀錄
+            </h1>
+          </div>
+          <p className="mt-3 max-w-[570px] text-[13px] leading-6 text-text-secondary expanded:mt-0">
+            收藏你建立或從分享取得的自創內容。建構角色與升級時，它們會與 SRD
+            選項並列，但始終保留自己的來源與版本。
+          </p>
+        </div>
+
+        {empty && (
+          <p className="mt-4 border-l-2 border-gold/60 pl-3 text-[12px] leading-relaxed text-text-light">
+            典藏冊目前是空的。從下方建立第一份內容，或開啟其他玩家提供的分享連結收藏。
+          </p>
+        )}
+      </header>
+
+      <div className="grid items-start gap-7 expanded:grid-cols-2">
+        <BackgroundManager initial={backgrounds} embedded extras={extras} />
+        <SubclassManager initial={subclasses} embedded extras={extras} />
+      </div>
     </main>
   );
 }
