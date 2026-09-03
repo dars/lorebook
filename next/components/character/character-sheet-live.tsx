@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useState, type ReactNode } from 'react';
 
+import { AppLink } from '@/components/ui/app-link';
 import type { CatalogItem } from '@/lib/catalog/types';
 import type { Character } from '@/lib/domain/character';
 import { needsSubclassPick } from '@/lib/rules/level-up';
@@ -77,12 +77,12 @@ export function CharacterSheetLive({
               升級當時內容庫離線，子職那一步被跳過了。補選後會一併補上到
               {c.level} 級為止的子職特性。
             </p>
-            <Link
+            <AppLink
               href="/character-level-up?mode=subclass"
               className="mt-2 flex min-h-11 items-center justify-center rounded-chip border border-gold text-[13px] font-bold text-gold hover:bg-gold/10"
             >
               補選子職
-            </Link>
+            </AppLink>
           </div>
         </div>
       )}

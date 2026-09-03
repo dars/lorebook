@@ -1,5 +1,5 @@
-import Link from 'next/link';
 
+import { AppLink } from '@/components/ui/app-link';
 import { signIn } from '@/lib/auth/actions';
 
 function LorebookSigil() {
@@ -77,10 +77,10 @@ export default async function LoginPage({
             </button>
           </form>
           <div className="login-divider"><span>或</span></div>
-          <Link href="/demo" className="login-demo-link">
+          <AppLink href="/demo" className="login-demo-link">
             <span><strong>先以訪客身分試玩</strong><small>不用註冊，直接查看範例角色</small></span>
             <span aria-hidden="true">↗</span>
-          </Link>
+          </AppLink>
           <p className="mt-7 text-center text-tiny leading-5 text-text-secondary">登入即表示你同意讓 Lorebook 儲存你的角色資料。</p>
         </div>
       </section>

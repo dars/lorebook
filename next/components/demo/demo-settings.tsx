@@ -1,12 +1,12 @@
-import Link from 'next/link';
 
+import { AppLink } from '@/components/ui/app-link';
 import { ThemeSwitch } from '@/components/shell/theme-switch';
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import type { Character } from '@/lib/domain/character';
 
 /** 試玩專用設定：保留正式版有意義的角色切換與主題，不出現帳號專屬功能。 */
 /*
- * 這個元件的 `<Link>` 全部 `prefetch={false}`。
+ * 這個元件的 `<AppLink>` 全部 `prefetch={false}`。
  *
  * Next 的 Link 預設會自動預取視窗內的目標，而這頁的連結一進畫面就全在
  * 視窗內——其中「法術目錄」與「裝備目錄」還會去查內容庫。實測是一進設定頁
@@ -28,13 +28,13 @@ export function DemoSettings({ character }: { character: Character }) {
         <p className="mt-1 text-[12px] leading-relaxed text-text-secondary">
           切換角色會離開目前試玩，這次調整的 HP、法術位與筆記將會還原。
         </p>
-        <Link
+        <AppLink
           href="/demo"
-          prefetch={false}
+         
           className="mt-4 flex min-h-11 items-center justify-center rounded-card border border-gold text-small font-semibold text-gold"
         >
           切換試玩角色
-        </Link>
+        </AppLink>
       </ParchmentCard>
 
       <ParchmentCard className="p-4">
@@ -49,13 +49,13 @@ export function DemoSettings({ character }: { character: Character }) {
         <p className="mt-2 text-[12px] leading-relaxed text-text-secondary">
           登入後可以建立角色，並保存角色狀態、裝備與旅程筆記。
         </p>
-        <Link
+        <AppLink
           href="/login"
-          prefetch={false}
+         
           className="mt-4 flex min-h-11 items-center justify-center rounded-card border border-border text-small text-text-primary"
         >
           登入 Lorebook
-        </Link>
+        </AppLink>
       </ParchmentCard>
     </div>
   );

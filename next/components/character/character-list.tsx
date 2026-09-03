@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 
+import { AppLink } from '@/components/ui/app-link';
 import { CharacterAvatar } from '@/components/character/character-avatar';
 import { ParchmentCard } from '@/components/ui/decorations';
 import { EditorSheet } from '@/components/ui/editor-sheet';
@@ -67,7 +67,7 @@ export function CharacterList({
             className="flex items-center gap-3 px-4 py-3 hover:border-gold/60"
           >
             {mode === 'demo' ? (
-              <Link
+              <AppLink
                 href={`/demo/${c.id}`}
                 className="flex min-h-12 min-w-0 flex-1 items-center gap-3 text-left"
               >
@@ -91,7 +91,7 @@ export function CharacterList({
                 <span className="min-h-11 shrink-0 content-center px-2 text-[12px] text-gold">
                   試玩&nbsp;→
                 </span>
-              </Link>
+              </AppLink>
             ) : (
               <>
                 <form action={selectCharacter.bind(null, c.id)} className="min-w-0 flex-1">

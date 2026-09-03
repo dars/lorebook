@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useState, useTransition } from 'react';
 
+import { AppLink } from '@/components/ui/app-link';
 import { collectHomebrew } from '@/lib/homebrew/collect-actions';
 import { HOMEBREW_KIND, type HomebrewKind } from '@/lib/homebrew/types';
 
@@ -36,12 +36,12 @@ export function CollectPanel({
         <p className="text-small text-text-light">
           收藏需要登入。登入後會回到這一頁，內容不會不見。
         </p>
-        <Link
+        <AppLink
           href={`/login?next=${encodeURIComponent(`/h/${token}`)}`}
           className="mt-3 flex min-h-11 items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
         >
           登入後收藏
-        </Link>
+        </AppLink>
       </div>
     );
   }
@@ -52,12 +52,12 @@ export function CollectPanel({
         <p className="text-small text-text-primary">
           已收進你的收藏紀錄。這是一份複製——作者之後怎麼改都不會影響它。
         </p>
-        <Link
+        <AppLink
           href="/library"
           className="mt-3 flex min-h-11 items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
         >
           前往收藏紀錄
-        </Link>
+        </AppLink>
       </div>
     );
   }

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AppLink } from '@/components/ui/app-link';
 
 /**
  * 「無法確認登入狀態」時的畫面。
@@ -32,19 +32,19 @@ export function OfflineNotice({
 
         <div className="mt-4 flex flex-col gap-2">
           {action && (
-            <Link
+            <AppLink
               href={action.href}
               className="flex min-h-11 items-center justify-center rounded-card border border-gold bg-gold/10 text-[13px] font-bold text-gold"
             >
               {action.label}
-            </Link>
+            </AppLink>
           )}
-          <Link
+          <AppLink
             href="/demo"
             className="flex min-h-11 items-center justify-center rounded-card border border-border text-[13px] text-text-secondary"
           >
             先看看試玩角色
-          </Link>
+          </AppLink>
         </div>
       </div>
     </main>

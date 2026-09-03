@@ -1,6 +1,7 @@
 'use client';
 
-import Link from 'next/link';
+import { AppLink } from '@/components/ui/app-link';
+
 import { usePathname } from 'next/navigation';
 
 /**
@@ -99,9 +100,9 @@ export function BookmarkTabBar({ items, active, onSelect }: NavProps = {}) {
               {body}
             </button>
           ) : (
-            <Link key={d.path} href={d.path} prefetch={false} className={cls}>
+            <AppLink key={d.path} href={d.path} className={cls}>
               {body}
-            </Link>
+            </AppLink>
           );
         })}
       </div>
@@ -152,9 +153,9 @@ export function NavRail({ items, active, onSelect }: NavProps = {}) {
             {body}
           </button>
         ) : (
-          <Link key={d.path} href={d.path} prefetch={false} className={`group ${cls}`}>
+          <AppLink key={d.path} href={d.path} className={`group ${cls}`}>
             {body}
-          </Link>
+          </AppLink>
         );
       })}
     </nav>

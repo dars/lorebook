@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
+import { AppLink } from '@/components/ui/app-link';
 import { CharacterList } from '@/components/character/character-list';
 import { SectionTitle } from '@/components/ui/decorations';
 import { fetchMyCharacters } from '@/lib/characters/fetch';
@@ -31,12 +31,12 @@ export default async function CharacterSelectPage() {
       )}
       <CharacterList initial={characters} />
 
-      <Link
+      <AppLink
         href="/character-create"
         className="mt-4 flex min-h-12 items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
       >
         ＋ 建立新角色
-      </Link>
+      </AppLink>
     </main>
   );
 }

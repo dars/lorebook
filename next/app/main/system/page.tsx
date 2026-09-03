@@ -1,5 +1,5 @@
-import Link from 'next/link';
 
+import { AppLink } from '@/components/ui/app-link';
 import { ThemeSwitch } from '@/components/shell/theme-switch';
 import { ParchmentCard } from '@/components/ui/decorations';
 import { SignOutButton } from '@/components/shell/sign-out-button';
@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
  * 角色（顯示當前、切換）／帳號（顯示 email、登出）／關於（版本與授權聲明）。
  */
 /*
- * 這一頁的 `<Link>` 全部 `prefetch={false}`。
+ * 這一頁的 `<AppLink>` 全部 `prefetch={false}`。
  *
  * Next 的 Link 預設會自動預取視窗內的目標，而這頁的四個連結一進畫面就全在
  * 視窗內——其中「法術目錄」與「裝備目錄」還會去查內容庫。實測是一進設定頁
@@ -42,13 +42,13 @@ export default async function SystemPage() {
             當前：{character.name}・{character.className} {character.level}
           </p>
         )}
-        <Link
+        <AppLink
           href="/character-select"
-          prefetch={false}
+         
           className="mt-4 flex min-h-11 items-center justify-center rounded-card border border-border text-small text-text-primary"
         >
           切換角色
-        </Link>
+        </AppLink>
       </ParchmentCard>
 
       {/* 自創與收藏的內容集中在一處，不在設定頁逐型別各列一條連結——
@@ -58,13 +58,13 @@ export default async function SystemPage() {
         <p className="mt-2 text-[12px] leading-relaxed text-text-secondary">
           自己建立的與從他人分享收藏來的自創內容——背景、子職業。
         </p>
-        <Link
+        <AppLink
           href="/library"
-          prefetch={false}
+         
           className="mt-4 flex min-h-11 items-center justify-center rounded-card border border-gold text-small text-gold"
         >
           開啟收藏紀錄
-        </Link>
+        </AppLink>
       </ParchmentCard>
 
       <ParchmentCard className="p-4">
@@ -97,13 +97,13 @@ export default async function SystemPage() {
 This work includes material from the System Reference Document 5.2 ("SRD 5.2") by Wizards of the Coast LLC, licensed under the Creative Commons Attribution 4.0 International License (https://creativecommons.org/licenses/by/4.0/legalcode).`}
         </p>
         <p className="mt-3 text-[12px] leading-relaxed text-text-secondary">
-          <Link href="/catalog/spells" prefetch={false} className="text-gold underline">
+          <AppLink href="/catalog/spells" className="text-gold underline">
             法術目錄
-          </Link>
+          </AppLink>
           {' · '}
-          <Link href="/catalog/items" prefetch={false} className="text-gold underline">
+          <AppLink href="/catalog/items" className="text-gold underline">
             裝備目錄
-          </Link>
+          </AppLink>
         </p>
       </ParchmentCard>
     </div>

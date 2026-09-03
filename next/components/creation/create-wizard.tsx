@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { AppLink } from '@/components/ui/app-link';
+
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import { EditorSheet } from '@/components/ui/editor-sheet';
 import type { CatalogSpell } from '@/lib/catalog/types';
@@ -445,6 +447,19 @@ export function CreateWizard({
 
         {current === '背景' && (
           <>
+            {/* 沒有任何自訂背景時給一行指路。自創內容的編輯一律在收藏紀錄
+                （見 docs/flutter-parity.md 的〈設計決定〉），這裡不做就地新增；
+                但不指路的話，使用者會以為這個 App 不支援自創。
+                離開再回來由 use-form-draft 的草稿保全接住，不必另存。 */}
+            {customBackgrounds.length === 0 && (
+              <p className="mb-3 text-[12px] leading-relaxed text-text-secondary">
+                想用自創背景？先到
+                <AppLink href="/library" className="mx-1 text-gold underline">
+                  收藏紀錄
+                </AppLink>
+                建立，再回來這裡選用——這一步填到哪裡會留著。
+              </p>
+            )}
             <OptionChips
               ariaLabel="背景"
               options={allBackgrounds.map((b) => ({

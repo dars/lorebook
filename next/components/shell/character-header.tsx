@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { AppLink } from '@/components/ui/app-link';
 import { CharacterAvatar } from '@/components/character/character-avatar';
 import type { Character } from '@/lib/domain/character';
 
@@ -67,7 +67,7 @@ function LevelBadge({
   // 不足以說明「這裡按了會發生什麼」——原版是靠它把「可升級」講出來的。
   // 框線用 55% 透明度（同 Flutter），全不透明會比角色名還搶眼。
   return (
-    <Link
+    <AppLink
       href="/character-level-up"
       aria-label="升級"
       className="flex min-h-12 flex-col items-center justify-center rounded-[10px] border border-gold/55 px-3 py-0.5 hover:border-gold hover:bg-gold/10"
@@ -83,6 +83,6 @@ function LevelBadge({
       <span className="font-display text-[26px] font-bold leading-none text-text-primary">
         {level}
       </span>
-    </Link>
+    </AppLink>
   );
 }
