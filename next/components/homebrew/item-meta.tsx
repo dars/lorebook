@@ -68,7 +68,7 @@ function NoteRow({
       <button
         type="button"
         onClick={() => setEditing(true)}
-        className="flex min-h-9 w-full items-center text-left text-[12px]"
+        className="flex min-h-11 w-full items-center text-left text-[12px]"
       >
         <span className={note ? 'text-text-light' : 'text-text-secondary'}>
           {note || '來自分享'}
@@ -94,13 +94,13 @@ function NoteRow({
         spellCheck={false}
         aria-label="來源備註"
         placeholder="例：阿凱的、DM 核准版"
-        className="h-9 flex-1 rounded-card border border-border bg-surface-2 px-2 text-[12px] text-text-primary"
+        className="min-h-11 flex-1 rounded-card border border-border bg-surface-2 px-2 text-[12px] text-text-primary"
       />
       <button
         type="button"
         onClick={save}
         disabled={pending}
-        className="min-h-9 text-[12px] text-gold disabled:opacity-50"
+        className="min-h-11 px-2 text-[12px] text-gold disabled:opacity-50"
       >
         {pending ? '儲存中' : '儲存'}
       </button>
@@ -147,14 +147,14 @@ function RefreshRow({
               type="button"
               onClick={run}
               disabled={pending}
-              className="min-h-9 text-[12px] text-danger disabled:opacity-50"
+              className="min-h-11 text-[12px] text-danger disabled:opacity-50"
             >
               {pending ? '更新中…' : '仍要更新'}
             </button>
             <button
               type="button"
               onClick={() => setConfirming(false)}
-              className="min-h-9 text-[12px] text-text-secondary"
+              className="min-h-11 text-[12px] text-text-secondary"
             >
               取消
             </button>
@@ -165,7 +165,7 @@ function RefreshRow({
           type="button"
           onClick={() => (edited ? setConfirming(true) : run())}
           disabled={pending}
-          className="min-h-9 text-[12px] text-gold disabled:opacity-50"
+          className="min-h-11 text-[12px] text-gold disabled:opacity-50"
         >
           {pending ? '更新中…' : '更新副本'}
         </button>
@@ -231,7 +231,7 @@ function ShareRow({
           type="button"
           onClick={create}
           disabled={pending}
-          className="min-h-9 text-[12px] text-gold disabled:opacity-50"
+          className="min-h-11 text-[12px] text-gold disabled:opacity-50"
         >
           {pending ? '產生中…' : '分享這一份'}
         </button>
@@ -256,14 +256,14 @@ function ShareRow({
         <button
           type="button"
           onClick={copy}
-          className="min-h-9 text-[12px] text-gold"
+          className="min-h-11 text-[12px] text-gold"
         >
           {copied ? '已複製' : '複製連結'}
         </button>
         <button
           type="button"
           onClick={() => setShowQr((v) => !v)}
-          className="min-h-9 text-[12px] text-gold"
+          className="min-h-11 text-[12px] text-gold"
         >
           {showQr ? '收起 QR' : '顯示 QR'}
         </button>
@@ -271,7 +271,7 @@ function ShareRow({
           type="button"
           onClick={revoke}
           disabled={pending}
-          className="min-h-9 text-[12px] text-text-secondary disabled:opacity-50"
+          className="min-h-11 text-[12px] text-text-secondary disabled:opacity-50"
         >
           {pending ? '撤銷中…' : '撤銷分享'}
         </button>
