@@ -89,5 +89,6 @@
 - [x] 7.5 **收斂 id 產生方式**（design D7）：`spell-manager.tsx` 改用 `randomId()`（`lib/creation/id.ts`）
   - 原任務寫「改為 `generateShareToken()`」是**錯的**：盤查後 id 產生方式其實有三套，而正解是 `randomId()`——它的 doc comment 就是為使用者自有資料而寫，且**收藏來的法術副本走的就是它**（`collect-actions.ts:50`）。`generateShareToken()` 是分享 token 的產生器，拿來產資料 id 語意錯位
   - 順帶記錄：**種族仍用 `generateShareToken()` 產 id**，是另一筆既有偏離，屬 `custom-species` 的範圍，本 change 不動
-- [ ] 7.7 線上實測後重新部署一次（7.5 的改動在 2026-09-22 首次部署之後）
+- [x] 7.7 7.5 之後重新部署（2026-09-22）：線上 `BUILD_ID` 為 `25a94e4`，`spell-manager` 所在 chunk 的 md5 與本機一致且不含 `randomUUID`
+  - 順帶確認：`wrangler deploy` 會偵測到 OpenNext 專案並轉呼叫 `opennextjs-cloudflare deploy`，同時把 `.dev.vars` 的值當 secrets 帶上去。但它**只做 deploy 不做 build**——這正是 `npm run build` 那個坑會靜默成立的原因
 - [ ] 7.6 更新 `openspec/specs` 主規格（archive 時同步）
