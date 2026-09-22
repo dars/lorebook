@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { EditorSheet } from '@/components/ui/editor-sheet';
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import { SpellCard } from '@/components/character/spell-card';
+import { randomId } from '@/lib/creation/id';
 import { CustomSpell, spellFromCustom } from '@/lib/spells/types';
 import { deleteCustomSpell, upsertCustomSpell } from '@/lib/spells/actions';
 
@@ -32,7 +33,7 @@ export function SpellManager({ initial, extras }: { initial: CustomSpell[]; extr
     <ParchmentCard className="p-4">
       <div className="flex items-center justify-between gap-3">
         <p className="text-[13px] text-text-secondary">{initial.length} 份法術典藏</p>
-        <button className={buttonClass} onClick={() => setEditing(CustomSpell.parse({ id: crypto.randomUUID(), name: '新法術', level: 0, description: '法術效果' }))}>＋ 新增法術</button>
+        <button className={buttonClass} onClick={() => setEditing(CustomSpell.parse({ id: randomId(), name: '新法術', level: 0, description: '法術效果' }))}>＋ 新增法術</button>
       </div>
       <p className="mt-2 text-[12px] leading-6 text-text-secondary">在這裡撰寫與管理，再到角色的法術頁從收藏選用。採用前請與 DM 確認。</p>
       {!initial.length && <p className="mt-4 border-t border-border pt-4 text-[13px] text-text-light">尚未收錄法術，為你的冒險寫下第一道咒語。</p>}

@@ -120,17 +120,36 @@ c.spells.some((s) => !s.homebrewId && s.nameEn === 'Mage Armor')
 
 取代自動化的是**明示**：選用對話框寫「選用後立即保存角色副本，不會增加法術位。請與 DM 確認環數與使用資格」，管理區塊寫「採用前請與 DM 確認」。與自訂種族、自訂子職一致——**強度與資格是 DM 的職責，App 不替桌上的人做裁決。**
 
-### D7：id 沿用 `crypto.randomUUID()`——與其他三個型別不一致，是待收斂的偏離
+### D7：id 一律用 `randomId()`（2026-09-22 修正）
 
-自創法術新建時的 id 來自 `crypto.randomUUID()`；背景／種族／子職都用 `lib/share/token.ts` 的 `generateShareToken()`（22 字元 base64url，128-bit）。
+> **本節原本寫錯了。** 初版聲稱「背景／種族／子職都用 `generateShareToken()`，
+> 法術用 `crypto.randomUUID()` 是唯一的偏離」。實際盤查後是**三套**：
 
-**兩者在安全性上等價**：UUIDv4 是 122-bit 隨機，同樣不可枚舉，沒有重蹈自訂背景時間戳 id 的問題（`custom-species` proposal 記過那個坑）。`CustomSpell.id` 的 regex `^[A-Za-z0-9_-]+$` 兩種形式都通過，所以功能上沒有差別。
+| 型別 | 原本的 id 來源 | 熵 / 長度 |
+|---|---|---|
+| 角色、背景、子職 | `newCharacterId()` → `randomId()`（`lib/creation/id.ts`） | 96-bit / 16 字元 |
+| 種族 | `generateShareToken()`（`lib/share/token.ts`） | 128-bit / 22 字元 |
+| 法術（初版） | `crypto.randomUUID()` | 122-bit / 36 字元 |
+| **收藏來的副本（全型別）** | `randomId()`（`collect-actions.ts:50`） | 96-bit / 16 字元 |
 
-但這仍是**不必要的第二種做法**，而 CLAUDE.md 明確寫「同一個東西不要有兩份實作」。之所以會這樣，單純是實作當時沒有回頭看前三個型別怎麼做——這正是跳過 propose 流程的代價。
+三者在安全性上等價——都是密碼學隨機、都不可枚舉，沒有重蹈自訂背景時間戳 id
+的問題。差別只有形狀。
 
-收斂方式是一行（`spell-manager.tsx` 的 `crypto.randomUUID()` 改為 `generateShareToken()`），**本 change 刻意不順手改**：改了會讓即將提交的程式碼與線上實測（tasks 6.1）跑的不是同一份。列為後續任務（tasks 7.1），線上實測通過後單獨處理。
+**收斂目標是 `randomId()`**，理由是它已經是這件事的正解，不是三個選項裡挑一個：
 
-注意**收藏他人分享的副本**一律走 `collectRow()` 換新 id（`homebrew-share` D2），那條路徑產生的是 `generateShareToken()` 的形式——所以同一張表裡本來就會有兩種形式的 id 並存，這也是為什麼 regex 要寬於任一種。
+1. 它的 doc comment 明寫「使用者自有資料的 id（角色、自訂背景、自訂子職…）」——
+   就是為這個用途存在的
+2. **收藏他人分享的法術一律走 `randomId()`**（`collect-actions.ts`）。手動建立
+   用別的，同一張表裡就會有兩種形狀的 id，而那個差異不代表任何東西
+3. `generateShareToken()` 是**分享 token** 的產生器——capability URL 的載體，
+   128-bit 是因為它會出現在網址裡。拿它產資料 id 是借用，語意不對
+
+法術已改為 `randomId()`（任務 7.5）。
+
+**種族仍用 `generateShareToken()` 產 id，那是另一筆既有偏離**，不在本 change
+的範圍內：功能無影響（id 只是隨機值），但它把分享 token 的產生器用在資料 id 上，
+語意錯位。要改是一行，但那屬 `custom-species`；記在這裡是為了讓下一個人知道
+「種族那樣寫不是慣例，別照抄」。
 
 ### D8：驗證只管結構，不管平衡
 

@@ -86,5 +86,8 @@
   - 附帶發現：線上最後一次部署是 **9/3**，所以 **`custom-species`（9/4 的 commit）在此之前從未上線**——本次部署一併帶上了自訂種族
 - [ ] 7.3 線上實測走完整流程：建立自創法術（含專注與升環）→ 於角色法術頁選用 → 確認法術位不變且標示為自創 → 編輯收藏 → 確認角色版本不變 → 自角色移除 → 確認收藏仍在 → 刪除收藏 → 確認既有角色仍正常 → 分享該法術 → 另一帳號檢視並收藏 → 確認副本 id 已換
 - [ ] 7.4 線上實測：以戰士（無法術位、無戲法）確認法術頁出現且可選用；分享該戰士角色卡，確認唯讀檢視無法術頁
-- [ ] 7.5 **收斂 id 產生方式**（design D7）：`spell-manager.tsx` 的 `crypto.randomUUID()` 改為 `generateShareToken()`。排在 7.3 之後，避免改動後與實測跑的不是同一份程式碼
+- [x] 7.5 **收斂 id 產生方式**（design D7）：`spell-manager.tsx` 改用 `randomId()`（`lib/creation/id.ts`）
+  - 原任務寫「改為 `generateShareToken()`」是**錯的**：盤查後 id 產生方式其實有三套，而正解是 `randomId()`——它的 doc comment 就是為使用者自有資料而寫，且**收藏來的法術副本走的就是它**（`collect-actions.ts:50`）。`generateShareToken()` 是分享 token 的產生器，拿來產資料 id 語意錯位
+  - 順帶記錄：**種族仍用 `generateShareToken()` 產 id**，是另一筆既有偏離，屬 `custom-species` 的範圍，本 change 不動
+- [ ] 7.7 線上實測後重新部署一次（7.5 的改動在 2026-09-22 首次部署之後）
 - [ ] 7.6 更新 `openspec/specs` 主規格（archive 時同步）
