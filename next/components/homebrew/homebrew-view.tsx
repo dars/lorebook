@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react';
+import { spellFromCustom } from '@/lib/spells/types';
+import { SpellCard } from '@/components/character/spell-card';
 
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import { HOMEBREW_KIND, type HomebrewContent } from '@/lib/homebrew/types';
@@ -55,6 +57,7 @@ export function HomebrewView({
       {content.kind === 'background' && <BackgroundBody b={content.data} />}
       {content.kind === 'subclass' && <SubclassBody s={content.data} />}
       {content.kind === 'species' && <SpeciesBody s={content.data} />}
+      {content.kind === 'spell' && <div className="mt-4"><SpellCard spell={spellFromCustom(content.data)} /></div>}
 
       {actions && <div className="mt-5">{actions}</div>}
 

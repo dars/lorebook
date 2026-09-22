@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SpellManager } from '@/components/spells/spell-manager';
 import { redirect } from 'next/navigation';
 
 import { BackgroundManager } from '@/components/backgrounds/background-manager';
@@ -29,7 +30,7 @@ export default async function LibraryPage() {
   if (auth.status === 'unauthenticated') redirect('/login');
   if (auth.status === 'unknown') return <OfflineNotice />;
 
-  const [{ items }, { shares }] = await Promise.all([
+  const [{ items, error }, { shares }] = await Promise.all([
     fetchLibrary(),
     listHomebrewShares(),
   ]);
@@ -93,8 +94,8 @@ export default async function LibraryPage() {
             </h1>
           </div>
           <p className="mt-3 max-w-[570px] text-[13px] leading-6 text-text-secondary expanded:mt-0">
-            收藏你建立或從分享取得的自創內容。建構角色與升級時，它們會與 SRD
-            選項並列，但始終保留自己的來源與版本。
+            收藏你建立或從分享取得的自創內容。背景、種族與子職用於建角或升級；
+            自創法術可在角色的法術頁選用，並保留選用當下的版本。
           </p>
         </div>
 
@@ -106,6 +107,8 @@ export default async function LibraryPage() {
       </header>
 
       <div className="grid items-start gap-7 expanded:grid-cols-2">
+        {error && <p role="alert" className="text-danger expanded:col-span-2">收藏載入失敗，請稍後重新整理。</p>}
+        <SpellManager initial={items.flatMap(i => i.content.kind === 'spell' ? [i.content.data] : [])} extras={extras} />
         <SpeciesManager initial={species} embedded extras={extras} />
         <BackgroundManager initial={backgrounds} embedded extras={extras} />
         <SubclassManager initial={subclasses} embedded extras={extras} />

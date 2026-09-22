@@ -1,4 +1,5 @@
 'use client';
+import type { ReactNode } from 'react';
 
 import { CollapsibleSection } from '@/components/ui/collapsible-section';
 import { ParchmentCard } from '@/components/ui/decorations';
@@ -11,7 +12,7 @@ import { CustomBadge } from '../custom-badge';
 
 /** 法術／物品／傳記三個分頁。版面語彙與其他分頁一致（區段標題＋卡片）。 */
 
-export function SpellsTab({ c }: { c: Character }) {
+export function SpellsTab({ c, tools }: { c: Character; tools?: ReactNode }) {
   const prepared = RING_LEVELS.map((lv) => ({
     lv,
     spells: c.spells.filter((s) => s.level === lv),
@@ -21,6 +22,7 @@ export function SpellsTab({ c }: { c: Character }) {
     <div className="px-4 pb-10">
       <CollapsibleSection en="SPELLCASTING" cn="施法" first>
         <SpellcastingCard c={c} />
+        {tools}
       </CollapsibleSection>
 
       {c.cantrips.length > 0 && (

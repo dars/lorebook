@@ -30,13 +30,13 @@ export function SpellCard({
     <EntryCard
       badge={badge ?? (spell.level === 0 ? '戲' : `${spell.level}`)}
       title={spell.name}
-      subtitle={spell.nameEn}
+      subtitle={[spell.nameEn, spell.homebrewId ? '自創法術' : ''].filter(Boolean).join(' · ')}
       // 射程附上格數——跑團在方格圖上跑，省掉「60 除以 5」這步心算。
       meta={spell.range ? withGridSquares(spell.range) : null}
       metaArrow={spell.range.length > 0}
       value={hasDamage ? spell.damage : null}
       valueClass={hasDamage ? damageClass(spell.damageType) : 'text-gold-dim'}
-      description={spell.description || null}
+      description={[spell.homebrewId ? `施法：${spell.castingTime}${spell.concentration ? ' · 需要專注' : ''}` : '', spell.description].filter(Boolean).join('\n\n') || null}
       footnote={spell.upgrade || null}
       emphasizeBadge={emphasize}
     />

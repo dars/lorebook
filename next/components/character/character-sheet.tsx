@@ -42,6 +42,7 @@ const TAB_SLUG: Record<string, string> = {
   傳記: 'bio',
 };
 type SheetProps = {
+  spellTools?: ReactNode;
   c: Character;
   /** 分享區塊。唯讀檢視不傳，該區塊即不渲染。 */
   share?: ReactNode;
@@ -76,6 +77,7 @@ function SheetFromUrl(props: SheetProps) {
 }
 
 function Sheet({
+  spellTools,
   c,
   share,
   onEditBasic,
@@ -86,7 +88,7 @@ function Sheet({
   inventory,
   slug,
 }: SheetProps & { slug: string | null }) {
-  const showSpells = c.spellSlots.length > 0 || c.cantrips.length > 0;
+  const showSpells = c.spellSlots.length > 0 || c.cantrips.length > 0 || c.spells.length > 0 || !!spellTools;
 
   const tabs = ['總覽', '屬性', ...(showSpells ? ['法術'] : []), '物品', '傳記'];
   const detailTabs = tabs.slice(1);
@@ -136,7 +138,7 @@ function Sheet({
       case '屬性':
         return <AbilitiesTab c={c} />;
       case '法術':
-        return <SpellsTab c={c} />;
+        return <SpellsTab c={c} tools={spellTools} />;
       case '物品':
         return <InventoryTab c={c} {...inventory} />;
       default:

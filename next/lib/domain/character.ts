@@ -53,6 +53,7 @@ export const Skill = z.object({
 });
 
 export const Spell = z.object({
+  homebrewId: z.string().optional(),
   name: z.string(),
   nameEn: z.string().default(''),
   level: z.number().int(),

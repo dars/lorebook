@@ -2,6 +2,7 @@ import type { z } from 'zod';
 
 import { CustomBackground } from '@/lib/backgrounds/types';
 import { CustomSpecies } from '@/lib/species/types';
+import { CustomSpell } from '@/lib/spells/types';
 import { CustomSubclass } from '@/lib/subclasses/types';
 
 /**
@@ -15,7 +16,7 @@ import { CustomSubclass } from '@/lib/subclasses/types';
  * 那次改動就是這裡一筆、0009 的 kind check 一個值、一個內容區塊元件。
  */
 
-export const HOMEBREW_KINDS = ['background', 'subclass', 'species'] as const;
+export const HOMEBREW_KINDS = ['background', 'subclass', 'species', 'spell'] as const;
 export type HomebrewKind = (typeof HOMEBREW_KINDS)[number];
 
 /**
@@ -25,13 +26,14 @@ export type HomebrewKind = (typeof HOMEBREW_KINDS)[number];
 export type HomebrewContent =
   | { kind: 'background'; data: CustomBackground }
   | { kind: 'subclass'; data: CustomSubclass }
-  | { kind: 'species'; data: CustomSpecies };
+  | { kind: 'species'; data: CustomSpecies }
+  | { kind: 'spell'; data: CustomSpell };
 
 type KindDef = {
   /** 型別標示，檢視頁與收藏紀錄共用。 */
   label: string;
   /** 來源表。收藏是寫進收藏者自己的這張表。 */
-  table: 'user_backgrounds' | 'user_subclasses' | 'user_species';
+  table: 'user_backgrounds' | 'user_subclasses' | 'user_species' | 'user_spells';
   /**
    * 驗證用的 schema，與**手動建立時完全相同**。
    *
@@ -49,6 +51,8 @@ type KindDef = {
 };
 
 export const HOMEBREW_KIND: Record<HomebrewKind, KindDef> = {
+  spell: { label: '法術', table: 'user_spells', schema: CustomSpell,
+    columns: (d) => ({ name: (d as CustomSpell).name }) },
   background: {
     label: '背景',
     table: 'user_backgrounds',
@@ -91,6 +95,8 @@ export function parseHomebrew(
   if (!parsed.success) return null;
 
   switch (kind) {
+    case 'spell':
+      return { kind, data: parsed.data as CustomSpell };
     case 'background':
       return { kind, data: parsed.data as CustomBackground };
     case 'subclass':

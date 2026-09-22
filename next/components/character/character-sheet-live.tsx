@@ -1,4 +1,5 @@
 'use client';
+import { SpellPicker } from '@/components/spells/spell-picker';
 
 import { useEffect, useState, type ReactNode } from 'react';
 
@@ -87,6 +88,7 @@ export function CharacterSheetLive({
         </div>
       )}
       <CharacterSheet
+        spellTools={persist ? <SpellPicker c={c} /> : undefined}
         c={c}
         share={share}
         onEditBasic={() => setEditor('basic')}
