@@ -2,9 +2,10 @@
 > 程式碼的盤點**，不是實作紀錄。所有 `[x]` 都在程式碼裡指認過；`[ ]` 是真的
 > 還沒做，`[~]` 是刻意不做。
 >
-> **目前狀態：程式碼完成、`tsc`／`eslint`／`vitest`（689 tests）全綠，但
-> migration 尚未推上線、線上未實測、未部署。** 順序不可顛倒：程式碼先上線
-> 而表還沒建，收藏紀錄頁會直接報錯（見 design Migration Plan）。
+> **目前狀態（2026-09-22）：程式碼完成、`tsc`／`eslint`／`vitest`（689 tests）
+> 全綠、migration 已套用線上、anon 權限已實測。剩部署與線上實測（7.2–7.4）。**
+> 順序不可顛倒：程式碼先上線而表還沒建，收藏紀錄頁會直接報錯（見 design
+> Migration Plan）——這次是先推表再部署，方向正確。
 >
 > **實作偏離記錄**
 >
@@ -25,8 +26,8 @@
 - [x] 1.3 同 migration 設定 RLS：四條 own-row policy、`grant ... to authenticated`、`revoke all ... from anon`
 - [x] 1.4 同 migration 補 `homebrew_shares_kind_check` 加入 `'spell'`
 - [x] 1.5 同 migration 全文重貼 `get_shared_homebrew` 並加入法術分支（`create or replace` 不接受部分更新；約束同 0008：`search_path = ''`、無動態 SQL、回傳形狀固定）
-- [ ] 1.6 **未套用**：`supabase db push`。`migration list --linked` 顯示 `20260910043545` 的 remote 為空——線上沒有 `user_spells` 表，也沒有 `kind` check 的 `'spell'` 與 RPC 的法術分支
-- [ ] 1.7 套用後以 anon key 實測讀寫皆遭拒（比照 custom-species 任務 1.4 的驗證）
+- [x] 1.6 已以 `supabase db push` 套用（2026-09-22，linked 專案即正式環境）。首次套用時 `drop trigger/policy if exists` 各回一行 NOTICE，屬正常輸出
+- [x] 1.7 anon key 實測（2026-09-22）：`user_spells` 的 select 與 insert 皆回 401 `42501 permission denied for table user_spells`——`revoke all from anon` 比 RLS 過濾更早擋下，連空陣列都不會回（同 custom-species 任務 1.4 的觀察）。另以假 token 呼叫 `get_shared_homebrew` 回 `not_found`／HTTP 200，確認函式全文重貼後 anon 的 execute 權限仍在
 
 ## 2. Domain 與 Repository（依賴 1）
 
