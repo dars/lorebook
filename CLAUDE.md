@@ -61,9 +61,28 @@ npm run build        # 正式建置
 **一律手動走 wrangler，git push 不會部署。**
 
 ```bash
-npm run build
-npx wrangler deploy      # 目標是 Workers（OpenNext 產出 .open-next/worker.js）
+npx opennextjs-cloudflare build   # 內含 next build，並產出 .open-next/
+npx wrangler deploy               # 上傳 .open-next/worker.js ＋ .open-next/assets
 ```
+
+⚠️ **`npm run build` 不夠**——它只是 `next build`，產出 `.next/`，**不會更新
+`.open-next/`**。而 `wrangler.jsonc` 指的是 `.open-next/`，所以只跑 `npm run build`
+再 deploy，會把上一次 OpenNext 建置的舊 bundle 重新上線，而且**完全不報錯**：
+wrangler 會照常說 Success 並給出網址。徵兆是部署輸出裡的
+`No updated asset files to upload`（新程式碼一定會有新的 chunk 要上傳）。
+2026-09-22 就這樣把 9/3 的 bundle 重新部署了一次。
+
+部署後驗證線上真的換版：比對 `.open-next/assets/_next/static/` 底下的 build id
+目錄名（等於 git short hash），或抓一支含新程式碼的 chunk 比 md5——
+
+```bash
+P=_next/static/chunks/<含新碼的 chunk>.js
+md5 -q next/.open-next/assets/$P
+curl -s "https://lorebook.code4soul.dev/$P" | md5 -q
+```
+
+有 migration 時**先 `npx supabase db push` 再部署**，順序不可顛倒：程式碼先上線
+而表還沒建，讀那張表的頁面會直接報錯；反之無影響。
 
 Service worker 若出問題，停用方式是設環境變數 `SW_DISABLED=1` 後重新部署——
 `/api/sw-status` 會回 `enabled:false`，頁面端與 SW 各自註銷並清快取。
