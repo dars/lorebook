@@ -25,6 +25,7 @@
 - [x] 4.5 送出組裝：依 `featMode` 產生 `asi`、`abilityCap`、`feat` 傳入 `applyLevelUp`；預覽同步；`asiReady` 改為 `featReady`（D8 三種條件）
 - [x] 4.6 `useFormDraft` 值納入 `featMode`、`catalogFeatId`、`catalogAbility`、`customName`、`customDesc`、`customBoost`、`customAbility`、`customEpic`，切模式不清空其他模式的輸入
 - [x] 4.7 選了專長時，本級的「屬性值提升」／「史詩恩賜」職業特性不寫入（`isFeatSlotFeature`，D5 去重）
+- [x] 4.8 （實測發現的既有 bug）3 級以後升級時，已有的 SRD 子職以 `findSrdSubclass`（英文名 → 2014/2024 改名對照 → 中文名）對回內容庫，寫入本級子職特性；原本只在選子職當下寫入，6／10／14 級子職特性會靜默漏掉
 
 ## 5. backlog 整理
 

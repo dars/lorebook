@@ -21,7 +21,12 @@ import {
   isEpicBoon,
   isFeatSlotFeature,
 } from '@/lib/rules/feats';
-import { applyLevelUp, applySubclassPick, planFor } from '@/lib/rules/level-up';
+import {
+  applyLevelUp,
+  applySubclassPick,
+  findSrdSubclass,
+  planFor,
+} from '@/lib/rules/level-up';
 
 /**
  * 升級流程，對照 Flutter 端的 `CharacterLevelUpPage`。
@@ -191,6 +196,10 @@ export function LevelUpView({
 
   // 3 級選用的自訂子職（本次），或角色卡上既有的快照（後續等級）。
   const activeCustom = customSubclass ?? initial.customSubclass;
+  // 3 級以後的升級：已有的 SRD 子職要對回內容庫，才拿得到本級的子職特性。
+  // 只看「本次選的」會讓 6／10／14 級的子職特性安靜地漏掉。
+  const existingSrdSubclass =
+    showSubclass || activeCustom ? null : findSrdSubclass(subclasses, initial);
 
   const newFeatures = [
     // 補選不是升級：這一趟不該拿到任何職業特性，只補子職那一份。
@@ -211,6 +220,16 @@ export function LevelUpView({
               f.level <= subclassThrough,
           )
           .map((f) => toFeature(f, `子職：${subclass.name}`))
+      : []),
+    ...(existingSrdSubclass
+      ? classFeatures
+          .filter(
+            (f) =>
+              f.is_subclass &&
+              f.subclass_short_name === existingSrdSubclass.short_name &&
+              f.level === plan.targetLevel,
+          )
+          .map((f) => toFeature(f, `子職：${initial.subclass}`))
       : []),
     // 自訂子職的特性自快照取用，不回查來源表——來源可能已被刪除。
     // 選子職的那一級取 ≤ 上限（一次補齊），之後只取該級。

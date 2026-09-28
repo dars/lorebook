@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { Character as CharacterSchema } from '@/lib/domain/character';
-import { applySubclassPick, needsSubclassPick } from './level-up';
+import { applySubclassPick, findSrdSubclass, needsSubclassPick } from './level-up';
 
 const ability = { score: 10, modifier: 0 };
 const make = (over: Record<string, unknown>) =>
@@ -80,5 +80,31 @@ describe('補選子職', () => {
       ],
     });
     expect(after.features.map((f) => f.name)).toEqual(['奧術復甦', 'Y']);
+  });
+});
+
+describe('已有 SRD 子職對回內容庫', () => {
+  const subs = [
+    { name: '塑能師', eng_name: 'Evoker', short_name: 'Evoker' },
+    { name: '奉獻誓言', eng_name: 'Oath of Devotion', short_name: 'Devotion' },
+  ];
+
+  it('以英文名比對', () => {
+    expect(findSrdSubclass(subs, make({ subclass: '塑能師', subclassEn: 'Evoker' }))?.short_name).toBe('Evoker');
+  });
+
+  it('2014 舊名對照到 2024——示範角色存的是 School of Evocation', () => {
+    expect(
+      findSrdSubclass(subs, make({ subclass: '塑能學派', subclassEn: 'School of Evocation' }))?.short_name,
+    ).toBe('Evoker');
+  });
+
+  it('英文名缺漏時以中文名比對', () => {
+    expect(findSrdSubclass(subs, make({ subclass: '奉獻誓言', subclassEn: '' }))?.short_name).toBe('Devotion');
+  });
+
+  it('對不到（自訂子職、尚未選）回 null', () => {
+    expect(findSrdSubclass(subs, make({ subclass: '我的子職', subclassEn: '' }))).toBeNull();
+    expect(findSrdSubclass(subs, make({ subclass: '', subclassEn: '' }))).toBeNull();
   });
 });

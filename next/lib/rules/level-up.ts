@@ -119,6 +119,40 @@ export function applySubclassPick(
   };
 }
 
+/**
+ * 2014 SRD 子職英文名 → 2024 SRD 5.2。只收**改了名**的；其餘兩版同名。
+ *
+ * Flutter 時期的示範角色存的是舊名（`School of Evocation`），以新名比對會
+ * 找不到子職——症狀是 6／10／14 級的子職特性安靜地不見。在比對時對照而非
+ * 改寫角色資料：角色卡上的名稱是使用者看得到的東西，不該被悄悄換掉。
+ */
+const LEGACY_SUBCLASS_EN: Record<string, string> = {
+  'School of Evocation': 'Evoker',
+  'Way of the Open Hand': 'Warrior of the Open Hand',
+  'Draconic Bloodline': 'Draconic Sorcery',
+  'The Fiend': 'Fiend Patron',
+};
+
+/**
+ * 角色卡上的 SRD 子職對回內容庫的哪一個。對不到（自訂子職、尚未選）回 null。
+ *
+ * 依序比英文名、舊名對照、中文名。中文名排最後：內容庫的譯名會被修正
+ * （supabase/data-fixes/），比英文名容易漂移。
+ */
+export function findSrdSubclass<T extends { name: string; eng_name: string | null }>(
+  subclasses: T[],
+  c: Pick<Character, 'subclass' | 'subclassEn'>,
+): T | null {
+  const en = c.subclassEn.trim();
+  const cn = c.subclass.trim();
+  const target = LEGACY_SUBCLASS_EN[en] ?? en;
+  return (
+    (target && subclasses.find((s) => s.eng_name === target)) ||
+    (cn && subclasses.find((s) => s.name === cn)) ||
+    null
+  );
+}
+
 const KEYS: [string, keyof AbilityScores][] = [
   ['STR', 'str'], ['DEX', 'dex'], ['CON', 'con'],
   ['INT', 'int_'], ['WIS', 'wis'], ['CHA', 'cha'],
