@@ -39,8 +39,6 @@ export const ABILITY_LABELS: Record<string, string> = {
 };
 
 export const NAME_MAX = 20;
-export const ORIGIN_FEAT_NAME_MAX = 20;
-export const ORIGIN_FEAT_DESC_MAX = 200;
 
 /** 2024 背景建構規則：恰 3 個能力候選、恰 2 個技能、名稱非空。 */
 export function isValid(b: Partial<CustomBackground>): boolean {

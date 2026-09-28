@@ -1,0 +1,967 @@
+[
+ {
+  "id": "71470507-75a0-4f45-a550-1839a1e84dd2",
+  "name": "戰技恩賜",
+  "eng_name": "Boon of Combat Prowess",
+  "data": {
+   "ENG_name": "Boon of Combat Prowess",
+   "ability": [
+    {
+     "choose": {
+      "from": [
+       "str",
+       "dex",
+       "con",
+       "int",
+       "wis",
+       "cha"
+      ]
+     },
+     "max": 30
+    }
+   ],
+   "basicRules2024": true,
+   "category": "EB",
+   "entries": [
+    "你獲得以下增益。",
+    {
+     "ENG_name": "Peerless Aim",
+     "entries": [
+      "當你的攻擊檢定未命中時，你可以改為命中。此增益使用一次後，直到你下個回合開始才能再次使用。"
+     ],
+     "name": "無雙準頭",
+     "type": "entries"
+    }
+   ],
+   "name": "戰技恩賜",
+   "page": 210,
+   "prerequisite": [
+    {
+     "level": 19
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "6e301d70-3558-4470-bf77-c1fcd6df76a2",
+  "name": "次元旅行恩賜",
+  "eng_name": "Boon of Dimensional Travel",
+  "data": {
+   "ENG_name": "Boon of Dimensional Travel",
+   "ability": [
+    {
+     "choose": {
+      "from": [
+       "str",
+       "dex",
+       "con",
+       "int",
+       "wis",
+       "cha"
+      ]
+     },
+     "max": 30
+    }
+   ],
+   "basicRules2024": true,
+   "category": "EB",
+   "entries": [
+    "你獲得以下增益。",
+    {
+     "ENG_name": "Blink Steps",
+     "entries": [
+      "在你採取{@action Attack|XPHB|攻擊}動作或{@action Magic|XPHB|魔法}動作後，你可以立即傳送至你能看見、30 呎內的一個未被佔據的空間。"
+     ],
+     "name": "閃現步",
+     "type": "entries"
+    }
+   ],
+   "name": "次元旅行恩賜",
+   "page": 210,
+   "prerequisite": [
+    {
+     "level": 19
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "be3a1902-5666-47f8-925f-e091ad7e0909",
+  "name": "命運恩賜",
+  "eng_name": "Boon of Fate",
+  "data": {
+   "ENG_name": "Boon of Fate",
+   "ability": [
+    {
+     "choose": {
+      "from": [
+       "str",
+       "dex",
+       "con",
+       "int",
+       "wis",
+       "cha"
+      ]
+     },
+     "max": 30
+    }
+   ],
+   "basicRules2024": true,
+   "category": "EB",
+   "entries": [
+    "你獲得以下增益。",
+    {
+     "ENG_name": "Improve Fate",
+     "entries": [
+      "當你或你 60 呎內的另一個生物在{@variantrule D20 Test|XPHB|d20 檢定}成功或失敗時，你可以擲 {@dice 2d4}，並將總和作為加值或減值套用於該 {@dice d20} 擲骰。此增益使用一次後，須擲{@variantrule Initiative|XPHB|先攻}或完成一次{@variantrule Short Rest|XPHB|短休}或{@variantrule Long Rest|XPHB|長休}才能再次使用。"
+     ],
+     "name": "扭轉命運",
+     "type": "entries"
+    }
+   ],
+   "hasFluffImages": true,
+   "name": "命運恩賜",
+   "page": 210,
+   "prerequisite": [
+    {
+     "level": 19
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "ce115f9d-0a2e-4196-aa25-5302551336be",
+  "name": "無堅不摧恩賜",
+  "eng_name": "Boon of Irresistible Offense",
+  "data": {
+   "ENG_name": "Boon of Irresistible Offense",
+   "ability": [
+    {
+     "choose": {
+      "from": [
+       "str",
+       "dex"
+      ]
+     },
+     "max": 30
+    }
+   ],
+   "basicRules2024": true,
+   "category": "EB",
+   "entries": [
+    "你獲得以下增益。",
+    {
+     "ENG_name": "Overcome Defenses",
+     "entries": [
+      "你造成的鈍擊、穿刺與揮砍傷害永遠無視{@variantrule Resistance|XPHB|抗性}。"
+     ],
+     "name": "破除防禦",
+     "type": "entries"
+    },
+    {
+     "ENG_name": "Overwhelming Strike",
+     "entries": [
+      "當你的攻擊檢定在 {@dice d20} 上擲出 20 時，你可以對目標造成等同於本專長所提升屬性值的額外傷害。額外傷害的型別與該次攻擊相同。"
+     ],
+     "name": "壓倒性打擊",
+     "type": "entries"
+    }
+   ],
+   "name": "無堅不摧恩賜",
+   "page": 211,
+   "prerequisite": [
+    {
+     "level": 19
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "40220dd3-d7fd-48dc-9924-ea8eba57a498",
+  "name": "法術回想恩賜",
+  "eng_name": "Boon of Spell Recall",
+  "data": {
+   "ENG_name": "Boon of Spell Recall",
+   "ability": [
+    {
+     "choose": {
+      "from": [
+       "int",
+       "wis",
+       "cha"
+      ]
+     },
+     "max": 30
+    }
+   ],
+   "basicRules2024": true,
+   "category": "EB",
+   "entries": [
+    "你獲得以下增益。",
+    {
+     "ENG_name": "Free Casting",
+     "entries": [
+      "每當你以一至四環法術位施展法術時，擲 {@dice 1d4}。若擲出的數字與該法術位的環位相同，則該法術位不被消耗。"
+     ],
+     "name": "免耗施法",
+     "type": "entries"
+    }
+   ],
+   "name": "法術回想恩賜",
+   "page": 211,
+   "prerequisite": [
+    {
+     "level": 19,
+     "spellcasting2020": true
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "fdd456a9-3b0f-43e2-905a-5ce0923d8138",
+  "name": "夜靈恩賜",
+  "eng_name": "Boon of the Night Spirit",
+  "data": {
+   "ENG_name": "Boon of the Night Spirit",
+   "ability": [
+    {
+     "choose": {
+      "from": [
+       "str",
+       "dex",
+       "con",
+       "int",
+       "wis",
+       "cha"
+      ]
+     },
+     "max": 30
+    }
+   ],
+   "basicRules2024": true,
+   "category": "EB",
+   "entries": [
+    "你獲得以下增益。",
+    {
+     "ENG_name": "Merge with Shadows",
+     "entries": [
+      "處於{@variantrule Dim Light|XPHB|微光光照}或{@variantrule Darkness|XPHB|黑暗}中時，你可以用一個{@variantrule Bonus Action|XPHB|附贈動作}使自己獲得{@condition Invisible|XPHB|隱形}狀態。在你採取動作、{@variantrule Bonus Action|XPHB|附贈動作}或{@variantrule Reaction|XPHB|反應}後，該狀態立即結束。"
+     ],
+     "name": "融入暗影",
+     "type": "entries"
+    },
+    {
+     "ENG_name": "Shadowy Form",
+     "entries": [
+      "處於{@variantrule Dim Light|XPHB|微光光照}或{@variantrule Darkness|XPHB|黑暗}中時，你對心靈與光耀以外的所有傷害具有{@variantrule Resistance|XPHB|抗性}。"
+     ],
+     "name": "暗影形體",
+     "type": "entries"
+    }
+   ],
+   "name": "夜靈恩賜",
+   "page": 211,
+   "prerequisite": [
+    {
+     "level": 19
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "becb407a-f5bd-400d-8daf-7bbe86923063",
+  "name": "真實視覺恩賜",
+  "eng_name": "Boon of Truesight",
+  "data": {
+   "ENG_name": "Boon of Truesight",
+   "ability": [
+    {
+     "choose": {
+      "from": [
+       "str",
+       "dex",
+       "con",
+       "int",
+       "wis",
+       "cha"
+      ]
+     },
+     "max": 30
+    }
+   ],
+   "basicRules2024": true,
+   "category": "EB",
+   "entries": [
+    "你獲得以下增益。",
+    {
+     "ENG_name": "Truesight",
+     "entries": [
+      "你具有 60 呎範圍的{@sense Truesight|XPHB|真實視覺}。"
+     ],
+     "name": "真實視覺",
+     "type": "entries"
+    }
+   ],
+   "name": "真實視覺恩賜",
+   "page": 211,
+   "prerequisite": [
+    {
+     "level": 19
+    }
+   ],
+   "senses": [
+    {
+     "truesight": 60
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "13266efd-2830-4663-a1ab-9294469f4dd7",
+  "name": "箭術",
+  "eng_name": "Archery",
+  "data": {
+   "ENG_name": "Archery",
+   "basicRules2024": true,
+   "category": "FS",
+   "entries": [
+    "你以遠端武器進行的攻擊檢定獲得 +2 加值。"
+   ],
+   "name": "箭術",
+   "page": 209,
+   "prerequisite": [
+    {
+     "feature": [
+      "Fighting Style"
+     ]
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "fa629c0b-000d-4e0e-a32b-41adfc1e9af8",
+  "name": "防禦",
+  "eng_name": "Defense",
+  "data": {
+   "ENG_name": "Defense",
+   "basicRules2024": true,
+   "category": "FS",
+   "entries": [
+    "當你身穿輕甲、中甲或重甲時，你的{@variantrule Armor Class|XPHB|護甲等級}獲得 +1 加值。"
+   ],
+   "name": "防禦",
+   "page": 209,
+   "prerequisite": [
+    {
+     "feature": [
+      "Fighting Style"
+     ]
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "e83104d1-b8c1-4f27-9413-ff854b828646",
+  "name": "巨武器戰鬥",
+  "eng_name": "Great Weapon Fighting",
+  "data": {
+   "ENG_name": "Great Weapon Fighting",
+   "basicRules2024": true,
+   "category": "FS",
+   "entries": [
+    "當你為雙手持握的近戰武器攻擊擲傷害骰時，你可以把傷害骰上的任何 1 或 2 視為 3。武器須具有{@itemProperty 2h|XPHB|雙手}或{@itemProperty V|XPHB|泛用}屬性才能獲得此增益。"
+   ],
+   "name": "巨武器戰鬥",
+   "page": 209,
+   "prerequisite": [
+    {
+     "feature": [
+      "Fighting Style"
+     ]
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "0561f760-cc09-485e-8541-92acf3a9c315",
+  "name": "雙武器戰鬥",
+  "eng_name": "Two-Weapon Fighting",
+  "data": {
+   "ENG_name": "Two-Weapon Fighting",
+   "basicRules2024": true,
+   "category": "FS",
+   "entries": [
+    "當你因使用具有{@itemProperty L|XPHB|輕型}屬性的武器而進行額外攻擊時，若該次攻擊的傷害尚未加上你的屬性調整值，你可以將其加上。"
+   ],
+   "hasFluffImages": true,
+   "name": "雙武器戰鬥",
+   "page": 210,
+   "prerequisite": [
+    {
+     "feature": [
+      "Fighting Style"
+     ]
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "f8be33a5-6635-4a75-96cb-b83b5f56b185",
+  "name": "屬性值提升",
+  "eng_name": "Ability Score Improvement",
+  "data": {
+   "ENG_name": "Ability Score Improvement",
+   "ability": [
+    {
+     "choose": {
+      "amount": 2,
+      "from": [
+       "str",
+       "dex",
+       "con",
+       "int",
+       "wis",
+       "cha"
+      ]
+     },
+     "hidden": true
+    },
+    {
+     "choose": {
+      "count": 2,
+      "from": [
+       "str",
+       "dex",
+       "con",
+       "int",
+       "wis",
+       "cha"
+      ]
+     },
+     "hidden": true
+    }
+   ],
+   "basicRules2024": true,
+   "category": "G",
+   "entries": [
+    "將一項自選屬性值提高 2，或將兩項自選屬性值各提高 1。本專長不能使屬性值超過 20。",
+    {
+     "ENG_name": "Repeatable",
+     "entries": [
+      "你可以多次選取本專長。"
+     ],
+     "name": "可重複",
+     "type": "entries"
+    }
+   ],
+   "name": "屬性值提升",
+   "page": 202,
+   "prerequisite": [
+    {
+     "level": 4
+    }
+   ],
+   "repeatable": true,
+   "repeatableHidden": true,
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "1549698c-0266-4cf3-b5f0-7982247d98f2",
+  "name": "擒抱大師",
+  "eng_name": "Grappler",
+  "data": {
+   "ENG_name": "Grappler",
+   "ability": [
+    {
+     "choose": {
+      "from": [
+       "str",
+       "dex"
+      ]
+     }
+    }
+   ],
+   "basicRules2024": true,
+   "category": "G",
+   "entries": [
+    "你獲得以下增益。",
+    {
+     "ENG_name": "Punch and Grab",
+     "entries": [
+      "當你在自己回合、作為{@action Attack|XPHB|攻擊}動作的一部分以{@variantrule Unarmed Strike|XPHB|徒手打擊}命中一個生物時，你可以同時使用「傷害」與「擒抱」兩種選項。此增益每回合只能使用一次。"
+     ],
+     "name": "拳擊擒拿",
+     "type": "entries"
+    },
+    {
+     "ENG_name": "Attack Advantage",
+     "entries": [
+      "你對被你{@condition Grappled|XPHB|被擒抱}的生物的攻擊檢定具有{@variantrule Advantage|XPHB|優勢}。"
+     ],
+     "name": "攻擊優勢",
+     "type": "entries"
+    },
+    {
+     "ENG_name": "Fast Wrestler",
+     "entries": [
+      "移動被你{@condition Grappled|XPHB|被擒抱}、體型不大於你的生物時，你無需花費額外移動力。"
+     ],
+     "name": "迅捷角力",
+     "type": "entries"
+    }
+   ],
+   "name": "擒抱大師",
+   "page": 204,
+   "prerequisite": [
+    {
+     "ability": [
+      {
+       "str": 13
+      }
+     ],
+     "level": 4
+    },
+    {
+     "ability": [
+      {
+       "dex": 13
+      }
+     ],
+     "level": 4
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "2f3cbb54-a7ab-40c8-a32b-e3c8150771e8",
+  "name": "警覺",
+  "eng_name": "Alert",
+  "data": {
+   "ENG_name": "Alert",
+   "basicRules2024": true,
+   "category": "O",
+   "entries": [
+    "你獲得以下增益。",
+    {
+     "ENG_name": "Initiative Proficiency",
+     "entries": [
+      "當你擲{@variantrule Initiative|XPHB|先攻}時，你可以把你的{@variantrule Proficiency|XPHB|熟練加值}加到擲骰上。"
+     ],
+     "name": "先攻熟練",
+     "type": "entries"
+    },
+    {
+     "ENG_name": "Initiative Swap",
+     "entries": [
+      "在你擲{@variantrule Initiative|XPHB|先攻}後，你可以立即與同場戰鬥中一名自願盟友互換{@variantrule Initiative|XPHB|先攻}。若你或該盟友處於{@condition Incapacitated|XPHB|失能}狀態，則不能互換。"
+     ],
+     "name": "先攻互換",
+     "type": "entries"
+    }
+   ],
+   "name": "警覺",
+   "page": 200,
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "465f1574-ca9b-40fe-aff3-06284145b622",
+  "name": "法術新手",
+  "eng_name": "Magic Initiate",
+  "data": {
+   "ENG_name": "Magic Initiate",
+   "_versions": [
+    {
+     "_mod": {
+      "entries": [
+       {
+        "items": {
+         "entries": [
+          "You learn two cantrips of your choice from the {@filter Cleric|spells|level=0;1|class=Cleric} spell list. Intelligence, Wisdom, or Charisma is your spellcasting ability for this feat's spells (choose when you select this feat)."
+         ],
+         "name": "Two Cantrips"
+        },
+        "mode": "replaceArr",
+        "replace": "Two Cantrips"
+       },
+       {
+        "items": {
+         "entries": [
+          "Choose a level 1 spell from the {@filter Cleric|spells|level=0;1|class=Cleric} spell list. You always have that spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a {@variantrule Long Rest|XPHB}. You can also cast the spell using any spell slots you have."
+         ],
+         "name": "Level 1 Spell"
+        },
+        "mode": "replaceArr",
+        "replace": "Level 1 Spell"
+       }
+      ]
+     },
+     "additionalSpells": [
+      {
+       "ability": {
+        "choose": [
+         "int",
+         "wis",
+         "cha"
+        ]
+       },
+       "innate": {
+        "_": {
+         "daily": {
+          "1": [
+           {
+            "choose": "level=1|class=Cleric"
+           }
+          ]
+         }
+        }
+       },
+       "known": {
+        "_": [
+         {
+          "choose": "level=0|class=Cleric",
+          "count": 2
+         }
+        ]
+       }
+      }
+     ],
+     "name": "Magic Initiate; Cleric",
+     "source": "XPHB"
+    },
+    {
+     "_mod": {
+      "entries": [
+       {
+        "items": {
+         "entries": [
+          "You learn two cantrips of your choice from the {@filter Druid|spells|level=0;1|class=Druid} spell list. Intelligence, Wisdom, or Charisma is your spellcasting ability for this feat's spells (choose when you select this feat)."
+         ],
+         "name": "Two Cantrips"
+        },
+        "mode": "replaceArr",
+        "replace": "Two Cantrips"
+       },
+       {
+        "items": {
+         "entries": [
+          "Choose a level 1 spell from the {@filter Druid|spells|level=0;1|class=Druid} spell list. You always have that spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a {@variantrule Long Rest|XPHB}. You can also cast the spell using any spell slots you have."
+         ],
+         "name": "Level 1 Spell"
+        },
+        "mode": "replaceArr",
+        "replace": "Level 1 Spell"
+       }
+      ]
+     },
+     "additionalSpells": [
+      {
+       "ability": {
+        "choose": [
+         "int",
+         "wis",
+         "cha"
+        ]
+       },
+       "innate": {
+        "_": {
+         "daily": {
+          "1": [
+           {
+            "choose": "level=1|class=Druid"
+           }
+          ]
+         }
+        }
+       },
+       "known": {
+        "_": [
+         {
+          "choose": "level=0|class=Druid",
+          "count": 2
+         }
+        ]
+       }
+      }
+     ],
+     "name": "Magic Initiate; Druid",
+     "source": "XPHB"
+    },
+    {
+     "_mod": {
+      "entries": [
+       {
+        "items": {
+         "entries": [
+          "You learn two cantrips of your choice from the {@filter Wizard|spells|level=0;1|class=Wizard} spell list. Intelligence, Wisdom, or Charisma is your spellcasting ability for this feat's spells (choose when you select this feat)."
+         ],
+         "name": "Two Cantrips"
+        },
+        "mode": "replaceArr",
+        "replace": "Two Cantrips"
+       },
+       {
+        "items": {
+         "entries": [
+          "Choose a level 1 spell from the {@filter Wizard|spells|level=0;1|class=Wizard} spell list. You always have that spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a {@variantrule Long Rest|XPHB}. You can also cast the spell using any spell slots you have."
+         ],
+         "name": "Level 1 Spell"
+        },
+        "mode": "replaceArr",
+        "replace": "Level 1 Spell"
+       }
+      ]
+     },
+     "additionalSpells": [
+      {
+       "ability": {
+        "choose": [
+         "int",
+         "wis",
+         "cha"
+        ]
+       },
+       "innate": {
+        "_": {
+         "daily": {
+          "1": [
+           {
+            "choose": "level=1|class=Wizard"
+           }
+          ]
+         }
+        }
+       },
+       "known": {
+        "_": [
+         {
+          "choose": "level=0|class=Wizard",
+          "count": 2
+         }
+        ]
+       }
+      }
+     ],
+     "name": "Magic Initiate; Wizard",
+     "source": "XPHB"
+    }
+   ],
+   "additionalSpells": [
+    {
+     "ability": {
+      "choose": [
+       "int",
+       "wis",
+       "cha"
+      ]
+     },
+     "innate": {
+      "_": {
+       "daily": {
+        "1": [
+         {
+          "choose": "level=1|class=Cleric"
+         }
+        ]
+       }
+      }
+     },
+     "known": {
+      "_": [
+       {
+        "choose": "level=0|class=Cleric",
+        "count": 2
+       }
+      ]
+     },
+     "name": "Cleric Spells"
+    },
+    {
+     "ability": {
+      "choose": [
+       "int",
+       "wis",
+       "cha"
+      ]
+     },
+     "innate": {
+      "_": {
+       "daily": {
+        "1": [
+         {
+          "choose": "level=1|class=Druid"
+         }
+        ]
+       }
+      }
+     },
+     "known": {
+      "_": [
+       {
+        "choose": "level=0|class=Druid",
+        "count": 2
+       }
+      ]
+     },
+     "name": "Druid Spells"
+    },
+    {
+     "ability": {
+      "choose": [
+       "int",
+       "wis",
+       "cha"
+      ]
+     },
+     "innate": {
+      "_": {
+       "daily": {
+        "1": [
+         {
+          "choose": "level=1|class=Wizard"
+         }
+        ]
+       }
+      }
+     },
+     "known": {
+      "_": [
+       {
+        "choose": "level=0|class=Wizard",
+        "count": 2
+       }
+      ]
+     },
+     "name": "Wizard Spells"
+    }
+   ],
+   "basicRules2024": true,
+   "category": "O",
+   "entries": [
+    "你獲得以下增益。",
+    {
+     "ENG_name": "Two Cantrips",
+     "entries": [
+      "你從{@filter 牧師|spells|level=0;1|class=Cleric}、{@filter 德魯伊|spells|level=0;1|class=Druid}或{@filter 法師|spells|level=0;1|class=Wizard}法術列表中學會兩個自選戲法。智力、感知或魅力是你施展本專長法術的施法屬性（在選擇本專長時決定）。"
+     ],
+     "name": "兩個戲法",
+     "type": "entries"
+    },
+    {
+     "ENG_name": "Level 1 Spell",
+     "entries": [
+      "從你為本專長戲法所選的同一列表中選擇一個一環法術。你永遠將該法術視為已準備。你可以免用法術位施展它一次，完成一次{@variantrule Long Rest|XPHB|長休}後回復以此方式施展的能力；你也可以用你擁有的任何法術位施展它。"
+     ],
+     "name": "一環法術",
+     "type": "entries"
+    },
+    {
+     "ENG_name": "Spell Change",
+     "entries": [
+      "每當你獲得新的等級，你可以將本專長所選法術之一替換為所選法術列表中同環位的另一個法術。"
+     ],
+     "name": "更換法術",
+     "type": "entries"
+    },
+    {
+     "ENG_name": "Repeatable",
+     "entries": [
+      "你可以多次選取本專長，但每次必須選擇不同的法術列表。"
+     ],
+     "name": "可重複",
+     "type": "entries"
+    }
+   ],
+   "name": "法術新手",
+   "page": 201,
+   "repeatable": true,
+   "repeatableHidden": true,
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "e750fa8a-f014-48e6-b122-54ed83c2cf8d",
+  "name": "野蠻打擊",
+  "eng_name": "Savage Attacker",
+  "data": {
+   "ENG_name": "Savage Attacker",
+   "basicRules2024": true,
+   "category": "O",
+   "entries": [
+    "你受過造成致命打擊的訓練。每回合一次，當你以武器命中目標時，你可以將該武器的傷害骰擲兩次，並擇一結果用於該目標。"
+   ],
+   "name": "野蠻打擊",
+   "page": 201,
+   "source": "XPHB",
+   "srd52": true
+  }
+ },
+ {
+  "id": "8bb482d3-557d-4bbd-ba38-b3dafea97a91",
+  "name": "技藝精湛",
+  "eng_name": "Skilled",
+  "data": {
+   "ENG_name": "Skilled",
+   "basicRules2024": true,
+   "category": "O",
+   "entries": [
+    "你獲得三項自選的{@table Skill List; Skills|XPHB|技能}或{@filter 工具|items|type=tool;artisan's tools;instrument;gaming set}熟練，任意組合皆可。",
+    {
+     "ENG_name": "Repeatable",
+     "entries": [
+      "你可以多次選取本專長。"
+     ],
+     "name": "可重複",
+     "type": "entries"
+    }
+   ],
+   "name": "技藝精湛",
+   "page": 201,
+   "repeatable": true,
+   "repeatableHidden": true,
+   "skillToolLanguageProficiencies": [
+    {
+     "choose": [
+      {
+       "count": 3,
+       "from": [
+        "anySkill",
+        "anyTool"
+       ]
+      }
+     ]
+    }
+   ],
+   "source": "XPHB",
+   "srd52": true
+  }
+ }
+]

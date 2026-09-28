@@ -149,6 +149,13 @@ export const CharacterFeature = z.object({
   isCustom: z.boolean().default(false),
 });
 
+/**
+ * 使用者自填專長（自訂起源專長、升級時的自訂專長）的字數上限。
+ * 兩處是同一種東西，上限只定義一次。
+ */
+export const FEAT_NAME_MAX = 20;
+export const FEAT_DESC_MAX = 200;
+
 export const ClassResource = z.object({
   name: z.string(),
   nameEn: z.string().default(''),

@@ -13,11 +13,10 @@ import {
   type CustomBackground,
   NAME_MAX,
   ORIGIN_FEAT_CHOICES,
-  ORIGIN_FEAT_DESC_MAX,
-  ORIGIN_FEAT_NAME_MAX,
   isValid,
 } from '@/lib/backgrounds/types';
 import { SKILLS } from '@/lib/creation/data';
+import { FEAT_DESC_MAX, FEAT_NAME_MAX } from '@/lib/domain/character';
 import { newCharacterId } from '@/lib/creation/id';
 
 /**
@@ -275,7 +274,7 @@ export function BackgroundManager({
                     spellCheck={false}
                     value={editing.originFeat}
                     onChange={(e) => set('originFeat', e.target.value)}
-                    maxLength={ORIGIN_FEAT_NAME_MAX}
+                    maxLength={FEAT_NAME_MAX}
                     placeholder="專長名稱，例：荒野嚮導"
                     className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
                   />
@@ -283,7 +282,7 @@ export function BackgroundManager({
                     aria-label="自訂起源專長說明"
                     value={editing.originFeatDescription}
                     onChange={(e) => set('originFeatDescription', e.target.value)}
-                    maxLength={ORIGIN_FEAT_DESC_MAX}
+                    maxLength={FEAT_DESC_MAX}
                     rows={3}
                     placeholder="說明（選填）：這個專長做什麼…"
                     className="mt-2 w-full rounded-card border border-border bg-surface-2 p-3 text-[13px] text-text-primary"

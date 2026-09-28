@@ -4,6 +4,7 @@ import {
   CATALOG_SOURCE,
   CatalogClass,
   CatalogClassFeature,
+  CatalogFeat,
   CatalogItem,
   CatalogSpell,
   CatalogSubclass,
@@ -135,4 +136,26 @@ export async function fetchClassProgression(
     error:
       subs.success && feats.success ? null : describe('子職與職業特性', (subs.success ? feats : subs).error!),
   };
+}
+
+/**
+ * 升級可選的專長：只取通用（G）與史詩恩賜（EB）。
+ *
+ * 戰鬥風格與起源專長不是 ASI 等級能選的，在伺服器端就濾掉；是否到 19 級、
+ * 先決條件是否滿足由 `lib/rules/feats.ts` 判斷——那是規則，不是查詢。
+ */
+export async function fetchFeats(): Promise<CatalogResult<CatalogFeat>> {
+  const supabase = createAnonClient();
+  const { data, error } = await supabase
+    .from('feats')
+    .select('id, name, eng_name, data')
+    .eq('source', CATALOG_SOURCE)
+    .in('data->>category', ['G', 'EB'])
+    .order('page');
+
+  if (error) return { rows: [], error: error.message };
+  const parsed = CatalogFeat.array().safeParse(data);
+  return parsed.success
+    ? { rows: parsed.data, error: null }
+    : { rows: [], error: describe('專長', parsed.error) };
 }

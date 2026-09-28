@@ -88,11 +88,31 @@ export const CatalogClassFeature = z.object({
   data: z.record(z.string(), z.unknown()).nullish().transform((v) => v ?? {}),
 });
 
+/**
+ * 專長（`feats` 表）。`data` 只取規則層用得到的四個鍵，其餘 5etools 欄位丟掉。
+ *
+ * `prerequisite`／`ability` 保持 unknown：兩者都是 5etools 的自由結構，
+ * 解析集中在 `lib/rules/feats.ts` 的固定清單裡，不在 schema 層假裝知道形狀。
+ */
+export const CatalogFeat = z.object({
+  id: z.string(),
+  name: z.string(),
+  eng_name: z.string().nullish().transform((v) => v ?? null),
+  data: z.object({
+    /** G 通用／EB 史詩恩賜／FS 戰鬥風格／O 起源。 */
+    category: z.string().nullish().transform((v) => v ?? ''),
+    prerequisite: z.array(z.unknown()).nullish().transform((v) => v ?? []),
+    ability: z.array(z.unknown()).nullish().transform((v) => v ?? []),
+    entries: z.array(z.unknown()).nullish().transform((v) => v ?? []),
+  }),
+});
+
 export type CatalogClass = z.infer<typeof CatalogClass>;
 export type CatalogSubclass = z.infer<typeof CatalogSubclass>;
 export type CatalogClassFeature = z.infer<typeof CatalogClassFeature>;
 export type CatalogSpell = z.infer<typeof CatalogSpell>;
 export type CatalogItem = z.infer<typeof CatalogItem>;
+export type CatalogFeat = z.infer<typeof CatalogFeat>;
 
 /** 目前開放的書源代碼（XPHB = 2024 修訂版玩家手冊）。 */
 export const CATALOG_SOURCE = 'XPHB';

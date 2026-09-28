@@ -49,8 +49,16 @@ export type LevelUpChoices = {
   hpRoll?: number | null;
   subclass?: string;
   subclassEn?: string;
-  /** 能力代碼 → 加值（{INT:2} 或 {INT:1, WIS:1}）。 */
+  /**
+   * 能力代碼 → 加值（{INT:2} 或 {INT:1, WIS:1}）。
+   * 專長的 +1 也走這裡——它在規則上就是能力值提升，另開一條路就得再實作一次
+   * CON 回溯 HP 與各項重算。
+   */
   asi?: Record<string, number>;
+  /** 能力值夾值上限。預設 20；史詩恩賜為 30。由呼叫端決定，這裡不需要知道專長種類。 */
+  abilityCap?: number;
+  /** 本級取得的專長（選屬性值提升時為 undefined）。 */
+  feat?: Character['features'][number];
   features?: Character['features'];
   cantrips?: Character['spells'];
   spells?: Character['spells'];
@@ -124,6 +132,7 @@ export function applyLevelUp(
   const target = plan.targetLevel;
   const pb = proficiencyBonusFor(target);
   const asi = choices.asi ?? {};
+  const cap = choices.abilityCap ?? 20;
 
   const oldScores = Object.fromEntries(
     KEYS.map(([code, key]) => [code, c.abilityScores[key]]),
@@ -131,7 +140,13 @@ export function applyLevelUp(
   const scores = Object.fromEntries(
     KEYS.map(([code]) => {
       const old = oldScores[code];
-      const score = Math.min(Math.max(old.score + (asi[code] ?? 0), 1), 20);
+      const add = asi[code] ?? 0;
+      // 只夾有加值的能力，且上限不低於現有分數：19 級以史詩恩賜到 21 之後，
+      // 升 20 時若對全部能力夾 20，那一點會在沒有任何提示下被吃掉。
+      const score =
+        add === 0
+          ? old.score
+          : Math.min(Math.max(old.score + add, 1), Math.max(cap, old.score));
       return [code, { ...old, score, modifier: abilityModifier(score) }];
     }),
   );
@@ -186,7 +201,11 @@ export function applyLevelUp(
     spellSlots: caster ? spellSlots : c.spellSlots,
     subclass: choices.subclass ?? c.subclass,
     subclassEn: choices.subclassEn ?? c.subclassEn,
-    features: [...c.features, ...(choices.features ?? [])],
+    features: [
+      ...c.features,
+      ...(choices.features ?? []),
+      ...(choices.feat ? [choices.feat] : []),
+    ],
     cantrips: [...c.cantrips, ...(choices.cantrips ?? [])],
     spells: [...c.spells, ...(choices.spells ?? [])],
     resources: syncClassResources(c.resources, c.classNameEn, target, newScores),

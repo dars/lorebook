@@ -7,15 +7,26 @@ import { AppLink } from '@/components/ui/app-link';
 import { updateCharacter } from '@/lib/characters/actions';
 import { useFormDraft } from '@/lib/hooks/use-form-draft';
 import type { Character } from '@/lib/domain/character';
-import type { CatalogClassFeature, CatalogSubclass } from '@/lib/catalog/types';
+import type { CatalogClassFeature, CatalogFeat, CatalogSubclass } from '@/lib/catalog/types';
 import type { CustomSubclass } from '@/lib/subclasses/types';
 import { ftFlattenEntries } from '@/lib/catalog/fivetools';
+import { FEAT_DESC_MAX, FEAT_NAME_MAX } from '@/lib/domain/character';
+import {
+  EPIC_BOON_LEVEL,
+  catalogFeatFeature,
+  customFeatFeature,
+  featAbilityOptions,
+  featCandidates,
+  featPrereqUnmet,
+  isEpicBoon,
+  isFeatSlotFeature,
+} from '@/lib/rules/feats';
 import { applyLevelUp, applySubclassPick, planFor } from '@/lib/rules/level-up';
 
 /**
  * 升級流程，對照 Flutter 端的 `CharacterLevelUpPage`。
  *
- * 一頁到底而非多步驟精靈：升級的選項少（HP、ASI、子職），拆成多步只是增加
+ * 一頁到底而非多步驟精靈：升級的選項少（HP、ASI／專長、子職），拆成多步只是增加
  * 點擊。建角步驟多才需要分步。
  *
  * 預覽顯示的是 `applyLevelUp` 的實際輸出，與存下的完全相同。
@@ -26,6 +37,13 @@ const ABILITY_LABEL: Record<string, string> = {
 };
 const CODES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
 
+type FeatMode = 'asi' | 'catalog' | 'custom';
+const FEAT_MODES: [FeatMode, string][] = [
+  ['asi', '屬性值提升'],
+  ['catalog', '內容庫專長'],
+  ['custom', '自訂專長'],
+];
+
 export function LevelUpView({
   initial,
   mode = 'level-up',
@@ -33,6 +51,8 @@ export function LevelUpView({
   customSubclasses,
   classFeatures,
   catalogOffline,
+  feats = [],
+  featsOffline = false,
 }: {
   initial: Character;
   /**
@@ -47,6 +67,10 @@ export function LevelUpView({
   classFeatures: CatalogClassFeature[];
   /** 內容庫取不到：子職與特性可跳過，數值仍照常升級。 */
   catalogOffline: boolean;
+  /** 內容庫的通用專長與史詩恩賜；只在 ASI 等級有值。 */
+  feats?: CatalogFeat[];
+  /** 專長取不到：ASI 與自訂專長照常，只有內容庫專長不能選。 */
+  featsOffline?: boolean;
 }) {
   const subclassOnly = mode === 'subclass';
   // 種族的每級額外 HP 讀角色卡上的快照，不以種族名反查 SPECIES——自訂種族
@@ -59,6 +83,16 @@ export function LevelUpView({
   const [asiMode, setAsiMode] = useState<'2' | '1+1'>('2');
   const [asiA, setAsiA] = useState<string | null>(null);
   const [asiB, setAsiB] = useState<string | null>(null);
+  // 2024 的 ASI 等級給的是「一個通用專長」，屬性值提升只是其中之一。
+  // 各模式的輸入分開存：切模式只決定送出哪一份，切回來不必重填。
+  const [featMode, setFeatMode] = useState<FeatMode>('asi');
+  const [catalogFeatId, setCatalogFeatId] = useState<string | null>(null);
+  const [catalogAbility, setCatalogAbility] = useState<string | null>(null);
+  const [customName, setCustomName] = useState('');
+  const [customDesc, setCustomDesc] = useState('');
+  const [customBoost, setCustomBoost] = useState(true);
+  const [customAbility, setCustomAbility] = useState<string | null>(null);
+  const [customEpic, setCustomEpic] = useState(false);
   // 兩種來源分開存：以旗標而非名稱區分，使用者自訂一個與 SRD 同名的子職時，
   // 那是他的子職（與自訂起源專長同一原則）。
   const [subclass, setSubclass] = useState<CatalogSubclass | null>(null);
@@ -75,8 +109,58 @@ export function LevelUpView({
         : {};
 
   const asiReady =
-    !plan.hasAsi ||
-    (asiMode === '2' ? asiA !== null : asiA !== null && asiB !== null && asiA !== asiB);
+    asiMode === '2' ? asiA !== null : asiA !== null && asiB !== null && asiA !== asiB;
+
+  const candidates = plan.hasAsi ? featCandidates(feats, plan.targetLevel) : [];
+  const catalogFeat = candidates.find((f) => f.id === catalogFeatId) ?? null;
+  const catalogOpts = catalogFeat ? featAbilityOptions(catalogFeat) : null;
+  const catalogCap = catalogOpts?.cap ?? 20;
+  // 史詩恩賜只在 19 級可取得；其他等級開放這個勾選等於讓 4 級就能推過 20。
+  const epicAvailable = plan.targetLevel >= EPIC_BOON_LEVEL;
+  const customCap = epicAvailable && customEpic ? 30 : 20;
+  // 所選能力已達上限時，+1 會被夾掉而毫無作用——取消史詩恩賜勾選就會發生。
+  const boostable = (code: string | null, cap: number) =>
+    code !== null && scoreOf(initial, code) < cap;
+
+  const featChoice: {
+    asi: Record<string, number>;
+    abilityCap?: number;
+    feat?: ReturnType<typeof customFeatFeature>;
+    ready: boolean;
+  } = !plan.hasAsi
+    ? { asi: {}, ready: true }
+    : featMode === 'asi'
+      ? { asi, ready: asiReady }
+      : featMode === 'catalog'
+        ? {
+            asi: catalogOpts && catalogAbility ? { [catalogAbility]: 1 } : {},
+            abilityCap: catalogCap,
+            feat: catalogFeat ? catalogFeatFeature(catalogFeat, plan.targetLevel) : undefined,
+            ready:
+              catalogFeat !== null &&
+              featPrereqUnmet(catalogFeat, initial, plan.targetLevel) === null &&
+              (!catalogOpts ||
+                (catalogOpts.from.includes(catalogAbility ?? '') &&
+                  boostable(catalogAbility, catalogCap))),
+          }
+        : {
+            asi: customBoost && customAbility ? { [customAbility]: 1 } : {},
+            abilityCap: customCap,
+            feat:
+              customName.trim() === ''
+                ? undefined
+                : customFeatFeature(
+                    {
+                      name: customName,
+                      description: customDesc,
+                      epic: epicAvailable && customEpic,
+                    },
+                    plan.targetLevel,
+                  ),
+            ready:
+              customName.trim() !== '' &&
+              (!customBoost || boostable(customAbility, customCap)),
+          };
   const hpReady =
     hpMode === 'average' || (typeof roll === 'number' && roll >= 1 && roll <= plan.hitDieFaces);
   // 子職：內容庫離線時可跳過——擋在這裡等於內容庫一有問題就不能升級，
@@ -114,6 +198,7 @@ export function LevelUpView({
       ? []
       : classFeatures
           .filter((f) => !f.is_subclass && f.level === plan.targetLevel)
+          .filter((f) => featMode === 'asi' || !isFeatSlotFeature(f.eng_name))
           .map((f) =>
             toFeature(f, `職業：${initial.className} Lv${plan.targetLevel}`),
           )),
@@ -154,7 +239,9 @@ export function LevelUpView({
       })
     : applyLevelUp(initial, plan, {
         hpRoll: hpMode === 'roll' && typeof roll === 'number' ? roll : null,
-        asi,
+        asi: featChoice.asi,
+        abilityCap: featChoice.abilityCap,
+        feat: featChoice.feat,
         subclass: subclass?.name ?? customSubclass?.name,
         subclassEn: subclass?.eng_name ?? customSubclass?.nameEn ?? undefined,
         features: newFeatures,
@@ -168,11 +255,16 @@ export function LevelUpView({
     hpMode !== 'average' ||
     roll !== '' ||
     asiA !== null ||
+    featMode !== 'asi' ||
     subclass !== null ||
     customSubclass !== null;
   const { pending, accept, discard, clear } = useFormDraft({
     key: `lorebook-draft-levelup-${initial.id}-${plan.targetLevel}`,
-    value: { hpMode, roll, asiMode, asiA, asiB, subclass, customSubclass },
+    value: {
+      hpMode, roll, asiMode, asiA, asiB, subclass, customSubclass,
+      featMode, catalogFeatId, catalogAbility,
+      customName, customDesc, customBoost, customAbility, customEpic,
+    },
     // 補選只有一個選擇，存草稿沒有意義；而且它與升級共用鍵會互相污染。
     active: started && !busy && !subclassOnly,
   });
@@ -185,6 +277,15 @@ export function LevelUpView({
     setAsiB(d.asiB);
     setSubclass(d.subclass);
     setCustomSubclass(d.customSubclass);
+    // 本變更之前存下的草稿沒有這些鍵。
+    setFeatMode(d.featMode ?? 'asi');
+    setCatalogFeatId(d.catalogFeatId ?? null);
+    setCatalogAbility(d.catalogAbility ?? null);
+    setCustomName(d.customName ?? '');
+    setCustomDesc(d.customDesc ?? '');
+    setCustomBoost(d.customBoost ?? true);
+    setCustomAbility(d.customAbility ?? null);
+    setCustomEpic(d.customEpic ?? false);
     accept();
   };
 
@@ -318,49 +419,235 @@ export function LevelUpView({
 
       {plan.hasAsi && (
         <>
-          <SectionTitle en="ABILITY SCORE" cn="屬性值提升" />
-          <ParchmentCard className="px-4 py-3">
-            <div className="flex gap-2">
-              {(['2', '1+1'] as const).map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  onClick={() => {
-                    setAsiMode(m);
-                    setAsiB(null);
-                  }}
-                  className={`min-h-11 flex-1 rounded-card border text-[13px] ${
-                    asiMode === m
-                      ? 'border-gold bg-gold/10 text-gold'
-                      : 'border-border-2 text-text-secondary'
-                  }`}
-                >
-                  {m === '2' ? '一項 +2' : '兩項各 +1'}
-                </button>
-              ))}
-            </div>
-            <div className="mt-3 flex flex-col gap-2">
-              <AbilityPicker
-                label={asiMode === '2' ? '+2 給誰' : '第一項 +1'}
-                value={asiA}
-                exclude={asiMode === '1+1' ? asiB : null}
-                scores={initial}
-                onPick={setAsiA}
-              />
-              {asiMode === '1+1' && (
+          <SectionTitle en="ABILITY SCORE / FEAT" cn="屬性值提升或專長" />
+          <div className="mb-2 flex gap-2">
+            {FEAT_MODES.map(([m, label]) => (
+              <button
+                key={m}
+                type="button"
+                aria-pressed={featMode === m}
+                onClick={() => setFeatMode(m)}
+                className={`min-h-11 flex-1 rounded-card border text-[13px] ${
+                  featMode === m
+                    ? 'border-gold bg-gold/10 text-gold'
+                    : 'border-border-2 text-text-secondary'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {featMode === 'asi' && (
+            <ParchmentCard className="px-4 py-3">
+              <div className="flex gap-2">
+                {(['2', '1+1'] as const).map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => {
+                      setAsiMode(m);
+                      setAsiB(null);
+                    }}
+                    className={`min-h-11 flex-1 rounded-card border text-[13px] ${
+                      asiMode === m
+                        ? 'border-gold bg-gold/10 text-gold'
+                        : 'border-border-2 text-text-secondary'
+                    }`}
+                  >
+                    {m === '2' ? '一項 +2' : '兩項各 +1'}
+                  </button>
+                ))}
+              </div>
+              <div className="mt-3 flex flex-col gap-2">
                 <AbilityPicker
-                  label="第二項 +1"
-                  value={asiB}
-                  exclude={asiA}
+                  label={asiMode === '2' ? '+2 給誰' : '第一項 +1'}
+                  value={asiA}
+                  exclude={asiMode === '1+1' ? asiB : null}
                   scores={initial}
-                  onPick={setAsiB}
+                  onPick={setAsiA}
                 />
+                {asiMode === '1+1' && (
+                  <AbilityPicker
+                    label="第二項 +1"
+                    value={asiB}
+                    exclude={asiA}
+                    scores={initial}
+                    onPick={setAsiB}
+                  />
+                )}
+              </div>
+              <p className="mt-2 text-[12px] text-text-secondary">
+                分數上限 20；已達上限的能力不會再提升。
+              </p>
+            </ParchmentCard>
+          )}
+
+          {featMode === 'catalog' && (
+            <ParchmentCard className="px-4 py-3">
+              {featsOffline ? (
+                <p className="text-[12px] leading-relaxed text-text-secondary">
+                  專長清單目前無法取得（內容庫離線）。可改用「自訂專長」記下專長名稱與效果。
+                </p>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-2">
+                    {candidates.map((f) => {
+                      const unmet = featPrereqUnmet(f, initial, plan.targetLevel);
+                      const selected = catalogFeatId === f.id;
+                      return (
+                        <button
+                          key={f.id}
+                          type="button"
+                          disabled={unmet !== null}
+                          aria-pressed={selected}
+                          onClick={() => {
+                            setCatalogFeatId(f.id);
+                            // 各專長可加的能力不同，換專長就重選。
+                            setCatalogAbility(null);
+                          }}
+                          className={`min-h-11 rounded-card border px-3 py-2 text-left disabled:cursor-not-allowed ${
+                            selected ? 'border-gold bg-gold/10' : 'border-border-2'
+                          }`}
+                        >
+                          <div className="flex items-baseline gap-2">
+                            <span
+                              className={`text-[14px] font-semibold ${
+                                unmet ? 'text-text-secondary' : 'text-text-primary'
+                              }`}
+                            >
+                              {f.name}
+                            </span>
+                            <span className="font-label text-[11px] text-text-primary/70">
+                              {f.eng_name}
+                            </span>
+                            {isEpicBoon(f) && (
+                              <span className="ml-auto text-[12px] text-section-label">
+                                史詩恩賜
+                              </span>
+                            )}
+                          </div>
+                          {/* 只變灰不說明，新手不知道為什麼不能選。 */}
+                          {unmet && (
+                            <p className="mt-0.5 text-[12px] text-text-secondary">{unmet}</p>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {catalogFeat && (
+                    <>
+                      <p className="mt-3 whitespace-pre-wrap text-[13px] leading-relaxed text-text-light">
+                        {catalogFeatFeature(catalogFeat, plan.targetLevel).description}
+                      </p>
+                      {catalogOpts && (
+                        <div className="mt-3">
+                          <AbilityPicker
+                            label="+1 給誰"
+                            value={catalogAbility}
+                            exclude={null}
+                            scores={initial}
+                            onPick={setCatalogAbility}
+                            allowed={catalogOpts.from}
+                            cap={catalogCap}
+                          />
+                          <p className="mt-2 text-[12px] text-text-secondary">
+                            分數上限 {catalogCap}。
+                          </p>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  <p className="mt-3 text-[12px] leading-relaxed text-text-secondary">
+                    SRD 收錄的通用專長很少。其他來源的專長請用「自訂專長」記下。
+                  </p>
+                </>
               )}
-            </div>
-            <p className="mt-2 text-[12px] text-text-secondary">
-              分數上限 20；已達上限的能力不會再提升。
-            </p>
-          </ParchmentCard>
+            </ParchmentCard>
+          )}
+
+          {featMode === 'custom' && (
+            <ParchmentCard className="px-4 py-3">
+              <label className="block">
+                <span className="mb-1 flex text-[12px] text-text-secondary">
+                  專長名稱
+                  <span className="ml-auto">
+                    {customName.length}／{FEAT_NAME_MAX}
+                  </span>
+                </span>
+                <input
+                  autoComplete="off"
+                  spellCheck={false}
+                  value={customName}
+                  onChange={(e) => setCustomName(e.target.value)}
+                  maxLength={FEAT_NAME_MAX}
+                  placeholder="例：鐵壁"
+                  className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+                />
+              </label>
+              <label className="mt-3 block">
+                <span className="mb-1 flex text-[12px] text-text-secondary">
+                  說明（選填）
+                  <span className="ml-auto">
+                    {customDesc.length}／{FEAT_DESC_MAX}
+                  </span>
+                </span>
+                <textarea
+                  value={customDesc}
+                  onChange={(e) => setCustomDesc(e.target.value)}
+                  maxLength={FEAT_DESC_MAX}
+                  rows={3}
+                  placeholder="這個專長做什麼…"
+                  className="w-full rounded-card border border-border bg-surface-2 p-3 text-[13px] text-text-primary"
+                />
+              </label>
+
+              <label className="mt-2 flex min-h-11 cursor-pointer items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={customBoost}
+                  onChange={(e) => setCustomBoost(e.target.checked)}
+                  className="size-4 accent-gold"
+                />
+                <span className="text-[13px] text-text-light">
+                  附帶 +1 能力值（多數通用專長都有）
+                </span>
+              </label>
+
+              {epicAvailable && (
+                <label className="flex min-h-11 cursor-pointer items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={customEpic}
+                    onChange={(e) => setCustomEpic(e.target.checked)}
+                    className="size-4 accent-gold"
+                  />
+                  <span className="text-[13px] text-text-light">
+                    這是史詩恩賜（能力值上限 30）
+                  </span>
+                </label>
+              )}
+
+              {customBoost && (
+                <div className="mt-2">
+                  <AbilityPicker
+                    label="+1 給誰"
+                    value={customAbility}
+                    exclude={null}
+                    scores={initial}
+                    onPick={setCustomAbility}
+                    cap={customCap}
+                  />
+                </div>
+              )}
+
+              <p className="mt-3 text-[12px] leading-relaxed text-text-secondary">
+                專長的效果不會自動計算，除了上面的 +1 能力值。使用前請與 DM 確認。
+              </p>
+            </ParchmentCard>
+          )}
         </>
       )}
         </>
@@ -538,7 +825,7 @@ export function LevelUpView({
             disabled={
               busy ||
               !subclassReady ||
-              (!subclassOnly && (!asiReady || !hpReady))
+              (!subclassOnly && (!featChoice.ready || !hpReady))
             }
             className="min-h-12 w-full rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold disabled:opacity-40"
           >
@@ -555,30 +842,37 @@ export function LevelUpView({
   );
 }
 
+const scoreOf = (c: Character, code: string) =>
+  c.abilityScores[
+    (code === 'INT' ? 'int_' : code.toLowerCase()) as keyof Character['abilityScores']
+  ].score;
+
 function AbilityPicker({
   label,
   value,
   exclude,
   scores,
   onPick,
+  allowed = CODES,
+  cap = 20,
 }: {
   label: string;
   value: string | null;
   exclude: string | null;
   scores: Character;
   onPick: (v: string) => void;
+  /** 專長只能加特定能力（擒抱大師：力量／敏捷）。 */
+  allowed?: string[];
+  /** 史詩恩賜可到 30。 */
+  cap?: number;
 }) {
-  const scoreOf = (code: string) =>
-    scores.abilityScores[
-      (code === 'INT' ? 'int_' : code.toLowerCase()) as keyof Character['abilityScores']
-    ].score;
 
   return (
     <div>
       <div className="mb-1 text-[12px] text-text-secondary">{label}</div>
       <div className="grid grid-cols-3 gap-1.5">
-        {CODES.map((code) => {
-          const maxed = scoreOf(code) >= 20;
+        {allowed.map((code) => {
+          const maxed = scoreOf(scores, code) >= cap;
           return (
             <button
               key={code}
@@ -591,7 +885,7 @@ function AbilityPicker({
                   : 'border-border-2 text-text-secondary'
               }`}
             >
-              {ABILITY_LABEL[code]} {scoreOf(code)}
+              {ABILITY_LABEL[code]} {scoreOf(scores, code)}
             </button>
           );
         })}

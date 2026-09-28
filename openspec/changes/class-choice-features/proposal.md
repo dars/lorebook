@@ -1,4 +1,4 @@
-> **狀態：BACKLOG（暫緩）** — 僅記錄方向，待 `level-up-flow` 完成後再規劃 artifacts 與實作。建議與專長（Feats）同批處理。
+> **狀態：BACKLOG（暫緩）** — 僅記錄方向，待 `level-up-flow` 完成後再規劃 artifacts 與實作。
 
 ## Why
 
@@ -14,7 +14,7 @@
   - 戰技 Maneuvers（戰鬥大師 Lv3 起）
   - 武器精通 Weapon Mastery 的換選（武人職業）
   - 戰鬥風格 Fighting Style（戰士 Lv1、聖騎士 Lv2 等）
-- **專長（Feats）**：ASI 步驟擴充為「ASI 或專長」（2024 規則專長即 ASI 的一種），含半專長的 +1 能力值連動——與本 change 共用選擇器基礎，建議同批。
+- ~~專長（Feats）~~：已獨立為 `asi-or-feat`（ASI 步驟擴充為「屬性值提升或專長」，含自訂專長與半專長 +1）。戰鬥風格專長仍屬本 backlog。
 - **選項資料建置**：內容庫 `class_features.data` 為 5etools 原文，選項清單需另行結構化（新表或 data 欄位約定），含中文化。
 - **既有角色回填**：已用唯讀模式升過級的角色，提供事後補選入口（類似 `level-up-flow` 的補選子職模式）。
 

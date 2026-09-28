@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { LevelUpView } from '@/components/level-up/level-up-view';
-import { fetchClassProgression } from '@/lib/catalog/fetch';
+import { fetchClassProgression, fetchFeats } from '@/lib/catalog/fetch';
 import { fetchCustomSubclasses } from '@/lib/subclasses/actions';
 import { getCurrentCharacterId } from '@/lib/characters/current';
 import { fetchMyCharacter } from '@/lib/characters/fetch';
 import { OfflineNotice } from '@/components/shell/offline-notice';
-import { needsSubclassPick } from '@/lib/rules/level-up';
+import { needsSubclassPick, planFor } from '@/lib/rules/level-up';
 import { getAuthState } from '@/lib/supabase/server';
 
 export const metadata: Metadata = { title: '升級｜Lorebook' };
@@ -41,11 +41,15 @@ export default async function LevelUpPage({
   // 都要一次補上。補選模式取到角色的**現有**等級，把這一路累積的子職特性
   // 一次補齊。
   const throughLevel = subclassOnly ? character.level : character.level + 1;
-  const [{ subclasses, features, error }, { subclasses: custom }] =
+  // 專長只在 ASI 等級用得到；補選子職不升級，也用不到。
+  const needsFeats =
+    !subclassOnly && planFor(character, character.speciesHpPerLevel).hasAsi;
+  const [{ subclasses, features, error }, { subclasses: custom }, feats] =
     await Promise.all([
       fetchClassProgression(character.classNameEn, throughLevel),
       // 只取母職業相符的——一次查全部再過濾只是白拿資料。
       fetchCustomSubclasses(character.classNameEn),
+      needsFeats ? fetchFeats() : Promise.resolve({ rows: [], error: null }),
     ]);
 
   return (
@@ -56,6 +60,8 @@ export default async function LevelUpPage({
       customSubclasses={custom}
       classFeatures={features}
       catalogOffline={error !== null || features.length === 0}
+      feats={feats.rows}
+      featsOffline={needsFeats && (feats.error !== null || feats.rows.length === 0)}
     />
   );
 }
