@@ -26,7 +26,7 @@ export function PortraitCard({
 
   return (
     <div className="mx-auto w-full max-w-[420px]">
-      <div className="relative aspect-square overflow-hidden rounded-character-header border border-border bg-linear-to-b from-[#2E2418] via-[#1E160C] to-[#14110C] medium:aspect-4/5">
+      <div className="relative isolate aspect-square overflow-hidden rounded-character-header border border-border bg-linear-to-b from-[#2E2418] via-[#1E160C] to-[#14110C] medium:aspect-4/5">
         {c.portraitUrl ? (
           // 立繪為 Supabase Storage 的任意外部 URL，且需要 object-position
           // 取景；next/image 的最佳化在此無用武之地（來源已是壓縮好的上傳圖），
@@ -51,12 +51,16 @@ export function PortraitCard({
         {/* 底部漸層：自中段開始加深，確保文字可讀。 */}
         <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-transparent from-50% to-black/80" />
 
+        {/* z-10 不可省：下方的文字層同為 absolute inset-0 且在 DOM 中較後，
+            沒有 z-index 時會疊在按鈕上把點擊吃掉——按鈕看得到卻按不動。
+            外層的 isolate 把這個 z-10 關在卡片內，否則捲動時會蓋過同為
+            z-10 的 sticky 頂列。 */}
         {onEdit && (
           <button
             type="button"
             onClick={onEdit}
             aria-label="更換角色圖"
-            className="absolute right-3 top-3 flex size-11 items-center justify-center rounded-full border border-border bg-black/60"
+            className="absolute right-3 top-3 z-10 flex size-11 items-center justify-center rounded-full border border-border bg-black/60"
           >
             <svg viewBox="0 0 24 24" className="size-[18px] fill-white/90" aria-hidden>
               <path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3zm3 5a6 6 0 1 1 0 12 6 6 0 0 1 0-12m0 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8" />
