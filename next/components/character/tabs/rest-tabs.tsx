@@ -292,7 +292,9 @@ export function BiographyTab({
                 <span className="w-10 shrink-0 text-[12px] text-section-label">
                   {label}
                 </span>
-                <span className="text-[13px] text-text-light">{v}</span>
+                {/* 編輯器是 textarea，換行是使用者寫進去的——不 pre-wrap 會被併成空白。
+                    min-w-0：flex 子項預設不收縮，長英文或網址會撐破卡片。 */}
+                <span className="min-w-0 whitespace-pre-wrap break-words text-[13px] text-text-light">{v}</span>
               </div>
             ))}
         </ParchmentCard>
