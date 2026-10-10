@@ -21,6 +21,7 @@ export function EntryCard({
   description,
   footnote,
   emphasizeBadge = false,
+  borderless = false,
 }: {
   badge: string;
   title: string;
@@ -37,6 +38,8 @@ export function EntryCard({
   footnote?: string | null;
   /** 徽章金色強調（已備法術、武器）。 */
   emphasizeBadge?: boolean;
+  /** 已在外層卡片中時，避免重複框線。 */
+  borderless?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
   const expandable = Boolean(description || footnote);
@@ -94,7 +97,7 @@ export function EntryCard({
   );
 
   return (
-    <div className="overflow-hidden rounded-[10px] border border-border">
+    <div className={borderless ? 'min-w-0 overflow-hidden' : 'overflow-hidden rounded-[10px] border border-border'}>
       {expandable ? (
         <button
           type="button"

@@ -2,6 +2,7 @@
 
 import { type ReactNode, useState } from 'react';
 
+import { LibrarySectionHeader, LibraryNoResults } from '@/components/homebrew/library-section-header';
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import { EditorSheet } from '@/components/ui/editor-sheet';
 import {
@@ -29,10 +30,12 @@ import {
 export function SubclassManager({
   initial,
   embedded,
+  search = '',
   extras,
 }: {
   initial: CustomSubclass[];
   embedded?: boolean;
+  search?: string;
   /**
    * 每一項的附加列（來源備註、分享入口、更新提示），以 id 為鍵。
    *
@@ -78,11 +81,13 @@ export function SubclassManager({
 
   return (
     <Wrap embedded={embedded}>
+      {embedded ? <LibrarySectionHeader title="子職業" subtitle="為角色整理專屬的能力與成長路線。" count={list.length} onCreate={() => setEditing(emptySubclass())} /> : (
       <SectionTitle en="CUSTOM SUBCLASSES" cn="自訂子職業" first={!embedded} />
+      )}
 
       {embedded ? (
         <details className="mb-4 rounded-card border border-border-2 bg-surface-1 px-4 py-2.5">
-          <summary className="cursor-pointer py-1 text-[12px] text-text-secondary">
+          <summary className="min-h-11 cursor-pointer content-center text-[12px] text-text-secondary">
             查看 2024 子職業結構
           </summary>
           <SubclassRules />
@@ -107,11 +112,12 @@ export function SubclassManager({
         </div>
       )}
 
-      <div className="flex flex-col gap-2">
-        {list.map((s) => (
+      {list.length > 0 && !list.some(item => item.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())) && <LibraryNoResults />}
+      <div className="flex flex-col gap-3">
+        {list.filter(item => item.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())).map((s) => (
           <ParchmentCard key={s.id} className="px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="flex-1 text-[15px] font-semibold text-text-primary">
+              <span className="min-w-0 flex-1 break-words text-[16px] font-semibold text-text-primary">
                 {s.name}
               </span>
               <button
@@ -138,6 +144,7 @@ export function SubclassManager({
         ))}
       </div>
 
+      {!embedded && (
       <button
         type="button"
         onClick={() => setEditing(emptySubclass())}
@@ -145,6 +152,7 @@ export function SubclassManager({
       >
         ＋ 新增自訂子職
       </button>
+      )}
 
       <EditorSheet
         open={editing !== null}

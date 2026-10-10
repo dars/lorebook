@@ -44,7 +44,14 @@ export function HomebrewItemMeta({
         <NoteRow kind={kind} id={id} note={sourceNote} />
       )}
       {outdated && <RefreshRow kind={kind} id={id} edited={edited} />}
-      <ShareRow kind={kind} id={id} shareToken={shareToken} />
+      <details className="group">
+        <summary className="min-h-11 cursor-pointer content-center text-[12px] text-text-secondary hover:text-gold">
+          分享設定與連結
+        </summary>
+        <div className="mb-2 rounded-card bg-surface-2 px-3 py-2">
+          <ShareRow kind={kind} id={id} shareToken={shareToken} />
+        </div>
+      </details>
     </div>
   );
 }

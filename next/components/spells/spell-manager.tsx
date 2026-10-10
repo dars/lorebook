@@ -3,7 +3,8 @@
 import { useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { EditorSheet } from '@/components/ui/editor-sheet';
-import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
+import { ParchmentCard } from '@/components/ui/decorations';
+import { LibrarySectionHeader, LibraryNoResults } from '@/components/homebrew/library-section-header';
 import { SpellCard } from '@/components/character/spell-card';
 import { randomId } from '@/lib/creation/id';
 import { CustomSpell, spellFromCustom } from '@/lib/spells/types';
@@ -12,7 +13,7 @@ import { deleteCustomSpell, upsertCustomSpell } from '@/lib/spells/actions';
 const fieldClass = 'mt-1 min-h-11 w-full rounded-card border border-border bg-surface-1 px-3 py-2 text-text-primary';
 const buttonClass = 'min-h-11 rounded-card border border-border-2 px-3 text-[13px] text-gold hover:border-gold';
 
-export function SpellManager({ initial, extras }: { initial: CustomSpell[]; extras: Record<string, ReactNode> }) {
+export function SpellManager({ initial, extras, search = '' }: { initial: CustomSpell[]; extras: Record<string, ReactNode>; search?: string }) {
   const [editing, setEditing] = useState<CustomSpell | null>(null);
   const [deleting, setDeleting] = useState<CustomSpell | null>(null);
   const [busy, setBusy] = useState(false);
@@ -28,24 +29,21 @@ export function SpellManager({ initial, extras }: { initial: CustomSpell[]; extr
     } catch { setError('連線失敗，請重試。'); }
     finally { setBusy(false); }
   }
-  return <section>
-    <SectionTitle en="CUSTOM SPELLS" cn="自創法術" first />
-    <ParchmentCard className="p-4">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-[13px] text-text-secondary">{initial.length} 份法術典藏</p>
-        <button className={buttonClass} onClick={() => setEditing(CustomSpell.parse({ id: randomId(), name: '新法術', level: 0, description: '法術效果' }))}>＋ 新增法術</button>
-      </div>
-      <p className="mt-2 text-[12px] leading-6 text-text-secondary">在這裡撰寫與管理，再到角色的法術頁從收藏選用。採用前請與 DM 確認。</p>
-      {!initial.length && <p className="mt-4 border-t border-border pt-4 text-[13px] text-text-light">尚未收錄法術，為你的冒險寫下第一道咒語。</p>}
-      <div className="mt-3 space-y-4">{initial.map(s => <div key={s.id}>
-        <SpellCard spell={spellFromCustom(s)} />
-        <div className="mt-2 flex gap-2">
+  const visible = initial.filter(s => [s.name, s.nameEn].some(name => name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())));
+  return <section className="min-w-0">
+    <LibrarySectionHeader title="法術" subtitle="撰寫咒語，再到角色的法術頁從收藏選用。" count={initial.length} onCreate={() => setEditing({ ...CustomSpell.parse({ id: randomId(), name: '新法術', level: 0, description: '法術效果' }), name: '', description: '' })} />
+      {!initial.length && <div className="rounded-card border border-dashed border-border px-4 py-10 text-center"><p className="text-[14px] text-text-primary">尚未收藏法術</p><p className="mt-2 text-[13px] text-text-secondary">從「新增法術」開始，寫下你的第一道咒語。</p></div>}
+      {initial.length > 0 && !visible.length && <LibraryNoResults />}
+      <div className="space-y-3">{visible.map(s => <ParchmentCard key={s.id} className="overflow-hidden">
+        <div className="medium:flex medium:items-start">
+        <div className="min-w-0 flex-1"><SpellCard spell={spellFromCustom(s)} borderless /></div>
+        <div className="flex shrink-0 justify-end gap-2 px-3 pb-3 medium:pt-3">
           <button className={buttonClass} onClick={() => setEditing(s)} aria-label={`編輯 ${s.name}`}>編輯</button>
           <button className={buttonClass} onClick={() => { setError(null); setDeleting(s); }} aria-label={`刪除 ${s.name}`}>刪除</button>
         </div>
-        {extras[s.id]}
-      </div>)}</div>
-    </ParchmentCard>
+        </div>
+        {extras[s.id] && <div className="px-4 pb-1">{extras[s.id]}</div>}
+      </ParchmentCard>)}</div>
     {editing && <SpellEditor initial={editing} onClose={() => setEditing(null)} onSaved={() => { setEditing(null); router.refresh(); }} />}
     <EditorSheet open={!!deleting} title="刪除自創法術" onClose={() => { if (!busy) setDeleting(null); }} onSave={remove} saveEnabled={!busy} saveLabel={busy ? '刪除中…' : '確認刪除'} saveTone="danger">
       <p>刪除「{deleting?.name}」？既有角色保存的法術不受影響，但此法術的分享連結將無法使用。</p>

@@ -1,13 +1,10 @@
 import type { Metadata } from 'next';
-import { SpellManager } from '@/components/spells/spell-manager';
+import { LibraryBrowser } from '@/components/homebrew/library-browser';
 import { redirect } from 'next/navigation';
 
-import { BackgroundManager } from '@/components/backgrounds/background-manager';
 import { HomebrewItemMeta } from '@/components/homebrew/item-meta';
 import { OfflineNotice } from '@/components/shell/offline-notice';
 import { BackButton } from '@/components/ui/back-button';
-import { SpeciesManager } from '@/components/species/species-manager';
-import { SubclassManager } from '@/components/subclasses/subclass-manager';
 import { fetchLibrary, findOutdated } from '@/lib/homebrew/library';
 import { listHomebrewShares } from '@/lib/homebrew/share-actions';
 import { getAuthState } from '@/lib/supabase/server';
@@ -56,63 +53,35 @@ export default async function LibraryPage() {
     ]),
   );
 
-  // flatMap 而非 filter().map()：filter 的回傳型別不會收窄判別聯集，
-  // 兩種型別的文件會混成一個聯集陣列而過不了型別檢查。
-  const backgrounds = items.flatMap((i) =>
-    i.content.kind === 'background' ? [i.content.data] : [],
-  );
-  const subclasses = items.flatMap((i) =>
-    i.content.kind === 'subclass' ? [i.content.data] : [],
-  );
-  const species = items.flatMap((i) =>
-    i.content.kind === 'species' ? [i.content.data] : [],
-  );
-
-  const empty = items.length === 0;
-
   return (
-    <main
-      id="main-content"
-      className="mx-auto w-full max-w-[1100px] flex-1 px-4 pb-12"
-    >
-      <header className="pb-6 pt-5">
-        <div className="flex items-center justify-between gap-4">
-          {/* 收藏紀錄有多個入口（設定頁、分享頁收藏後），返回目的地不能寫死。 */}
-          <BackButton fallback="/main/system" />
-          <span className="font-label text-[9px] tracking-[2px] text-section-label">
-            PERSONAL ARCHIVE
-          </span>
-        </div>
-
-        <div className="mt-2 border-y border-border-2 py-5 expanded:flex expanded:items-end expanded:justify-between expanded:gap-10">
+    <main id="main-content" className="mx-auto w-full max-w-[1100px] flex-1 px-4 pb-12 medium:px-6">
+      <header className="pb-7 pt-5">
+        <BackButton fallback="/main/system" />
+        <div className="mt-3 flex items-center gap-5 border-b border-border pb-6">
+          <svg aria-hidden="true" viewBox="0 0 48 56" className="hidden h-14 w-12 shrink-0 fill-none stroke-gold medium:block" strokeWidth="1.2">
+            <path d="M9 4h29v44H13a5 5 0 0 1-5-5V9a5 5 0 0 1 5-5M13 4v37m-5 2h30M19 15h13M19 20h9" />
+            <path d="m25 26 5 5-5 5-5-5zM34 48v5l-4-3-4 3v-5" />
+          </svg>
           <div>
-            <p className="font-label text-[10px] font-bold tracking-[2px] text-section-label">
-              MY LIBRARY
-            </p>
-            <h1 className="mt-1 font-display text-[30px] font-bold text-gold expanded:text-[36px]">
-              收藏紀錄
-            </h1>
+            <p className="font-label text-[10px] tracking-[3px] text-section-label">PERSONAL ARCHIVE</p>
+            <h1 className="mt-1 font-display text-[30px] font-bold text-gold medium:text-[36px]">收藏紀錄</h1>
+            <p className="mt-2 max-w-[580px] text-[13px] leading-6 text-text-secondary">你的法術、血脈與故事。自創與收藏的內容，都在這本典藏冊裡。</p>
           </div>
-          <p className="mt-3 max-w-[570px] text-[13px] leading-6 text-text-secondary expanded:mt-0">
-            收藏你建立或從分享取得的自創內容。背景、種族與子職用於建角或升級；
-            自創法術可在角色的法術頁選用，並保留選用當下的版本。
-          </p>
         </div>
-
-        {empty && (
-          <p className="mt-4 border-l-2 border-gold/60 pl-3 text-[12px] leading-relaxed text-text-light">
-            典藏冊目前是空的。從下方建立第一份內容，或開啟其他玩家提供的分享連結收藏。
-          </p>
-        )}
       </header>
-
-      <div className="grid items-start gap-7 expanded:grid-cols-2">
-        {error && <p role="alert" className="text-danger expanded:col-span-2">收藏載入失敗，請稍後重新整理。</p>}
-        <SpellManager initial={items.flatMap(i => i.content.kind === 'spell' ? [i.content.data] : [])} extras={extras} />
-        <SpeciesManager initial={species} embedded extras={extras} />
-        <BackgroundManager initial={backgrounds} embedded extras={extras} />
-        <SubclassManager initial={subclasses} embedded extras={extras} />
-      </div>
+      {error ? (
+        <div role="alert" className="rounded-card border border-danger/50 bg-surface-1 p-6 text-[14px] leading-7 text-text-primary">
+          收藏暫時無法載入。請重新整理頁面再試；這不代表你的收藏已被刪除。
+        </div>
+      ) : (
+        <LibraryBrowser
+          spells={items.flatMap(i => i.content.kind === 'spell' ? [i.content.data] : [])}
+          species={items.flatMap(i => i.content.kind === 'species' ? [i.content.data] : [])}
+          backgrounds={items.flatMap(i => i.content.kind === 'background' ? [i.content.data] : [])}
+          subclasses={items.flatMap(i => i.content.kind === 'subclass' ? [i.content.data] : [])}
+          extras={extras}
+        />
+      )}
     </main>
   );
 }

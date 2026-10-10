@@ -18,16 +18,19 @@ export function SpellCard({
   spell,
   badge,
   emphasize = false,
+  borderless = false,
 }: {
   spell: Spell;
   /** 徽章文字；省略時戲法為「戲」、其餘為環數。 */
   badge?: string;
   /** 金色強調徽章（已備法術、附贈／反應法術）。 */
   emphasize?: boolean;
+  borderless?: boolean;
 }) {
   const hasDamage = spell.damage.length > 0;
   return (
     <EntryCard
+      borderless={borderless}
       badge={badge ?? (spell.level === 0 ? '戲' : `${spell.level}`)}
       title={spell.name}
       subtitle={[spell.nameEn, spell.homebrewId ? '自創法術' : ''].filter(Boolean).join(' · ')}

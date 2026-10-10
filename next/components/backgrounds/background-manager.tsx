@@ -2,6 +2,7 @@
 
 import { type ReactNode, useId, useState } from 'react';
 
+import { LibrarySectionHeader, LibraryNoResults } from '@/components/homebrew/library-section-header';
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import { EditorSheet, FieldLabel } from '@/components/ui/editor-sheet';
 import {
@@ -43,10 +44,12 @@ const EMPTY: CustomBackground = {
 export function BackgroundManager({
   initial,
   embedded,
+  search = '',
   extras,
 }: {
   initial: CustomBackground[];
   embedded?: boolean;
+  search?: string;
   /**
    * 每一項的附加列（來源備註、分享入口、更新提示），以 id 為鍵。
    *
@@ -91,11 +94,13 @@ export function BackgroundManager({
 
   return (
     <Wrap embedded={embedded}>
+      {embedded ? <LibrarySectionHeader title="背景" subtitle="收藏角色故事的起點與背景能力。" count={list.length} onCreate={() => setEditing({ ...EMPTY })} /> : (
       <SectionTitle en="CUSTOM BACKGROUNDS" cn="自訂背景" first={!embedded} />
+      )}
 
       {embedded ? (
         <details className="mb-4 rounded-card border border-border-2 bg-surface-1 px-4 py-2.5">
-          <summary className="cursor-pointer py-1 text-[12px] text-text-secondary">
+          <summary className="min-h-11 cursor-pointer content-center text-[12px] text-text-secondary">
             查看 2024 背景建構規則
           </summary>
           <BackgroundRules />
@@ -120,11 +125,12 @@ export function BackgroundManager({
         </div>
       )}
 
-      <div className="flex flex-col gap-2">
-        {list.map((b) => (
+      {list.length > 0 && !list.some(item => item.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())) && <LibraryNoResults />}
+      <div className="flex flex-col gap-3">
+        {list.filter(item => item.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())).map((b) => (
           <ParchmentCard key={b.id} className="px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="flex-1 text-[15px] font-semibold text-text-primary">
+              <span className="min-w-0 flex-1 break-words text-[16px] font-semibold text-text-primary">
                 {b.name}
               </span>
               <button
@@ -153,6 +159,7 @@ export function BackgroundManager({
         ))}
       </div>
 
+      {!embedded && (
       <button
         type="button"
         onClick={() => setEditing({ ...EMPTY })}
@@ -160,6 +167,7 @@ export function BackgroundManager({
       >
         ＋ 新增自訂背景
       </button>
+      )}
 
       <EditorSheet
         open={editing !== null}
