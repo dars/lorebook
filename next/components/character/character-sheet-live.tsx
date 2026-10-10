@@ -88,7 +88,10 @@ export function CharacterSheetLive({
         </div>
       )}
       <CharacterSheet
-        spellTools={persist ? <SpellPicker c={c} /> : undefined}
+        spellTools={persist ? {
+          cantrips: <SpellPicker c={c} kind="cantrips" />,
+          spells: <SpellPicker c={c} kind="spells" />,
+        } : undefined}
         c={c}
         share={share}
         onEditBasic={() => setEditor('basic')}

@@ -12,7 +12,7 @@ import { CustomBadge } from '../custom-badge';
 
 /** 法術／物品／傳記三個分頁。版面語彙與其他分頁一致（區段標題＋卡片）。 */
 
-export function SpellsTab({ c, tools }: { c: Character; tools?: ReactNode }) {
+export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: ReactNode; spells: ReactNode } }) {
   const prepared = RING_LEVELS.map((lv) => ({
     lv,
     spells: c.spells.filter((s) => s.level === lv),
@@ -22,11 +22,11 @@ export function SpellsTab({ c, tools }: { c: Character; tools?: ReactNode }) {
     <div className="px-4 pb-10">
       <CollapsibleSection en="SPELLCASTING" cn="施法" first>
         <SpellcastingCard c={c} />
-        {tools}
       </CollapsibleSection>
 
-      {c.cantrips.length > 0 && (
-        <CollapsibleSection en="CANTRIPS" cn="戲法">
+      {(c.cantrips.length > 0 || tools?.cantrips) && (
+        <CollapsibleSection en="CANTRIPS" cn="戲法" trailing={tools?.cantrips}>
+          {c.cantrips.length === 0 && <p className="py-3 text-[13px] leading-relaxed text-text-secondary">尚未選用戲法，點標題右側「選用」從收藏加入。</p>}
           <div className="flex flex-col gap-2">
             {c.cantrips.map((s, i) => (
               <SpellCard key={`${s.name}-${i}`} spell={s} badge="戲" />
@@ -38,8 +38,9 @@ export function SpellsTab({ c, tools }: { c: Character; tools?: ReactNode }) {
       {/* 已備法術：2024 的施法者是「準備」而非「習得即可用」。
           環數在區段**內部**用小膠囊分組，不是每一環各開一個可收合區段——
           後者在高階施法者身上會變成九個標題疊在一起。 */}
-      {prepared.length > 0 && (
-        <CollapsibleSection en="SPELLBOOK" cn="已備法術">
+      {(prepared.length > 0 || tools?.spells) && (
+        <CollapsibleSection en="SPELLBOOK" cn="已備法術" trailing={tools?.spells}>
+          {prepared.length === 0 && <p className="py-3 text-[13px] leading-relaxed text-text-secondary">尚未選用法術，點標題右側「選用」從收藏加入。</p>}
           {prepared.map(({ lv, spells }) => (
             <div key={lv} className="mb-3">
               <span className="mb-1.5 inline-flex items-baseline gap-1.5 rounded-chip border border-border-2 px-2 py-0.5">
