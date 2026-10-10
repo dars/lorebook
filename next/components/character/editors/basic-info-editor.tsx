@@ -13,6 +13,8 @@ import { characterActions, useCharacterStore } from '@/lib/state/character-store
  * 決定的規則資料，改了會與已推導的數值不一致，維持唯讀。
  */
 
+type Draft = { name: string; alignment: string; deity: string };
+
 export function BasicInfoEditor({
   open,
   onClose,
@@ -21,12 +23,26 @@ export function BasicInfoEditor({
   onClose: () => void;
 }) {
   const c = useCharacterStore((s) => s.character);
-  const [name, setName] = useState(c?.name ?? '');
-  const [alignment, setAlignment] = useState(c?.alignment ?? '');
-  const [deity, setDeity] = useState(c?.deity ?? '');
   const uid = useId();
+  // 草稿為 null＝「尚未動過，顯示角色現值」，比照 AboutEditor。
+  // 不可寫成 useState(c?.name ?? '')：這個元件常駐掛載（關閉時只是不顯示），
+  // 首次渲染時 store 還沒載入角色，初值就此固定成空字串——每次打開都是空的。
+  const [draft, setDraft] = useState<Draft | null>(null);
 
   if (!c) return null;
+
+  const { name, alignment, deity } = draft ?? {
+    name: c.name,
+    alignment: c.alignment,
+    deity: c.deity,
+  };
+  const patch = (p: Partial<Draft>) =>
+    setDraft({ name, alignment, deity, ...p });
+  // 關閉時清掉草稿：取消後再打開應該看到現值，而不是上一輪沒存的修改。
+  const close = () => {
+    setDraft(null);
+    onClose();
+  };
 
   const save = () => {
     characterActions.setBasicInfo({
@@ -35,14 +51,14 @@ export function BasicInfoEditor({
       alignmentEn: alignmentEnFor(alignment),
       deity: deity.trim(),
     });
-    onClose();
+    close();
   };
 
   return (
     <EditorSheet
       open={open}
       title="基本資訊"
-      onClose={onClose}
+      onClose={close}
       onSave={save}
       saveEnabled={name.trim().length > 0}
     >
@@ -54,7 +70,7 @@ export function BasicInfoEditor({
         autoComplete="off"
         spellCheck={false}
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e) => patch({ name: e.target.value })}
         maxLength={30}
         className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
       />
@@ -67,7 +83,7 @@ export function BasicInfoEditor({
           <button
             key={cn}
             type="button"
-            onClick={() => setAlignment(cn)}
+            onClick={() => patch({ alignment: cn })}
             className={`min-h-11 rounded-chip border text-[12px] ${
               alignment === cn
                 ? 'border-gold bg-gold/10 text-gold'
@@ -99,7 +115,7 @@ export function BasicInfoEditor({
           autoComplete="off"
           spellCheck={false}
           value={deity}
-          onChange={(e) => setDeity(e.target.value)}
+          onChange={(e) => patch({ deity: e.target.value })}
           maxLength={20}
           placeholder="無特定信仰可留空"
           className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
