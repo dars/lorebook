@@ -26,7 +26,7 @@ export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: Reac
 
       {(c.cantrips.length > 0 || tools?.cantrips) && (
         <CollapsibleSection en="CANTRIPS" cn="戲法" trailing={tools?.cantrips}>
-          {c.cantrips.length === 0 && <p className="py-3 text-[13px] leading-relaxed text-text-secondary">尚未選用戲法，點標題右側「選用」從收藏加入。</p>}
+          {c.cantrips.length === 0 && <p className="py-3 text-[13px] leading-relaxed text-text-secondary">尚未選用戲法，點標題右側「選用」加入。</p>}
           <div className="flex flex-col gap-2">
             {c.cantrips.map((s, i) => (
               <SpellCard key={`${s.name}-${i}`} spell={s} badge="戲" />
@@ -40,7 +40,7 @@ export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: Reac
           後者在高階施法者身上會變成九個標題疊在一起。 */}
       {(prepared.length > 0 || tools?.spells) && (
         <CollapsibleSection en="SPELLBOOK" cn="已備法術" trailing={tools?.spells}>
-          {prepared.length === 0 && <p className="py-3 text-[13px] leading-relaxed text-text-secondary">尚未選用法術，點標題右側「選用」從收藏加入。</p>}
+          {prepared.length === 0 && <p className="py-3 text-[13px] leading-relaxed text-text-secondary">尚未選用法術，點標題右側「選用」加入。</p>}
           {prepared.map(({ lv, spells }) => (
             <div key={lv} className="mb-3">
               <span className="mb-1.5 inline-flex items-baseline gap-1.5 rounded-chip border border-border-2 px-2 py-0.5">

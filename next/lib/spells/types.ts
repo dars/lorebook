@@ -42,3 +42,39 @@ export function removeCustomSpell(c: Character, id: string): Character {
     concentrationSpell: c.concentrationSpell === removed.name ? null : c.concentrationSpell,
   };
 }
+
+/**
+ * 內容庫法術的身分：英文名。
+ *
+ * 內容庫快照不帶 id（見 `spellFromCatalog`），而中文譯名會被 data-fixes 修正
+ * ——以中文名比對，修譯名之後同一道法術就能被選第二次。
+ */
+function sameCatalogSpell(a: Spell, b: Spell): boolean {
+  if (a.homebrewId || b.homebrewId) return false;
+  return a.nameEn && b.nameEn ? a.nameEn === b.nameEn : a.name === b.name;
+}
+
+export function hasCatalogSpell(c: Character, s: Spell): boolean {
+  return [...c.cantrips, ...c.spells].some(x => sameCatalogSpell(x, s));
+}
+
+export function addCatalogSpell(c: Character, s: Spell): Character {
+  if (hasCatalogSpell(c, s)) return c;
+  const key = s.level === 0 ? 'cantrips' : 'spells';
+  return { ...c, [key]: [...c[key], s] };
+}
+
+/**
+ * 依位置移除角色上的任一法術（內容庫、自創、建角時帶入的都算）。
+ *
+ * 帶上名稱做核對：選單渲染時的 `c` 與 store 當下的狀態之間可能隔了一次更新，
+ * 位置對不上時寧可不動，也不要刪到隔壁那一道。
+ */
+export function removeSpellAt(c: Character, kind: 'cantrips' | 'spells', index: number, name: string): Character {
+  const removed = c[kind][index];
+  if (!removed || removed.name !== name) return c;
+  return { ...c,
+    [kind]: c[kind].filter((_, i) => i !== index),
+    concentrationSpell: c.concentrationSpell === removed.name ? null : c.concentrationSpell,
+  };
+}

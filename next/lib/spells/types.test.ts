@@ -3,7 +3,7 @@ import { Character, Spell } from '@/lib/domain/character';
 import { parseHomebrew } from '@/lib/homebrew/types';
 import { collectRow } from '@/lib/homebrew/collect';
 import { knowsMageArmor } from '@/lib/rules/ac';
-import { CustomSpell, addCustomSpell, removeCustomSpell, spellFromCustom } from './types';
+import { CustomSpell, addCatalogSpell, addCustomSpell, hasCatalogSpell, removeCustomSpell, removeSpellAt, spellFromCustom } from './types';
 
 const spell = CustomSpell.parse({ id: 'spell-1', name: '星焰', level: 1, description: '<script>alert(1)</script> {@dice 1d6}', castKind: 'bonus', concentration: true, duration: '1 分鐘', components: 'V, S', upgrade: '每環 +1d6' });
 const character = () => Character.parse({ id: 'hero', name: '冒險者', abilityScores: Object.fromEntries(['str','dex','con','int_','wis','cha'].map(key => [key,{score:10,modifier:0}])) });
@@ -47,5 +47,32 @@ describe('自創法術', () => {
   });
   it('同名自創法術不會啟用官方法師護甲規則', () => {
     expect(knowsMageArmor(addCustomSpell(character(),{...spell,nameEn:'Mage Armor'}))).toBe(false);
+  });
+});
+
+describe('內容庫法術', () => {
+  const fireBolt = Spell.parse({ name: '火焰箭', nameEn: 'Fire Bolt', level: 0 });
+  const shield = Spell.parse({ name: '護盾術', nameEn: 'Shield', level: 1, castKind: 'reaction' });
+  it('依環數分流到戲法或已備法術', () => {
+    const c = addCatalogSpell(addCatalogSpell(character(), fireBolt), shield);
+    expect(c.cantrips.map(s => s.nameEn)).toEqual(['Fire Bolt']);
+    expect(c.spells.map(s => s.nameEn)).toEqual(['Shield']);
+  });
+  it('以英文名去重——譯名修正後不會被選第二次', () => {
+    const c = addCatalogSpell(character(), shield);
+    const renamed = { ...shield, name: '護盾' };
+    expect(hasCatalogSpell(c, renamed)).toBe(true);
+    expect(addCatalogSpell(c, renamed)).toBe(c);
+  });
+  it('與同名的自創法術互不干擾', () => {
+    const c = addCustomSpell(character(), { ...spell, name: '護盾術', nameEn: 'Shield' });
+    expect(hasCatalogSpell(c, shield)).toBe(false);
+    expect(addCatalogSpell(c, shield).spells).toHaveLength(2);
+  });
+  it('依位置移除並清理專注；名稱對不上時不動', () => {
+    const c = { ...addCatalogSpell(character(), shield), concentrationSpell: '護盾術' };
+    expect(removeSpellAt(c, 'spells', 0, '別的法術')).toBe(c);
+    const result = removeSpellAt(c, 'spells', 0, '護盾術');
+    expect(result.spells).toEqual([]); expect(result.concentrationSpell).toBeNull();
   });
 });
