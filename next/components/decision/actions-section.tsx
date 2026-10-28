@@ -74,9 +74,9 @@ function Category({
         aria-expanded={open}
         className="flex w-full items-center py-1.5 text-left"
       >
-        <span className="text-[15px] leading-none text-gold-dim">{open ? '⌄' : '›'}</span>
-        <span className="ml-1 text-[12px] font-semibold text-gold-dim">{label}</span>
-        <span className="font-label ml-1.5 truncate text-[10px] text-text-secondary">
+        <span className="text-body leading-none text-gold-dim">{open ? '⌄' : '›'}</span>
+        <span className="ml-1 text-small font-semibold text-gold-dim">{label}</span>
+        <span className="font-label ml-1.5 truncate text-eyebrow text-text-secondary">
           · {count}
         </span>
       </button>
@@ -107,11 +107,11 @@ function RingGroup({
         aria-expanded={open}
         className="flex w-full items-center py-1 text-left"
       >
-        <span className="text-[14px] leading-none text-text-secondary">{open ? '⌄' : '›'}</span>
-        <span className="font-label ml-1 text-[10px] font-semibold tracking-wider text-text-secondary">
+        <span className="text-body leading-none text-text-secondary">{open ? '⌄' : '›'}</span>
+        <span className="font-label ml-1 text-eyebrow font-semibold tracking-wider text-text-secondary">
           {label}
         </span>
-        <span className="font-label ml-1.5 text-[10px] text-text-secondary/60">· {count}</span>
+        <span className="font-label ml-1.5 text-eyebrow text-text-secondary">· {count}</span>
       </button>
       {open && <div className="flex flex-col gap-1.5 pl-1.5 pt-1">{children}</div>}
     </div>
@@ -234,7 +234,7 @@ export function ActionsSection({
                 title={o.cn}
                 subtitle={o.en}
                 value={o.effect}
-                valueClass="text-text-light text-[13px]"
+                valueClass="text-text-light text-ui"
                 description={o.desc}
               />
             ))}
@@ -279,7 +279,7 @@ export function ActionsSection({
               title="機會攻擊"
               subtitle="Opportunity Attack"
               value="1 次攻擊"
-              valueClass="text-text-light text-[13px]"
+              valueClass="text-text-light text-ui"
               description="當敵人離開你的觸及範圍時，你可用反應對其進行一次近戰攻擊。"
             />
           </div>

@@ -26,10 +26,10 @@ export function CharacterHeader({ c }: { c: Character }) {
       <div className="flex items-center gap-2.5 px-5 py-2">
         <Avatar c={c} />
         <div className="min-w-0 flex-1">
-          <div className="font-display truncate text-[16px] font-bold text-text-primary">
+          <div className="font-display truncate text-body font-bold text-text-primary">
             {c.name}
           </div>
-          <div className="truncate text-[12px] text-text-secondary">
+          <div className="truncate text-small text-text-secondary">
             {[c.species, c.className].filter(Boolean).join(' · ')} {c.level}
           </div>
         </div>
@@ -53,7 +53,7 @@ function LevelBadge({
   if (!interactive) {
     return (
       <span className="flex flex-col items-center">
-        <span className="font-label text-[10px] font-semibold tracking-[1px] text-text-secondary">
+        <span className="font-label text-eyebrow font-semibold tracking-[1px] text-text-secondary">
           LEVEL
         </span>
         <span className="font-display text-[28px] font-bold leading-none text-text-primary">
@@ -73,7 +73,7 @@ function LevelBadge({
       className="flex min-h-12 flex-col items-center justify-center rounded-[10px] border border-gold/55 px-3 py-0.5 hover:border-gold hover:bg-gold/10"
     >
       <span className="flex items-center gap-1">
-        <span className="font-label text-[10px] font-semibold tracking-[1px] text-text-secondary">
+        <span className="font-label text-eyebrow font-semibold tracking-[1px] text-text-secondary">
           LEVEL
         </span>
         <svg viewBox="0 0 24 24" className="size-3 fill-gold" aria-hidden>

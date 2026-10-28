@@ -6,6 +6,7 @@ import { SignOutButton } from '@/components/shell/sign-out-button';
 import { getCurrentCharacterId } from '@/lib/characters/current';
 import { fetchMyCharacter } from '@/lib/characters/fetch';
 import { getSessionUser } from '@/lib/supabase/server';
+import { GuideLink } from '@/components/guide/guide-link';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,8 +36,9 @@ export default async function SystemPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-[700px] flex-col gap-4 px-4 py-2">
+      <GuideLink />
       <ParchmentCard className="p-4">
-        <h2 className="text-[14px] font-semibold text-text-primary">角色</h2>
+        <h2 className="text-body font-semibold text-text-primary">角色</h2>
         {character && (
           <p className="mt-3 text-small text-text-light">
             當前：{character.name}・{character.className} {character.level}
@@ -54,8 +56,8 @@ export default async function SystemPage() {
       {/* 自創與收藏的內容集中在一處，不在設定頁逐型別各列一條連結——
           型別會長（背景、子職、種族、法術…），設定頁不該變成清單。 */}
       <ParchmentCard className="p-4">
-        <h2 className="text-[14px] font-semibold text-text-primary">收藏紀錄</h2>
-        <p className="mt-2 text-[12px] leading-relaxed text-text-secondary">
+        <h2 className="text-body font-semibold text-text-primary">收藏紀錄</h2>
+        <p className="mt-2 text-small leading-relaxed text-text-secondary">
           自己建立的與從他人分享收藏來的自創內容——背景、子職業。
         </p>
         <AppLink
@@ -68,35 +70,35 @@ export default async function SystemPage() {
       </ParchmentCard>
 
       <ParchmentCard className="p-4">
-        <h2 className="text-[14px] font-semibold text-text-primary">外觀主題</h2>
+        <h2 className="text-body font-semibold text-text-primary">外觀主題</h2>
         <div className="mt-3">
           <ThemeSwitch />
         </div>
       </ParchmentCard>
 
       <ParchmentCard className="p-4">
-        <h2 className="text-[14px] font-semibold text-text-primary">帳號</h2>
+        <h2 className="text-body font-semibold text-text-primary">帳號</h2>
         <p className="mt-3 text-small text-text-light">{user?.email}</p>
         <SignOutButton />
       </ParchmentCard>
 
       <ParchmentCard className="p-4">
-        <h2 className="text-[14px] font-semibold text-text-primary">關於</h2>
+        <h2 className="text-body font-semibold text-text-primary">關於</h2>
         <p className="mt-3 text-small text-text-light">Lorebook v0.1.0</p>
-        <p className="mt-1 text-[12px] text-text-secondary">
+        <p className="mt-1 text-small text-text-secondary">
           D&amp;D 5.5e（2024）角色卡管理工具
         </p>
 
-        <h2 className="mt-4 text-[14px] font-semibold text-text-primary">
+        <h2 className="mt-4 text-body font-semibold text-text-primary">
           授權聲明
         </h2>
         {/* CC-BY-4.0 的署名是法律要求，必須逐字呈現，不可摘要或改寫。 */}
-        <p className="mt-3 whitespace-pre-line text-[12px] leading-relaxed text-text-secondary">
+        <p className="mt-3 whitespace-pre-line text-small leading-relaxed text-text-secondary">
           {`本作品收錄之遊戲規則內容取自 System Reference Document 5.2（"SRD 5.2"），著作權為 Wizards of the Coast LLC 所有，依 Creative Commons Attribution 4.0 International License（CC-BY-4.0）授權使用。
 
 This work includes material from the System Reference Document 5.2 ("SRD 5.2") by Wizards of the Coast LLC, licensed under the Creative Commons Attribution 4.0 International License (https://creativecommons.org/licenses/by/4.0/legalcode).`}
         </p>
-        <p className="mt-3 text-[12px] leading-relaxed text-text-secondary">
+        <p className="mt-3 text-small leading-relaxed text-text-secondary">
           <AppLink href="/catalog/spells" className="text-gold underline">
             法術目錄
           </AppLink>

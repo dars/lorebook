@@ -75,13 +75,13 @@ export function HpUndoBar({
       aria-live="polite"
     >
       <div className="pointer-events-auto flex items-center gap-3 rounded-chip border border-border bg-surface-1/95 py-2 pl-4 pr-2 shadow-[0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur">
-        <span className="font-display text-[14px] font-bold tabular-nums text-text-primary">
+        <span className="font-display text-body font-bold tabular-nums text-text-primary">
           {label}
         </span>
         <button
           type="button"
           onClick={onUndo}
-          className="min-h-9 rounded-chip border border-gold px-3 text-[12px] font-bold text-gold hover:bg-gold/10"
+          className="min-h-9 rounded-chip border border-gold px-3 text-small font-bold text-gold hover:bg-gold/10"
         >
           復原
         </button>

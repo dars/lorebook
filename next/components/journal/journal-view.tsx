@@ -82,13 +82,13 @@ export function JournalView({
       {/* 試玩模式才提醒。HP 與裝備同樣只活在這次瀏覽，但那些是隨手可重做的
           數值；日誌是使用者**寫出來的東西**，弄丟一段字的代價完全不同。 */}
       {!persist && (
-        <p className="mb-3 rounded-card border border-border-2 bg-surface-1 px-3 py-2 text-[12px] leading-relaxed text-text-secondary">
+        <p className="mb-3 rounded-card border border-border-2 bg-surface-1 px-3 py-2 text-small leading-relaxed text-text-secondary">
           試玩模式：寫的內容只存在這次瀏覽，重新整理就會消失。
         </p>
       )}
 
       {entries.length === 0 ? (
-        <p className="py-6 text-center text-[13px] text-text-secondary">
+        <p className="py-6 text-center text-ui text-text-secondary">
           尚未建立任何日誌。<br />點下方的「＋」開始記錄你的冒險。
         </p>
       ) : (
@@ -103,15 +103,15 @@ export function JournalView({
                 className="w-full text-left"
               >
                 <span className="flex items-baseline gap-2">
-                  <span className="min-w-0 flex-1 truncate text-[14px] font-semibold text-text-primary">
+                  <span className="min-w-0 flex-1 truncate text-body font-semibold text-text-primary">
                     {e.title}
                   </span>
-                  <span className="font-label shrink-0 text-[11px] text-text-secondary">
+                  <span className="font-label shrink-0 text-tiny text-text-secondary">
                     {fmtJournalRelativeDate(new Date(e.updatedAt))}
                   </span>
                 </span>
                 {e.body && (
-                  <span className="mt-1 line-clamp-2 block text-[13px] leading-relaxed text-text-secondary">
+                  <span className="mt-1 line-clamp-2 block text-body text-text-primary">
                     {e.body}
                   </span>
                 )}
@@ -119,7 +119,7 @@ export function JournalView({
               <button
                 type="button"
                 onClick={() => setConfirmDelete(e.id)}
-                className="mt-2 min-h-11 text-[12px] text-text-secondary"
+                className="mt-2 min-h-11 text-small text-text-secondary"
               >
                 刪除
               </button>
@@ -167,7 +167,7 @@ export function JournalView({
           setConfirmDelete(null);
         }}
       >
-        <p className="text-[13px] leading-relaxed text-text-light">
+        <p className="text-ui leading-relaxed text-text-light">
           「{entries.find((e) => e.id === confirmDelete)?.title}」將被刪除，無法復原。
         </p>
       </EditorSheet>
@@ -183,7 +183,7 @@ export function JournalView({
           setEditing(null);
         }}
       >
-        <p className="text-[13px] leading-relaxed text-text-light">
+        <p className="text-ui leading-relaxed text-text-light">
           編輯的內容尚未儲存，捨棄後無法復原。
           <span className="block text-text-secondary">
             按「取消」回去繼續編輯。

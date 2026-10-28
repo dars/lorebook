@@ -38,24 +38,24 @@ export function LibraryBrowser({ spells, species, backgrounds, subclasses, extra
   return (
     <div className="expanded:grid expanded:grid-cols-[200px_minmax(0,1fr)] expanded:gap-8">
       <aside className="mb-5 expanded:mb-0 expanded:border-r expanded:border-border-2 expanded:pr-5">
-        <p className="mb-3 font-label text-[10px] tracking-[2px] text-section-label">典藏索引 / INDEX</p>
+        <p className="mb-3 font-label text-eyebrow tracking-[2px] text-section-label">典藏索引 / INDEX</p>
         <nav aria-label="收藏分類" className="grid grid-cols-4 gap-1 expanded:grid-cols-1 expanded:gap-2">
           {categories.map(category => (
             <button key={category.id} type="button" aria-pressed={selected.id === category.id} aria-controls={`library-${category.id}`} onClick={() => select(category.id)}
               className={`relative min-h-11 rounded-r-card border-l-2 px-2 py-3 text-center transition-colors expanded:min-h-14 expanded:px-4 expanded:text-left ${selected.id === category.id ? 'border-gold bg-gold/10 text-gold' : 'border-transparent text-text-secondary hover:border-border hover:bg-surface-1 hover:text-text-primary'}`}>
-              <span className="block text-[15px] font-semibold">{category.name}</span>
-              <span className="mt-1 hidden font-label text-[10px] tracking-[1.5px] expanded:block">{category.en}</span>
+              <span className="block text-body font-semibold">{category.name}</span>
+              <span className="mt-1 hidden font-label text-eyebrow tracking-[1.5px] expanded:block">{category.en}</span>
             </button>
           ))}
         </nav>
-        <p className="mt-6 hidden border-t border-border-2 pt-4 text-[12px] leading-6 text-text-secondary expanded:block">寫下你的創作，或從其他玩家的分享連結收藏。<br />採用前請先與 DM 確認。</p>
+        <p className="mt-6 hidden border-t border-border-2 pt-4 text-small leading-6 text-text-secondary expanded:block">寫下你的創作，或從其他玩家的分享連結收藏。<br />採用前請先與 DM 確認。</p>
       </aside>
 
       <div className="min-w-0">
         <label className="mb-6 flex min-h-12 items-center gap-3 rounded-card border border-border-2 bg-surface-1 px-4 focus-within:border-gold">
           <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4 shrink-0 fill-none stroke-text-secondary" strokeWidth="1.5"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg>
           <span className="sr-only">搜尋{selected.name}名稱</span>
-          <input type="search" name="librarySearch" autoComplete="off" value={query} onChange={e => setQuery(e.target.value)} placeholder={`搜尋${selected.name}名稱…`} className="min-h-11 min-w-0 flex-1 bg-transparent text-[14px] text-text-primary placeholder:text-text-secondary" />
+          <input type="search" name="librarySearch" autoComplete="off" value={query} onChange={e => setQuery(e.target.value)} placeholder={`搜尋${selected.name}名稱…`} className="min-h-11 min-w-0 flex-1 bg-transparent text-body text-text-primary placeholder:text-text-secondary" />
         </label>
         {/* 保留各分類實例，切換不丟失管理器的本機清單狀態。 */}
         <div id="library-spell" hidden={selected.id !== 'spell'}><SpellManager initial={spells} extras={extras} search={query} /></div>

@@ -86,7 +86,7 @@ export function SubclassEditor({
         onChange={(e) => onChange({ ...value, name: e.target.value })}
         maxLength={NAME_MAX}
         placeholder="例：烈焰學派"
-        className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+        className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
       />
 
       <div className="mt-4">
@@ -97,7 +97,7 @@ export function SubclassEditor({
               key={c.en}
               type="button"
               onClick={() => pickClass(c.en)}
-              className={`min-h-11 rounded-chip border text-[12px] ${
+              className={`min-h-11 rounded-chip border text-small ${
                 value.classEn === c.en
                   ? 'border-gold bg-gold/10 text-gold'
                   : 'border-border-2 text-text-secondary'
@@ -112,7 +112,7 @@ export function SubclassEditor({
       {value.levels.length > 0 && (
         <div className="mt-4">
           <FieldLabel>特性</FieldLabel>
-          <p className="mb-2 text-[12px] text-text-secondary">
+          <p className="mb-2 text-small text-text-secondary">
             {classCn(value.classEn)}的子職在 {value.levels.join('、')} 級獲得特性。
             3 級必填，其餘可留空。
           </p>
@@ -124,21 +124,21 @@ export function SubclassEditor({
             return (
               <div key={level} className="mb-3">
                 <div className="mb-1 flex items-baseline gap-2">
-                  <span className="text-[12px] text-gold">{level} 級</span>
+                  <span className="text-small text-gold">{level} 級</span>
                   {level === 3 && (
-                    <span className="text-[12px] text-text-secondary">必填</span>
+                    <span className="text-small text-text-secondary">必填</span>
                   )}
                   <button
                     type="button"
                     onClick={() => addFeature(level)}
-                    className="ml-auto min-h-9 text-[12px] text-gold"
+                    className="ml-auto min-h-9 text-small text-gold"
                   >
                     ＋ 新增特性
                   </button>
                 </div>
 
                 {items.length === 0 ? (
-                  <p className="text-[12px] text-text-secondary">
+                  <p className="text-small text-text-secondary">
                     尚未新增，點上方的「＋ 新增特性」。
                   </p>
                 ) : (
@@ -158,7 +158,7 @@ export function SubclassEditor({
                           }
                           maxLength={FEATURE_NAME_MAX}
                           placeholder="特性名稱"
-                          className="min-h-11 flex-1 rounded-chip border border-border bg-surface-2 px-3 text-[13px] text-text-primary"
+                          className="min-h-11 flex-1 rounded-chip border border-border bg-surface-2 px-3 text-ui text-text-primary"
                         />
                         <button
                           type="button"
@@ -178,7 +178,7 @@ export function SubclassEditor({
                         maxLength={FEATURE_DESC_MAX}
                         rows={3}
                         placeholder="說明（選填）"
-                        className="mt-2 w-full rounded-card border border-border bg-surface-2 p-2 text-[13px] text-text-primary"
+                        className="mt-2 w-full rounded-card border border-border bg-surface-2 p-2 text-ui text-text-primary"
                       />
                     </div>
                   ))
@@ -187,7 +187,7 @@ export function SubclassEditor({
             );
           })}
 
-          <p className="text-[12px] leading-relaxed text-text-secondary">
+          <p className="text-small leading-relaxed text-text-secondary">
             特性僅為顯示文字，不會產生規則效果——寫「+2 AC」不會反映在角色卡的
             護甲等級上，數值請自行與 DM 確認。
           </p>

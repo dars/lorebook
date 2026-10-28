@@ -76,7 +76,7 @@ export function SharePanel({
         type="button"
         onClick={onCreate}
         disabled={pending}
-        className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-chip bg-gold-solid text-[14px] font-bold text-[#1A1206] disabled:opacity-60"
+        className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-chip bg-gold-solid text-body font-bold text-[#1A1206] disabled:opacity-60"
       >
         <svg viewBox="0 0 24 24" className="size-4 fill-current" aria-hidden>
           <path d="M18 16.1c-.8 0-1.5.3-2 .8l-7.1-4.2c.1-.2.1-.5.1-.7s0-.5-.1-.7L16 7.1c.5.5 1.2.8 2 .8a3 3 0 1 0-3-3c0 .3 0 .5.1.7L8 9.9c-.5-.5-1.2-.8-2-.8a3 3 0 1 0 0 6c.8 0 1.5-.3 2-.8l7.1 4.2c-.1.2-.1.4-.1.6a2.9 2.9 0 1 0 3-2.9" />
@@ -102,19 +102,19 @@ export function SharePanel({
                     每一條分享——給隊友的、給觀戰者的——都被標成 DM，
                     是顯示錯誤資訊而非缺功能。沒有備註就不顯示徽章。 */}
                 {s.label && (
-                  <span className="rounded-chip border border-gold/60 bg-gold/10 px-1.5 text-[10px] font-semibold text-gold">
+                  <span className="rounded-chip border border-gold/60 bg-gold/10 px-1.5 text-eyebrow font-semibold text-gold">
                     {s.label}
                   </span>
                 )}
                 {s.createdAt && (
-                  <span className="font-label text-[11px] tabular-nums text-text-secondary">
+                  <span className="font-label text-tiny tabular-nums text-text-secondary">
                     {fmtShareDate(s.createdAt)} 建立
                   </span>
                 )}
                 {copied === s.token && <Chip tone="gold">已複製</Chip>}
               </div>
               <div className="mt-1 flex items-center gap-2">
-                <code className="min-w-0 grow truncate text-[12px] text-text-light">
+                <code className="min-w-0 grow truncate text-small text-text-light">
                   {shareLinkFor(origin, s.token).replace(/^https?:\/\//, '')}
                 </code>
                 {/* 圖示鈕而非三顆文字鈕：連結本身才是這一列的主體。 */}
@@ -142,19 +142,19 @@ export function SharePanel({
         title="分享連結"
         onClose={() => setQrToken(null)}
       >
-        <p className="text-[12px] text-text-secondary">
+        <p className="text-small text-text-secondary">
           讓對方掃描，或把連結傳給他。
         </p>
         {qrToken && (
           <div className="mt-4 flex flex-col items-center">
             <ShareQr link={shareLinkFor(origin, qrToken)} />
-            <code className="mt-4 w-full break-all rounded-card border border-border px-3 py-2 text-center text-[12px] text-text-light">
+            <code className="mt-4 w-full break-all rounded-card border border-border px-3 py-2 text-center text-small text-text-light">
               {shareLinkFor(origin, qrToken)}
             </code>
             <button
               type="button"
               onClick={() => void onCopy(qrToken)}
-              className="mt-2 min-h-11 w-full rounded-card border border-border text-[13px] text-text-secondary"
+              className="mt-2 min-h-11 w-full rounded-card border border-border text-ui text-text-secondary"
             >
               {copied === qrToken ? '已複製' : '複製連結'}
             </button>
@@ -173,7 +173,7 @@ export function SharePanel({
           setConfirmRevoke(null);
         }}
       >
-        <p className="text-[13px] leading-relaxed text-text-light">
+        <p className="text-ui leading-relaxed text-text-light">
           這個連結會立即失效，對方會看到「這份分享已被撤銷」。
           <span className="block text-text-secondary">
             無法復原，但你可以再建立新的連結。其他分享不受影響。

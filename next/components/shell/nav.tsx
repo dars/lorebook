@@ -87,7 +87,7 @@ export function BookmarkTabBar({ items, active, onSelect }: NavProps = {}) {
                 className={`size-5 ${selected ? 'fill-gold' : 'fill-text-secondary'}`}
               />
               <span
-                className={`mt-0.5 text-[12px] ${
+                className={`mt-0.5 text-small ${
                   selected ? 'font-semibold text-gold' : 'text-text-secondary'
                 }`}
               >
@@ -135,7 +135,7 @@ export function NavRail({ items, active, onSelect }: NavProps = {}) {
               />
             </span>
             <span
-              className={`text-[12px] ${
+              className={`text-small ${
                 selected ? 'font-semibold text-gold' : 'text-text-secondary'
               }`}
             >

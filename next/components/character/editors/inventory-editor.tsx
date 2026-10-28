@@ -174,7 +174,7 @@ export function InventoryEditor({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="搜尋物品（中／英文名稱）…"
-            className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+            className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
           />
 
           {/* 類別分段控制，對照 Flutter 的 _CategorySegmented。 */}
@@ -184,7 +184,7 @@ export function InventoryEditor({
                 key={label}
                 type="button"
                 onClick={() => setCategory(key)}
-                className={`min-h-9 flex-1 rounded-md text-[12px] ${
+                className={`min-h-9 flex-1 rounded-md text-small ${
                   category === key
                     ? 'bg-surface-2 font-semibold text-gold'
                     : 'text-text-secondary'
@@ -197,7 +197,7 @@ export function InventoryEditor({
 
           <div className="mt-2">
             {filtered.length === 0 ? (
-              <p className="py-3 text-[12px] text-text-secondary">
+              <p className="py-3 text-small text-text-secondary">
                 找不到符合的品項。
               </p>
             ) : (
@@ -205,9 +205,9 @@ export function InventoryEditor({
                 <div key={label}>
                   {showHeaders && (
                     <div className="flex items-center gap-2 px-1 pb-1 pt-3">
-                      <span className="text-[12px] text-section-label">{label}</span>
+                      <span className="text-small text-section-label">{label}</span>
                       <span className="h-px grow bg-border-2" />
-                      <span className="font-label text-[10px] text-text-secondary">
+                      <span className="font-label text-eyebrow text-text-secondary">
                         {items.length}
                       </span>
                     </div>
@@ -224,12 +224,12 @@ export function InventoryEditor({
     <EditorSheet open={open} title="取得物品" onClose={onClose} size="wide">
       <div ref={paneRef}>
       <div className="mb-3 flex items-baseline justify-between">
-        <span className="text-[12px] text-text-secondary">目前財富</span>
+        <span className="text-small text-text-secondary">目前財富</span>
         <CoinAmount cp={totalCp(c.currency)} coinSize={14} className="text-gold" />
       </div>
 
       {catalog.length === 0 ? (
-        <p className="text-[12px] text-text-secondary">
+        <p className="text-small text-text-secondary">
           內容庫離線不可用，暫時無法自目錄取得物品。
         </p>
       ) : wide ? (
@@ -239,7 +239,7 @@ export function InventoryEditor({
           <div className="w-px shrink-0 bg-border-2" />
           <div className="min-w-0 flex-1 pl-3">
             {selected === null ? (
-              <p className="flex h-full items-center justify-center text-[13px] text-text-secondary">
+              <p className="flex h-full items-center justify-center text-ui text-text-secondary">
                 選擇左側條目檢視詳情
               </p>
             ) : (
@@ -297,8 +297,8 @@ function FeedbackBar({
           : 'border-danger bg-danger/12 text-danger'
       }`}
     >
-      <span className="flex items-center gap-2 text-[13px] font-bold">
-        <span aria-hidden className="text-[15px] leading-none">
+      <span className="flex items-center gap-2 text-ui font-bold">
+        <span aria-hidden className="text-body leading-none">
           {ok ? '✓' : '✕'}
         </span>
         {feedback.title}
@@ -309,8 +309,8 @@ function FeedbackBar({
       <span className="ml-auto flex flex-wrap items-center gap-x-3 gap-y-1">
         {feedback.rows.map(([label, cp]) => (
           <span key={label} className="flex items-baseline gap-1.5">
-            <span className="text-[11px] opacity-80">{label}</span>
-            <CoinAmount cp={cp} coinSize={14} textClassName="text-[13px]" />
+            <span className="text-tiny opacity-80">{label}</span>
+            <CoinAmount cp={cp} coinSize={14} textClassName="text-ui" />
           </span>
         ))}
       </span>
@@ -318,7 +318,7 @@ function FeedbackBar({
         type="button"
         onClick={onDismiss}
         aria-label="關閉訊息"
-        className="-my-2.5 -mr-3 flex size-11 items-center justify-center text-[13px] opacity-70 hover:opacity-100"
+        className="-my-2.5 -mr-3 flex size-11 items-center justify-center text-ui opacity-70 hover:opacity-100"
       >
         ✕
       </button>
@@ -353,15 +353,15 @@ function ItemList({
           className="flex min-h-11 items-center gap-2 rounded-card border border-border-2 px-3 text-left"
         >
           <span className="min-w-0 flex-1">
-            <span className="text-[13px] text-text-primary">{i.name}</span>
-            <span className="font-label ml-1.5 text-[11px] text-text-primary/70">
+            <span className="text-ui text-text-primary">{i.name}</span>
+            <span className="font-label ml-1.5 text-tiny text-text-primary/70">
               {i.eng_name}
             </span>
-            <span className="ml-1.5 text-[12px] text-section-label">
+            <span className="ml-1.5 text-small text-section-label">
               {CATEGORY_LABEL[i.category] ?? i.category}
             </span>
           </span>
-          <span className="shrink-0 text-[12px] text-gold">
+          <span className="shrink-0 text-small text-gold">
             {i.price_cp === null ? '—' : <CoinAmount cp={i.price_cp} coinSize={14} />}
           </span>
         </button>

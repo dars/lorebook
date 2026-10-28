@@ -5,10 +5,9 @@ import { CollapsibleSection } from '@/components/ui/collapsible-section';
 import { ParchmentCard } from '@/components/ui/decorations';
 import { EditIcon } from '@/components/ui/editor-sheet';
 import type { Character } from '@/lib/domain/character';
-import { featureArmorViolation } from '@/lib/rules/ac';
 import { SpellCard } from '../spell-card';
 import { Treasury } from '../coins';
-import { CustomBadge } from '../custom-badge';
+import { FeatureGroups } from '../feature-groups';
 
 /** 法術／物品／傳記三個分頁。版面語彙與其他分頁一致（區段標題＋卡片）。 */
 
@@ -26,7 +25,7 @@ export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: Reac
 
       {(c.cantrips.length > 0 || tools?.cantrips) && (
         <CollapsibleSection en="CANTRIPS" cn="戲法" trailing={tools?.cantrips}>
-          {c.cantrips.length === 0 && <p className="py-3 text-[13px] leading-relaxed text-text-secondary">尚未選用戲法，點標題右側「選用」加入。</p>}
+          {c.cantrips.length === 0 && <p className="py-3 text-ui leading-relaxed text-text-secondary">尚未選用戲法，點標題右側「管理戲法」勾選加入。</p>}
           <div className="flex flex-col gap-2">
             {c.cantrips.map((s, i) => (
               <SpellCard key={`${s.name}-${i}`} spell={s} badge="戲" />
@@ -40,12 +39,12 @@ export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: Reac
           後者在高階施法者身上會變成九個標題疊在一起。 */}
       {(prepared.length > 0 || tools?.spells) && (
         <CollapsibleSection en="SPELLBOOK" cn="已備法術" trailing={tools?.spells}>
-          {prepared.length === 0 && <p className="py-3 text-[13px] leading-relaxed text-text-secondary">尚未選用法術，點標題右側「選用」加入。</p>}
+          {prepared.length === 0 && <p className="py-3 text-ui leading-relaxed text-text-secondary">尚未選用法術，點標題右側「管理法術」勾選加入。</p>}
           {prepared.map(({ lv, spells }) => (
             <div key={lv} className="mb-3">
               <span className="mb-1.5 inline-flex items-baseline gap-1.5 rounded-chip border border-border-2 px-2 py-0.5">
-                <span className="text-[12px] text-text-primary">{lv} 環</span>
-                <span className="font-label text-[10px] text-text-secondary">
+                <span className="text-small text-text-primary">{lv} 環</span>
+                <span className="font-label text-eyebrow text-text-secondary">
                   {RING_EN[lv]}
                 </span>
               </span>
@@ -105,13 +104,13 @@ function SpellcastingCard({ c }: { c: Character }) {
           <div key={x.en} className="flex flex-1 items-center">
             {i > 0 && <span className="mr-3 h-10 w-px bg-border/40" />}
             <span className="flex flex-1 flex-col items-center">
-              <span className="font-label text-[10px] tracking-[1.5px] text-section-label">
+              <span className="font-label text-eyebrow tracking-[1.5px] text-section-label">
                 {x.en}
               </span>
               <span className="font-display mt-0.5 text-[24px] font-bold leading-none text-gold">
                 {x.v}
               </span>
-              <span className="mt-1 text-[12px] text-text-primary/70">{x.sub}</span>
+              <span className="mt-1 text-small text-text-primary/70">{x.sub}</span>
             </span>
           </div>
         ))}
@@ -121,10 +120,10 @@ function SpellcastingCard({ c }: { c: Character }) {
         <>
           <div className="my-3 h-px bg-border/40" />
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <span className="text-[13px] text-text-secondary">每日法術位上限</span>
+            <span className="text-ui text-text-secondary">每日法術位上限</span>
             <span className="flex flex-wrap items-baseline gap-3">
               {c.spellSlots.map((s) => (
-                <span key={s.level} className="text-[13px] tabular-nums text-text-primary">
+                <span key={s.level} className="text-ui tabular-nums text-text-primary">
                   {s.level} 環
                   <span className="font-display ml-1 font-bold text-gold">×{s.total}</span>
                 </span>
@@ -133,7 +132,7 @@ function SpellcastingCard({ c }: { c: Character }) {
           </div>
           {/* 上限與當下剩餘是兩回事，說清楚剩餘在哪裡看，免得以為這裡的數字
               不會變。 */}
-          <p className="mt-1 text-[12px] text-text-secondary">
+          <p className="mt-1 text-small text-text-secondary">
             即時消耗於「行動」頁追蹤
           </p>
         </>
@@ -179,7 +178,7 @@ export function InventoryTab({
                 <button
                   type="button"
                   onClick={onAddCustomItem}
-                  className="min-h-9 text-[12px] text-gold"
+                  className="min-h-9 text-small text-gold"
                 >
                   ＋ 自訂
                 </button>
@@ -191,7 +190,7 @@ export function InventoryTab({
       >
         {c.equipment.length === 0 ? (
           // 空狀態要指出下一步在哪。唯讀（分享檢視）沒有入口可指，就只陳述事實。
-          <p className="py-3 text-[13px] leading-relaxed text-text-secondary">
+          <p className="py-3 text-ui leading-relaxed text-text-secondary">
             {onAddItem
               ? '還沒有任何物品。點右上角的取得物品自目錄挑選，或用「＋ 自訂」新增自製品項。'
               : '沒有物品。'}
@@ -233,11 +232,11 @@ export function BiographyTab({
       >
         <ParchmentCard className="px-4 py-3">
           {c.backstory ? (
-            <p className="whitespace-pre-wrap text-[14px] leading-relaxed text-text-light">
+            <p className="whitespace-pre-wrap text-body leading-relaxed text-text-light">
               「{c.backstory}」
             </p>
           ) : (
-            <p className="text-[13px] text-text-secondary">
+            <p className="text-ui text-text-secondary">
               尚未撰寫背景故事{onEditAbout ? '，點右上角編輯' : ''}。
             </p>
           )}
@@ -246,7 +245,7 @@ export function BiographyTab({
               {c.personalityTags.map((t) => (
                 <span
                   key={t}
-                  className="rounded-chip border border-border-2 px-2 py-1 text-[12px] text-text-secondary"
+                  className="rounded-chip border border-border-2 px-2 py-1 text-small text-text-secondary"
                 >
                   {t}
                 </span>
@@ -272,7 +271,7 @@ export function BiographyTab({
             c.personality.bonds,
             c.personality.flaws,
           ].some(Boolean) && (
-            <p className="py-2 text-[13px] text-text-secondary">
+            <p className="py-2 text-ui text-text-secondary">
               尚未描述性格{onEditPersonality ? '，點右上角編輯' : ''}。
             </p>
           )}
@@ -290,63 +289,19 @@ export function BiographyTab({
                 key={label}
                 className={`flex gap-3 py-2 ${i > 0 ? 'border-t border-border/40' : ''}`}
               >
-                <span className="w-10 shrink-0 text-[12px] text-section-label">
+                <span className="w-10 shrink-0 text-small text-section-label">
                   {label}
                 </span>
                 {/* 編輯器是 textarea，換行是使用者寫進去的——不 pre-wrap 會被併成空白。
                     min-w-0：flex 子項預設不收縮，長英文或網址會撐破卡片。 */}
-                <span className="min-w-0 whitespace-pre-wrap break-words text-[13px] text-text-light">{v}</span>
+                <span className="min-w-0 whitespace-pre-wrap break-words text-body text-text-primary">{v}</span>
               </div>
             ))}
         </ParchmentCard>
       </CollapsibleSection>
 
       <CollapsibleSection en="FEATURES & TRAITS" cn="特長">
-        <ParchmentCard className="px-4">
-          {c.features.map((f, i) => {
-            // 當下的裝備讓這條特性失效時要講出來——不然使用者會照著它算 AC。
-            const violation = featureArmorViolation(c, f);
-            return (
-            <details
-              key={`${f.name}-${i}`}
-              className={`py-2 ${i > 0 ? 'border-t border-border/40' : ''}`}
-            >
-              <summary className="cursor-pointer">
-                <span
-                  className={`text-[14px] ${violation ? 'text-text-secondary line-through' : 'text-text-primary'}`}
-                >
-                  {f.name}
-                </span>
-                {f.nameEn && (
-                  <span className="font-label ml-1.5 text-[10px] text-text-primary/70">
-                    {f.nameEn}
-                  </span>
-                )}
-                {f.source && (
-                  <span className="ml-1.5 text-[12px] text-section-label">
-                    {f.source}
-                  </span>
-                )}
-                {f.isCustom && <CustomBadge className="ml-1.5" />}
-                {violation && (
-                  <span className="ml-1.5 rounded-chip border border-danger/60 bg-danger/10 px-1.5 py-0.5 text-[10px] font-semibold text-danger">
-                    {violation}
-                  </span>
-                )}
-              </summary>
-              {f.description ? (
-                <p className="mt-2 whitespace-pre-wrap text-[13px] leading-relaxed text-text-light">
-                  {f.description}
-                </p>
-              ) : (
-                <p className="mt-2 text-[12px] text-text-secondary">
-                  這項特性沒有說明文字。
-                </p>
-              )}
-            </details>
-            );
-          })}
-        </ParchmentCard>
+        <FeatureGroups c={c} />
       </CollapsibleSection>
 
       <CollapsibleSection
@@ -360,7 +315,7 @@ export function BiographyTab({
       >
         <ParchmentCard className="px-4 py-1">
           {c.languages.length === 0 && c.toolProficiencies.length === 0 ? (
-            <p className="py-2 text-[13px] leading-relaxed text-text-secondary">
+            <p className="py-2 text-ui leading-relaxed text-text-secondary">
               尚未有語言或工具熟練{onEditProficiency ? '，點右上角編輯新增' : ''}。
             </p>
           ) : (
@@ -382,10 +337,10 @@ export function BiographyTab({
 function ProfRow({ label, items }: { label: string; items: string[] }) {
   return (
     <div className="flex gap-3 py-2">
-      <span className="w-10 shrink-0 text-[12px] text-section-label">
+      <span className="w-10 shrink-0 text-small text-section-label">
         {label}
       </span>
-      <span className="text-[13px] text-text-light">{items.join(' · ')}</span>
+      <span className="text-ui text-text-light">{items.join(' · ')}</span>
     </div>
   );
 }
@@ -429,8 +384,8 @@ function EquipmentGroups({
           {/* 只有一組時仍出標題——「這些都還沒穿上」本身就是資訊。 */}
           <div className="mb-1.5 flex items-center gap-1.5">
             <GroupIcon name={g.icon} />
-            <span className="text-[12px] text-text-primary">{g.cn}</span>
-            <span className="font-label text-[10px] tracking-[1px] text-text-secondary">
+            <span className="text-small text-text-primary">{g.cn}</span>
+            <span className="font-label text-eyebrow tracking-[1px] text-text-secondary">
               {g.en}
             </span>
           </div>
@@ -488,25 +443,25 @@ function EquipmentRow({
       <ItemIcon type={item.itemType} />
       <span className="min-w-0 flex-1 text-left">
         <span className="flex items-baseline gap-1.5">
-          <span className="truncate text-[14px] text-text-primary">{item.name}</span>
+          <span className="truncate text-body text-text-primary">{item.name}</span>
           {item.quantity > 1 && (
-            <span className="shrink-0 text-[12px] tabular-nums text-text-secondary">
+            <span className="shrink-0 text-small tabular-nums text-text-secondary">
               ×{item.quantity}
             </span>
           )}
           {item.quest && (
-            <span className="shrink-0 rounded-chip border border-border-2 px-1.5 text-[10px] text-text-secondary">
+            <span className="shrink-0 rounded-chip border border-border-2 px-1.5 text-eyebrow text-text-secondary">
               任務
             </span>
           )}
         </span>
         {item.nameEn && (
-          <span className="font-label block truncate text-[11px] text-text-primary/70">
+          <span className="font-label block truncate text-tiny text-text-primary/70">
             {item.nameEn}
           </span>
         )}
         {subtitle && (
-          <span className="block truncate text-[12px] text-text-secondary">
+          <span className="block truncate text-small text-text-secondary">
             {subtitle}
           </span>
         )}
@@ -560,7 +515,7 @@ function EquipmentRow({
         <button
           type="button"
           onClick={onUse}
-          className="min-h-9 shrink-0 rounded-chip border border-border-2 px-3 text-[12px] text-text-primary hover:border-gold/60"
+          className="min-h-9 shrink-0 rounded-chip border border-border-2 px-3 text-small text-text-primary hover:border-gold/60"
         >
           使用
         </button>

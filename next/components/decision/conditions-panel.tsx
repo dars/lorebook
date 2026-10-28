@@ -29,14 +29,14 @@ export function ConditionsPanel({ c, readOnly = false }: { c: Character; readOnl
           disabled={readOnly}
           className="flex w-full items-center text-left"
         >
-          <span className="text-[12px] text-section-label" aria-hidden>
+          <span className="text-small text-section-label" aria-hidden>
             ⚠
           </span>
-          <span className="ml-1.5 text-[12px] text-gold-dim">狀態異常・CONDITIONS</span>
+          <span className="ml-1.5 text-small text-gold-dim">狀態異常・CONDITIONS</span>
         </button>
 
         {!hasAny ? (
-          <p className="mt-1.5 text-[12px] text-text-secondary">
+          <p className="mt-1.5 text-small text-text-secondary">
             目前無異常狀態{readOnly ? '' : '，點這裡新增'}
           </p>
         ) : (
@@ -64,8 +64,9 @@ export function ConditionsPanel({ c, readOnly = false }: { c: Character; readOnl
         open={picker}
         title="異常狀態"
         onClose={() => setPicker(false)}
-        onSave={() => setPicker(false)}
+        closeLabel="完成"
       >
+        <p className="mb-3 text-ui text-text-secondary">勾選或取消會立即套用到角色。</p>
         <div className="flex flex-col">
           {CONDITIONS.map((cond) =>
             cond.leveled ? (
@@ -74,10 +75,10 @@ export function ConditionsPanel({ c, readOnly = false }: { c: Character; readOnl
                 className="flex items-center gap-3 border-b border-border/40 py-2.5"
               >
                 <span className="min-w-0 flex-1">
-                  <span className="text-[14px] text-text-primary">
+                  <span className="text-body text-text-primary">
                     {cond.name}　{cond.nameEn}
                   </span>
-                  <span className="block text-[12px] leading-relaxed text-text-secondary">
+                  <span className="block text-small leading-relaxed text-text-secondary">
                     {cond.effect}
                   </span>
                 </span>
@@ -85,7 +86,7 @@ export function ConditionsPanel({ c, readOnly = false }: { c: Character; readOnl
                   <Step label="力竭減 1" onClick={() => characterActions.setExhaustion(c.exhaustionLevel - 1)}>
                     −
                   </Step>
-                  <span className="font-display w-4 text-center text-[15px] font-bold text-gold">
+                  <span className="font-display w-4 text-center text-body font-bold text-gold">
                     {c.exhaustionLevel}
                   </span>
                   <Step label="力竭加 1" onClick={() => characterActions.setExhaustion(c.exhaustionLevel + 1)}>
@@ -105,10 +106,10 @@ export function ConditionsPanel({ c, readOnly = false }: { c: Character; readOnl
                   className="mt-1 size-4 shrink-0 accent-[#c9a84c]"
                 />
                 <span className="min-w-0">
-                  <span className="text-[14px] text-text-primary">
+                  <span className="text-body text-text-primary">
                     {cond.name}　{cond.nameEn}
                   </span>
-                  <span className="block text-[12px] leading-relaxed text-text-secondary">
+                  <span className="block text-small leading-relaxed text-text-secondary">
                     {cond.effect}
                   </span>
                 </span>
@@ -124,7 +125,7 @@ export function ConditionsPanel({ c, readOnly = false }: { c: Character; readOnl
         onClose={() => setDetail(null)}
         onSave={() => setDetail(null)}
       >
-        <p className="text-[14px] leading-relaxed text-text-light">{info?.effect}</p>
+        <p className="text-body leading-relaxed text-text-light">{info?.effect}</p>
       </EditorSheet>
     </>
   );
@@ -142,7 +143,7 @@ function Chip({
 }) {
   return (
     <span className="inline-flex items-center rounded-chip border border-border-2 bg-surface-2 pl-2.5">
-      <button type="button" onClick={onTap} className="py-1 text-[12px] text-text-primary">
+      <button type="button" onClick={onTap} className="py-1 text-small text-text-primary">
         {label}
       </button>
       {onRemove && (
@@ -150,7 +151,7 @@ function Chip({
           type="button"
           onClick={onRemove}
           aria-label={`移除 ${label}`}
-          className="px-2 py-1 text-[12px] text-text-secondary"
+          className="px-2 py-1 text-small text-text-secondary"
         >
           ×
         </button>
@@ -173,7 +174,7 @@ function Step({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="flex size-8 items-center justify-center rounded-full border border-border text-[13px] text-text-primary"
+      className="flex size-8 items-center justify-center rounded-full border border-border text-ui text-text-primary"
     >
       {children}
     </button>

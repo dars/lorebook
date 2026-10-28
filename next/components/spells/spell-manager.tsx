@@ -11,7 +11,7 @@ import { CustomSpell, spellFromCustom } from '@/lib/spells/types';
 import { deleteCustomSpell, upsertCustomSpell } from '@/lib/spells/actions';
 
 const fieldClass = 'mt-1 min-h-11 w-full rounded-card border border-border bg-surface-1 px-3 py-2 text-text-primary';
-const buttonClass = 'min-h-11 rounded-card border border-border-2 px-3 text-[13px] text-gold hover:border-gold';
+const buttonClass = 'min-h-11 rounded-card border border-border-2 px-3 text-ui text-gold hover:border-gold';
 
 export function SpellManager({ initial, extras, search = '' }: { initial: CustomSpell[]; extras: Record<string, ReactNode>; search?: string }) {
   const [editing, setEditing] = useState<CustomSpell | null>(null);
@@ -32,7 +32,7 @@ export function SpellManager({ initial, extras, search = '' }: { initial: Custom
   const visible = initial.filter(s => [s.name, s.nameEn].some(name => name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())));
   return <section className="min-w-0">
     <LibrarySectionHeader title="法術" subtitle="撰寫咒語，再到角色的法術頁從收藏選用。" count={initial.length} onCreate={() => setEditing({ ...CustomSpell.parse({ id: randomId(), name: '新法術', level: 0, description: '法術效果' }), name: '', description: '' })} />
-      {!initial.length && <div className="rounded-card border border-dashed border-border px-4 py-10 text-center"><p className="text-[14px] text-text-primary">尚未收藏法術</p><p className="mt-2 text-[13px] text-text-secondary">從「新增法術」開始，寫下你的第一道咒語。</p></div>}
+      {!initial.length && <div className="rounded-card border border-dashed border-border px-4 py-10 text-center"><p className="text-body text-text-primary">尚未收藏法術</p><p className="mt-2 text-ui text-text-secondary">從「新增法術」開始，寫下你的第一道咒語。</p></div>}
       {initial.length > 0 && !visible.length && <LibraryNoResults />}
       <div className="space-y-3">{visible.map(s => <ParchmentCard key={s.id} className="overflow-hidden">
         <div className="medium:flex medium:items-start">
@@ -67,7 +67,7 @@ function SpellEditor({ initial, onClose, onSaved }: { initial: CustomSpell; onCl
     finally { setBusy(false); }
   }
   return <EditorSheet open title="編寫自創法術" onClose={() => { if (!busy) onClose(); }} onSave={save} saveEnabled={!busy && CustomSpell.safeParse(draft).success} saveLabel={busy ? '儲存中…' : '儲存法術'}>
-    <fieldset disabled={busy} className="space-y-4 text-[13px] text-text-secondary">
+    <fieldset disabled={busy} className="space-y-4 text-ui text-text-secondary">
       <p>名稱與效果說明為必填；儲存不會更新已選用此法術的角色。</p>
       <div className="grid grid-cols-1 gap-3 medium:grid-cols-2">
         {([['name','法術名稱 *',120],['nameEn','英文名稱',120],['school','學派',80],['castingTime','施法時間 *',200],['range','射程',200],['duration','持續時間',200],['components','成分（言語／姿勢／材料）',500],['damage','傷害骰',120],['damageType','傷害類型',120]] as const).map(([key,label,max]) => <label key={key}>{label}<input className={fieldClass} maxLength={max} value={draft[key]} onChange={e => patch(key,e.target.value)} /></label>)}

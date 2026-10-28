@@ -74,10 +74,10 @@ export function InstallPrompt() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
       <div className="mx-auto max-w-[520px] rounded-card border border-border bg-surface-1 p-4 shadow-[0_4px_16px_rgba(0,0,0,0.5)]">
-        <p className="text-[14px] font-semibold text-text-primary">
+        <p className="text-body font-semibold text-text-primary">
           把 Lorebook 加到主畫面
         </p>
-        <p className="mt-1 text-[12px] leading-relaxed text-text-secondary">
+        <p className="mt-1 text-small leading-relaxed text-text-secondary">
           {deferred
             ? '之後就能像 App 一樣全螢幕開啟。'
             : '點 Safari 下方的分享按鈕，選「加入主畫面」，之後就能像 App 一樣開啟。'}
@@ -87,7 +87,7 @@ export function InstallPrompt() {
           <button
             type="button"
             onClick={() => close('never')}
-            className="min-h-11 flex-1 rounded-chip border border-border text-[13px] text-text-secondary"
+            className="min-h-11 flex-1 rounded-chip border border-border text-ui text-text-secondary"
           >
             不要再顯示
           </button>
@@ -98,7 +98,7 @@ export function InstallPrompt() {
                 await deferred.prompt();
                 close('later');
               }}
-              className="min-h-11 flex-1 rounded-chip bg-gold-solid text-[13px] font-bold text-[#1A1206]"
+              className="min-h-11 flex-1 rounded-chip bg-gold-solid text-ui font-bold text-[#1A1206]"
             >
               安裝應用程式
             </button>
@@ -106,7 +106,7 @@ export function InstallPrompt() {
             <button
               type="button"
               onClick={() => close('later')}
-              className="min-h-11 flex-1 rounded-chip border border-gold text-[13px] text-gold"
+              className="min-h-11 flex-1 rounded-chip border border-gold text-ui text-gold"
             >
               知道了
             </button>

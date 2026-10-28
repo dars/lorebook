@@ -91,7 +91,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col font-cjk">
+      <body className="min-h-full flex flex-col font-reading">
         <a href="#main-content" className="skip-link">
           跳至主要內容
         </a>

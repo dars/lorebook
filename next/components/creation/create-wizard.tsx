@@ -272,7 +272,7 @@ export function CreateWizard({
     <main id="main-content" className="mx-auto w-full max-w-[1000px] flex-1 px-4 pb-32">
       {pending && (
         <div className="mt-4 rounded-card border border-gold bg-gold/10 px-3 py-2.5">
-          <p className="text-[13px] text-text-primary">
+          <p className="text-ui text-text-primary">
             有一份未完成的建角草稿
             {pending.name.trim() && `（${pending.name.trim()}）`}。
           </p>
@@ -280,14 +280,14 @@ export function CreateWizard({
             <button
               type="button"
               onClick={() => resume(pending)}
-              className="min-h-11 flex-1 rounded-chip border border-gold text-[13px] font-bold text-gold"
+              className="min-h-11 flex-1 rounded-chip border border-gold text-ui font-bold text-gold"
             >
               繼續填寫
             </button>
             <button
               type="button"
               onClick={discard}
-              className="min-h-11 flex-1 rounded-chip border border-border text-[13px] text-text-secondary"
+              className="min-h-11 flex-1 rounded-chip border border-border text-ui text-text-secondary"
             >
               重新開始
             </button>
@@ -296,7 +296,7 @@ export function CreateWizard({
       )}
 
       <div className="pt-5">
-        <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
+        <div className="font-label text-eyebrow tracking-[1.5px] text-section-label">
           步驟 {Math.min(step + 1, steps.length)} / {steps.length} · {current}
         </div>
         <div className="mt-2 flex gap-1">
@@ -326,14 +326,14 @@ export function CreateWizard({
               onChange={(e) => setName(e.target.value)}
               maxLength={30}
               placeholder="你的角色叫什麼？"
-              className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+              className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
             />
             <SectionTitle en="ALIGNMENT" cn="陣營" />
             <select
               aria-label="陣營"
               value={alignment}
               onChange={(e) => setAlignment(e.target.value)}
-              className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary medium:w-auto medium:min-w-60"
+              className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary medium:w-auto medium:min-w-60"
             >
               <option value="">未定</option>
               {ALIGNMENTS.map(([cn, en]) => (
@@ -411,7 +411,7 @@ export function CreateWizard({
                       key={s}
                       type="button"
                       onClick={() => setSizeChoice(s)}
-                      className={`min-h-11 rounded-chip border px-5 text-[14px] ${
+                      className={`min-h-11 rounded-chip border px-5 text-body ${
                         (sizeChoice ?? species.size) === s
                           ? 'border-gold bg-gold/15 font-semibold text-gold'
                           : 'border-border-2 bg-surface-1 text-text-primary hover:border-gold/50'
@@ -474,7 +474,7 @@ export function CreateWizard({
                 但不指路的話，使用者會以為這個 App 不支援自創。
                 離開再回來由 use-form-draft 的草稿保全接住，不必另存。 */}
             {customBackgrounds.length === 0 && (
-              <p className="mb-3 text-[12px] leading-relaxed text-text-secondary">
+              <p className="mb-3 text-small leading-relaxed text-text-secondary">
                 想用自創背景？先到
                 <AppLink href="/library" className="mx-1 text-gold underline">
                   收藏紀錄
@@ -530,7 +530,7 @@ export function CreateWizard({
                   }
                 />
                 <SectionTitle en="ABILITY BONUS" cn="能力加值" />
-                <p className="mb-2 text-[12px] text-text-secondary">
+                <p className="mb-2 text-small text-text-secondary">
                   背景給 {bg.abilities.map((a) => ABILITY_LABEL[a]).join('、')}{' '}
                   三項中的加值，二選一種分配方式。
                   {cls && (
@@ -545,7 +545,7 @@ export function CreateWizard({
                       key={m}
                       type="button"
                       onClick={() => setBonusMode(m)}
-                      className={`min-h-11 flex-1 rounded-card border text-[13px] ${
+                      className={`min-h-11 flex-1 rounded-card border text-ui ${
                         bonusMode === m
                           ? 'border-gold bg-gold/10 text-gold'
                           : 'border-border-2 text-text-secondary'
@@ -559,7 +559,7 @@ export function CreateWizard({
                   <div className="mt-3 flex flex-col gap-2">
                     {(['+2', '+1'] as const).map((slot) => (
                       <div key={slot}>
-                        <div className="mb-1 text-[12px] text-text-secondary">
+                        <div className="mb-1 text-small text-text-secondary">
                           {slot} 給誰
                         </div>
                         <div className="flex gap-2">
@@ -575,7 +575,7 @@ export function CreateWizard({
                                 onClick={() =>
                                   slot === '+2' ? setPlus2(a) : setPlus1(a)
                                 }
-                                className={`min-h-11 flex-1 rounded-chip border text-[13px] disabled:opacity-30 ${
+                                className={`min-h-11 flex-1 rounded-chip border text-ui disabled:opacity-30 ${
                                   sel
                                     ? 'border-gold bg-gold/10 text-gold'
                                     : 'border-border-2 text-text-secondary'
@@ -663,13 +663,13 @@ export function CreateWizard({
                 {bg.skills.map((n) => (
                   <span
                     key={n}
-                    className="rounded-chip border border-gold/40 bg-gold/10 px-3 py-1.5 text-[13px] text-gold"
+                    className="rounded-chip border border-gold/40 bg-gold/10 px-3 py-1.5 text-ui text-gold"
                   >
                     {n}
                   </span>
                 ))}
               </div>
-              <p className="mt-1.5 text-[12px] text-text-secondary">
+              <p className="mt-1.5 text-small text-text-secondary">
                 背景固定給這些，不佔上面的選取名額。
               </p>
 
@@ -678,13 +678,13 @@ export function CreateWizard({
                 {cls.saves.map((a) => (
                   <span
                     key={a}
-                    className="rounded-chip border border-gold/40 bg-gold/10 px-3 py-1.5 text-[13px] text-gold"
+                    className="rounded-chip border border-gold/40 bg-gold/10 px-3 py-1.5 text-ui text-gold"
                   >
                     {ABILITY_LABEL[a] ?? a}
                   </span>
                 ))}
               </div>
-              <p className="mt-1.5 text-[12px] text-text-secondary">
+              <p className="mt-1.5 text-small text-text-secondary">
                 由 {cls.cn} 固定給予。
               </p>
             </div>
@@ -694,7 +694,7 @@ export function CreateWizard({
         {current === '法術' && cls && (
           <>
             {spells.length === 0 ? (
-              <p className="text-[13px] text-text-secondary">
+              <p className="text-ui text-text-secondary">
                 內容庫目前無法取得，法術可於建立後再補。
               </p>
             ) : (
@@ -744,13 +744,13 @@ export function CreateWizard({
       </div>
 
       {portraitWarning && (
-        <p role="alert" className="mt-3 text-[13px] text-text-light">
+        <p role="alert" className="mt-3 text-ui text-text-light">
           {portraitWarning}
         </p>
       )}
 
       {error && (
-        <p role="alert" className="mt-3 text-[13px] text-danger">
+        <p role="alert" className="mt-3 text-ui text-danger">
           {error}
         </p>
       )}
@@ -761,7 +761,7 @@ export function CreateWizard({
             <button
               type="button"
               onClick={() => setStep((s) => s - 1)}
-              className="min-h-12 flex-1 rounded-card border border-border text-[14px] text-text-secondary"
+              className="min-h-12 flex-1 rounded-card border border-border text-body text-text-secondary"
             >
               上一步
             </button>
@@ -771,7 +771,7 @@ export function CreateWizard({
               type="button"
               onClick={submit}
               disabled={busy || !preview()}
-              className="min-h-12 flex-2 rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold disabled:opacity-40"
+              className="min-h-12 flex-2 rounded-card border border-gold bg-gold/10 text-body font-bold text-gold disabled:opacity-40"
             >
               {busy ? '建立中…' : '建立角色'}
             </button>
@@ -791,7 +791,7 @@ export function CreateWizard({
                 setStep((s) => s + 1);
               }}
               disabled={!canNext}
-              className="min-h-12 flex-2 rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold disabled:opacity-40"
+              className="min-h-12 flex-2 rounded-card border border-gold bg-gold/10 text-body font-bold text-gold disabled:opacity-40"
             >
               下一步
             </button>
@@ -835,12 +835,12 @@ function SkillPicker({
             }`}
           >
             <span className={`size-2 rounded-full ${on ? 'bg-gold' : 'border border-border'}`} />
-            <span className={`text-[13px] ${on ? 'text-gold' : 'text-text-primary'}`}>
+            <span className={`text-ui ${on ? 'text-gold' : 'text-text-primary'}`}>
               {n}
             </span>
-            <span className="font-label text-[11px] text-text-primary/70">{en}</span>
+            <span className="font-label text-tiny text-text-primary/70">{en}</span>
             {by && (
-              <span className="ml-auto text-[12px] text-text-secondary">（{by}）</span>
+              <span className="ml-auto text-small text-text-secondary">（{by}）</span>
             )}
           </button>
         );
@@ -882,6 +882,8 @@ function SpellPicker({
               <button
                 type="button"
                 disabled={disabled}
+                role="checkbox"
+                aria-checked={on}
                 onClick={() =>
                   onToggle(
                     on ? selected.filter((x) => x !== s.name) : [...selected, s.name],
@@ -892,20 +894,21 @@ function SpellPicker({
                 // ——文字貼頂、ⓘ 偏低。中英文的基線對齊改由內層那一段負責。
                 className="flex min-h-11 min-w-0 flex-1 items-center gap-1.5 px-3 text-left"
               >
+                <span aria-hidden className="shrink-0 text-gold">{on ? '☑' : '☐'}</span>
                 <span className="flex min-w-0 flex-1 items-baseline gap-1.5">
                   <span
-                    className={`truncate text-[13px] ${on ? 'text-gold' : 'text-text-primary'}`}
+                    className={`truncate text-ui ${on ? 'text-gold' : 'text-text-primary'}`}
                   >
                     {s.name}
                   </span>
                   {s.eng_name && (
-                    <span className="font-label truncate text-[10px] text-text-secondary">
+                    <span className="font-label truncate text-eyebrow text-text-secondary">
                       {s.eng_name}
                     </span>
                   )}
                 </span>
                 {s.concentration && (
-                  <span className="shrink-0 text-[10px] text-text-secondary">
+                  <span className="shrink-0 text-eyebrow text-text-secondary">
                     專注
                   </span>
                 )}
@@ -914,7 +917,7 @@ function SpellPicker({
                 type="button"
                 aria-label={`${s.name} 的說明`}
                 onClick={() => setDetail(s)}
-                className="flex size-11 shrink-0 items-center justify-center text-[13px] text-text-secondary hover:text-gold"
+                className="flex size-11 shrink-0 items-center justify-center text-ui text-text-secondary hover:text-gold"
               >
                 ⓘ
               </button>
@@ -931,7 +934,7 @@ function SpellPicker({
       >
         {detail && (
           <>
-            <div className="font-label -mt-2 text-[11px] text-text-secondary">
+            <div className="font-label -mt-2 text-tiny text-text-secondary">
               {detail.eng_name}
             </div>
             <div className="mt-2 flex flex-wrap gap-1.5">
@@ -953,7 +956,7 @@ function SpellPicker({
               {detail.concentration && <StatChip label="專注" value="需要" />}
               {detail.ritual && <StatChip label="儀式" value="可" />}
             </div>
-            <p className="mt-3 whitespace-pre-wrap text-[13px] leading-relaxed text-text-light">
+            <p className="mt-3 whitespace-pre-wrap text-ui leading-relaxed text-text-light">
               {ftFlattenEntries(detail.entries) || '這個法術沒有說明文字。'}
             </p>
           </>
@@ -982,14 +985,14 @@ function SpeciesHint({
 }) {
   if (offline) {
     return (
-      <p className="mb-3 text-[12px] leading-relaxed text-text-secondary">
+      <p className="mb-3 text-small leading-relaxed text-text-secondary">
         自訂種族目前取不到（離線）——內建種族仍可照常建角。
       </p>
     );
   }
   if (hasCustom) return null;
   return (
-    <p className="mb-3 text-[12px] leading-relaxed text-text-secondary">
+    <p className="mb-3 text-small leading-relaxed text-text-secondary">
       想用自創種族？先到
       <AppLink href="/library" className="mx-1 text-gold underline">
         收藏紀錄
@@ -1000,7 +1003,7 @@ function SpeciesHint({
 }
 
 function Confirm({ c }: { c: ReturnType<typeof buildCharacter> | null }) {
-  if (!c) return <p className="text-[13px] text-danger">資料不完整，請回前面的步驟檢查。</p>;
+  if (!c) return <p className="text-ui text-danger">資料不完整，請回前面的步驟檢查。</p>;
 
   const score = (a: string) =>
     c.abilityScores[
@@ -1039,7 +1042,7 @@ function Confirm({ c }: { c: ReturnType<typeof buildCharacter> | null }) {
       <div className="flex flex-col gap-3">
         <ParchmentCard className="px-4 py-3">
           <div className="font-display text-[20px] font-bold text-gold">{c.name}</div>
-          <div className="mt-1 text-[13px] text-text-light">
+          <div className="mt-1 text-ui text-text-light">
             {[c.species, `${c.className} ${c.level}`, c.background, c.alignment]
               .filter(Boolean)
               .join(' · ')}
@@ -1051,7 +1054,7 @@ function Confirm({ c }: { c: ReturnType<typeof buildCharacter> | null }) {
             <ParchmentCard key={k} className="py-3">
               <div className="flex flex-col items-center">
                 <span className="font-display text-[22px] font-bold text-gold">{v}</span>
-                <span className="mt-0.5 text-center text-[12px] text-text-primary/70">
+                <span className="mt-0.5 text-center text-small text-text-primary/70">
                   {k}
                 </span>
               </div>
@@ -1065,12 +1068,12 @@ function Confirm({ c }: { c: ReturnType<typeof buildCharacter> | null }) {
               const s = score(a);
               return (
                 <span key={a} className="flex items-baseline justify-between">
-                  <span className="text-[12px] text-text-secondary">
+                  <span className="text-small text-text-secondary">
                     {ABILITY_LABEL[a]}
                   </span>
-                  <span className="text-[15px] font-bold text-gold">
+                  <span className="text-body font-bold text-gold">
                     {s.score}
-                    <span className="ml-1 text-[12px] text-text-secondary">
+                    <span className="ml-1 text-small text-text-secondary">
                       ({fmtMod(s.modifier)})
                     </span>
                   </span>
@@ -1081,16 +1084,16 @@ function Confirm({ c }: { c: ReturnType<typeof buildCharacter> | null }) {
         </ParchmentCard>
 
         <ParchmentCard className="px-4 py-3">
-          <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
+          <div className="font-label text-eyebrow tracking-[1.5px] text-section-label">
             熟練技能
           </div>
-          <div className="mt-1 text-[13px] leading-relaxed text-text-light">
+          <div className="mt-1 text-ui leading-relaxed text-text-light">
             {c.skills.filter((s) => s.proficient).map((s) => s.name).join('、') || '無'}
           </div>
-          <div className="font-label mt-3 text-[10px] tracking-[1.5px] text-section-label">
+          <div className="font-label mt-3 text-eyebrow tracking-[1.5px] text-section-label">
             豁免熟練
           </div>
-          <div className="mt-1 text-[13px] text-text-light">
+          <div className="mt-1 text-ui text-text-light">
             {ABILITY_ORDER.filter((a) => score(a).proficientSave)
               .map((a) => ABILITY_LABEL[a])
               .join('、') || '無'}
@@ -1102,20 +1105,20 @@ function Confirm({ c }: { c: ReturnType<typeof buildCharacter> | null }) {
           <ParchmentCard className="px-4 py-3">
             {c.cantrips.length > 0 && (
               <>
-                <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
+                <div className="font-label text-eyebrow tracking-[1.5px] text-section-label">
                   戲法
                 </div>
-                <div className="mt-1 text-[13px] text-text-light">
+                <div className="mt-1 text-ui text-text-light">
                   {c.cantrips.map((s) => s.name).join('、')}
                 </div>
               </>
             )}
             {c.spells.length > 0 && (
               <>
-                <div className="font-label mt-3 text-[10px] tracking-[1.5px] text-section-label">
+                <div className="font-label mt-3 text-eyebrow tracking-[1.5px] text-section-label">
                   一環法術（已準備）
                 </div>
-                <div className="mt-1 text-[13px] text-text-light">
+                <div className="mt-1 text-ui text-text-light">
                   {c.spells.map((s) => s.name).join('、')}
                 </div>
               </>

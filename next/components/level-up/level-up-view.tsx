@@ -326,21 +326,21 @@ export function LevelUpView({
     <main id="main-content" className="mx-auto w-full max-w-[700px] flex-1 px-4 pb-32">
       {pending && (
         <div className="mt-4 rounded-card border border-gold bg-gold/10 px-3 py-2.5">
-          <p className="text-[13px] text-text-primary">
+          <p className="text-ui text-text-primary">
             有一份未完成的升級選擇（升到 {plan.targetLevel} 級）。
           </p>
           <div className="mt-2 flex gap-2">
             <button
               type="button"
               onClick={() => resume(pending)}
-              className="min-h-11 flex-1 rounded-chip border border-gold text-[13px] font-bold text-gold"
+              className="min-h-11 flex-1 rounded-chip border border-gold text-ui font-bold text-gold"
             >
               繼續
             </button>
             <button
               type="button"
               onClick={discard}
-              className="min-h-11 flex-1 rounded-chip border border-border text-[13px] text-text-secondary"
+              className="min-h-11 flex-1 rounded-chip border border-border text-ui text-text-secondary"
             >
               重新開始
             </button>
@@ -349,7 +349,7 @@ export function LevelUpView({
       )}
 
       <div className="pt-5">
-        <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
+        <div className="font-label text-eyebrow tracking-[1.5px] text-section-label">
           {subclassOnly ? 'PICK SUBCLASS' : 'LEVEL UP'}
         </div>
         {subclassOnly ? (
@@ -357,10 +357,10 @@ export function LevelUpView({
             <div className="mt-1 font-display text-[28px] font-bold text-gold">
               補選子職
             </div>
-            <p className="mt-1 text-[13px] text-text-light">
+            <p className="mt-1 text-ui text-text-light">
               {initial.name}・{initial.className} {initial.level}
             </p>
-            <p className="mt-1 text-[12px] leading-relaxed text-text-secondary">
+            <p className="mt-1 text-small leading-relaxed text-text-secondary">
               升級當時內容庫離線，這個角色的子職被跳過了。選定後會一併補上
               到 {initial.level} 級為止的子職特性；等級與其他數值不會變動。
             </p>
@@ -374,7 +374,7 @@ export function LevelUpView({
             <span className="font-display text-[36px] font-bold text-gold">
               {plan.targetLevel}
             </span>
-            <span className="ml-2 text-[13px] text-text-light">
+            <span className="ml-2 text-ui text-text-light">
               {initial.name}・{initial.className}
             </span>
           </div>
@@ -389,7 +389,7 @@ export function LevelUpView({
           <button
             type="button"
             onClick={() => setHpMode('average')}
-            className={`min-h-11 flex-1 rounded-card border text-[13px] ${
+            className={`min-h-11 flex-1 rounded-card border text-ui ${
               hpMode === 'average'
                 ? 'border-gold bg-gold/10 text-gold'
                 : 'border-border-2 text-text-secondary'
@@ -400,7 +400,7 @@ export function LevelUpView({
           <button
             type="button"
             onClick={() => setHpMode('roll')}
-            className={`min-h-11 flex-1 rounded-card border text-[13px] ${
+            className={`min-h-11 flex-1 rounded-card border text-ui ${
               hpMode === 'roll'
                 ? 'border-gold bg-gold/10 text-gold'
                 : 'border-border-2 text-text-secondary'
@@ -412,7 +412,7 @@ export function LevelUpView({
         {hpMode === 'roll' && (
           <div className="mt-3">
             {/* App 不代擲——與其他擲骰處一致。 */}
-            <p className="mb-2 text-[12px] text-text-secondary">
+            <p className="mb-2 text-small text-text-secondary">
               擲 d{plan.hitDieFaces} 後把結果填進來。
             </p>
             <input
@@ -425,11 +425,11 @@ export function LevelUpView({
               onChange={(e) =>
                 setRoll(e.target.value === '' ? '' : Number(e.target.value))
               }
-              className="min-h-11 w-24 rounded-chip border border-border bg-surface-2 px-3 text-center text-[14px] text-text-primary"
+              className="min-h-11 w-24 rounded-chip border border-border bg-surface-2 px-3 text-center text-body text-text-primary"
             />
           </div>
         )}
-        <p className="mt-3 text-[12px] text-text-secondary">
+        <p className="mt-3 text-small text-text-secondary">
           最大生命值 {initial.maxHp} → <span className="text-gold">{preview.maxHp}</span>
           {plan.speciesHpPerLevel > 0 &&
             `（含${initial.species}每級 +${plan.speciesHpPerLevel}）`}
@@ -446,7 +446,7 @@ export function LevelUpView({
                 type="button"
                 aria-pressed={featMode === m}
                 onClick={() => setFeatMode(m)}
-                className={`min-h-11 flex-1 rounded-card border text-[13px] ${
+                className={`min-h-11 flex-1 rounded-card border text-ui ${
                   featMode === m
                     ? 'border-gold bg-gold/10 text-gold'
                     : 'border-border-2 text-text-secondary'
@@ -468,7 +468,7 @@ export function LevelUpView({
                       setAsiMode(m);
                       setAsiB(null);
                     }}
-                    className={`min-h-11 flex-1 rounded-card border text-[13px] ${
+                    className={`min-h-11 flex-1 rounded-card border text-ui ${
                       asiMode === m
                         ? 'border-gold bg-gold/10 text-gold'
                         : 'border-border-2 text-text-secondary'
@@ -496,7 +496,7 @@ export function LevelUpView({
                   />
                 )}
               </div>
-              <p className="mt-2 text-[12px] text-text-secondary">
+              <p className="mt-2 text-small text-text-secondary">
                 分數上限 20；已達上限的能力不會再提升。
               </p>
             </ParchmentCard>
@@ -505,7 +505,7 @@ export function LevelUpView({
           {featMode === 'catalog' && (
             <ParchmentCard className="px-4 py-3">
               {featsOffline ? (
-                <p className="text-[12px] leading-relaxed text-text-secondary">
+                <p className="text-small leading-relaxed text-text-secondary">
                   專長清單目前無法取得（內容庫離線）。可改用「自訂專長」記下專長名稱與效果。
                 </p>
               ) : (
@@ -531,24 +531,24 @@ export function LevelUpView({
                         >
                           <div className="flex items-baseline gap-2">
                             <span
-                              className={`text-[14px] font-semibold ${
+                              className={`text-body font-semibold ${
                                 unmet ? 'text-text-secondary' : 'text-text-primary'
                               }`}
                             >
                               {f.name}
                             </span>
-                            <span className="font-label text-[11px] text-text-primary/70">
+                            <span className="font-label text-tiny text-text-primary/70">
                               {f.eng_name}
                             </span>
                             {isEpicBoon(f) && (
-                              <span className="ml-auto text-[12px] text-section-label">
+                              <span className="ml-auto text-small text-section-label">
                                 史詩恩賜
                               </span>
                             )}
                           </div>
                           {/* 只變灰不說明，新手不知道為什麼不能選。 */}
                           {unmet && (
-                            <p className="mt-0.5 text-[12px] text-text-secondary">{unmet}</p>
+                            <p className="mt-0.5 text-small text-text-secondary">{unmet}</p>
                           )}
                         </button>
                       );
@@ -557,7 +557,7 @@ export function LevelUpView({
 
                   {catalogFeat && (
                     <>
-                      <p className="mt-3 whitespace-pre-wrap text-[13px] leading-relaxed text-text-light">
+                      <p className="mt-3 whitespace-pre-wrap text-ui leading-relaxed text-text-light">
                         {catalogFeatFeature(catalogFeat, plan.targetLevel).description}
                       </p>
                       {catalogOpts && (
@@ -571,7 +571,7 @@ export function LevelUpView({
                             allowed={catalogOpts.from}
                             cap={catalogCap}
                           />
-                          <p className="mt-2 text-[12px] text-text-secondary">
+                          <p className="mt-2 text-small text-text-secondary">
                             分數上限 {catalogCap}。
                           </p>
                         </div>
@@ -579,7 +579,7 @@ export function LevelUpView({
                     </>
                   )}
 
-                  <p className="mt-3 text-[12px] leading-relaxed text-text-secondary">
+                  <p className="mt-3 text-small leading-relaxed text-text-secondary">
                     SRD 收錄的通用專長很少。其他來源的專長請用「自訂專長」記下。
                   </p>
                 </>
@@ -590,7 +590,7 @@ export function LevelUpView({
           {featMode === 'custom' && (
             <ParchmentCard className="px-4 py-3">
               <label className="block">
-                <span className="mb-1 flex text-[12px] text-text-secondary">
+                <span className="mb-1 flex text-small text-text-secondary">
                   專長名稱
                   <span className="ml-auto">
                     {customName.length}／{FEAT_NAME_MAX}
@@ -603,11 +603,11 @@ export function LevelUpView({
                   onChange={(e) => setCustomName(e.target.value)}
                   maxLength={FEAT_NAME_MAX}
                   placeholder="例：鐵壁"
-                  className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+                  className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
                 />
               </label>
               <label className="mt-3 block">
-                <span className="mb-1 flex text-[12px] text-text-secondary">
+                <span className="mb-1 flex text-small text-text-secondary">
                   說明（選填）
                   <span className="ml-auto">
                     {customDesc.length}／{FEAT_DESC_MAX}
@@ -619,7 +619,7 @@ export function LevelUpView({
                   maxLength={FEAT_DESC_MAX}
                   rows={3}
                   placeholder="這個專長做什麼…"
-                  className="w-full rounded-card border border-border bg-surface-2 p-3 text-[13px] text-text-primary"
+                  className="w-full rounded-card border border-border bg-surface-2 p-3 text-ui text-text-primary"
                 />
               </label>
 
@@ -630,7 +630,7 @@ export function LevelUpView({
                   onChange={(e) => setCustomBoost(e.target.checked)}
                   className="size-4 accent-gold"
                 />
-                <span className="text-[13px] text-text-light">
+                <span className="text-ui text-text-light">
                   附帶 +1 能力值（多數通用專長都有）
                 </span>
               </label>
@@ -643,7 +643,7 @@ export function LevelUpView({
                     onChange={(e) => setCustomEpic(e.target.checked)}
                     className="size-4 accent-gold"
                   />
-                  <span className="text-[13px] text-text-light">
+                  <span className="text-ui text-text-light">
                     這是史詩恩賜（能力值上限 30）
                   </span>
                 </label>
@@ -662,7 +662,7 @@ export function LevelUpView({
                 </div>
               )}
 
-              <p className="mt-3 text-[12px] leading-relaxed text-text-secondary">
+              <p className="mt-3 text-small leading-relaxed text-text-secondary">
                 專長的效果不會自動計算，除了上面的 +1 能力值。使用前請與 DM 確認。
               </p>
             </ParchmentCard>
@@ -677,7 +677,7 @@ export function LevelUpView({
           <SectionTitle en="SUBCLASS" cn="子職業" />
           {subclasses.length === 0 && customSubclasses.length === 0 && (
             <ParchmentCard className="mb-2 px-4 py-3">
-              <p className="text-[12px] leading-relaxed text-text-secondary">
+              <p className="text-small leading-relaxed text-text-secondary">
                 {subclassOnly
                   ? '子職清單目前無法取得（內容庫離線）。連線後再回來補選。'
                   : '子職清單目前無法取得（內容庫離線）。可先完成升級，之後再自角色頁補選——數值不受影響。'}
@@ -700,10 +700,10 @@ export function LevelUpView({
                     className={`px-4 py-3 ${subclass?.id === s.id ? 'border-gold' : ''}`}
                   >
                     <div className="flex items-baseline gap-2">
-                      <span className="text-[15px] font-semibold text-text-primary">
+                      <span className="text-body font-semibold text-text-primary">
                         {s.name}
                       </span>
-                      <span className="font-label text-[11px] text-text-primary/70">
+                      <span className="font-label text-tiny text-text-primary/70">
                         {s.eng_name}
                       </span>
                     </div>
@@ -725,19 +725,19 @@ export function LevelUpView({
                     className={`px-4 py-3 ${customSubclass?.id === s.id ? 'border-gold' : ''}`}
                   >
                     <div className="flex items-baseline gap-2">
-                      <span className="text-[15px] font-semibold text-text-primary">
+                      <span className="text-body font-semibold text-text-primary">
                         {s.name}
                       </span>
                       {s.nameEn && (
-                        <span className="font-label text-[11px] text-text-primary/70">
+                        <span className="font-label text-tiny text-text-primary/70">
                           {s.nameEn}
                         </span>
                       )}
-                      <span className="ml-auto text-[12px] text-section-label">
+                      <span className="ml-auto text-small text-section-label">
                         自訂
                       </span>
                     </div>
-                    <p className="mt-1 text-[12px] text-text-secondary">
+                    <p className="mt-1 text-small text-text-secondary">
                       {[...new Set(s.features.map((f) => f.level))]
                         .sort((a, b) => a - b)
                         .join('/')}{' '}
@@ -753,7 +753,7 @@ export function LevelUpView({
               docs/flutter-parity.md 的〈設計決定〉）。這裡只指路——不指路的話，
               沒有子職可選的人會以為這個 App 不支援自創。
               升級的選擇由 use-form-draft 的草稿保全接住，離開再回來不會白填。 */}
-          <p className="mt-2 text-[12px] leading-relaxed text-text-secondary">
+          <p className="mt-2 text-small leading-relaxed text-text-secondary">
             SRD 每個職業只收錄一個子職。想用自創或他人分享的子職，先到
             <AppLink href="/library" className="mx-1 text-gold underline">
               收藏紀錄
@@ -774,13 +774,13 @@ export function LevelUpView({
                 className={`py-2 ${i > 0 ? 'border-t border-border/40' : ''}`}
               >
                 <summary className="cursor-pointer">
-                  <span className="text-[14px] text-text-primary">{f.name}</span>
-                  <span className="ml-1.5 text-[12px] text-section-label">
+                  <span className="text-body text-text-primary">{f.name}</span>
+                  <span className="ml-1.5 text-small text-section-label">
                     {f.source}
                   </span>
                 </summary>
                 {f.description && (
-                  <p className="mt-2 whitespace-pre-wrap text-[13px] leading-relaxed text-text-light">
+                  <p className="mt-2 whitespace-pre-wrap text-ui leading-relaxed text-text-light">
                     {f.description}
                   </p>
                 )}
@@ -803,10 +803,10 @@ export function LevelUpView({
           <ParchmentCard key={k} className="py-3">
             <div className="flex flex-col items-center">
               <span className="font-display text-[22px] font-bold text-gold">{v}</span>
-              <span className="text-[12px] text-text-secondary">
+              <span className="text-small text-text-secondary">
                 {old !== v ? `原 ${old}` : '未變'}
               </span>
-              <span className="mt-0.5 text-[12px] text-text-primary/70">{k}</span>
+              <span className="mt-0.5 text-small text-text-primary/70">{k}</span>
             </div>
           </ParchmentCard>
         ))}
@@ -814,15 +814,15 @@ export function LevelUpView({
 
       {preview.spellSlots.length > 0 && (
         <ParchmentCard className="mt-2 px-4 py-3">
-          <div className="text-[12px] text-text-secondary">法術位</div>
+          <div className="text-small text-text-secondary">法術位</div>
           <div className="mt-1 flex flex-wrap gap-2">
             {preview.spellSlots.map((s) => (
-              <span key={s.level} className="text-[13px] text-gold">
+              <span key={s.level} className="text-ui text-gold">
                 {s.level} 環 {s.total - s.used}/{s.total}
               </span>
             ))}
           </div>
-          <p className="mt-1 text-[12px] text-text-secondary">
+          <p className="mt-1 text-small text-text-secondary">
             已消耗的法術位不會因升級回復——升級不是休息。
           </p>
         </ParchmentCard>
@@ -831,7 +831,7 @@ export function LevelUpView({
       )}
 
       {error && (
-        <p role="alert" className="mt-3 text-[13px] text-danger">
+        <p role="alert" className="mt-3 text-ui text-danger">
           {error}
         </p>
       )}
@@ -846,7 +846,7 @@ export function LevelUpView({
               !subclassReady ||
               (!subclassOnly && (!featChoice.ready || !hpReady))
             }
-            className="min-h-12 w-full rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold disabled:opacity-40"
+            className="min-h-12 w-full rounded-card border border-gold bg-gold/10 text-body font-bold text-gold disabled:opacity-40"
           >
             {busy
               ? '套用中…'
@@ -888,7 +888,7 @@ function AbilityPicker({
 
   return (
     <div>
-      <div className="mb-1 text-[12px] text-text-secondary">{label}</div>
+      <div className="mb-1 text-small text-text-secondary">{label}</div>
       <div className="grid grid-cols-3 gap-1.5">
         {allowed.map((code) => {
           const maxed = scoreOf(scores, code) >= cap;
@@ -898,7 +898,7 @@ function AbilityPicker({
               type="button"
               disabled={code === exclude || maxed}
               onClick={() => onPick(code)}
-              className={`min-h-11 rounded-chip border text-[12px] disabled:opacity-30 ${
+              className={`min-h-11 rounded-chip border text-small disabled:opacity-30 ${
                 value === code
                   ? 'border-gold bg-gold/10 text-gold'
                   : 'border-border-2 text-text-secondary'

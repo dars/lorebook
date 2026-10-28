@@ -84,9 +84,9 @@ export function CatalogFilter({
           spellCheck={false}
           placeholder={placeholder}
           onChange={(e) => apply(e.target.value)}
-          className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+          className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
         />
-        <p className="mt-1.5 text-[12px] tabular-nums text-text-secondary" aria-live="polite">
+        <p className="mt-1.5 text-small tabular-nums text-text-secondary" aria-live="polite">
           {shown === null
             ? `共 ${total} ${unit}`
             : shown === 0

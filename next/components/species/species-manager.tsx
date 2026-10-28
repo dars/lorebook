@@ -110,14 +110,14 @@ export function SpeciesManager({
 
       {embedded ? (
         <details className="mb-4 rounded-card border border-border-2 bg-surface-1 px-4 py-2.5">
-          <summary className="min-h-11 cursor-pointer content-center text-[12px] text-text-secondary">
+          <summary className="min-h-11 cursor-pointer content-center text-small text-text-secondary">
             查看自訂種族的規則依據與界限
           </summary>
           <SpeciesRules />
         </details>
       ) : (
         <ParchmentCard className="mb-4 px-4 py-3">
-          <div className="text-[13px] font-semibold text-text-primary">
+          <div className="text-ui font-semibold text-text-primary">
             自訂種族的規則依據與界限
           </div>
           <SpeciesRules />
@@ -125,15 +125,15 @@ export function SpeciesManager({
       )}
 
       {error && (
-        <p role="alert" className="mb-3 text-[13px] text-danger">
+        <p role="alert" className="mb-3 text-ui text-danger">
           {error}
         </p>
       )}
 
       {list.length === 0 && (
         <div className="mb-3 rounded-card border border-dashed border-border px-4 py-6 text-center">
-          <p className="text-[13px] text-text-light">尚未收藏種族</p>
-          <p className="mt-1 text-[12px] text-text-secondary">
+          <p className="text-ui text-text-light">尚未收藏種族</p>
+          <p className="mt-1 text-small text-text-secondary">
             建立一個自訂種族，SRD 沒收錄的族群也能拿來建角。
           </p>
         </div>
@@ -144,25 +144,25 @@ export function SpeciesManager({
         {list.filter(item => item.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())).map((s) => (
           <ParchmentCard key={s.id} className="px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="min-w-0 flex-1 break-words text-[16px] font-semibold text-text-primary">
+              <span className="min-w-0 flex-1 break-words text-body font-semibold text-text-primary">
                 {s.name}
               </span>
               <button
                 type="button"
                 onClick={() => setEditing(s)}
-                className="min-h-11 rounded-chip border border-border-2 px-3 text-[12px] text-gold"
+                className="min-h-11 rounded-chip border border-border-2 px-3 text-small text-gold"
               >
                 編輯
               </button>
               <button
                 type="button"
                 onClick={() => setConfirmDelete(s)}
-                className="min-h-11 rounded-chip px-2 text-[12px] text-text-secondary hover:text-danger"
+                className="min-h-11 rounded-chip px-2 text-small text-text-secondary hover:text-danger"
               >
                 刪除
               </button>
             </div>
-            <p className="mt-1 text-[12px] text-text-secondary">
+            <p className="mt-1 text-small text-text-secondary">
               {summary(s)}
             </p>
             {extras?.[s.id]}
@@ -174,7 +174,7 @@ export function SpeciesManager({
       <button
         type="button"
         onClick={() => setEditing({ ...EMPTY })}
-        className="mt-4 flex min-h-12 w-full items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
+        className="mt-4 flex min-h-12 w-full items-center justify-center rounded-card border border-gold bg-gold/10 text-body font-bold text-gold"
       >
         ＋ 新增自訂種族
       </button>
@@ -199,7 +199,7 @@ export function SpeciesManager({
               onChange={(e) => set('name', e.target.value)}
               maxLength={NAME_MAX}
               placeholder="例：石裔"
-              className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+              className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
             />
 
             <div className="mt-4">
@@ -213,7 +213,7 @@ export function SpeciesManager({
                 onChange={(e) => set('nameEn', e.target.value)}
                 maxLength={NAME_EN_MAX}
                 placeholder="例：Stoneborn"
-                className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+                className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
               />
             </div>
 
@@ -251,7 +251,7 @@ export function SpeciesManager({
                 selected={editing.darkvisionFt}
                 onSelect={(v) => set('darkvisionFt', v)}
               />
-              <p className="mt-1 text-[12px] text-text-secondary">
+              <p className="mt-1 text-small text-text-secondary">
                 選了距離就會自動出現對應的特性條目，不必自己再寫一條。
               </p>
             </div>
@@ -285,7 +285,7 @@ export function SpeciesManager({
             {editing.skillPickCount > 0 && (
               <div className="mt-4">
                 <FieldLabel>可選技能來源</FieldLabel>
-                <p className="mb-2 text-[12px] text-text-secondary">
+                <p className="mb-2 text-small text-text-secondary">
                   建角時自這裡挑 {editing.skillPickCount} 項。至少需勾選{' '}
                   {editing.skillPickCount + 1} 項（目前{' '}
                   <span
@@ -314,7 +314,7 @@ export function SpeciesManager({
                               : [...editing.skillPickFrom, s.name],
                           )
                         }
-                        className={`min-h-11 rounded-chip border text-[12px] ${
+                        className={`min-h-11 rounded-chip border text-small ${
                           on
                             ? 'border-gold bg-gold/10 text-gold'
                             : 'border-border-2 text-text-secondary'
@@ -347,17 +347,17 @@ export function SpeciesManager({
                 maxLength={DESC_MAX}
                 rows={3}
                 placeholder="這個種族是什麼樣的人？"
-                className="w-full rounded-card border border-border bg-surface-2 p-3 text-[13px] text-text-primary"
+                className="w-full rounded-card border border-border bg-surface-2 p-3 text-ui text-text-primary"
               />
             </div>
 
-            <p className="mt-4 text-[12px] leading-relaxed text-text-secondary">
+            <p className="mt-4 text-small leading-relaxed text-text-secondary">
               修改與刪除<span className="text-text-primary">不影響</span>
               已用這個種族建立的角色——種族在建角時就已經快照進角色卡了。
             </p>
 
             {problem && (
-              <p className="mt-2 text-[12px] text-danger">{problem}</p>
+              <p className="mt-2 text-small text-danger">{problem}</p>
             )}
           </>
         )}
@@ -371,7 +371,7 @@ export function SpeciesManager({
         onClose={() => setConfirmDelete(null)}
         onSave={() => confirmDelete && remove(confirmDelete)}
       >
-        <p className="text-[13px] leading-relaxed text-text-light">
+        <p className="text-ui leading-relaxed text-text-light">
           「{confirmDelete?.name}」將被刪除。
           <br />
           <span className="text-text-secondary">
@@ -420,7 +420,7 @@ function Choices<T extends string | number>({
           type="button"
           aria-pressed={selected === o.key}
           onClick={() => onSelect(o.key)}
-          className={`min-h-11 rounded-chip border px-4 text-[13px] ${
+          className={`min-h-11 rounded-chip border px-4 text-ui ${
             selected === o.key
               ? 'border-gold bg-gold/10 font-semibold text-gold'
               : 'border-border-2 text-text-secondary'
@@ -462,12 +462,12 @@ function AbilitiesField({
               { name: '', uses: 1, recovery: 'long', description: '' },
             ])
           }
-          className="ml-auto min-h-11 px-2 text-[12px] text-gold disabled:opacity-30"
+          className="ml-auto min-h-11 px-2 text-small text-gold disabled:opacity-30"
         >
           ＋ 新增能力
         </button>
       </div>
-      <p className="mb-2 text-[12px] leading-relaxed text-text-secondary">
+      <p className="mb-2 text-small leading-relaxed text-text-secondary">
         每則會在角色卡的資源區產生一格，依回復時機參與短休／長休。最多{' '}
         {ABILITY_MAX} 則。
       </p>
@@ -483,7 +483,7 @@ function AbilitiesField({
               onChange={(e) => set(i, { name: e.target.value })}
               maxLength={ABILITY_NAME_MAX}
               placeholder="例：石膚"
-              className="min-h-11 flex-1 rounded-chip border border-border bg-surface-2 px-3 text-[13px] text-text-primary"
+              className="min-h-11 flex-1 rounded-chip border border-border bg-surface-2 px-3 text-ui text-text-primary"
             />
             <button
               type="button"
@@ -497,7 +497,7 @@ function AbilitiesField({
 
           <div className="mt-2 flex flex-wrap gap-3">
             <div>
-              <span className="text-[12px] text-text-secondary">次數</span>
+              <span className="text-small text-text-secondary">次數</span>
               <div className="mt-1">
                 <Choices
                   ariaLabel="次數"
@@ -511,7 +511,7 @@ function AbilitiesField({
               </div>
             </div>
             <div>
-              <span className="text-[12px] text-text-secondary">回復時機</span>
+              <span className="text-small text-text-secondary">回復時機</span>
               <div className="mt-1">
                 <Choices
                   ariaLabel="回復時機"
@@ -533,7 +533,7 @@ function AbilitiesField({
             maxLength={ABILITY_DESC_MAX}
             rows={2}
             placeholder="說明（選填）"
-            className="mt-2 w-full rounded-card border border-border bg-surface-2 p-2 text-[13px] text-text-primary"
+            className="mt-2 w-full rounded-card border border-border bg-surface-2 p-2 text-ui text-text-primary"
           />
         </div>
       ))}
@@ -570,12 +570,12 @@ function TraitsField({
           onClick={() =>
             onChange([...value, { name: '', nameEn: '', description: '' }])
           }
-          className="ml-auto min-h-11 px-2 text-[12px] text-gold disabled:opacity-30"
+          className="ml-auto min-h-11 px-2 text-small text-gold disabled:opacity-30"
         >
           ＋ 新增特性
         </button>
       </div>
-      <p className="mb-2 text-[12px] leading-relaxed text-text-secondary">
+      <p className="mb-2 text-small leading-relaxed text-text-secondary">
         僅為顯示文字，不會產生規則效果——寫「毒素抗性」不會讓角色卡真的有抗性。
         最多 {TRAIT_MAX} 條。
       </p>
@@ -591,7 +591,7 @@ function TraitsField({
               onChange={(e) => set(i, { name: e.target.value })}
               maxLength={TRAIT_NAME_MAX}
               placeholder="特性名稱"
-              className="min-h-11 flex-1 rounded-chip border border-border bg-surface-2 px-3 text-[13px] text-text-primary"
+              className="min-h-11 flex-1 rounded-chip border border-border bg-surface-2 px-3 text-ui text-text-primary"
             />
             <button
               type="button"
@@ -627,7 +627,7 @@ function TraitsField({
             maxLength={TRAIT_DESC_MAX}
             rows={2}
             placeholder="說明（選填）"
-            className="mt-2 w-full rounded-card border border-border bg-surface-2 p-2 text-[13px] text-text-primary"
+            className="mt-2 w-full rounded-card border border-border bg-surface-2 p-2 text-ui text-text-primary"
           />
         </div>
       ))}
@@ -663,7 +663,7 @@ function Wrap({
 function SpeciesRules() {
   return (
     <>
-      <ul className="mt-2 flex flex-col gap-1 text-[12px] leading-relaxed text-text-secondary">
+      <ul className="mt-2 flex flex-col gap-1 text-small leading-relaxed text-text-secondary">
         <li>
           · 2024 版的種族
           <span className="text-text-primary">不給能力值加值</span>
@@ -671,17 +671,17 @@ function SpeciesRules() {
         </li>
         <li>· 種族沒有官方的建構框架（背景有）。自訂種族屬社群 homebrew，使用前請與 DM 確認</li>
       </ul>
-      <p className="mt-2 text-[12px] font-semibold text-text-primary">
+      <p className="mt-2 text-small font-semibold text-text-primary">
         以下是這個 App 畫的線，不是規則書的限制：
       </p>
-      <ul className="mt-1 flex flex-col gap-1 text-[12px] leading-relaxed text-text-secondary">
+      <ul className="mt-1 flex flex-col gap-1 text-small leading-relaxed text-text-secondary">
         <li>· 速度 20／25／30／35／40 呎（SRD 的實際取值是 25–35）</li>
         <li>· 黑暗視覺 無／60／120 呎</li>
         <li>· 每級額外 HP 0–2（SRD 只有矮人的 1）</li>
         <li>· 種族技能可選數 0–2，候選自 18 技能勾選</li>
         <li>· 特性為純文字，不產生機制效果；有限次數能力則會產生角色卡資源</li>
       </ul>
-      <p className="mt-2 text-[12px] text-text-secondary">
+      <p className="mt-2 text-small text-text-secondary">
         App 只檢查結構合法性，
         <span className="text-text-primary">不判斷強度</span>——平衡是 DM 的職權。
       </p>

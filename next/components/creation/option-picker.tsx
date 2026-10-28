@@ -35,7 +35,7 @@ export function OptionChips({
             role="radio"
             aria-checked={on}
             onClick={() => onSelect(o.key)}
-            className={`min-h-11 rounded-chip border px-4 text-[14px] transition-colors ${
+            className={`min-h-11 rounded-chip border px-4 text-body transition-colors ${
               on
                 ? 'border-gold bg-gold/15 font-semibold text-gold'
                 : 'border-border-2 bg-surface-1 text-text-primary hover:border-gold/50'
@@ -43,7 +43,7 @@ export function OptionChips({
           >
             {o.label}
             {o.suffix && (
-              <span className="font-label ml-1.5 text-[11px] text-text-secondary">
+              <span className="font-label ml-1.5 text-tiny text-text-secondary">
                 {o.suffix}
               </span>
             )}
@@ -57,7 +57,7 @@ export function OptionChips({
 /** 說明卡的資料 chip（生命骰 d6、豁免 智力/感知…）。純顯示，不可點。 */
 export function StatChip({ label, value }: { label: string; value: string }) {
   return (
-    <span className="rounded-chip border border-border-2 bg-surface-2 px-2 py-1 text-[11px] text-text-secondary">
+    <span className="rounded-chip border border-border-2 bg-surface-2 px-2 py-1 text-tiny text-text-secondary">
       {label}{' '}
       <span className="font-semibold text-text-light">{value}</span>
     </span>
@@ -83,7 +83,7 @@ export function TraitChip({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="min-h-8 rounded-chip border border-gold/40 bg-gold/5 px-2 py-1 text-[11px] text-gold hover:bg-gold/15"
+        className="min-h-8 rounded-chip border border-gold/40 bg-gold/5 px-2 py-1 text-tiny text-gold hover:bg-gold/15"
       >
         {name}
         <span aria-hidden className="ml-1 opacity-60">
@@ -97,11 +97,11 @@ export function TraitChip({
         onClose={() => setOpen(false)}
       >
         {nameEn && (
-          <p className="font-label -mt-2 mb-2 text-[11px] text-text-secondary">
+          <p className="font-label -mt-2 mb-2 text-tiny text-text-secondary">
             {nameEn}
           </p>
         )}
-        <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-text-light">
+        <p className="whitespace-pre-wrap text-ui leading-relaxed text-text-light">
           {description || '這項特性沒有說明文字。'}
         </p>
       </EditorSheet>
@@ -130,11 +130,11 @@ export function DescCard({
       <div className="flex items-baseline gap-2">
         <span className="font-display text-[17px] font-bold text-gold">{title}</span>
         {titleEn && (
-          <span className="font-label text-[12px] text-text-primary/70">{titleEn}</span>
+          <span className="font-label text-small text-text-primary/70">{titleEn}</span>
         )}
       </div>
       {description && (
-        <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
+        <p className="mt-1.5 text-ui leading-relaxed text-text-secondary">
           {description}
         </p>
       )}

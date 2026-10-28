@@ -63,7 +63,7 @@ export function JournalEditor({
         placeholder="標題"
         maxLength={80}
         autoComplete="off"
-        className="w-full rounded-t-card bg-transparent px-3 pb-2 pt-3 text-[18px] font-bold text-text-primary placeholder:text-text-secondary/60 focus:outline-none"
+        className="w-full rounded-t-card bg-transparent px-3 pb-2 pt-3 text-[18px] font-bold text-text-primary placeholder:text-text-secondary focus:outline-none"
       />
 
       <div className="mx-3 h-px bg-border/40" />
@@ -85,7 +85,7 @@ export function JournalEditor({
         }}
         rows={11}
         placeholder="今天發生了什麼？"
-        className="w-full resize-y rounded-b-card bg-transparent px-3 pb-3 pt-2 text-[14px] leading-relaxed text-text-primary placeholder:text-text-secondary/60 focus:outline-none"
+        className="w-full resize-y rounded-b-card bg-transparent px-3 pb-3 pt-2 text-body leading-relaxed text-text-primary placeholder:text-text-secondary focus:outline-none"
       />
     </div>
   );

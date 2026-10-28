@@ -20,7 +20,7 @@ export default function OfflinePage() {
     >
       <div className="rounded-card border border-border bg-surface-1 p-5">
         <h1 className="font-display text-[20px] font-bold text-gold">目前離線</h1>
-        <p className="mt-2 text-[13px] leading-relaxed text-text-light">
+        <p className="mt-2 text-ui leading-relaxed text-text-light">
           這一頁還沒有在有網路的時候開過，所以這台裝置上沒有它的內容。
           <span className="mt-1 block text-text-secondary">
             開過的頁面離線時仍然看得到。恢復連線後重新整理即可。
@@ -30,13 +30,13 @@ export default function OfflinePage() {
         <div className="mt-4 flex flex-col gap-2">
           <AppLink
             href="/main/character"
-            className="flex min-h-11 items-center justify-center rounded-card border border-gold bg-gold/10 text-[13px] font-bold text-gold"
+            className="flex min-h-11 items-center justify-center rounded-card border border-gold bg-gold/10 text-ui font-bold text-gold"
           >
             回到角色卡
           </AppLink>
           <AppLink
             href="/demo"
-            className="flex min-h-11 items-center justify-center rounded-card border border-border text-[13px] text-text-secondary"
+            className="flex min-h-11 items-center justify-center rounded-card border border-border text-ui text-text-secondary"
           >
             先看看試玩角色
           </AppLink>

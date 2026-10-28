@@ -47,7 +47,7 @@ export function EntryCard({
   const header = (
     <div className="flex items-center px-3.5 py-3">
       <span
-        className={`flex size-[34px] shrink-0 items-center justify-center rounded-md border text-[13px] font-semibold ${
+        className={`flex size-[34px] shrink-0 items-center justify-center rounded-md border text-ui font-semibold ${
           emphasizeBadge
             ? 'border-gold-dim bg-gold-dim/[0.09] text-gold-dim'
             : 'border-border text-text-primary/70'
@@ -57,11 +57,11 @@ export function EntryCard({
       </span>
 
       <span className="ml-3 min-w-0 flex-1">
-        <span className="block truncate text-[16px] font-semibold text-text-primary">
+        <span className="block truncate text-body font-semibold text-text-primary">
           {title}
         </span>
         {subtitle && (
-          <span className="font-label block truncate text-[11px] text-text-primary/70">
+          <span className="font-label block truncate text-tiny text-text-primary/70">
             {subtitle}
           </span>
         )}
@@ -70,8 +70,8 @@ export function EntryCard({
       {(meta || value) && (
         <span className="ml-3 flex shrink-0 flex-col items-end">
           {meta && (
-            <span className="flex items-center text-[12px] text-text-primary/70">
-              {metaArrow && <span className="mr-0.5 text-[12px]">→</span>}
+            <span className="flex items-center text-small text-text-primary/70">
+              {metaArrow && <span className="mr-0.5 text-small">→</span>}
               {meta}
             </span>
           )}
@@ -114,12 +114,12 @@ export function EntryCard({
       {expanded && (
         <div className="border-t border-border bg-surface-0 px-4 pb-4 pt-3.5">
           {description && (
-            <p className="whitespace-pre-wrap text-[14px] leading-[1.75] text-text-primary/85">
+            <p className="whitespace-pre-wrap break-words text-body leading-[1.75] text-text-primary">
               {description}
             </p>
           )}
           {footnote && (
-            <p className="mt-3 whitespace-pre-wrap text-[13px] leading-[1.6] text-gold-dim">
+            <p className="mt-3 whitespace-pre-wrap break-words text-body leading-[1.75] text-text-light">
               {footnote}
             </p>
           )}

@@ -38,7 +38,7 @@ export function CollectPanel({
         </p>
         <AppLink
           href={`/login?next=${encodeURIComponent(`/h/${token}`)}`}
-          className="mt-3 flex min-h-11 items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
+          className="mt-3 flex min-h-11 items-center justify-center rounded-card border border-gold bg-gold/10 text-body font-bold text-gold"
         >
           登入後收藏
         </AppLink>
@@ -54,7 +54,7 @@ export function CollectPanel({
         </p>
         <AppLink
           href="/library"
-          className="mt-3 flex min-h-11 items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
+          className="mt-3 flex min-h-11 items-center justify-center rounded-card border border-gold bg-gold/10 text-body font-bold text-gold"
         >
           前往收藏紀錄
         </AppLink>
@@ -84,7 +84,7 @@ export function CollectPanel({
 
       <label
         htmlFor="collect-note"
-        className="font-label text-[10px] tracking-[1.5px] text-section-label"
+        className="font-label text-eyebrow tracking-[1.5px] text-section-label"
       >
         NOTE · 備註（選填）
       </label>
@@ -104,7 +104,7 @@ export function CollectPanel({
       </p>
 
       {error && (
-        <p role="alert" className="mt-3 text-[13px] text-danger">
+        <p role="alert" className="mt-3 text-ui text-danger">
           {error}
         </p>
       )}
@@ -113,7 +113,7 @@ export function CollectPanel({
         type="button"
         onClick={submit}
         disabled={pending}
-        className="mt-4 flex min-h-12 w-full cursor-pointer items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold disabled:opacity-50"
+        className="mt-4 flex min-h-12 w-full cursor-pointer items-center justify-center rounded-card border border-gold bg-gold/10 text-body font-bold text-gold disabled:opacity-50"
       >
         {pending ? '收藏中…' : `收進我的收藏紀錄（${HOMEBREW_KIND[kind].label}）`}
       </button>

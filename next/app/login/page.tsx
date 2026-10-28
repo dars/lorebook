@@ -81,7 +81,11 @@ export default async function LoginPage({
             <span><strong>先以訪客身分試玩</strong><small>不用註冊，直接查看範例角色</small></span>
             <span aria-hidden="true">↗</span>
           </AppLink>
-          <p className="mt-7 text-center text-tiny leading-5 text-text-secondary">登入即表示你同意讓 Lorebook 儲存你的角色資料。</p>
+          <p className="mt-7 text-center text-small leading-6 text-text-secondary">使用前請閱讀我們的資料處理方式與使用規範。</p>
+          <nav aria-label="政策與條款" className="flex flex-wrap justify-center gap-x-5 text-small text-section-label">
+            <AppLink href="/privacy" className="inline-flex min-h-11 items-center underline">隱私權政策</AppLink>
+            <AppLink href="/terms" className="inline-flex min-h-11 items-center underline">使用條款</AppLink>
+          </nav>
         </div>
       </section>
       <p className="login-edition font-label" aria-hidden="true">EST. 2024 · TAIWAN</p>

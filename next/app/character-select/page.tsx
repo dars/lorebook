@@ -7,6 +7,7 @@ import { SectionTitle } from '@/components/ui/decorations';
 import { fetchMyCharacters } from '@/lib/characters/fetch';
 import { OfflineNotice } from '@/components/shell/offline-notice';
 import { getAuthState } from '@/lib/supabase/server';
+import { GuideLink } from '@/components/guide/guide-link';
 
 export const metadata: Metadata = { title: '選擇角色｜Lorebook' };
 export const dynamic = 'force-dynamic';
@@ -27,13 +28,14 @@ export default async function CharacterSelectPage() {
       <SectionTitle en="CHARACTERS" cn="選擇角色" />
 
       {error && (
-        <p className="py-3 text-[13px] text-danger">無法載入角色（{error}）</p>
+        <p className="py-3 text-ui text-danger">無法載入角色（{error}）</p>
       )}
       <CharacterList initial={characters} />
+      <GuideLink />
 
       <AppLink
         href="/character-create"
-        className="mt-4 flex min-h-12 items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
+        className="mt-4 flex min-h-12 items-center justify-center rounded-card border border-gold bg-gold/10 text-body font-bold text-gold"
       >
         ＋ 建立新角色
       </AppLink>

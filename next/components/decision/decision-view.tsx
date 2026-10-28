@@ -93,12 +93,12 @@ export function DecisionView({
                 <span className="font-display text-[24px] font-bold leading-none text-gold">
                   {ac.value}
                 </span>
-                <span className="font-label text-[10px] tracking-wider text-text-secondary">
+                <span className="font-label text-eyebrow tracking-wider text-text-secondary">
                   AC
                 </span>
               </span>
             </div>
-              <span className="mt-1 max-w-[86px] truncate text-[10px] text-text-secondary">
+              <span className="mt-1 max-w-[86px] truncate text-eyebrow text-text-secondary">
                 {ac.label}
               </span>
             </div>
@@ -107,30 +107,30 @@ export function DecisionView({
 
             {/* 專注 */}
             <div className="mt-3 flex w-full flex-col items-center border-t border-border/40 pt-3 medium:mt-0 medium:w-auto medium:flex-1 medium:border-t-0 medium:pt-0">
-              <span className="font-label text-[10px] tracking-[1.5px] text-section-label">
+              <span className="font-label text-eyebrow tracking-[1.5px] text-section-label">
                 CONCENTRATION
               </span>
               {c.concentrationSpell ? (
                 <>
-                  <span className="mt-1 text-center text-[14px] text-gold">
+                  <span className="mt-1 text-center text-body text-gold">
                     {c.concentrationSpell}
                   </span>
                   <button
                     type="button"
                     onClick={() => characterActions.setConcentration(null)}
-                    className="mt-1.5 min-h-9 rounded-chip border border-border px-3 text-[12px] text-text-secondary"
+                    className="mt-1.5 min-h-9 rounded-chip border border-border px-3 text-small text-text-secondary"
                   >
                     結束專注
                   </button>
                 </>
               ) : (
                 <>
-                  <span className="mt-1 text-[13px] text-text-secondary">未專注</span>
+                  <span className="mt-1 text-ui text-text-secondary">未專注</span>
                   <button
                     type="button"
                     onClick={() => setPickConcentration(true)}
                     disabled={concentrationCandidates.length === 0}
-                    className="mt-1.5 min-h-9 rounded-chip border border-border px-3 text-[12px] text-text-primary disabled:opacity-40"
+                    className="mt-1.5 min-h-9 rounded-chip border border-border px-3 text-small text-text-primary disabled:opacity-40"
                   >
                     選擇專注法術
                   </button>
@@ -154,7 +154,7 @@ export function DecisionView({
                   onClick={() => characterActions.setMageArmor(!c.mageArmorActive)}
                   aria-pressed={c.mageArmorActive}
                   disabled={wearingArmor(c)}
-                  className={`min-h-9 rounded-chip border px-2.5 text-[12px] disabled:opacity-40 ${
+                  className={`min-h-9 rounded-chip border px-2.5 text-small disabled:opacity-40 ${
                     c.mageArmorActive
                       ? 'border-gold bg-gold/10 text-gold'
                       : 'border-border-2 text-text-secondary'
@@ -162,7 +162,7 @@ export function DecisionView({
                 >
                   法師護甲 Mage Armor
                 </button>
-                <span className="text-[12px] leading-tight text-text-secondary">
+                <span className="text-small leading-tight text-text-secondary">
                   {wearingArmor(c) ? (
                     <>著甲中無法施放</>
                   ) : (
@@ -185,16 +185,16 @@ export function DecisionView({
         <CollapsibleSection en="RESOURCES" cn="資源">
           <ParchmentCard className="px-4 py-2">
             {c.spellSlots.length > 0 && (
-              <span className="mt-1 block text-[12px] text-gold">
+              <span className="mt-1 block text-small text-gold">
                 法術位{' '}
-                <span className="font-label text-[10px] text-text-secondary">
+                <span className="font-label text-eyebrow text-text-secondary">
                   Spell Slots
                 </span>
               </span>
             )}
             {c.spellSlots.map((s) => (
               <div key={`slot-${s.level}`} className="flex items-center gap-3 py-2">
-                <span className="w-14 shrink-0 text-[12px] text-text-secondary">
+                <span className="w-14 shrink-0 text-small text-text-secondary">
                   {s.level} 環
                 </span>
                 <Pips
@@ -203,20 +203,20 @@ export function DecisionView({
                   label={`${s.level} 環法術位`}
                   onChange={(d) => characterActions.adjustSpellSlot(s.level, d)}
                 />
-                <span className="ml-auto text-[13px] tabular-nums text-gold">
+                <span className="ml-auto text-ui tabular-nums text-gold">
                   {s.total - s.used}/{s.total}
                 </span>
               </div>
             ))}
             {c.resources.map((r) => (
               <div key={r.name} className="flex items-center gap-3 py-2">
-                <span className="w-14 shrink-0 truncate text-[12px] text-text-secondary">
+                <span className="w-14 shrink-0 truncate text-small text-text-secondary">
                   {r.name}
                 </span>
                 {r.display === 'number' ? (
                   <span className="flex items-center gap-2">
                     <StepBtn label={`${r.name} 減 5`} onClick={() => characterActions.adjustResource(r.name, -5)}>−5</StepBtn>
-                    <span className="text-[13px] tabular-nums text-gold">
+                    <span className="text-ui tabular-nums text-gold">
                       {r.current}/{r.max} {r.unit}
                     </span>
                     <StepBtn label={`${r.name} 加 5`} onClick={() => characterActions.adjustResource(r.name, 5)}>+5</StepBtn>
@@ -229,7 +229,7 @@ export function DecisionView({
                       label={r.name}
                       onChange={(d) => characterActions.adjustResource(r.name, d)}
                     />
-                    <span className="ml-auto text-[13px] tabular-nums text-gold">
+                    <span className="ml-auto text-ui tabular-nums text-gold">
                       {r.current}/{r.max}
                       {r.dieFaces > 0 && ` · d${r.dieFaces}`}
                     </span>
@@ -270,20 +270,20 @@ export function DecisionView({
       <CollapsibleSection en="REST" cn="休息">
         <ParchmentCard className="px-4 py-3">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] text-text-secondary">
+            <span className="text-ui text-text-secondary">
               生命骰 {c.level - c.hitDiceUsed}/{c.level}（d{c.hitDieFaces}）
             </span>
             <button
               type="button"
               onClick={() => characterActions.useHitDie()}
               disabled={c.level - c.hitDiceUsed <= 0}
-              className="min-h-9 rounded-chip border border-border px-3 text-[12px] text-text-primary disabled:opacity-40"
+              className="min-h-9 rounded-chip border border-border px-3 text-small text-text-primary disabled:opacity-40"
             >
               花用一顆
             </button>
           </div>
           {/* App 不替玩家擲骰——說明白，免得以為壞了。 */}
-          <p className="mt-1 text-[12px] text-text-secondary">
+          <p className="mt-1 text-small text-text-secondary">
             花用後請自行擲 d{c.hitDieFaces}＋體質，再用上方 HP 加減調整。
           </p>
 
@@ -348,7 +348,7 @@ export function DecisionView({
         onSave={() => setPickConcentration(false)}
       >
         {concentrationCandidates.length === 0 ? (
-          <p className="text-[13px] text-text-secondary">沒有需要專注的法術。</p>
+          <p className="text-ui text-text-secondary">沒有需要專注的法術。</p>
         ) : (
           <div className="flex flex-col">
             {concentrationCandidates.map((s) => (
@@ -361,11 +361,11 @@ export function DecisionView({
                 }}
                 className="flex items-baseline gap-2 border-b border-border/40 py-2.5 text-left"
               >
-                <span className="text-[14px] text-text-primary">{s.name}</span>
-                <span className="font-label text-[11px] text-text-primary/70">
+                <span className="text-body text-text-primary">{s.name}</span>
+                <span className="font-label text-tiny text-text-primary/70">
                   {s.nameEn}
                 </span>
-                <span className="ml-auto text-[12px] text-text-secondary">
+                <span className="ml-auto text-small text-text-secondary">
                   {s.level === 0 ? '戲法' : `${s.level} 環`}
                 </span>
               </button>
@@ -424,9 +424,9 @@ function TempHpSheet({
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
         placeholder={`${current}`}
-        className="min-h-11 w-full rounded-chip border border-border bg-surface-0 px-3 text-[16px] text-text-primary"
+        className="min-h-11 w-full rounded-chip border border-border bg-surface-0 px-3 text-body text-text-primary"
       />
-      <p className="mt-2 text-[12px] leading-relaxed text-text-secondary">
+      <p className="mt-2 text-small leading-relaxed text-text-secondary">
         臨時 HP 不疊加：填入的值會<b className="text-text-light">取代</b>現有的{' '}
         {current} 點（填 0 清空）。扣血時先扣臨時 HP。
       </p>
@@ -506,10 +506,10 @@ function ChecksPanel({ c }: { c: Character }) {
         {selected ? (
           <>
             <span className="min-w-0 flex-1">
-              <span className="block text-[11px] text-text-secondary">
+              <span className="block text-tiny text-text-secondary">
                 骰 1d20 然後加上
               </span>
-              <span className="font-label mt-0.5 block truncate text-[10px] text-section-label">
+              <span className="font-label mt-0.5 block truncate text-eyebrow text-section-label">
                 {selected.cn}
                 {selected.en && `・${selected.en}`}
               </span>
@@ -519,7 +519,7 @@ function ChecksPanel({ c }: { c: Character }) {
             </span>
           </>
         ) : (
-          <span className="text-[13px] text-text-secondary">
+          <span className="text-ui text-text-secondary">
             點選下方項目，計算 1d20 加值
           </span>
         )}
@@ -562,17 +562,17 @@ function ChecksPanel({ c }: { c: Character }) {
                     />
                   )}
                   <span className="min-w-0">
-                    <span className="block truncate text-[13px] text-text-primary">
+                    <span className="block truncate text-ui text-text-primary">
                       {r.name}
                     </span>
                     {r.nameEn && (
-                      <span className="font-label block truncate text-[10px] text-text-secondary">
+                      <span className="font-label block truncate text-eyebrow text-text-secondary">
                         {r.nameEn}
                       </span>
                     )}
                   </span>
                 </span>
-                <span className="shrink-0 text-[14px] font-semibold tabular-nums text-gold">
+                <span className="shrink-0 text-body font-semibold tabular-nums text-gold">
                   {sign(r.value)}
                 </span>
               </button>
@@ -620,8 +620,8 @@ function RestButton({
         aria-live="polite"
         className="flex min-h-14 flex-1 flex-col items-center justify-center rounded-card border border-gold bg-gold/[0.06] px-2 text-center"
       >
-        <span className="text-[13px] text-gold">已完成{title}</span>
-        <span className="text-[11px] text-text-secondary">{doneHint}</span>
+        <span className="text-ui text-gold">已完成{title}</span>
+        <span className="text-tiny text-text-secondary">{doneHint}</span>
       </output>
     );
   }
@@ -629,12 +629,12 @@ function RestButton({
   if (asking) {
     return (
       <div className="flex-1 rounded-card border border-gold p-2">
-        <p className="text-[12px] leading-relaxed text-text-light">{confirm}</p>
+        <p className="text-small leading-relaxed text-text-light">{confirm}</p>
         <div className="mt-2 flex gap-2">
           <button
             type="button"
             onClick={() => setAsking(false)}
-            className="min-h-9 flex-1 rounded-chip border border-border text-[12px] text-text-secondary"
+            className="min-h-9 flex-1 rounded-chip border border-border text-small text-text-secondary"
           >
             取消
           </button>
@@ -645,7 +645,7 @@ function RestButton({
               setAsking(false);
               setDone(true);
             }}
-            className="min-h-9 flex-1 rounded-chip border border-gold bg-gold/10 text-[12px] text-gold"
+            className="min-h-9 flex-1 rounded-chip border border-gold bg-gold/10 text-small text-gold"
           >
             確定
           </button>
@@ -660,8 +660,8 @@ function RestButton({
       onClick={() => setAsking(true)}
       className="flex min-h-14 flex-1 flex-col items-center justify-center rounded-card border border-border"
     >
-      <span className="text-[14px] text-text-primary">{title}</span>
-      <span className="text-[12px] text-text-secondary">{subtitle}</span>
+      <span className="text-body text-text-primary">{title}</span>
+      <span className="text-small text-text-secondary">{subtitle}</span>
     </button>
   );
 }
@@ -700,7 +700,7 @@ function HpColumn({
         <svg viewBox="0 0 24 24" className="size-3 fill-danger" aria-hidden>
           <path d="M12 21c-.3 0-.6-.1-.8-.3C6.2 16.3 3 13.4 3 9.5 3 6.4 5.4 4 8.5 4c1.7 0 3.2.8 4.1 2 .9-1.2 2.4-2 4.1-2C19.6 4 22 6.4 22 9.5c0 3.9-3.2 6.8-8.2 11.2-.2.2-.5.3-.8.3z" />
         </svg>
-        <span className="font-label text-[11px] font-bold text-gold">HP</span>
+        <span className="font-label text-tiny font-bold text-gold">HP</span>
       </span>
 
       <span className="mt-0.5 flex items-baseline gap-1">
@@ -711,7 +711,7 @@ function HpColumn({
         >
           {c.currentHp}
         </span>
-        <span className="font-display text-[14px] tabular-nums text-text-secondary">
+        <span className="font-display text-body tabular-nums text-text-secondary">
           /{c.maxHp}
         </span>
         {/* 臨時 HP。**0 的時候也要在**——先前只在 >0 時顯示一枚 chip，等於
@@ -731,13 +731,13 @@ function HpColumn({
         >
           {c.tempHp > 0 ? (
             <>
-              <span className="font-display text-[13px] font-bold text-temp-hp">
+              <span className="font-display text-ui font-bold text-temp-hp">
                 +{c.tempHp}
               </span>
-              <span className="ml-0.5 text-[10px] text-temp-hp">臨時</span>
+              <span className="ml-0.5 text-eyebrow text-temp-hp">臨時</span>
             </>
           ) : (
-            <span className="text-[11px]">＋臨時</span>
+            <span className="text-tiny">＋臨時</span>
           )}
         </button>
       </span>
@@ -783,7 +783,7 @@ function HpButton({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="flex h-8 w-11 items-center justify-center rounded-md bg-border text-[16px] text-text-primary hover:brightness-125"
+      className="flex h-8 w-11 items-center justify-center rounded-md bg-border text-body text-text-primary hover:brightness-125"
     >
       {children}
     </button>
@@ -816,7 +816,7 @@ function MovementStat({
       >
         <path d={d} />
       </svg>
-      <span className="text-[11px] text-text-light">{label}</span>
+      <span className="text-tiny text-text-light">{label}</span>
       <span
         className={`font-display text-[18px] font-bold tabular-nums ${
           dim ? 'text-text-secondary' : 'text-text-primary'
@@ -824,8 +824,8 @@ function MovementStat({
       >
         {feet}
       </span>
-      <span className="font-label text-[10px] font-semibold text-text-secondary">FT</span>
-      <span className="text-[11px] text-section-label">
+      <span className="font-label text-eyebrow font-semibold text-text-secondary">FT</span>
+      <span className="text-tiny text-section-label">
         · {Math.floor(feet / 5)} 格
       </span>
     </span>
@@ -849,7 +849,7 @@ function StepBtn({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="relative flex size-9 items-center justify-center rounded-full border border-border text-[16px] text-text-primary before:absolute before:-inset-1 before:content-[''] hover:border-gold hover:text-gold active:border-gold"
+      className="relative flex size-9 items-center justify-center rounded-full border border-border text-body text-text-primary before:absolute before:-inset-1 before:content-[''] hover:border-gold hover:text-gold active:border-gold"
     >
       {children}
     </button>
@@ -907,7 +907,7 @@ function Pips({
  * 才會播報。用 polite：同步狀態不該打斷正在讀的內容。
  */
 function SyncBadge({ dirty, error }: { dirty: boolean; error: string | null }) {
-  const cls = 'rounded-chip border px-2 py-0.5 text-[12px]';
+  const cls = 'rounded-chip border px-2 py-0.5 text-small';
   const [tone, text] = error
     ? ['border-danger text-danger', '同步失敗']
     : dirty

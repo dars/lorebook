@@ -41,7 +41,7 @@ export function SubclassBody({ s }: { s: CustomSubclass }) {
       ) : (
         levels.map((level) => (
           <ParchmentCard key={level} className="p-4">
-            <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
+            <div className="font-label text-eyebrow tracking-[1.5px] text-section-label">
               LEVEL {level} · {level} 級
             </div>
             <div className="mt-2 space-y-3">
@@ -49,7 +49,7 @@ export function SubclassBody({ s }: { s: CustomSubclass }) {
                 .filter((f) => f.level === level)
                 .map((f, i) => (
                   <div key={i}>
-                    <p className="text-[15px] font-semibold text-text-primary">
+                    <p className="text-body font-semibold text-text-primary">
                       {f.name}
                     </p>
                     {f.description && (

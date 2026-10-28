@@ -29,10 +29,10 @@ export function BackgroundBody({ b }: { b: CustomBackground }) {
       </ParchmentCard>
 
       <ParchmentCard className="p-4">
-        <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
+        <div className="font-label text-eyebrow tracking-[1.5px] text-section-label">
           ORIGIN FEAT · 起源專長
         </div>
-        <p className="mt-1 text-[15px] font-semibold text-text-primary">
+        <p className="mt-1 text-body font-semibold text-text-primary">
           {b.originFeat}
           {/* 專長本身是不是自創的，與「背景是自創的」是兩件事——以自訂背景
               選了 SRD 專長時，那個專長仍是 SRD 的。 */}

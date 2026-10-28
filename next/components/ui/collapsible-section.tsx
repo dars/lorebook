@@ -72,16 +72,16 @@ export function CollapsibleSection({
               <path d="M8.6 16.6 13.2 12 8.6 7.4 10 6l6 6-6 6z" />
             )}
           </svg>
-          <span className="font-label ml-1.5 text-[10px] font-bold tracking-[2px] text-gold">
+          <span className="font-label ml-1.5 text-eyebrow font-bold tracking-[2px] text-gold">
             {en}
           </span>
           {cn && (
-            <span className="ml-1.5 text-[14px] font-bold text-text-primary">
+            <span className="font-cjk ml-1.5 text-body font-bold text-text-primary">
               {cn}
             </span>
           )}
           {!expanded && summary && (
-            <span className="ml-2 truncate text-[12px] text-section-label/70">
+            <span className="ml-2 truncate text-small text-section-label">
               {summary}
             </span>
           )}

@@ -1,200 +1,69 @@
 'use client';
 
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
 import { EditorSheet, FieldLabel } from '@/components/ui/editor-sheet';
 import type { CatalogItem } from '@/lib/catalog/types';
-import { characterActions, useCharacterStore } from '@/lib/state/character-store';
+import type { Character } from '@/lib/domain/character';
+import { useCharacterStore } from '@/lib/state/character-store';
+import { applyStringSelection } from '@/lib/ui/selection';
 
-/**
- * 熟練編輯（語言與工具），對照 Flutter 端的 `showProficiencyEditor`。
- *
- * 語言候選為 App 內建常數（16 種，永遠可用）；工具候選來自內容庫並依
- * subcategory 分組——38 項平鋪會變成難以檢索的 chip 牆。
- *
- * 兩者都保留自由填寫：DM 可能發明戰役專屬的語言或工具，擋掉沒有好處。
- * 內容庫取不到時工具段顯示提示但**不阻擋語言段**，且自由填寫仍可用——
- * 離線時那是唯一的新增途徑。
- */
-const LANGUAGES = [
-  '通用語', '矮人語', '精靈語', '巨人語', '侏儒語', '地精語', '半身人語',
-  '獸人語', '深淵語', '天界語', '深潛語', '龍語', '煉獄語', '原初語',
-  '精類語', '地底通用語',
-];
+const LANGUAGES = ['通用語', '矮人語', '精靈語', '巨人語', '侏儒語', '地精語', '半身人語', '獸人語', '深淵語', '天界語', '深潛語', '龍語', '煉獄語', '原初語', '精類語', '地底通用語'];
 
-const ENTRY_MAX = 20;
+export function ProficiencyEditor({ open, onClose, tools }: { open: boolean; onClose: () => void; tools: CatalogItem[] }) {
+  const c = useCharacterStore(s => s.character);
+  return open && c ? <ProficiencyDraft key={c.id} initial={c} tools={tools} onClose={onClose} /> : null;
+}
 
-export function ProficiencyEditor({
-  open,
-  onClose,
-  tools,
-}: {
-  open: boolean;
-  onClose: () => void;
-  /** 內容庫的工具清單；空陣列＝離線。 */
-  tools: CatalogItem[];
-}) {
-  const c = useCharacterStore((s) => s.character);
-  const [customLang, setCustomLang] = useState('');
-  const [customTool, setCustomTool] = useState('');
-
-  if (!c) return null;
-
-  const grouped = new Map<string, CatalogItem[]>();
-  for (const t of tools) {
-    const list = grouped.get(t.subcategory) ?? [];
-    list.push(t);
-    grouped.set(t.subcategory, list);
-  }
-
-  return (
-    <EditorSheet open={open} title="熟練" onClose={onClose}>
-      <FieldLabel>語言</FieldLabel>
-      <Selected
-        items={c.languages}
-        onRemove={(x) => characterActions.removeLanguage(x)}
-      />
-      <Candidates
-        items={LANGUAGES.filter((l) => !c.languages.includes(l))}
-        onAdd={(x) => characterActions.addLanguage(x)}
-      />
-      <FreeText
-        value={customLang}
-        onChange={setCustomLang}
-        placeholder="清單沒有的語言，自行填寫"
-        onAdd={() => {
-          characterActions.addLanguage(customLang);
-          setCustomLang('');
-        }}
-      />
-
-      <div className="mt-6">
-        <FieldLabel>工具</FieldLabel>
-        <Selected
-          items={c.toolProficiencies}
-          onRemove={(x) => characterActions.removeToolProficiency(x)}
-        />
-        {grouped.size === 0 ? (
-          <p className="py-2 text-[12px] text-text-secondary">
-            工具清單離線不可用，可用下方欄位自行填寫。
-          </p>
-        ) : (
-          [...grouped.entries()].map(([sub, items]) => (
-            <div key={sub}>
-              <div className="mb-1 mt-1.5 text-[12px] text-gold-dim">{sub}</div>
-              <Candidates
-                items={items
-                  .map((i) => i.name)
-                  .filter((n) => !c.toolProficiencies.includes(n))}
-                onAdd={(x) => characterActions.addToolProficiency(x)}
-              />
-            </div>
-          ))
-        )}
-        <FreeText
-          value={customTool}
-          onChange={setCustomTool}
-          placeholder="清單沒有的工具，自行填寫"
-          onAdd={() => {
-            characterActions.addToolProficiency(customTool);
-            setCustomTool('');
-          }}
-        />
-      </div>
+function ProficiencyDraft({ initial, tools, onClose }: { initial: Character; tools: CatalogItem[]; onClose: () => void }) {
+  const [before] = useState(initial);
+  const [languages, setLanguages] = useState(before.languages);
+  const [proficiencies, setProficiencies] = useState(before.toolProficiencies);
+  const [discard, setDiscard] = useState(false);
+  const changed = (a: string[], b: string[]) => a.length !== b.length || a.some(s => !b.includes(s));
+  const dirty = changed(before.languages, languages) || changed(before.toolProficiencies, proficiencies);
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ''; };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [dirty]);
+  return <>
+    <EditorSheet open title="管理熟練" onClose={() => dirty ? setDiscard(true) : onClose()} saveLabel="儲存變更" saveEnabled={dirty}
+      footer={<p role="status" className="text-small text-text-secondary">已選 {languages.length} 種語言 · {proficiencies.length} 項工具</p>}
+      onSave={() => {
+        useCharacterStore.getState().update(c => c.id !== before.id ? c : { ...c,
+          languages: applyStringSelection(c.languages, before.languages, languages),
+          toolProficiencies: applyStringSelection(c.toolProficiencies, before.toolProficiencies, proficiencies),
+        });
+        onClose();
+      }}>
+      <p className="mb-4 text-ui text-text-secondary">原地勾選或取消，儲存後才套用到角色。</p>
+      <Choices title="語言" options={[...LANGUAGES, ...before.languages]} selected={languages} onChange={setLanguages} />
+      <div className="mt-6"><Choices title="工具" options={[...tools.map(t => t.name), ...before.toolProficiencies]} selected={proficiencies} onChange={setProficiencies} /></div>
+      {!tools.length && <p className="text-small text-text-secondary">工具目錄暫無資料，仍可管理既有熟練或自行填寫。</p>}
     </EditorSheet>
-  );
+    <EditorSheet open={discard} title="捨棄尚未儲存的熟練變更？" onClose={() => setDiscard(false)} closeLabel="繼續編輯" onSave={onClose} saveLabel="捨棄變更" saveTone="danger"><p>角色目前的熟練不會改變。</p></EditorSheet>
+  </>;
 }
 
-function Selected({
-  items,
-  onRemove,
-}: {
-  items: string[];
-  onRemove: (x: string) => void;
-}) {
-  if (items.length === 0) return null;
-  return (
-    <div className="mb-2 flex flex-wrap gap-1.5">
-      {items.map((x) => (
-        <span
-          key={x}
-          className="flex items-center rounded-chip border border-gold bg-gold/10 pl-2.5 text-[12px] text-gold"
-        >
-          {x}
-          <button
-            type="button"
-            onClick={() => onRemove(x)}
-            aria-label={`移除 ${x}`}
-            className="flex size-9 items-center justify-center"
-          >
-            ×
-          </button>
-        </span>
-      ))}
+function Choices({ title, options, selected, onChange }: { title: string; options: string[]; selected: string[]; onChange: (items: string[]) => void }) {
+  const [custom, setCustom] = useState<string[]>([]);
+  const [value, setValue] = useState('');
+  const all = [...new Set([...options, ...custom])];
+  return <section aria-label={title}>
+    <FieldLabel>{title}</FieldLabel>
+    <div className="grid gap-2 medium:grid-cols-2">{all.map(item => <label key={item} className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-card border px-3 py-2 text-ui ${selected.includes(item) ? 'border-gold bg-gold/10 text-gold' : 'border-border-2 text-text-primary'}`}>
+      <input type="checkbox" className="size-4 shrink-0 accent-gold" checked={selected.includes(item)} onChange={() => onChange(selected.includes(item) ? selected.filter(s => s !== item) : [...selected, item])} />
+      <span className="break-words">{item}</span>
+    </label>)}</div>
+    <div className="mt-3 flex gap-2">
+      <input aria-label={`自訂${title}`} maxLength={20} value={value} onChange={e => setValue(e.target.value)} placeholder={`自行填寫${title}…`} className="min-h-11 min-w-0 flex-1 rounded-card border border-border bg-surface-0 px-3 text-body" />
+      <button type="button" disabled={!value.trim()} className="min-h-11 px-3 text-ui text-gold disabled:opacity-40" onClick={() => {
+        const item = value.trim();
+        if (!all.includes(item)) setCustom([...custom, item]);
+        if (!selected.includes(item)) onChange([...selected, item]);
+        setValue('');
+      }}>加入</button>
     </div>
-  );
-}
-
-function Candidates({
-  items,
-  onAdd,
-}: {
-  items: string[];
-  onAdd: (x: string) => void;
-}) {
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {items.map((x) => (
-        <button
-          key={x}
-          type="button"
-          onClick={() => onAdd(x)}
-          className="min-h-9 rounded-chip border border-border-2 bg-surface-2 px-2.5 text-[12px] text-text-secondary"
-        >
-          {x}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function FreeText({
-  value,
-  onChange,
-  placeholder,
-  onAdd,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
-  onAdd: () => void;
-}) {
-  return (
-    <div className="mt-2 flex gap-2">
-      <input
-        aria-label={placeholder}
-        autoComplete="off"
-        spellCheck={false}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            onAdd();
-          }
-        }}
-        maxLength={ENTRY_MAX}
-        placeholder={placeholder}
-        className="min-h-11 flex-1 rounded-chip border border-border bg-surface-2 px-3 text-[13px] text-text-primary"
-      />
-      <button
-        type="button"
-        onClick={onAdd}
-        aria-label="加入"
-        className="min-h-11 min-w-11 rounded-chip border border-border text-gold"
-      >
-        ＋
-      </button>
-    </div>
-  );
+  </section>;
 }

@@ -28,7 +28,7 @@ export function OfflineBanner() {
       aria-live="polite"
       className="border-y border-gold/40 bg-gold/10 px-5 py-2"
     >
-      <p className="text-[12px] leading-relaxed text-text-primary">
+      <p className="text-small leading-relaxed text-text-primary">
         <span className="font-semibold">目前離線</span>
         {cachedAt && (
           <span className="text-text-secondary">
@@ -37,7 +37,7 @@ export function OfflineBanner() {
         )}
       </p>
       {dirty && (
-        <p className="mt-0.5 text-[12px] leading-relaxed text-danger">
+        <p className="mt-0.5 text-small leading-relaxed text-danger">
           這次的變更<strong>尚未存下</strong>，重新整理會遺失。恢復連線後會自動同步。
         </p>
       )}

@@ -29,11 +29,11 @@ export function SectionTitle({
 }) {
   return (
     <div className={`flex items-center ${first ? 'pt-0' : 'pt-3'} pb-2`}>
-      <span className="font-label text-[10px] font-bold tracking-[2px] text-section-label">
+      <span className="font-label text-eyebrow font-bold tracking-[2px] text-section-label">
         {en}
       </span>
       {cn && (
-        <span className="ml-1.5 text-[14px] font-bold text-text-primary">
+        <span className="font-cjk ml-1.5 text-body font-bold text-text-primary">
           {cn}
         </span>
       )}
@@ -113,15 +113,15 @@ export function InfoField({
 }) {
   return (
     <div>
-      <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
+      <div className="font-label text-eyebrow tracking-[1.5px] text-section-label">
         {label}
       </div>
       <div className="mt-1">
-        <span className="text-[15px] font-semibold text-text-primary">
+        <span className="text-body font-semibold text-text-primary">
           {value}
         </span>
         {valueEn && (
-          <span className="font-label ml-1.5 text-[11px] text-text-primary/70">
+          <span className="font-label ml-1.5 text-tiny text-text-primary/70">
             {valueEn}
           </span>
         )}

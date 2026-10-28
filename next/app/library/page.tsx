@@ -63,14 +63,14 @@ export default async function LibraryPage() {
             <path d="m25 26 5 5-5 5-5-5zM34 48v5l-4-3-4 3v-5" />
           </svg>
           <div>
-            <p className="font-label text-[10px] tracking-[3px] text-section-label">PERSONAL ARCHIVE</p>
+            <p className="font-label text-eyebrow tracking-[3px] text-section-label">PERSONAL ARCHIVE</p>
             <h1 className="mt-1 font-display text-[30px] font-bold text-gold medium:text-[36px]">收藏紀錄</h1>
-            <p className="mt-2 max-w-[580px] text-[13px] leading-6 text-text-secondary">你的法術、血脈與故事。自創與收藏的內容，都在這本典藏冊裡。</p>
+            <p className="mt-2 max-w-[580px] text-ui leading-6 text-text-secondary">你的法術、血脈與故事。自創與收藏的內容，都在這本典藏冊裡。</p>
           </div>
         </div>
       </header>
       {error ? (
-        <div role="alert" className="rounded-card border border-danger/50 bg-surface-1 p-6 text-[14px] leading-7 text-text-primary">
+        <div role="alert" className="rounded-card border border-danger/50 bg-surface-1 p-6 text-body leading-7 text-text-primary">
           收藏暫時無法載入。請重新整理頁面再試；這不代表你的收藏已被刪除。
         </div>
       ) : (

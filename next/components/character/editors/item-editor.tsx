@@ -93,7 +93,7 @@ export function ItemEditor({
         value={item.name}
         onChange={(e) => set('name', e.target.value)}
         maxLength={40}
-        className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+        className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
       />
 
       <div className="mt-3">
@@ -107,7 +107,7 @@ export function ItemEditor({
           onChange={(e) => set('nameEn', e.target.value)}
           placeholder="Item name（可留空）"
           maxLength={40}
-          className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+          className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
         />
       </div>
 
@@ -119,7 +119,7 @@ export function ItemEditor({
               key={t.v}
               type="button"
               onClick={() => set('itemType', t.v)}
-              className={`min-h-11 rounded-chip border text-[12px] ${
+              className={`min-h-11 rounded-chip border text-small ${
                 item.itemType === t.v
                   ? 'border-gold bg-gold/10 text-gold'
                   : 'border-border-2 text-text-secondary'
@@ -137,7 +137,7 @@ export function ItemEditor({
           <Step label="數量減 1" onClick={() => set('quantity', Math.max(1, item.quantity - 1))}>
             −
           </Step>
-          <span className="font-display w-6 text-center text-[16px] font-bold text-gold">
+          <span className="font-display w-6 text-center text-body font-bold text-gold">
             {item.quantity}
           </span>
           <Step label="數量加 1" onClick={() => set('quantity', item.quantity + 1)}>
@@ -157,17 +157,17 @@ export function ItemEditor({
             value={item.damage}
             onChange={(e) => set('damage', e.target.value)}
             placeholder="傷害骰（選填，如 1d8）"
-            className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+            className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
           />
           <div className="mt-2">
-            <span className="mb-1 block text-[12px] text-text-secondary">傷害類型</span>
+            <span className="mb-1 block text-small text-text-secondary">傷害類型</span>
             <div className="flex flex-wrap gap-1.5">
               {DAMAGE_TYPES.map(([code, label]) => (
                 <button
                   key={code}
                   type="button"
                   onClick={() => set('damageType', item.damageType === code ? '' : code)}
-                  className={`min-h-9 rounded-chip border px-2.5 text-[12px] ${
+                  className={`min-h-9 rounded-chip border px-2.5 text-small ${
                     item.damageType === code
                       ? 'border-gold bg-gold/10 text-gold'
                       : 'border-border-2 text-text-secondary'
@@ -185,7 +185,7 @@ export function ItemEditor({
               onChange={(e) => set('finesse', e.target.checked)}
               className="mt-1 size-4 accent-[#c9a84c]"
             />
-            <span className="text-[12px] leading-relaxed text-text-light">
+            <span className="text-small leading-relaxed text-text-light">
               靈巧（finesse）：命中/傷害取力量或敏捷較高者
             </span>
           </label>
@@ -201,7 +201,7 @@ export function ItemEditor({
                 key={a.v}
                 type="button"
                 onClick={() => set('armorCategory', a.v)}
-                className={`min-h-11 rounded-chip border text-[12px] ${
+                className={`min-h-11 rounded-chip border text-small ${
                   item.armorCategory === a.v
                     ? 'border-gold bg-gold/10 text-gold'
                     : 'border-border-2 text-text-secondary'
@@ -224,9 +224,9 @@ export function ItemEditor({
                 ? '加值（盾牌通常 2）'
                 : 'AC 基值（如輕甲 11、重甲 16）'
             }
-            className="mt-2 min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+            className="mt-2 min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
           />
-          <p className="mt-1 text-[12px] text-text-secondary">缺值時不參與 AC 推導。</p>
+          <p className="mt-1 text-small text-text-secondary">缺值時不參與 AC 推導。</p>
         </div>
       )}
 
@@ -239,7 +239,7 @@ export function ItemEditor({
           onChange={(e) => set('description', e.target.value)}
           rows={3}
           maxLength={300}
-          className="w-full rounded-card border border-border bg-surface-2 p-2 text-[13px] text-text-primary"
+          className="w-full rounded-card border border-border bg-surface-2 p-2 text-ui text-text-primary"
         />
       </div>
 
@@ -250,16 +250,16 @@ export function ItemEditor({
           onChange={(e) => set('quest', e.target.checked)}
           className="mt-1 size-4 accent-[#c9a84c]"
         />
-        <span className="text-[12px] leading-relaxed text-text-light">
+        <span className="text-small leading-relaxed text-text-light">
           任務物品
-          <span className="block text-[12px] text-text-secondary">
+          <span className="block text-small text-text-secondary">
             刪除需確認、用罄保留、不可販售
           </span>
         </span>
       </label>
 
       {problem && (
-        <p role="alert" className="mt-3 text-[12px] text-danger">
+        <p role="alert" className="mt-3 text-small text-danger">
           {problem}
         </p>
       )}
@@ -271,7 +271,7 @@ export function ItemEditor({
         <div className="mt-6 border-t border-border/40 pt-4">
           {confirmingDelete ? (
             <div className="rounded-card border border-danger p-3">
-              <p className="text-[12px] leading-relaxed text-text-light">
+              <p className="text-small leading-relaxed text-text-light">
                 {item.quest
                   ? `「${item.name}」是任務物品，可能還有劇情用途。`
                   : `「${item.name}」將自物品欄移除。`}
@@ -281,7 +281,7 @@ export function ItemEditor({
                 <button
                   type="button"
                   onClick={() => setConfirmingDelete(false)}
-                  className="min-h-11 flex-1 rounded-chip border border-border text-[13px] text-text-secondary"
+                  className="min-h-11 flex-1 rounded-chip border border-border text-ui text-text-secondary"
                 >
                   取消
                 </button>
@@ -291,7 +291,7 @@ export function ItemEditor({
                     onDelete();
                     setConfirmingDelete(false);
                   }}
-                  className="min-h-11 flex-1 rounded-chip border border-danger bg-danger/10 text-[13px] font-bold text-danger"
+                  className="min-h-11 flex-1 rounded-chip border border-danger bg-danger/10 text-ui font-bold text-danger"
                 >
                   確定刪除
                 </button>
@@ -301,7 +301,7 @@ export function ItemEditor({
             <button
               type="button"
               onClick={() => setConfirmingDelete(true)}
-              className="min-h-11 w-full rounded-chip border border-border-2 text-[13px] text-danger hover:border-danger"
+              className="min-h-11 w-full rounded-chip border border-border-2 text-ui text-danger hover:border-danger"
             >
               刪除這件物品
             </button>
@@ -326,7 +326,7 @@ function Step({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="flex size-8 items-center justify-center rounded-full border border-border text-[13px] text-text-primary"
+      className="flex size-8 items-center justify-center rounded-full border border-border text-ui text-text-primary"
     >
       {children}
     </button>

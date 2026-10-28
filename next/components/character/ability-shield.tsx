@@ -73,7 +73,7 @@ export function AbilityShield({
         >
           {sign}
         </span>
-        <span className="font-label mt-[calc(var(--u)*1.7)] text-[calc(var(--u)*7.5)] leading-tight tracking-[calc(var(--u)*0.83)] text-text-primary/50">
+        <span className="font-label mt-[calc(var(--u)*1.7)] text-[calc(var(--u)*7.5)] leading-tight tracking-[calc(var(--u)*0.83)] text-text-secondary">
           {nameEn}
         </span>
         {/* 原始值以圓形徽章置於盾牌下緣。 */}

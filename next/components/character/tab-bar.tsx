@@ -47,7 +47,7 @@ export function CharacterTabBar({
             }`}
           >
             <span
-              className={`px-0.5 py-2 ${segment ? 'text-[13px]' : 'text-[15px]'} ${
+              className={`px-0.5 py-2 ${segment ? 'text-ui' : 'text-body'} ${
                 selected
                   ? 'font-bold text-gold'
                   : 'font-medium text-text-secondary hover:text-text-primary'

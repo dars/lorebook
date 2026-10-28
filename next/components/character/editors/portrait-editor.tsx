@@ -56,7 +56,7 @@ export function PortraitEditor({
 
   return (
     <EditorSheet open={open} title="角色圖" onClose={onClose}>
-      <p className="text-[12px] leading-relaxed text-text-secondary">
+      <p className="text-small leading-relaxed text-text-secondary">
         建議使用直式圖片（4:5）。上傳前會自動縮到 1024px 寬並轉為 JPEG——
         原圖動輒數 MB，那會讓每次開角色卡都拖著它。
       </p>
@@ -75,7 +75,7 @@ export function PortraitEditor({
       />
 
       {error && (
-        <p role="alert" className="mt-3 text-[13px] text-danger">
+        <p role="alert" className="mt-3 text-ui text-danger">
           {error}
         </p>
       )}
@@ -85,7 +85,7 @@ export function PortraitEditor({
           type="button"
           disabled={busy}
           onClick={() => input.current?.click()}
-          className="min-h-11 rounded-card border border-gold bg-gold/10 text-[13px] font-bold text-gold disabled:opacity-40"
+          className="min-h-11 rounded-card border border-gold bg-gold/10 text-ui font-bold text-gold disabled:opacity-40"
         >
           {busy ? '處理中…' : c.portraitUrl ? '更換圖片' : '選擇圖片'}
         </button>
@@ -94,7 +94,7 @@ export function PortraitEditor({
             type="button"
             disabled={busy}
             onClick={() => void remove()}
-            className="min-h-11 rounded-card border border-border text-[13px] text-text-secondary disabled:opacity-40"
+            className="min-h-11 rounded-card border border-border text-ui text-text-secondary disabled:opacity-40"
           >
             移除圖片
           </button>
@@ -102,11 +102,11 @@ export function PortraitEditor({
       </div>
 
       <div className="mt-5">
-        <div className="font-label mb-1.5 text-[10px] tracking-[1.5px] text-section-label">
+        <div className="font-label mb-1.5 text-eyebrow tracking-[1.5px] text-section-label">
           取景
         </div>
         <div className="flex items-center gap-3">
-          <span className="w-12 shrink-0 text-[12px] text-text-secondary">縮放</span>
+          <span className="w-12 shrink-0 text-small text-text-secondary">縮放</span>
           <input
             type="range"
             min={1}
@@ -121,7 +121,7 @@ export function PortraitEditor({
           />
         </div>
         <div className="mt-2 flex items-center gap-3">
-          <span className="w-12 shrink-0 text-[12px] text-text-secondary">水平</span>
+          <span className="w-12 shrink-0 text-small text-text-secondary">水平</span>
           <input
             type="range"
             min={0}
@@ -136,7 +136,7 @@ export function PortraitEditor({
           />
         </div>
         <div className="mt-2 flex items-center gap-3">
-          <span className="w-12 shrink-0 text-[12px] text-text-secondary">垂直</span>
+          <span className="w-12 shrink-0 text-small text-text-secondary">垂直</span>
           <input
             type="range"
             min={0}

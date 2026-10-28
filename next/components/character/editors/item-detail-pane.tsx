@@ -142,7 +142,7 @@ export function ItemDetailPane({
             type="button"
             onClick={onClose}
             aria-label="返回清單"
-            className="min-h-9 shrink-0 text-[13px] text-gold"
+            className="min-h-9 shrink-0 text-ui text-gold"
           >
             ‹ 返回
           </button>
@@ -151,7 +151,7 @@ export function ItemDetailPane({
           {item.name}
         </h3>
         {item.eng_name && (
-          <span className="font-label min-w-0 shrink truncate text-[13px] uppercase text-text-secondary">
+          <span className="font-label min-w-0 shrink truncate text-ui uppercase text-text-secondary">
             {item.eng_name}
           </span>
         )}
@@ -177,11 +177,11 @@ export function ItemDetailPane({
                 key={label}
                 className="w-32 rounded-card border border-border-2 bg-surface-1 px-2 py-3 text-center"
               >
-                <span className="font-label block text-[10px] tracking-[1.2px] text-section-label">
+                <span className="font-label block text-eyebrow tracking-[1.2px] text-section-label">
                   {label}
                 </span>
                 <span className="mt-1 block text-gold">{value}</span>
-                <span className="mt-1 block text-[10px] leading-snug text-text-secondary">
+                <span className="mt-1 block text-eyebrow leading-snug text-text-secondary">
                   {note || '—'}
                 </span>
               </div>
@@ -191,16 +191,16 @@ export function ItemDetailPane({
 
         {(rules.length > 0 || desc) && (
           <div className="mt-3 rounded-card border border-border-2 bg-surface-1 p-4">
-            <span className="font-label block text-[10px] tracking-[1.2px] text-section-label">
+            <span className="font-label block text-eyebrow tracking-[1.2px] text-section-label">
               規則 RULES
             </span>
             {rules.map((line) => (
-              <p key={line} className="mt-2 text-[13px] leading-relaxed text-text-light">
+              <p key={line} className="mt-2 text-ui leading-relaxed text-text-light">
                 {line}
               </p>
             ))}
             {desc && (
-              <p className="mt-2 whitespace-pre-wrap text-[13px] leading-relaxed text-text-light">
+              <p className="mt-2 whitespace-pre-wrap text-ui leading-relaxed text-text-light">
                 {desc}
               </p>
             )}
@@ -213,7 +213,7 @@ export function ItemDetailPane({
         <div className="rounded-card border border-border-2 bg-surface-1 p-4">
           <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
             <span className="flex items-center gap-1.5">
-              <span className="text-[13px] text-text-secondary">數量</span>
+              <span className="text-ui text-text-secondary">數量</span>
               <Round label="數量減 1" disabled={qty <= 1} onClick={() => setQty(qty - 1)}>
                 −
               </Round>
@@ -226,7 +226,7 @@ export function ItemDetailPane({
             </span>
 
             <span className="flex items-center gap-2">
-              <span className="text-[13px] text-text-secondary">成交單價</span>
+              <span className="text-ui text-text-secondary">成交單價</span>
               <button
                 type="button"
                 onClick={() => setEditingPrice((v) => !v)}
@@ -237,9 +237,9 @@ export function ItemDetailPane({
                 {unitCp > 0 ? (
                   <CoinAmount cp={unitCp} coinSize={15} />
                 ) : (
-                  <span className="text-[13px] text-text-secondary">未定價</span>
+                  <span className="text-ui text-text-secondary">未定價</span>
                 )}
-                <span className="text-[12px] text-text-secondary" aria-hidden>
+                <span className="text-small text-text-secondary" aria-hidden>
                   ✎
                 </span>
               </button>
@@ -259,7 +259,7 @@ export function ItemDetailPane({
           <div className="my-3 h-px bg-border-2" />
 
           <div className="flex items-center">
-            <span className="text-[13px] text-text-secondary">總計</span>
+            <span className="text-ui text-text-secondary">總計</span>
             <CoinAmount
               cp={unitCp * qty}
               coinSize={18}
@@ -272,14 +272,14 @@ export function ItemDetailPane({
             <button
               type="button"
               onClick={() => onAcquire(item, qty, unitCp)}
-              className="min-h-11 flex-1 rounded-chip border border-border text-[14px] text-text-primary"
+              className="min-h-11 flex-1 rounded-chip border border-border text-body text-text-primary"
             >
               直接取得
             </button>
             <button
               type="button"
               onClick={() => onPurchase(item, qty, unitCp)}
-              className="min-h-11 flex-1 rounded-chip bg-gold-solid text-[14px] font-bold text-[#1A1206]"
+              className="min-h-11 flex-1 rounded-chip bg-gold-solid text-body font-bold text-[#1A1206]"
             >
               購買
             </button>
@@ -318,7 +318,7 @@ function PriceEditor({ cp, onDone }: { cp: number; onDone: (cp: number) => void 
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
         placeholder="金額…"
-        className="min-h-9 w-24 rounded-lg border border-border bg-surface-1 px-2 text-[14px] text-text-primary"
+        className="min-h-9 w-24 rounded-lg border border-border bg-surface-1 px-2 text-body text-text-primary"
       />
       <span className="flex gap-1">
         {(['cp', 'sp', 'gp'] as const).map((u) => (
@@ -327,7 +327,7 @@ function PriceEditor({ cp, onDone }: { cp: number; onDone: (cp: number) => void 
             type="button"
             onClick={() => setUnit(u)}
             aria-pressed={unit === u}
-            className={`flex min-h-9 items-center gap-1 rounded-lg border px-2.5 text-[13px] ${
+            className={`flex min-h-9 items-center gap-1 rounded-lg border px-2.5 text-ui ${
               unit === u
                 ? 'border-gold text-gold'
                 : 'border-border text-text-secondary'
@@ -341,7 +341,7 @@ function PriceEditor({ cp, onDone }: { cp: number; onDone: (cp: number) => void 
       <button
         type="button"
         onClick={() => onDone(Math.max(0, (Number.parseInt(draft, 10) || 0) * per))}
-        className="ml-auto min-h-9 rounded-lg border border-gold px-3 text-[13px] text-gold"
+        className="ml-auto min-h-9 rounded-lg border border-gold px-3 text-ui text-gold"
       >
         完成
       </button>
@@ -352,7 +352,7 @@ function PriceEditor({ cp, onDone }: { cp: number; onDone: (cp: number) => void 
 function Badge({ children, gold = false }: { children: string; gold?: boolean }) {
   return (
     <span
-      className={`rounded px-2.5 py-1 text-[11px] ${
+      className={`rounded px-2.5 py-1 text-tiny ${
         gold ? 'border border-gold text-gold' : 'border border-border text-text-light'
       }`}
     >
@@ -382,7 +382,7 @@ function Round({
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
-      className="flex size-8 items-center justify-center rounded-full border border-border text-[13px] text-text-primary disabled:opacity-40"
+      className="flex size-8 items-center justify-center rounded-full border border-border text-ui text-text-primary disabled:opacity-40"
     >
       {children}
     </button>

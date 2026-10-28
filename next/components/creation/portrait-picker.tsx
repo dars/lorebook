@@ -45,7 +45,7 @@ export function PortraitPicker({
           alt={preview ? '角色圖預覽' : ''}
           className="size-full object-cover"
         />
-        <span className="absolute inset-x-0 bottom-0 bg-black/60 py-1.5 text-[11px] text-text-light">
+        <span className="absolute inset-x-0 bottom-0 bg-black/60 py-1.5 text-tiny text-text-light">
           {preview ? '換一張' : '尚未上傳角色圖'}
         </span>
       </button>
@@ -68,12 +68,12 @@ export function PortraitPicker({
         <button
           type="button"
           onClick={() => onPick(null)}
-          className="mt-1.5 min-h-9 text-[12px] text-text-secondary hover:text-danger"
+          className="mt-1.5 min-h-9 text-small text-text-secondary hover:text-danger"
         >
           移除
         </button>
       ) : (
-        <p className="mt-1.5 text-[12px] text-text-secondary">
+        <p className="mt-1.5 text-small text-text-secondary">
           選填，建立後也能再補。
         </p>
       )}

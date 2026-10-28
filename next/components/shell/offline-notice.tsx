@@ -22,7 +22,7 @@ export function OfflineNotice({
     >
       <div className="rounded-card border border-border bg-surface-1 p-5">
         <h1 className="font-display text-[20px] font-bold text-gold">目前連不上</h1>
-        <p className="mt-2 text-[13px] leading-relaxed text-text-light">
+        <p className="mt-2 text-ui leading-relaxed text-text-light">
           無法確認你的登入狀態，通常是網路不通。
           <span className="mt-1 block text-text-secondary">
             你<strong className="text-text-light">沒有</strong>
@@ -34,14 +34,14 @@ export function OfflineNotice({
           {action && (
             <AppLink
               href={action.href}
-              className="flex min-h-11 items-center justify-center rounded-card border border-gold bg-gold/10 text-[13px] font-bold text-gold"
+              className="flex min-h-11 items-center justify-center rounded-card border border-gold bg-gold/10 text-ui font-bold text-gold"
             >
               {action.label}
             </AppLink>
           )}
           <AppLink
             href="/demo"
-            className="flex min-h-11 items-center justify-center rounded-card border border-border text-[13px] text-text-secondary"
+            className="flex min-h-11 items-center justify-center rounded-card border border-border text-ui text-text-secondary"
           >
             先看看試玩角色
           </AppLink>

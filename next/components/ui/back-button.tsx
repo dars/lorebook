@@ -35,7 +35,7 @@ export function BackButton({
         if (window.history.length > 1) router.back();
         else router.push(fallback);
       }}
-      className={`flex min-h-11 items-center text-[12px] text-text-secondary hover:text-gold ${className}`}
+      className={`flex min-h-11 items-center text-small text-text-secondary hover:text-gold ${className}`}
     >
       ← {label}
     </button>

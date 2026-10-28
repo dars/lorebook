@@ -80,14 +80,14 @@ export function AbilitiesTab({ c }: { c: Character }) {
               >
                 <ProfCheck on={prof} />
                 <span
-                  className={`min-w-0 flex-1 truncate text-[13px] text-text-primary ${
+                  className={`min-w-0 flex-1 truncate text-ui text-text-primary ${
                     prof ? 'font-semibold' : ''
                   }`}
                 >
                   {cn}豁免
                 </span>
                 <span
-                  className={`font-display shrink-0 text-[15px] font-bold ${
+                  className={`font-display shrink-0 text-body font-bold ${
                     prof ? 'text-gold' : 'text-text-primary/60'
                   }`}
                 >
@@ -116,7 +116,7 @@ export function AbilitiesTab({ c }: { c: Character }) {
           return (
             <div key={en} className="flex items-stretch gap-3">
               <div className="w-14 shrink-0 pt-2 text-center">
-                <div className="text-[12px] text-text-primary/70">{cn}</div>
+                <div className="text-small text-text-primary/70">{cn}</div>
                 <div className="font-display text-[18px] font-bold leading-tight text-text-primary">
                   {sign(mod)}
                 </div>
@@ -132,17 +132,17 @@ export function AbilitiesTab({ c }: { c: Character }) {
                     <span className="flex items-center gap-1.5">
                       <ProfDot on={s.proficient} />
                       <span
-                        className={`text-[13px] ${
+                        className={`text-ui ${
                           s.proficient ? 'text-text-primary' : 'text-text-secondary'
                         }`}
                       >
                         {s.name}
                       </span>
-                      <span className="font-label text-[10px] text-text-primary/70">
+                      <span className="font-label text-eyebrow text-text-primary/70">
                         {s.nameEn}
                       </span>
                     </span>
-                    <span className="text-[15px] font-semibold text-gold">
+                    <span className="text-body font-semibold text-gold">
                       {sign(s.modifier)}
                     </span>
                   </div>

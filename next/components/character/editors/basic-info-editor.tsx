@@ -72,7 +72,7 @@ export function BasicInfoEditor({
         value={name}
         onChange={(e) => patch({ name: e.target.value })}
         maxLength={30}
-        className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+        className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
       />
 
       <FieldLabel>
@@ -84,7 +84,7 @@ export function BasicInfoEditor({
             key={cn}
             type="button"
             onClick={() => patch({ alignment: cn })}
-            className={`min-h-11 rounded-chip border text-[12px] ${
+            className={`min-h-11 rounded-chip border text-small ${
               alignment === cn
                 ? 'border-gold bg-gold/10 text-gold'
                 : 'border-border-2 text-text-secondary'
@@ -101,7 +101,7 @@ export function BasicInfoEditor({
           href="https://alignment-compass.vercel.app/"
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-1.5 inline-flex min-h-9 items-center text-[12px] text-gold"
+          className="mt-1.5 inline-flex min-h-9 items-center text-small text-gold"
         >
           <span className="mr-1" aria-hidden>↗</span>
           不確定選哪個？做個陣營羅盤測驗
@@ -118,11 +118,11 @@ export function BasicInfoEditor({
           onChange={(e) => patch({ deity: e.target.value })}
           maxLength={20}
           placeholder="無特定信仰可留空"
-          className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+          className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
         />
       </div>
 
-      <p className="mt-4 text-[12px] leading-relaxed text-text-secondary">
+      <p className="mt-4 text-small leading-relaxed text-text-secondary">
         物種、生物類型、體型與背景是建角時決定的規則資料，會影響已推導的數值，
         因此不開放修改。
       </p>

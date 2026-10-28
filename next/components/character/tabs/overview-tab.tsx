@@ -96,7 +96,7 @@ export function OverviewTab({
                 <span className="font-display mt-1 text-[22px] font-bold text-gold">
                   {s.value}
                 </span>
-                <span className="mt-0.5 text-[12px] text-text-primary/70">
+                <span className="mt-0.5 text-small text-text-primary/70">
                   {s.sub}
                 </span>
               </div>

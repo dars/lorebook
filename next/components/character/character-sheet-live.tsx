@@ -71,16 +71,16 @@ export function CharacterSheetLive({
       {persist && needsSubclassPick(c) && (
         <div className="mx-auto mt-3 w-full max-w-[700px] px-4">
           <div className="rounded-card border border-gold/55 bg-gold/10 px-4 py-3">
-            <p className="text-[13px] text-text-primary">
+            <p className="text-ui text-text-primary">
               這個角色還沒有子職。
             </p>
-            <p className="mt-1 text-[12px] leading-relaxed text-text-secondary">
+            <p className="mt-1 text-small leading-relaxed text-text-secondary">
               升級當時內容庫離線，子職那一步被跳過了。補選後會一併補上到
               {c.level} 級為止的子職特性。
             </p>
             <AppLink
               href="/character-level-up?mode=subclass"
-              className="mt-2 flex min-h-11 items-center justify-center rounded-chip border border-gold text-[13px] font-bold text-gold hover:bg-gold/10"
+              className="mt-2 flex min-h-11 items-center justify-center rounded-chip border border-gold text-ui font-bold text-gold hover:bg-gold/10"
             >
               補選子職
             </AppLink>

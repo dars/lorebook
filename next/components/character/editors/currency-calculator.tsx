@@ -126,8 +126,8 @@ export function CurrencyCalculator({
         tabIndex={-1}
         className="max-h-[95dvh] w-full max-w-[520px] overflow-y-auto overscroll-contain rounded-t-card border border-border bg-surface-1 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-1 focus:outline-none"
       >
-        <h2 className="pt-2 text-[16px] font-bold text-text-primary">資產計算機</h2>
-        <p className="mt-0.5 text-[12px] leading-relaxed text-text-secondary">
+        <h2 className="pt-2 text-body font-bold text-text-primary">資產計算機</h2>
+        <p className="mt-0.5 text-small leading-relaxed text-text-secondary">
           按 +/- 選符號、輸入金額，點幣別完成一筆後可直接接著輸入下一筆；
           幣別需由大到小依序點選。
         </p>
@@ -226,14 +226,14 @@ export function CurrencyCalculator({
           <button
             type="button"
             onClick={close}
-            className="min-h-11 flex-1 rounded-chip border border-border text-[14px] text-text-secondary"
+            className="min-h-11 flex-1 rounded-chip border border-border text-body text-text-secondary"
           >
             取消
           </button>
           <button
             type="button"
             onClick={confirm}
-            className="min-h-11 flex-1 rounded-chip bg-gold-solid text-[14px] font-bold text-[#1A1206]"
+            className="min-h-11 flex-1 rounded-chip bg-gold-solid text-body font-bold text-[#1A1206]"
           >
             {terms.length === 0 ? '關閉' : '確定套用'}
           </button>

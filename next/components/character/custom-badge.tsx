@@ -9,7 +9,7 @@
 export function CustomBadge({ className = '' }: { className?: string }) {
   return (
     <span
-      className={`inline-flex items-center rounded-chip border border-gold/60 px-1.5 py-px align-middle text-[12px] leading-none text-gold ${className}`}
+      className={`inline-flex items-center rounded-chip border border-gold/60 px-1.5 py-px align-middle text-small leading-none text-gold ${className}`}
     >
       自訂
     </span>

@@ -70,7 +70,7 @@ export function PortraitCard({
 
         <div className="absolute inset-0 flex flex-col justify-end p-5">
           {(c.className || c.subclass) && (
-            <p className="text-[13px] tracking-[2px] text-gold">
+            <p className="text-ui tracking-[2px] text-gold">
               {[
                 c.className,
                 c.classNameEn.toUpperCase(),
@@ -85,12 +85,12 @@ export function PortraitCard({
             {c.name}
           </h1>
           {c.nameEn && (
-            <p className="font-display text-[16px] tracking-[8px] text-white/70">
+            <p className="font-display text-body tracking-[8px] text-white/70">
               {c.nameEn.toUpperCase()}
             </p>
           )}
           {(c.background || c.alignment || c.deity) && (
-            <p className="mt-2.5 text-[14px] text-white/85">
+            <p className="mt-2.5 text-body text-white/85">
               {c.background}
               {c.backgroundIsCustom && <CustomBadge className="ml-1.5" />}
               {/* 徽章是元素，不能再用 join(' · ')——分隔符改由各項自帶。 */}

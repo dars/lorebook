@@ -127,7 +127,7 @@ export function AbilityStep({
               key={m}
               type="button"
               onClick={() => onMethod(m)}
-              className={`min-h-11 flex-1 rounded-lg border text-[13px] ${
+              className={`min-h-11 flex-1 rounded-lg border text-ui ${
                 method === m
                   ? 'border-gold bg-gold-solid font-bold text-[#1A1206]'
                   : 'border-border-2 bg-surface-1 text-text-secondary'
@@ -145,11 +145,11 @@ export function AbilityStep({
             aria-expanded={detail}
             className="flex w-full items-center gap-2 px-3 py-3 text-left"
           >
-            <span className="flex-1 text-[12px] text-text-light">
+            <span className="flex-1 text-small text-text-light">
               {EXPLAIN[method].summary}
             </span>
-            <span className="text-[12px] text-gold">怎麼用</span>
-            <span aria-hidden className="text-[12px] text-gold">
+            <span className="text-small text-gold">怎麼用</span>
+            <span aria-hidden className="text-small text-gold">
               {detail ? '▲' : '▼'}
             </span>
           </button>
@@ -162,15 +162,15 @@ export function AbilityStep({
 
               <ol className="mt-3 flex flex-col gap-1.5">
                 {EXPLAIN[method].steps.map((s, i) => (
-                  <li key={i} className="flex gap-2 text-[12px] text-text-light">
-                    <span className="flex size-5 shrink-0 items-center justify-center rounded-full border border-gold text-[12px] text-gold">
+                  <li key={i} className="flex gap-2 text-small text-text-light">
+                    <span className="flex size-5 shrink-0 items-center justify-center rounded-full border border-gold text-small text-gold">
                       {i + 1}
                     </span>
                     <span className="leading-relaxed">{s}</span>
                   </li>
                 ))}
               </ol>
-              <p className="mt-3 rounded-md bg-gold/8 px-2.5 py-2 text-[12px] leading-relaxed text-text-light">
+              <p className="mt-3 rounded-md bg-gold/8 px-2.5 py-2 text-small leading-relaxed text-text-light">
                 {EXPLAIN[method].fitFor}
               </p>
             </div>
@@ -181,7 +181,7 @@ export function AbilityStep({
       <div>
         {method === 'array' && (
           <div className="flex flex-wrap items-center gap-2">
-            <span className="flex-1 text-[12px] text-text-secondary">
+            <span className="flex-1 text-small text-text-secondary">
               剩餘可分配 {pool.length}／6
             </span>
             <PillButton onClick={() => onBase(recommendArray(cls))}>
@@ -199,7 +199,7 @@ export function AbilityStep({
 
         {method === 'buy' && (
           <div className="flex items-center gap-2">
-            <span className="shrink-0 text-[12px] text-text-secondary">剩餘點數</span>
+            <span className="shrink-0 text-small text-text-secondary">剩餘點數</span>
             <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-2">
               <span
                 className={`block h-full ${remaining < 0 ? 'bg-danger' : 'bg-gold-solid'}`}
@@ -209,7 +209,7 @@ export function AbilityStep({
               />
             </span>
             <span
-              className={`shrink-0 text-[13px] font-bold ${remaining < 0 ? 'text-danger' : 'text-gold'}`}
+              className={`shrink-0 text-ui font-bold ${remaining < 0 ? 'text-danger' : 'text-gold'}`}
             >
               {remaining} / {POINT_BUY_BUDGET}
             </span>
@@ -234,13 +234,13 @@ export function AbilityStep({
                 key={code}
                 className="flex items-center gap-2 rounded-card border border-border bg-surface-1 px-3 py-2"
               >
-                <span className="w-12 shrink-0 text-[14px] font-semibold text-text-primary">
+                <span className="w-12 shrink-0 text-body font-semibold text-text-primary">
                   {ABILITY_LABEL[code]}
                 </span>
 
                 <span className="ml-auto flex items-center gap-2">
                   {add > 0 && (
-                    <span className="text-[12px] font-bold text-gold-dim">＋{add}</span>
+                    <span className="text-small font-bold text-gold-dim">＋{add}</span>
                   )}
 
                   {method === 'array' && (
@@ -250,7 +250,7 @@ export function AbilityStep({
                       onChange={(e) =>
                         setOne(code, e.target.value === '' ? null : Number(e.target.value))
                       }
-                      className="min-h-11 w-[104px] rounded-chip border border-border bg-surface-2 px-2 text-[14px] text-text-primary"
+                      className="min-h-11 w-[104px] rounded-chip border border-border bg-surface-2 px-2 text-body text-text-primary"
                     >
                       <option value="">—</option>
                       {STANDARD_ARRAY.map((v) => {
@@ -277,7 +277,7 @@ export function AbilityStep({
                       >
                         −
                       </StepButton>
-                      <span className="w-7 text-center text-[15px] font-bold text-text-primary">
+                      <span className="w-7 text-center text-body font-bold text-text-primary">
                         {b ?? 8}
                       </span>
                       <StepButton
@@ -305,14 +305,14 @@ export function AbilityStep({
                       onChange={(e) =>
                         setOne(code, e.target.value === '' ? null : Number(e.target.value))
                       }
-                      className="min-h-11 w-16 rounded-chip border border-border bg-surface-2 px-2 text-center text-[14px] text-text-primary"
+                      className="min-h-11 w-16 rounded-chip border border-border bg-surface-2 px-2 text-center text-body text-text-primary"
                     />
                   )}
 
-                  <span aria-hidden className="text-[12px] text-section-label">
+                  <span aria-hidden className="text-small text-section-label">
                     →
                   </span>
-                  <span className="w-16 text-right text-[15px] font-bold text-gold">
+                  <span className="w-16 text-right text-body font-bold text-gold">
                     {final === null
                       ? '—'
                       : `${final} (${mod! >= 0 ? '+' : ''}${mod})`}
@@ -339,7 +339,7 @@ function PillButton({
     <button
       type="button"
       onClick={onClick}
-      className="min-h-9 shrink-0 rounded-chip border border-gold px-3 text-[12px] text-gold hover:bg-gold/10"
+      className="min-h-9 shrink-0 rounded-chip border border-gold px-3 text-small text-gold hover:bg-gold/10"
     >
       {children}
     </button>
@@ -380,7 +380,7 @@ function ArrayVisual({ pool }: { pool: number[] }) {
           return (
             <span
               key={v}
-              className={`flex h-8 flex-1 items-center justify-center rounded-md border text-[15px] font-bold ${
+              className={`flex h-8 flex-1 items-center justify-center rounded-md border text-body font-bold ${
                 free
                   ? 'border-gold bg-gold/12 text-gold'
                   : 'border-border-2 bg-surface-2 text-text-secondary'
@@ -407,7 +407,7 @@ function Legend({
   children: React.ReactNode;
 }) {
   return (
-    <span className="flex items-center gap-1.5 text-[10px] text-text-secondary">
+    <span className="flex items-center gap-1.5 text-eyebrow text-text-secondary">
       <span className={`size-2.5 rounded-[2px] border ${className}`} />
       {children}
     </span>
@@ -432,14 +432,14 @@ function PointCostTable() {
             <tr className="bg-surface-2">
               <th
                 scope="row"
-                className="w-14 px-2 py-1.5 text-left text-[10px] font-normal text-section-label"
+                className="w-14 px-2 py-1.5 text-left text-eyebrow font-normal text-section-label"
               >
                 分數
               </th>
               {scores.map((s) => (
                 <td
                   key={s}
-                  className={`py-1.5 text-[12px] font-bold ${
+                  className={`py-1.5 text-small font-bold ${
                     pricey(s) ? 'bg-gold/8 text-gold' : 'text-text-light'
                   }`}
                 >
@@ -450,14 +450,14 @@ function PointCostTable() {
             <tr className="border-t border-border-2">
               <th
                 scope="row"
-                className="px-2 py-1.5 text-left text-[10px] font-normal text-section-label"
+                className="px-2 py-1.5 text-left text-eyebrow font-normal text-section-label"
               >
                 累計花費
               </th>
               {scores.map((s) => (
                 <td
                   key={s}
-                  className={`py-1.5 text-[12px] font-bold ${
+                  className={`py-1.5 text-small font-bold ${
                     pricey(s) ? 'bg-gold/8 text-gold' : 'text-text-secondary'
                   }`}
                 >
@@ -468,7 +468,7 @@ function PointCostTable() {
           </tbody>
         </table>
       </div>
-      <p className="mt-1.5 text-[10px] leading-relaxed text-text-secondary">
+      <p className="mt-1.5 text-eyebrow leading-relaxed text-text-secondary">
         金色兩格＝變貴的地方：14 與 15 每加 1 分要 2 點，其餘每分 1 點。
       </p>
     </div>
@@ -479,14 +479,14 @@ function PointCostTable() {
 function RollDemo() {
   return (
     <div className="rounded-md bg-surface-2 p-3">
-      <div className="text-[10px] text-section-label">一次的樣子</div>
+      <div className="text-eyebrow text-section-label">一次的樣子</div>
       <div className="mt-1.5 flex items-center gap-1.5">
         {[6, 4, 3, 2].map((v) => {
           const dropped = v === 2;
           return (
             <span
               key={v}
-              className={`flex size-8 items-center justify-center rounded-[7px] border text-[15px] font-bold ${
+              className={`flex size-8 items-center justify-center rounded-[7px] border text-body font-bold ${
                 dropped
                   ? 'border-border-2 bg-surface-2 text-text-secondary line-through'
                   : 'border-gold bg-gold/12 text-gold'
@@ -496,14 +496,14 @@ function RollDemo() {
             </span>
           );
         })}
-        <span aria-hidden className="text-[13px] text-text-secondary">
+        <span aria-hidden className="text-ui text-text-secondary">
           →
         </span>
         <span className="rounded-[7px] border border-gold bg-gold/20 px-3 py-1.5 text-[17px] font-bold text-gold">
           13
         </span>
       </div>
-      <p className="mt-1.5 text-[10px] leading-relaxed text-text-secondary">
+      <p className="mt-1.5 text-eyebrow leading-relaxed text-text-secondary">
         擲出 6、4、3、2 → 去掉最低的 2 → 6＋4＋3 ＝ 13。這樣做六次，得到六個值。
       </p>
     </div>

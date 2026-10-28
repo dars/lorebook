@@ -3,6 +3,7 @@ import { AppLink } from '@/components/ui/app-link';
 import { ThemeSwitch } from '@/components/shell/theme-switch';
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import type { Character } from '@/lib/domain/character';
+import { GuideLink } from '@/components/guide/guide-link';
 
 /** 試玩專用設定：保留正式版有意義的角色切換與主題，不出現帳號專屬功能。 */
 /*
@@ -19,13 +20,14 @@ export function DemoSettings({ character }: { character: Character }) {
   return (
     <div className="mx-auto flex w-full max-w-[700px] flex-col gap-4 px-4 py-2">
       <SectionTitle en="SETTINGS" cn="設定" first />
+      <GuideLink />
 
       <ParchmentCard className="p-4">
-        <h2 className="text-[14px] font-semibold text-text-primary">試玩角色</h2>
+        <h2 className="text-body font-semibold text-text-primary">試玩角色</h2>
         <p className="mt-3 text-small text-text-light">
           當前：{character.name}・{character.className} {character.level}
         </p>
-        <p className="mt-1 text-[12px] leading-relaxed text-text-secondary">
+        <p className="mt-1 text-small leading-relaxed text-text-secondary">
           切換角色會離開目前試玩，這次調整的 HP、法術位與筆記將會還原。
         </p>
         <AppLink
@@ -38,15 +40,15 @@ export function DemoSettings({ character }: { character: Character }) {
       </ParchmentCard>
 
       <ParchmentCard className="p-4">
-        <h2 className="text-[14px] font-semibold text-text-primary">外觀主題</h2>
+        <h2 className="text-body font-semibold text-text-primary">外觀主題</h2>
         <div className="mt-3">
           <ThemeSwitch />
         </div>
       </ParchmentCard>
 
       <ParchmentCard className="p-4">
-        <h2 className="text-[14px] font-semibold text-text-primary">保存自己的冒險</h2>
-        <p className="mt-2 text-[12px] leading-relaxed text-text-secondary">
+        <h2 className="text-body font-semibold text-text-primary">保存自己的冒險</h2>
+        <p className="mt-2 text-small leading-relaxed text-text-secondary">
           登入後可以建立角色，並保存角色狀態、裝備與旅程筆記。
         </p>
         <AppLink

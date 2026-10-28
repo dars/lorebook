@@ -48,7 +48,7 @@ export default async function MainLayout({
             有 home indicator 的機型再往上讓一段，否則最後一列會被壓住。 */}
         <main
           id="main-content"
-          className="flex-1 pb-[calc(6rem+env(safe-area-inset-bottom))]"
+          className="flex-1 pb-[calc(6rem+env(safe-area-inset-bottom))] medium:pb-[env(safe-area-inset-bottom)]"
         >
           {children}
         </main>

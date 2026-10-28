@@ -45,13 +45,13 @@ export function SpeciesBody({ s }: { s: CustomSpecies }) {
 
       {s.abilities.length > 0 && (
         <ParchmentCard className="p-4">
-          <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
+          <div className="font-label text-eyebrow tracking-[1.5px] text-section-label">
             LIMITED USES · 有限次數能力
           </div>
           <div className="mt-2 space-y-3">
             {s.abilities.map((a, i) => (
               <div key={i}>
-                <p className="text-[15px] font-semibold text-text-primary">
+                <p className="text-body font-semibold text-text-primary">
                   {a.name}
                   <span className="ml-2 text-tiny font-normal text-text-secondary">
                     {a.uses === 'proficiency' ? '熟練加值' : a.uses} 次／
@@ -71,13 +71,13 @@ export function SpeciesBody({ s }: { s: CustomSpecies }) {
 
       {s.traits.length > 0 && (
         <ParchmentCard className="p-4">
-          <div className="font-label text-[10px] tracking-[1.5px] text-section-label">
+          <div className="font-label text-eyebrow tracking-[1.5px] text-section-label">
             TRAITS · 特性
           </div>
           <div className="mt-2 space-y-3">
             {s.traits.map((t, i) => (
               <div key={i}>
-                <p className="text-[15px] font-semibold text-text-primary">
+                <p className="text-body font-semibold text-text-primary">
                   {t.name}
                   {t.nameEn && (
                     <span className="font-label ml-2 text-tiny text-text-primary/70">

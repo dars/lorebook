@@ -105,7 +105,7 @@ export function CoinAmount({
   cp,
   coinSize = 16,
   className = '',
-  textClassName = 'text-[14px]',
+  textClassName = 'text-body',
 }: {
   cp: number;
   coinSize?: number;

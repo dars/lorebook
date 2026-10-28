@@ -70,7 +70,7 @@ export function AboutEditor({
         onChange={(e) => setV({ ...cur, backstory: e.target.value })}
         rows={6}
         placeholder="這個角色的過去與動機…"
-        className="w-full resize-y rounded-card border border-border bg-surface-2 p-3 text-[14px] leading-relaxed text-text-primary"
+        className="w-full resize-y rounded-card border border-border bg-surface-2 p-3 text-body leading-relaxed text-text-primary"
       />
 
       <div className="mt-4">
@@ -82,7 +82,7 @@ export function AboutEditor({
           value={cur.tags}
           onChange={(e) => setV({ ...cur, tags: e.target.value })}
           placeholder="以頓號分隔，如：好奇、書蟲、理性"
-          className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+          className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
         />
       </div>
     </EditorSheet>
@@ -129,7 +129,7 @@ export function PersonalityEditor({
             onChange={(e) => setV({ ...cur, [f.k]: e.target.value })}
             rows={2}
             placeholder={`${f.hint}…`}
-            className="w-full resize-y rounded-card border border-border bg-surface-2 p-2 text-[13px] text-text-primary"
+            className="w-full resize-y rounded-card border border-border bg-surface-2 p-2 text-ui text-text-primary"
           />
         </div>
       ))}

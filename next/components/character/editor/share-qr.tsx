@@ -49,7 +49,7 @@ export function ShareQr({ link, size = 180 }: { link: string; size?: number }) {
       style={{ background: LIGHT }}
     >
       {error ? (
-        <p className="text-[12px]" style={{ color: DARK, width: size }}>
+        <p className="text-small" style={{ color: DARK, width: size }}>
           QR 產生失敗，請改用連結。
         </p>
       ) : svg ? (

@@ -100,28 +100,28 @@ export function BackgroundManager({
 
       {embedded ? (
         <details className="mb-4 rounded-card border border-border-2 bg-surface-1 px-4 py-2.5">
-          <summary className="min-h-11 cursor-pointer content-center text-[12px] text-text-secondary">
+          <summary className="min-h-11 cursor-pointer content-center text-small text-text-secondary">
             查看 2024 背景建構規則
           </summary>
           <BackgroundRules />
         </details>
       ) : (
         <ParchmentCard className="mb-4 px-4 py-3">
-          <div className="text-[13px] font-semibold text-text-primary">2024 版的背景建構規則</div>
+          <div className="text-ui font-semibold text-text-primary">2024 版的背景建構規則</div>
           <BackgroundRules />
         </ParchmentCard>
       )}
 
       {error && (
-        <p role="alert" className="mb-3 text-[13px] text-danger">
+        <p role="alert" className="mb-3 text-ui text-danger">
           {error}
         </p>
       )}
 
       {list.length === 0 && (
         <div className="mb-3 rounded-card border border-dashed border-border px-4 py-6 text-center">
-          <p className="text-[13px] text-text-light">尚未收藏背景</p>
-          <p className="mt-1 text-[12px] text-text-secondary">建立一個自訂背景，作為角色故事的起點。</p>
+          <p className="text-ui text-text-light">尚未收藏背景</p>
+          <p className="mt-1 text-small text-text-secondary">建立一個自訂背景，作為角色故事的起點。</p>
         </div>
       )}
 
@@ -130,25 +130,25 @@ export function BackgroundManager({
         {list.filter(item => item.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())).map((b) => (
           <ParchmentCard key={b.id} className="px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="min-w-0 flex-1 break-words text-[16px] font-semibold text-text-primary">
+              <span className="min-w-0 flex-1 break-words text-body font-semibold text-text-primary">
                 {b.name}
               </span>
               <button
                 type="button"
                 onClick={() => setEditing(b)}
-                className="min-h-11 rounded-chip border border-border-2 px-3 text-[12px] text-gold"
+                className="min-h-11 rounded-chip border border-border-2 px-3 text-small text-gold"
               >
                 編輯
               </button>
               <button
                 type="button"
                 onClick={() => setConfirmDelete(b)}
-                className="min-h-11 rounded-chip px-2 text-[12px] text-text-secondary hover:text-danger"
+                className="min-h-11 rounded-chip px-2 text-small text-text-secondary hover:text-danger"
               >
                 刪除
               </button>
             </div>
-            <p className="mt-1 text-[12px] text-text-secondary">
+            <p className="mt-1 text-small text-text-secondary">
               {b.abilities.map((a) => ABILITY_LABELS[a] ?? a).join('、')}・
               {b.skills.join('、')}・{b.originFeat}
               {b.originFeatCustom && '（自訂）'}
@@ -163,7 +163,7 @@ export function BackgroundManager({
       <button
         type="button"
         onClick={() => setEditing({ ...EMPTY })}
-        className="mt-4 flex min-h-12 w-full items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
+        className="mt-4 flex min-h-12 w-full items-center justify-center rounded-card border border-gold bg-gold/10 text-body font-bold text-gold"
       >
         ＋ 新增自訂背景
       </button>
@@ -188,7 +188,7 @@ export function BackgroundManager({
               onChange={(e) => set('name', e.target.value)}
               maxLength={NAME_MAX}
               placeholder="例：荒野嚮導"
-              className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+              className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
             />
 
             <div className="mt-4">
@@ -210,7 +210,7 @@ export function BackgroundManager({
                             : [...editing.abilities, code],
                         )
                       }
-                      className={`min-h-11 rounded-chip border text-[12px] disabled:opacity-30 ${
+                      className={`min-h-11 rounded-chip border text-small disabled:opacity-30 ${
                         on ? 'border-gold bg-gold/10 text-gold' : 'border-border-2 text-text-secondary'
                       }`}
                     >
@@ -240,7 +240,7 @@ export function BackgroundManager({
                             : [...editing.skills, s.name],
                         )
                       }
-                      className={`min-h-11 rounded-chip border text-[12px] disabled:opacity-30 ${
+                      className={`min-h-11 rounded-chip border text-small disabled:opacity-30 ${
                         on ? 'border-gold bg-gold/10 text-gold' : 'border-border-2 text-text-secondary'
                       }`}
                     >
@@ -263,7 +263,7 @@ export function BackgroundManager({
                       set('originFeat', custom ? '' : ORIGIN_FEAT_CHOICES[0]);
                       set('originFeatDescription', '');
                     }}
-                    className={`min-h-11 flex-1 rounded-card border text-[13px] ${
+                    className={`min-h-11 flex-1 rounded-card border text-ui ${
                       editing.originFeatCustom === custom
                         ? 'border-gold bg-gold/10 text-gold'
                         : 'border-border-2 text-text-secondary'
@@ -284,7 +284,7 @@ export function BackgroundManager({
                     onChange={(e) => set('originFeat', e.target.value)}
                     maxLength={FEAT_NAME_MAX}
                     placeholder="專長名稱，例：荒野嚮導"
-                    className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+                    className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
                   />
                   <textarea
                     aria-label="自訂起源專長說明"
@@ -293,9 +293,9 @@ export function BackgroundManager({
                     maxLength={FEAT_DESC_MAX}
                     rows={3}
                     placeholder="說明（選填）：這個專長做什麼…"
-                    className="mt-2 w-full rounded-card border border-border bg-surface-2 p-3 text-[13px] text-text-primary"
+                    className="mt-2 w-full rounded-card border border-border bg-surface-2 p-3 text-ui text-text-primary"
                   />
-                  <p className="mt-1 text-[12px] text-text-secondary">
+                  <p className="mt-1 text-small text-text-secondary">
                     自訂專長僅為顯示文字，不會產生規則效果——數值請自行與 DM 確認。
                   </p>
                 </>
@@ -306,7 +306,7 @@ export function BackgroundManager({
                       key={f}
                       type="button"
                       onClick={() => set('originFeat', f)}
-                      className={`min-h-11 rounded-chip border text-[12px] ${
+                      className={`min-h-11 rounded-chip border text-small ${
                         editing.originFeat === f
                           ? 'border-gold bg-gold/10 text-gold'
                           : 'border-border-2 text-text-secondary'
@@ -330,7 +330,7 @@ export function BackgroundManager({
                 onChange={(e) => set('toolProficiency', e.target.value)}
                 maxLength={20}
                 placeholder="例：盜賊工具"
-                className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-[14px] text-text-primary"
+                className="min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-body text-text-primary"
               />
             </div>
           </>
@@ -345,7 +345,7 @@ export function BackgroundManager({
         onClose={() => setConfirmDelete(null)}
         onSave={() => confirmDelete && remove(confirmDelete)}
       >
-        <p className="text-[13px] leading-relaxed text-text-light">
+        <p className="text-ui leading-relaxed text-text-light">
           「{confirmDelete?.name}」將被刪除。
           <br />
           <span className="text-text-secondary">
@@ -376,13 +376,13 @@ function Wrap({
 function BackgroundRules() {
   return (
     <>
-      <ul className="mt-2 flex flex-col gap-1 text-[12px] leading-relaxed text-text-secondary">
+      <ul className="mt-2 flex flex-col gap-1 text-small leading-relaxed text-text-secondary">
         <li>· 三個能力值加值候選（建角時分配 +2/+1 或三項各 +1）</li>
         <li>· 兩個固定技能熟練</li>
         <li>· 一個起源專長</li>
         <li>· 可選一項工具熟練</li>
       </ul>
-      <p className="mt-2 text-[12px] text-text-secondary">這是規則書的限制，不是這個 App 自訂的。</p>
+      <p className="mt-2 text-small text-text-secondary">這是規則書的限制，不是這個 App 自訂的。</p>
     </>
   );
 }

@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense, useState, type ReactNode } from 'react';
 
 import type { Character } from '@/lib/domain/character';
+import { CharacterPdfExport } from './character-pdf-export';
 import { CharacterTabBar } from './tab-bar';
 import { SwipeTabs } from './swipe-tabs';
 import { AbilitiesTab } from './tabs/abilities-tab';
@@ -155,15 +156,17 @@ function Sheet({
 
   return (
     <>
+      <CharacterPdfExport c={c} />
       {/* compact / medium：單欄分頁，可左右滑動切換。
-          高度扣掉頁首（約 3.5rem）、分頁列（約 3rem）與底部書籤列——
+          高度扣掉頁首（約 3.5rem）、PDF 工具列（3.75rem）、分頁列（約 3rem）與底部書籤列——
+          medium 已改用側邊導覽，不再扣手機的 6rem，避免底部出現整條空白。
           每一頁在這個區域內各自垂直捲動，見 SwipeTabs 的說明。 */}
       <div className="expanded:hidden mx-auto flex w-full max-w-[700px] flex-col">
         <CharacterTabBar tabs={tabs} current={index} onChange={select(tabs)} />
         <SwipeTabs
           current={index}
           onSettle={select(tabs)}
-          className="h-[calc(100dvh-6.5rem-6rem-env(safe-area-inset-bottom))]"
+          className="h-[calc(100dvh-6.5rem-3.75rem-6rem-env(safe-area-inset-bottom))] medium:h-[calc(100dvh-6.5rem-3.75rem-env(safe-area-inset-bottom))]"
         >
           {tabs.map((t) => (
             <div key={t}>{render(t)}</div>

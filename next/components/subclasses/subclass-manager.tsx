@@ -87,28 +87,28 @@ export function SubclassManager({
 
       {embedded ? (
         <details className="mb-4 rounded-card border border-border-2 bg-surface-1 px-4 py-2.5">
-          <summary className="min-h-11 cursor-pointer content-center text-[12px] text-text-secondary">
+          <summary className="min-h-11 cursor-pointer content-center text-small text-text-secondary">
             查看 2024 子職業結構
           </summary>
           <SubclassRules />
         </details>
       ) : (
         <ParchmentCard className="mb-4 px-4 py-3">
-          <div className="text-[13px] font-semibold text-text-primary">2024 版的子職業結構</div>
+          <div className="text-ui font-semibold text-text-primary">2024 版的子職業結構</div>
           <SubclassRules />
         </ParchmentCard>
       )}
 
       {error && (
-        <p role="alert" className="mb-3 text-[13px] text-danger">
+        <p role="alert" className="mb-3 text-ui text-danger">
           {error}
         </p>
       )}
 
       {list.length === 0 && (
         <div className="mb-3 rounded-card border border-dashed border-border px-4 py-6 text-center">
-          <p className="text-[13px] text-text-light">尚未收藏子職業</p>
-          <p className="mt-1 text-[12px] text-text-secondary">建立一個子職業，記錄專屬的成長路線。</p>
+          <p className="text-ui text-text-light">尚未收藏子職業</p>
+          <p className="mt-1 text-small text-text-secondary">建立一個子職業，記錄專屬的成長路線。</p>
         </div>
       )}
 
@@ -117,25 +117,25 @@ export function SubclassManager({
         {list.filter(item => item.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())).map((s) => (
           <ParchmentCard key={s.id} className="px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="min-w-0 flex-1 break-words text-[16px] font-semibold text-text-primary">
+              <span className="min-w-0 flex-1 break-words text-body font-semibold text-text-primary">
                 {s.name}
               </span>
               <button
                 type="button"
                 onClick={() => setEditing(s)}
-                className="min-h-11 rounded-chip border border-border-2 px-3 text-[12px] text-gold"
+                className="min-h-11 rounded-chip border border-border-2 px-3 text-small text-gold"
               >
                 編輯
               </button>
               <button
                 type="button"
                 onClick={() => setConfirmDelete(s)}
-                className="min-h-11 rounded-chip px-2 text-[12px] text-text-secondary hover:text-danger"
+                className="min-h-11 rounded-chip px-2 text-small text-text-secondary hover:text-danger"
               >
                 刪除
               </button>
             </div>
-            <p className="mt-1 text-[12px] text-text-secondary">
+            <p className="mt-1 text-small text-text-secondary">
               {classCn(s.classEn)}・{s.features.length} 個特性（
               {[...new Set(s.features.map((f) => f.level))].sort((a, b) => a - b).join('/')} 級）
             </p>
@@ -148,7 +148,7 @@ export function SubclassManager({
       <button
         type="button"
         onClick={() => setEditing(emptySubclass())}
-        className="mt-4 flex min-h-12 w-full items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
+        className="mt-4 flex min-h-12 w-full items-center justify-center rounded-card border border-gold bg-gold/10 text-body font-bold text-gold"
       >
         ＋ 新增自訂子職
       </button>
@@ -164,7 +164,7 @@ export function SubclassManager({
         {editing && (
           <>
             <SubclassEditor value={editing} onChange={setEditing} />
-            {problem && <p className="mt-3 text-[12px] text-danger">{problem}</p>}
+            {problem && <p className="mt-3 text-small text-danger">{problem}</p>}
           </>
         )}
       </EditorSheet>
@@ -177,7 +177,7 @@ export function SubclassManager({
         onClose={() => setConfirmDelete(null)}
         onSave={() => confirmDelete && remove(confirmDelete)}
       >
-        <p className="text-[13px] leading-relaxed text-text-light">
+        <p className="text-ui leading-relaxed text-text-light">
           「{confirmDelete?.name}」將被刪除。
           <br />
           <span className="text-text-secondary">
@@ -209,14 +209,14 @@ function Wrap({
 function SubclassRules() {
   return (
     <>
-      <ul className="mt-2 flex flex-col gap-1 text-[12px] leading-relaxed text-text-secondary">
+      <ul className="mt-2 flex flex-col gap-1 text-small leading-relaxed text-text-secondary">
         <li>· 3 級取得子職，之後在特定等級再獲得特性</li>
         <li>
           · 特性的等級<strong className="text-text-light">依職業而異</strong>，選定母職業後會自動列出
         </li>
         <li>· 同一等級可以有多個特性</li>
       </ul>
-      <p className="mt-2 text-[12px] text-text-secondary">這是規則書的結構，不是這個 App 自訂的。</p>
+      <p className="mt-2 text-small text-text-secondary">這是規則書的結構，不是這個 App 自訂的。</p>
     </>
   );
 }

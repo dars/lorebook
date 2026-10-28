@@ -45,7 +45,7 @@ export function HomebrewItemMeta({
       )}
       {outdated && <RefreshRow kind={kind} id={id} edited={edited} />}
       <details className="group">
-        <summary className="min-h-11 cursor-pointer content-center text-[12px] text-text-secondary hover:text-gold">
+        <summary className="min-h-11 cursor-pointer content-center text-small text-text-secondary hover:text-gold">
           分享設定與連結
         </summary>
         <div className="mb-2 rounded-card bg-surface-2 px-3 py-2">
@@ -75,7 +75,7 @@ function NoteRow({
       <button
         type="button"
         onClick={() => setEditing(true)}
-        className="flex min-h-11 w-full items-center text-left text-[12px]"
+        className="flex min-h-11 w-full items-center text-left text-small"
       >
         <span className={note ? 'text-text-light' : 'text-text-secondary'}>
           {note || '來自分享'}
@@ -101,13 +101,13 @@ function NoteRow({
         spellCheck={false}
         aria-label="來源備註"
         placeholder="例：阿凱的、DM 核准版"
-        className="min-h-11 flex-1 rounded-card border border-border bg-surface-2 px-2 text-[12px] text-text-primary"
+        className="min-h-11 flex-1 rounded-card border border-border bg-surface-2 px-2 text-small text-text-primary"
       />
       <button
         type="button"
         onClick={save}
         disabled={pending}
-        className="min-h-11 px-2 text-[12px] text-gold disabled:opacity-50"
+        className="min-h-11 px-2 text-small text-gold disabled:opacity-50"
       >
         {pending ? '儲存中' : '儲存'}
       </button>
@@ -143,10 +143,10 @@ function RefreshRow({
 
   return (
     <div className="py-1">
-      <p className="text-[12px] text-gold">來源已更新</p>
+      <p className="text-small text-gold">來源已更新</p>
       {confirming ? (
         <div className="mt-1">
-          <p className="text-[12px] leading-relaxed text-text-light">
+          <p className="text-small leading-relaxed text-text-light">
             更新會換成來源當下的版本，你在這一份上改過的內容會消失。備註會留著。
           </p>
           <div className="mt-1 flex gap-3">
@@ -154,14 +154,14 @@ function RefreshRow({
               type="button"
               onClick={run}
               disabled={pending}
-              className="min-h-11 text-[12px] text-danger disabled:opacity-50"
+              className="min-h-11 text-small text-danger disabled:opacity-50"
             >
               {pending ? '更新中…' : '仍要更新'}
             </button>
             <button
               type="button"
               onClick={() => setConfirming(false)}
-              className="min-h-11 text-[12px] text-text-secondary"
+              className="min-h-11 text-small text-text-secondary"
             >
               取消
             </button>
@@ -172,13 +172,13 @@ function RefreshRow({
           type="button"
           onClick={() => (edited ? setConfirming(true) : run())}
           disabled={pending}
-          className="min-h-11 text-[12px] text-gold disabled:opacity-50"
+          className="min-h-11 text-small text-gold disabled:opacity-50"
         >
           {pending ? '更新中…' : '更新副本'}
         </button>
       )}
       {error && (
-        <p role="alert" className="text-[12px] text-danger">
+        <p role="alert" className="text-small text-danger">
           {error}
         </p>
       )}
@@ -238,12 +238,12 @@ function ShareRow({
           type="button"
           onClick={create}
           disabled={pending}
-          className="min-h-11 text-[12px] text-gold disabled:opacity-50"
+          className="min-h-11 text-small text-gold disabled:opacity-50"
         >
           {pending ? '產生中…' : '分享這一份'}
         </button>
         {error && (
-          <p role="alert" className="text-[12px] text-danger">
+          <p role="alert" className="text-small text-danger">
             {error}
           </p>
         )}
@@ -253,7 +253,7 @@ function ShareRow({
 
   return (
     <div className="py-1">
-      <p className="break-all text-[12px] text-text-light">
+      <p className="break-all text-small text-text-light">
         {link.replace(/^https?:\/\//, '')}
       </p>
       <p className="mt-0.5 text-tiny leading-relaxed text-text-secondary">
@@ -263,14 +263,14 @@ function ShareRow({
         <button
           type="button"
           onClick={copy}
-          className="min-h-11 text-[12px] text-gold"
+          className="min-h-11 text-small text-gold"
         >
           {copied ? '已複製' : '複製連結'}
         </button>
         <button
           type="button"
           onClick={() => setShowQr((v) => !v)}
-          className="min-h-11 text-[12px] text-gold"
+          className="min-h-11 text-small text-gold"
         >
           {showQr ? '收起 QR' : '顯示 QR'}
         </button>
@@ -278,7 +278,7 @@ function ShareRow({
           type="button"
           onClick={revoke}
           disabled={pending}
-          className="min-h-11 text-[12px] text-text-secondary disabled:opacity-50"
+          className="min-h-11 text-small text-text-secondary disabled:opacity-50"
         >
           {pending ? '撤銷中…' : '撤銷分享'}
         </button>
@@ -289,7 +289,7 @@ function ShareRow({
         </div>
       )}
       {error && (
-        <p role="alert" className="text-[12px] text-danger">
+        <p role="alert" className="text-small text-danger">
           {error}
         </p>
       )}

@@ -43,7 +43,7 @@ export function CharacterList({
 
   if (list.length === 0) {
     return (
-      <p className="py-3 text-[13px] leading-relaxed text-text-secondary">
+      <p className="py-3 text-ui leading-relaxed text-text-secondary">
         還沒有角色。用下方的「＋ 建立新角色」建立第一個冒險者，開始你的旅程。
       </p>
     );
@@ -51,11 +51,11 @@ export function CharacterList({
 
   return (
     <>
-      <p className="pb-2 text-[12px] text-text-secondary">
+      <p className="pb-2 text-small text-text-secondary">
         {mode === 'demo' ? '選一位冒險者開始試玩' : '點選進入角色卡'}
       </p>
       {error && (
-        <p role="alert" className="pb-2 text-[13px] text-danger">
+        <p role="alert" className="pb-2 text-ui text-danger">
           {error}
         </p>
       )}
@@ -73,22 +73,22 @@ export function CharacterList({
               >
                 <CharacterAvatar c={c} size={48} />
                 <span className="min-w-0 flex-1">
-                  <span className="font-display block truncate text-[16px] font-bold text-text-primary">
+                  <span className="font-display block truncate text-body font-bold text-text-primary">
                     {c.name}
                   </span>
-                  <span className="block truncate text-[12px] text-text-secondary">
+                  <span className="block truncate text-small text-text-secondary">
                     {[c.species, c.className, c.subclass].filter(Boolean).join(' · ')}
                   </span>
                 </span>
                 <span className="flex shrink-0 flex-col items-center">
-                  <span className="font-label text-[10px] font-semibold tracking-[1px] text-text-secondary">
+                  <span className="font-label text-eyebrow font-semibold tracking-[1px] text-text-secondary">
                     LEVEL
                   </span>
                   <span className="font-display text-[24px] font-bold leading-none text-text-primary">
                     {c.level}
                   </span>
                 </span>
-                <span className="min-h-11 shrink-0 content-center px-2 text-[12px] text-gold">
+                <span className="min-h-11 shrink-0 content-center px-2 text-small text-gold">
                   試玩&nbsp;→
                 </span>
               </AppLink>
@@ -98,15 +98,15 @@ export function CharacterList({
                   <button type="submit" className="flex w-full items-center gap-3 text-left">
                     <CharacterAvatar c={c} size={48} />
                     <span className="min-w-0 flex-1">
-                      <span className="font-display block truncate text-[16px] font-bold text-text-primary">
+                      <span className="font-display block truncate text-body font-bold text-text-primary">
                         {c.name}
                       </span>
-                      <span className="block truncate text-[12px] text-text-secondary">
+                      <span className="block truncate text-small text-text-secondary">
                         {[c.species, c.className, c.subclass].filter(Boolean).join(' · ')}
                       </span>
                     </span>
                     <span className="flex shrink-0 flex-col items-center">
-                      <span className="font-label text-[10px] font-semibold tracking-[1px] text-text-secondary">
+                      <span className="font-label text-eyebrow font-semibold tracking-[1px] text-text-secondary">
                         LEVEL
                       </span>
                       <span className="font-display text-[24px] font-bold leading-none text-text-primary">
@@ -119,7 +119,7 @@ export function CharacterList({
                   type="button"
                   onClick={() => setConfirming(c)}
                   aria-label={`刪除 ${c.name}`}
-                  className="min-h-11 shrink-0 px-2 text-[12px] text-text-secondary hover:text-danger"
+                  className="min-h-11 shrink-0 px-2 text-small text-text-secondary hover:text-danger"
                 >
                   刪除
                 </button>
@@ -137,7 +137,7 @@ export function CharacterList({
         onClose={() => setConfirming(null)}
         onSave={() => confirming && !busy && remove(confirming)}
       >
-        <p className="text-[13px] leading-relaxed text-text-light">
+        <p className="text-ui leading-relaxed text-text-light">
           將刪除「{confirming?.name}」。
           <span className="block text-danger">此操作無法復原。</span>
         </p>

@@ -4,6 +4,7 @@ import { AppLink } from '@/components/ui/app-link';
 import { CharacterList } from '@/components/character/character-list';
 import { SectionTitle } from '@/components/ui/decorations';
 import { DEMO_CHARACTERS } from '@/lib/demo/characters';
+import { GuideLink } from '@/components/guide/guide-link';
 
 export const metadata: Metadata = {
   title: '試玩｜Lorebook',
@@ -29,10 +30,11 @@ export default function DemoPage() {
       </p>
 
       <CharacterList initial={DEMO_CHARACTERS} mode="demo" />
+      <GuideLink />
 
       <AppLink
         href="/login"
-        className="mt-4 flex min-h-12 items-center justify-center rounded-card border border-gold bg-gold/10 text-[14px] font-bold text-gold"
+        className="mt-4 flex min-h-12 items-center justify-center rounded-card border border-gold bg-gold/10 text-body font-bold text-gold"
       >
         登入並建立自己的角色
       </AppLink>

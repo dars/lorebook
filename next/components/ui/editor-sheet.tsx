@@ -37,6 +37,7 @@ type EditorSheetProps = {
   /** 'wide'＝1100px，給內含主從式版面的面板。 */
   size?: 'default' | 'wide';
   children: ReactNode;
+  footer?: ReactNode;
 };
 
 /**
@@ -58,6 +59,7 @@ function Sheet({
   closeLabel = '取消',
   size = 'default',
   children,
+  footer,
 }: EditorSheetProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -94,20 +96,21 @@ function Sheet({
       <div
         autoFocus
         tabIndex={-1}
-        className={`max-h-[85dvh] w-full overflow-y-auto overscroll-contain rounded-t-[16px] border border-border bg-surface-1 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] focus:outline-none medium:rounded-card medium:pb-5 ${
+        className={`flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-t-[16px] border border-border bg-surface-1 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] focus:outline-none medium:rounded-card medium:pb-5 ${
           size === 'wide' ? 'max-w-[1100px]' : 'max-w-[560px]'
         }`}
       >
-        <h2 id={titleId} className="text-[16px] font-bold text-text-primary">
+        <h2 id={titleId} className="shrink-0 text-body font-bold text-text-primary">
           {title}
         </h2>
-        <div className="mt-4">{children}</div>
+        <div className="mt-4 min-h-0 overflow-y-auto overscroll-contain pr-1 pb-2">{children}</div>
+        {footer && <div className="shrink-0 border-t border-border-2 pt-3">{footer}</div>}
 
-        <div className="mt-6 flex gap-2">
+        <div className="mt-3 flex shrink-0 gap-2">
           <button
             type="button"
             onClick={onClose}
-            className="min-h-11 flex-1 rounded-card border border-border text-[13px] text-text-secondary hover:border-text-secondary hover:text-text-primary"
+            className="min-h-11 flex-1 rounded-card border border-border text-ui text-text-secondary hover:border-text-secondary hover:text-text-primary"
           >
             {closeLabel}
           </button>
@@ -116,7 +119,7 @@ function Sheet({
               type="button"
               onClick={onSave}
               disabled={!saveEnabled}
-              className={`min-h-11 flex-1 rounded-card border text-[13px] font-bold disabled:opacity-40 ${
+              className={`min-h-11 flex-1 rounded-card border text-ui font-bold disabled:opacity-40 ${
                 saveTone === 'danger'
                   ? 'border-danger bg-danger/10 text-danger hover:bg-danger/20 disabled:hover:bg-danger/10'
                   : 'border-gold bg-gold/10 text-gold hover:bg-gold/20 disabled:hover:bg-gold/10'
@@ -147,7 +150,7 @@ export function FieldLabel({
   htmlFor?: string;
 }) {
   const className =
-    'font-label mb-1.5 block text-[10px] tracking-[1.5px] text-section-label';
+    'font-label mb-1.5 block text-eyebrow tracking-[1.5px] text-section-label';
   if (htmlFor) {
     return (
       <label htmlFor={htmlFor} className={className}>

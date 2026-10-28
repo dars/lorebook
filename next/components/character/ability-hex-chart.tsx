@@ -120,7 +120,7 @@ export function AbilityHexChart({
             y={y}
             textAnchor="middle"
             dominantBaseline="middle"
-            className="fill-text-secondary text-[11px]"
+            className="fill-text-secondary text-tiny"
           >
             {LABEL[code]}
           </text>

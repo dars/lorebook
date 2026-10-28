@@ -42,7 +42,7 @@ export function DemoShell({ character }: { character: Character }) {
             home indicator。 */}
         <main
           id="main-content"
-          className="flex-1 pb-[calc(6rem+env(safe-area-inset-bottom))]"
+          className="flex-1 pb-[calc(6rem+env(safe-area-inset-bottom))] medium:pb-[env(safe-area-inset-bottom)]"
         >
           {tab === 'decision' && (
             <DecisionView initial={character} persist={false} />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 
 /**
  * 外觀主題切換，對照 Flutter 端 `system_page.dart` 的主題選擇。
@@ -12,6 +12,23 @@ import { useEffect, useState } from 'react';
 type Mode = 'system' | 'dark' | 'light';
 
 const KEY = 'lorebook-theme';
+const THEME_EVENT = 'lorebook-theme-change';
+
+function readMode(): Mode {
+  const stored = localStorage.getItem(KEY);
+  return stored === 'dark' || stored === 'light' ? stored : 'system';
+}
+
+function subscribeMode(notify: () => void) {
+  window.addEventListener('storage', notify);
+  window.addEventListener(THEME_EVENT, notify);
+  return () => {
+    window.removeEventListener('storage', notify);
+    window.removeEventListener(THEME_EVENT, notify);
+  };
+}
+
+const serverMode = (): Mode => 'system';
 
 export function applyTheme(mode: Mode) {
   const dark =
@@ -26,16 +43,13 @@ export function applyTheme(mode: Mode) {
     ?.setAttribute('content', dark ? '#1c1610' : '#faf7f2');
 }
 
-export function ThemeSwitch() {
-  // 初值自 localStorage 讀（lazy initializer，不在 effect 裡 setState）——
-  // layout 的行內 script 已在繪製前套好主題，這裡只是把選擇同步進 UI。
-  const [mode, setMode] = useState<Mode>(() => {
-    if (typeof window === 'undefined') return 'system';
-    return (localStorage.getItem(KEY) as Mode | null) ?? 'system';
-  });
+export function ThemeSwitch({ compact = false }: { compact?: boolean }) {
+  // hydration 先使用相同快照，再讀取偏好，避免已選主題與伺服器的按鈕狀態不符。
+  const mode = useSyncExternalStore(subscribeMode, readMode, serverMode);
 
   // 「系統」時跟著系統設定變——使用者在 OS 切換深淺色時不必重整。
   useEffect(() => {
+    applyTheme(mode);
     if (mode !== 'system') return;
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const onChange = () => applyTheme('system');
@@ -44,10 +58,23 @@ export function ThemeSwitch() {
   }, [mode]);
 
   const pick = (m: Mode) => {
-    setMode(m);
     localStorage.setItem(KEY, m);
+    window.dispatchEvent(new Event(THEME_EVENT));
     applyTheme(m);
   };
+
+  if (compact) {
+    return (
+      <label className="flex min-h-11 shrink-0 items-center gap-2 rounded-card border border-border px-3 text-small text-text-light focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-gold">
+        <span>外觀</span>
+        <select aria-label="外觀主題" name="theme" value={mode} onChange={(event) => pick(event.target.value as Mode)} className="min-h-11 min-w-[5rem] cursor-pointer bg-surface-0 text-small text-text-primary outline-none">
+          <option value="system">跟隨系統</option>
+          <option value="light">淺色</option>
+          <option value="dark">深色</option>
+        </select>
+      </label>
+    );
+  }
 
   return (
     <div className="grid grid-cols-3 gap-1.5">
@@ -61,6 +88,7 @@ export function ThemeSwitch() {
         <button
           key={v}
           type="button"
+          aria-pressed={mode === v}
           onClick={() => pick(v)}
           className={`flex min-h-11 items-center justify-center gap-1.5 rounded-chip border text-small ${
             mode === v

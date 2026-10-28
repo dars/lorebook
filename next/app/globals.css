@@ -44,6 +44,7 @@
    * 與「暗到能在淺底上被讀出來」是相反的需求，因此拆成兩個 token。
    */
   --color-gold-solid: #c9a84c;
+  --color-on-gold: #1c1610; /* 對 gold-solid 7.84:1；不可跟著淺色底切換。 */
 
   /* ── 深色主題（主視覺，預設）─────────────
    * 深色是這個 App 的識別；淺色為 :root[data-theme="light"] 覆寫，
@@ -116,6 +117,8 @@
    */
   --font-display: var(--font-display-src), Georgia, serif;
   --font-body: var(--font-body-src), system-ui, sans-serif;
+  /* 內文與操作使用系統黑體；古典襯線保留給標題，不增加中文字型下載。 */
+  --font-reading: var(--font-body-src), 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans CJK TC', system-ui, sans-serif;
   /* 中文用**系統襯線**堆疊：Flutter 端是 Noto Serif TC，襯線是這個 App
    * 的識別之一。系統襯線字面接近且仍是 0 bytes。 */
   --font-cjk:
@@ -128,9 +131,16 @@
   --text-display: 32px;
   --text-title: 28px;
   --text-heading: 18px;
-  --text-body: 14px;
-  --text-small: 12px;
-  --text-tiny: 11px;
+  --text-body: 1rem;
+  --text-body--line-height: 1.7;
+  --text-ui: .875rem;
+  --text-ui--line-height: 1.6;
+  --text-small: .8125rem;
+  --text-small--line-height: 1.5;
+  --text-tiny: .75rem;
+  --text-tiny--line-height: 1.5;
+  --text-eyebrow: .6875rem;
+  --text-eyebrow--line-height: 1.5;
 
   /* ── 版型級距（對齊 Material 3 window size class）───
    * 與 Flutter 的 ResponsiveLayout 同值，兩邊斷點不可分歧。
@@ -212,6 +222,23 @@ html {
 body {
   background: var(--color-surface-0);
   color: var(--color-text-primary);
+  font-size: var(--text-body);
+  line-height: 1.7;
+}
+
+/* 桌面增大閱讀文字，不放大盾牌、骰子與大型數值的幾何尺寸。 */
+@media (min-width: 840px) {
+  :root {
+    --text-ui: .9375rem;
+    --text-small: .875rem;
+    --text-tiny: .8125rem;
+    --text-eyebrow: .75rem;
+  }
+}
+
+@layer base {
+  h1, h2, h3 { font-family: var(--font-cjk); }
+  input, textarea, select { font-size: max(1rem, 1em); }
 }
 
 /* ── 登入頁：典籍封面 ────────────────────────────────── */
@@ -315,7 +342,7 @@ body {
   border: 1px solid var(--color-gold);
   padding: .8rem 1rem;
 }
-.login-primary-button { cursor: pointer; background: var(--color-gold-solid); color: var(--color-surface-0); font-weight: 700; box-shadow: 0 8px 24px color-mix(in srgb, var(--color-gold) 12%, transparent); }
+.login-primary-button { cursor: pointer; background: var(--color-gold-solid); color: var(--color-on-gold); font-weight: 700; box-shadow: 0 8px 24px color-mix(in srgb, var(--color-gold) 12%, transparent); }
 .login-primary-button::before { content: ''; position: absolute; inset: 3px; border: 1px solid color-mix(in srgb, var(--color-surface-0) 20%, transparent); pointer-events: none; }
 .login-divider { display: flex; align-items: center; gap: .75rem; margin: 1.25rem 0; font-size: var(--text-tiny); color: var(--color-text-secondary); }
 .login-divider::before, .login-divider::after { content: ''; height: 1px; flex: 1; background: var(--color-border-2); }
