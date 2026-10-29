@@ -1,4 +1,5 @@
 'use client';
+import {WizardMemory} from './wizard-memory';
 import {WizardRest} from './wizard-rest';
 import { displayedCharacter } from '@/lib/state/displayed-character';
 
@@ -240,6 +241,7 @@ export function DecisionView({
                 )}
               </div>
             ))}
+            <WizardMemory c={c} persist={persist}/>
           </ParchmentCard>
         </CollapsibleSection>
   );

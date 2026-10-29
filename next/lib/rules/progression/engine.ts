@@ -53,7 +53,7 @@ export function validateChoices(c: Character, selections: Selections, catalog: C
         const v = selections[g.id] ?? [], before = old[g.id] ?? [];
         if (!requireComplete && !v.length && !requiredSources.some(source => g.id.startsWith(`${source}/`)))
             continue;
-        if (v.length !== g.count)
+        if (v.length < (g.minCount??g.count) || v.length > g.count)
             issue(g, `需選 ${g.count} 項，目前 ${v.length} 項。`);
         if (new Set(v).size !== v.length)
             issue(g, '同一項不能重複選取。');
@@ -170,7 +170,7 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
     if (issues.length)
         throw new Error(issues.map(i => i.message).join(' '));
     const groups = choiceGroups(c, catalog, selections);
-    const active = Object.fromEntries(groups.filter(g => selections[g.id]?.length === g.count).map(g => [g.id, selections[g.id]]));
+    const active = Object.fromEntries(groups.filter(g => selections[g.id] && selections[g.id].length >= (g.minCount??g.count) && selections[g.id].length <= g.count).map(g => [g.id, selections[g.id]]));
     const features: CharacterFeature[] = c.features.filter(f => !f.progressionSource);
     const oldResources = c.resources.filter(r => r.progressionSource);
     const resources: ClassResource[] = c.resources.filter(r => !r.progressionSource);
@@ -231,7 +231,8 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
     const restSpent = { ...(c.progression?.restSpent ?? {}) };
     if (context === 'rest')
         for (const g of groups) {
-            const n = removed(baseline(c)[g.id] ?? [], active[g.id] ?? []);
+            const before = normalizePreparedSelections(c, {...baseline(c), ...Object.fromEntries(Object.entries(active).filter(([key])=>key!=='prepared'))}, catalog.spells);
+            const n = removed((g.id==='prepared'?before[g.id]:baseline(c)[g.id]) ?? [], active[g.id] ?? []);
             if (n && g.replace) {
                 const key = g.replace.budget ?? g.id;
                 restSpent[key] = (restSpent[key] ?? 0) + (g.id==='prepared'&&c.classNameEn==='Wizard'&&c.progression?.rest==='short'?n:g.replace.count >= 99 ? 99 : n);

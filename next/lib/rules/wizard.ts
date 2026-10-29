@@ -25,3 +25,8 @@ export function recoverArcaneSlots(c:Character,counts:Record<number,number>):Cha
  if(total<1||total>Math.ceil(c.level/2))throw Error(`本次可恢復的總環數為 1 至 ${Math.ceil(c.level/2)}。`);
  return {...c,spellSlots:c.spellSlots.map(s=>({...s,used:s.used-(counts[s.level]??0)})),resources:c.resources.map(r=>r===resource?{...r,current:r.current-1}:r)};
 }
+
+/** 與替換驗證共用 restSpent；不另外保存一份可能不同步的資源數字。 */
+export function memorizeSpellUses(c:Character):number {
+ return c.classNameEn==='Wizard'&&c.level>=5&&c.progression?.rest==='short'?Math.max(0,1-(c.progression.restSpent.prepared??0)):0;
+}

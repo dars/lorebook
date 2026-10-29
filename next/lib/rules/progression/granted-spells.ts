@@ -1,3 +1,4 @@
+import {normalizeOrigins} from './origins';
 import type { Character } from '@/lib/domain/character';
 /** 固定授予與名額分開。SRD 5.2.1 pp. 35, 40, 46, 54–56, 58, 70, 72, 76。 */
 const SUBCLASS: Record<string, Record<number, string[]>> = {
@@ -40,9 +41,7 @@ export function automaticSpellNames(c: Character, s: Record<string, string[]>): 
 
 /** 誓言等自動授予的法術不佔準備名額；移出一般清單，保留於自動授予清單。 */
 export function normalizePreparedSelections(c:Character, s:Record<string,string[]>, spells:{id:string;eng_name:string|null}[]):Record<string,string[]> {
-    const bg=c.features.find(f=>!f.isCustom&&f.source.startsWith('背景：'));
-    const inferred=bg?.name.includes('法師')?'Wizard':bg?.name.includes('牧師')?'Cleric':bg?.name.includes('德魯伊')?'Druid':'';
-    if(inferred&&!s['background-origin/list']?.length) s={...s,'background-origin/list':[inferred]};
+    s=normalizeOrigins(c,s);
     if(!s.prepared)return s;
     const names=automaticSpellNames(c,s);
     const extra = new Set(Object.entries(s).filter(([key]) => /^(spell-mastery-[12]|signature|lore-spells|arcanum-\d+|tome-rituals)$/.test(key) || key.endsWith('/spell')).flatMap(([, ids])=>ids));

@@ -801,7 +801,7 @@ function LevelUpForm({
 
       {<>
         {backfillDraft.pending && <p className="text-small text-gold">有未保存的成長補選。<button type="button" className="min-h-11 px-2 underline" onClick={()=>{setChoiceSelections({...choiceSelections,...backfillDraft.pending});backfillDraft.accept();}}>帶入補選草稿</button><button type="button" className="min-h-11 px-2" onClick={backfillDraft.discard}>捨棄</button></p>}
-        {(effectiveSelections.prepared?.length??0)!==(choiceSelections.prepared?.length??0) && <p role="status" className="text-small text-gold">原本準備的法術已轉為固定授予，不再占名額；請補選空出的準備名額。</p>}
+        {(effectiveSelections.prepared?.length??0)!==(choiceSelections.prepared?.length??0) && <p role="status" className="text-small text-gold">原本法術仍然已準備，現在不占一般名額；空出的名額可以稍後補選。</p>}
         <ChoiceEditor character={choiceCharacter} catalog={flowCatalog} value={effectiveSelections} onChange={setChoiceSelections} context="level" />
         <label className="flex min-h-11 items-center gap-2 text-small text-text-secondary"><input type="checkbox" checked={deferChoices} onChange={e=>setDeferChoices(e.target.checked)} className="accent-gold"/>尚未開始的舊選項稍後到「成長選擇」補齊</label>
         {!choiceReady && <ul role="alert" className="list-disc space-y-1 pl-5 text-small text-danger">{[...new Set(choiceIssues.map(i => i.message))].map(message => <li key={message}>{message}</li>)}</ul>}

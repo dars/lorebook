@@ -1,3 +1,4 @@
+import {normalizeOrigins, fixedBackgroundList, magicInitiateSources} from './origins';
 import { ftFlattenEntries } from '@/lib/catalog/fivetools';
 import { featAbilityOptions, featPrereqUnmet } from '../feats';
 import { startingOptions, STARTING } from './equipment';
@@ -21,6 +22,7 @@ export type ChoiceGroup = {
     title: string;
     level: number;
     count: number;
+    minCount?: number;
     options: Option[];
     kind: 'feature' | 'skill' | 'expertise' | 'tool' | 'language' | 'spell' | 'book' | 'form' | 'mixed';
     detail?: string;
@@ -28,6 +30,7 @@ export type ChoiceGroup = {
     replace?: {
         when: 'level' | 'long' | 'short';
         count: number;
+    minCount?: number;
         budget?: string;
     };
     ability?: string;
@@ -49,6 +52,7 @@ export function hasSrdSubclass(c: Character): boolean {
     return (aliases[c.classNameEn] ?? []).includes(c.subclassEn);
 }
 export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Selections = c.progression?.selections ?? {}): ChoiceGroup[] {
+    selected=normalizeOrigins(c,selected);
     const cls = c.classNameEn, lv = c.level, groups: ChoiceGroup[] = [];
     const values = (key: string) => selected[key] ?? [];
     const chosen = (key: string, id: string) => values(key).includes(id);
@@ -224,17 +228,19 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
         if (arr.includes('Skilled'))
             simple(`${source}/skills`, '熟練 · 三項技能或工具', 1, 3, [...skillOptions.map(o => ({ ...o, id: `skill:${o.id}` })), ...TOOLS.map(o => ({ ...o, id: `tool:${o.id}` }))], { kind: 'mixed', family: 'mixed' });
         if (arr.includes('Magic Initiate')) {
-            const inferred = source === 'background-origin' ? (bg?.name.includes('牧師') ? 'Cleric' : bg?.name.includes('法師') ? 'Wizard' : '') : '';
-            simple(`${source}/list`, '法術新手 · 法術清單', 1, 1, opts(['Cleric|牧師', 'Druid|德魯伊', 'Wizard|法師']).filter(o => !inferred || o.id === inferred));
+            const inferred = source === 'background-origin' ? fixedBackgroundList(c) : '';
+            const prefix=source==='background-origin'?'背景':source==='human-origin'?'人類額外專長':source.replace(/^feat-origin-/, '');
+            simple(`${source}/list`, `${prefix} · 法術新手 · 法術清單`, 1, 1, opts(['Cleric|牧師', 'Druid|德魯伊', 'Wizard|法師']).filter(o => !inferred || o.id === inferred));
             const list = values(`${source}/list`)[0] || inferred;
             const listGroup=groups.find(g=>g.id===`${source}/list`)!;
             listGroup.detail='再次取得法術新手時，必須選不同的職業法術清單。';
-            for(const o of listGroup.options) if(Object.entries(selected).some(([key,ids])=>key!==`${source}/list`&&key.endsWith('/list')&&ids.includes(o.id)) || (source!=='background-origin' && o.id===(bg?.name.includes('法師')?'Wizard':bg?.name.includes('牧師')?'Cleric':''))) o.disabledReason='其他法術新手來源已使用此清單';
-            simple(`${source}/ability`, '法術新手 · 施法屬性', 1, 1, opts(['INT|智力', 'WIS|感知', 'CHA|魅力']));
+            // 固定背景清單優先；舊人類來源若撞名，應改人類來源而不是把唯一背景選項鎖死。
+            if(!inferred) for(const o of listGroup.options) if(magicInitiateSources(c,selected).some(other=>other!==source&&values(`${other}/list`).includes(o.id))) o.disabledReason='其他法術新手來源已使用此清單';
+            simple(`${source}/ability`, `${prefix} · 法術新手 · 施法屬性`, 1, 1, opts(['INT|智力', 'WIS|感知', 'CHA|魅力']));
             if (list) {
                 const ability = values(`${source}/ability`)[0];
-                spell(`${source}/cantrips`, '法術新手 · 戲法', 1, 2, [list], 0, 0, { always: true, ability, replace: { when: 'level', count: 1, budget: source } });
-                spell(`${source}/spell`, '法術新手 · 一環法術', 1, 1, [list], 1, 1, { always: true, ability, recovery: 'long', replace: { when: 'level', count: 1, budget: source } });
+                spell(`${source}/cantrips`, `${prefix} · 法術新手 · 戲法`, 1, 2, [list], 0, 0, { always: true, ability, replace: { when: 'level', count: 1, budget: source } });
+                spell(`${source}/spell`, `${prefix} · 法術新手 · 一環法術`, 1, 1, [list], 1, 1, { always: true, ability, recovery: 'long', replace: { when: 'level', count: 1, budget: source } });
             }
         }
     }
@@ -248,9 +254,18 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
         if (g)
             g.options = g.options.filter(o => ids.has(o.id));
     }
+    for(const g of groups.filter(g=>g.id.endsWith('/cantrips'))) for(const o of g.options){
+        const other=groups.some(x=>x.kind==='spell'&&x.id!==g.id&&values(x.id).includes(o.id));
+        const known=c.cantrips.some(x=>!x.homebrewId&&!x.progressionSource&&sameSpellName(x.nameEn,catalog.spells.find(v=>v.id===o.id)?.eng_name??''));
+        if((other||known)&&!c.progression?.selections[g.id]?.includes(o.id))o.disabledReason='角色已由其他來源學會此戲法，請選另一個';
+    }
     const alwaysIds = new Set(groups.filter(g => g.kind === 'spell' && g.always).flatMap(g => values(g.id)));
     const automatic = automaticSpellNames(c, selected);
     const basePrepared = groups.find(g => g.id === 'prepared');
+    if (basePrepared && (automatic.length || [...alwaysIds].some(id=>catalog.spells.some(s=>s.id===id&&s.level>0)))) {
+        basePrepared.minCount=0;
+        basePrepared.detail='始終準備法術另列、不占一般名額；空出的名額可稍後補選。';
+    }
     if (basePrepared)
         basePrepared.options = basePrepared.options.filter(o => !alwaysIds.has(o.id) && !automatic.some(n => sameSpellName(n, catalog.spells.find(s => s.id === o.id)?.eng_name ?? '')));
     for (const g of groups.filter(g => g.id === 'tome-cantrips' || g.id === 'tome-rituals')) {

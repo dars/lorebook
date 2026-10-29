@@ -59,7 +59,7 @@ it('信仰之盾改為誓言法術後自動釋出準備名額，不再報不合�
  const c=paladin();const spells=['Shield of Faith','Protection from Evil and Good','Divine Smite','Bless','Command','Cure Wounds','Heroism'].map((name,i)=>CatalogSpell.parse({id:String(i),name,eng_name:name,level:1,classes:['Paladin']}));
  const cat={spells,items:[],feats:[]};const old={prepared:['0','3','4','5']};
  const normalized=normalizePreparedSelections(c,old,spells);expect(normalized.prepared).toEqual(['3','4','5']);
- expect(validateChoices(c,old,cat,'level',false).map(i=>i.message)).toEqual(['需選 4 項，目前 3 項。']);
+ expect(validateChoices(c,old,cat,'level',false).map(i=>i.message)).toEqual([]);
  const result=applyChoices(c,{prepared:['0','3','4','5','6']},cat,'level',false);
  expect(result.spells.find(s=>s.nameEn==='Shield of Faith')).toMatchObject({alwaysPrepared:true,progressionSource:'automatic'});
  expect(result.progression?.selections.prepared).toEqual(['3','4','5','6']);

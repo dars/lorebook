@@ -1,5 +1,5 @@
 'use client';
-import { normalizePreparedSelections } from '@/lib/rules/progression/granted-spells';
+import { automaticSpellNames, normalizePreparedSelections } from '@/lib/rules/progression/granted-spells';
 import { CoinAmount } from '@/components/character/coins';
 import { useState } from 'react';
 import type { Character } from '@/lib/domain/character';
@@ -15,10 +15,12 @@ export function ChoiceEditor({ character, catalog, value: rawValue, onChange, co
     const value=normalizePreparedSelections(character,rawValue,catalog.spells);
     const groups = choiceGroups(character, catalog, value);
     const issues = validateChoices(character, value, catalog, context);
-    const complete = groups.filter(g => (value[g.id]?.length ?? 0) === g.count && !issues.some(i=>i.group===g.id)).length;
+    const complete = groups.filter(g => (value[g.id]?.length ?? 0) >= (g.minCount??g.count) && (value[g.id]?.length??0)<=g.count && !issues.some(i=>i.group===g.id)).length;
+    const always=new Set([...groups.filter(g=>g.kind==='spell'&&g.always).flatMap(g=>(value[g.id]??[]).filter(id=>catalog.spells.some(s=>s.id===id&&s.level>0))),...catalog.spells.filter(s=>s.level>0&&automaticSpellNames(character,value).includes(s.eng_name??'')).map(s=>s.id)]);
     return <section aria-label="成長選擇" className="my-4">
     <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-border pb-2"><h2 className="font-cjk text-body font-bold text-gold">成長選擇</h2><span className="text-small text-text-secondary">{complete} / {groups.length} 項完成</span></div>
     <p className="mb-3 text-small leading-relaxed text-text-secondary">點選項目即可選取，再點一次取消。已選內容留在原位。既有法術選入名額後會歸到該來源，其他手動與自創內容會保留。{context === 'creation' && '起始組合會自動穿戴護甲並啟用武器，之後可在物品頁調整。'}</p>
+    {always.size>0&&<p role="status" className="mb-3 text-small text-gold">目前已準備 {(value.prepared?.length??0)+always.size} 個法術：一般準備 {value.prepared?.length??0} 個 ＋ 始終準備 {always.size} 個（不占名額）。空出的名額可稍後補選，原有法術仍可施放。</p>}
     <div className="divide-y divide-border-2">{groups.map(g => <Group key={g.id} group={g} character={character} value={value[g.id] ?? []} onChange={v => onChange({ ...value, [g.id]: v })} context={context} issues={issues.filter(i => i.group === g.id).map(i => i.message)}/>)}</div>
   </section>;
 }
@@ -34,13 +36,13 @@ function Group({ group: g, character: c, value, onChange, context, issues }: {
     const [open, setOpen] = useState(false);
     const before = c.progression?.selections[g.id] ?? [];
     const limit = replacementLimit(c, g, context);
-    const locked = !issues.length && before.length >= g.count && !limit && (g.kind === 'form' || before.every(id => g.options.some(o => o.id === id)));
+    const locked = !issues.length && before.length >= g.count && !limit && (g.kind === 'form' || before.every(id => value.includes(id) && g.options.some(o => o.id === id && !o.disabledReason)));
     const available: ChoiceGroup['options'] = [...g.options, ...value.filter(id => g.kind !== 'form' && !g.options.some(o => o.id === id)).map(id => ({ id, name: '已選項目需重新確認', detail: '名額或前置條件已改變，請取消後重選。' }))];
     const matches = available.filter(o => `${o.name} ${o.id} ${o.detail ?? ''}`.toLowerCase().includes(search.toLowerCase()));
     const toggle = (id: string) => onChange(value.includes(id) ? value.filter(v => v !== id) : g.count === 1 ? [id] : [...value, id]);
     const preview = value.map(v => g.kind === 'form' ? formName(v) : g.options.find(o => o.id === v)?.name ?? '待確認項目').join('、');
-    return <div className="py-1">
-    <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="flex min-h-11 w-full items-center gap-2 text-left"><span aria-hidden className="text-gold">{open ? '▾' : '▸'}</span><span className="min-w-0 flex-1"><span className="text-ui font-semibold text-text-primary">{g.title}</span><span className="ml-2 text-small text-text-secondary">{preview || '尚未選擇'}</span></span><span className={`shrink-0 text-small ${issues.length ? 'text-text-secondary' : 'text-gold'}`}>{value.length}/{g.count}</span></button>
+    return <div id={`choice-${g.id}`} className="scroll-mt-4 py-1">
+    <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="flex min-h-11 w-full items-center gap-2 text-left"><span aria-hidden className="text-gold">{open ? '▾' : '▸'}</span><span className="min-w-0 flex-1"><span className="text-ui font-semibold text-text-primary">{g.title}</span><span className="ml-2 text-small text-text-secondary">{preview || '尚未選擇'}</span></span><span className={`shrink-0 text-small ${issues.length ? 'text-text-secondary' : 'text-gold'}`}>{g.id==='prepared'?`一般 ${value.length} · 上限 ${g.count}`:`${value.length}/${g.count}`}</span></button>
     {open && <div className="pb-3 pl-5">
       {g.detail && <p className="mb-2 text-small text-text-secondary">{g.detail}</p>}
       {locked ? <p className="text-small text-text-secondary">已完成。{g.replace ? `可在${g.replace.when === 'level' ? '下次升級' : g.replace.when === 'long' ? '長休' : '短休或長休'}後替換。` : '此為取得時的固定選擇。'}</p> : <>
