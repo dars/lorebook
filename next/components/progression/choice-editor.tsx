@@ -24,6 +24,7 @@ export function ChoiceEditor({ character, catalog, value: rawValue, onChange, co
     return <section aria-label="成長選擇" className="my-4">
     <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-border pb-2"><h2 className="font-cjk text-body font-bold text-gold">成長選擇</h2><span className="text-small text-text-secondary">{complete} / {groups.length} 項完成</span></div>
     <p className="mb-3 text-small leading-relaxed text-text-secondary">點選項目即可選取，再點一次取消。已選內容留在原位。既有法術選入名額後會歸到該來源，其他手動與自創內容會保留。{context === 'creation' && '起始組合會自動穿戴護甲並啟用武器，之後可在物品頁調整。'}</p>
+    {character.classNameEn==='Bard'&&character.level>=10&&<aside className="mb-3 border-l-2 border-gold pl-3 text-small"><strong className="text-gold">魔法奧祕 · 10 級已解鎖</strong><p className="text-text-secondary">新增或替換的已備法術可從詩人、牧師、德魯伊、法師清單選擇，共用已備名額。每次升級可替換 1 個舊法術。</p><a href="#choice-prepared" className="inline-flex min-h-11 items-center text-gold underline">前往已備法術選擇</a></aside>}
     {always.size>0&&<p role="status" className="mb-3 text-small text-gold">目前已準備 {(value.prepared?.length??0)+always.size} 個法術：一般準備 {value.prepared?.length??0} 個 ＋ 始終準備 {always.size} 個（不占名額）。空出的名額可稍後補選，原有法術仍可施放。</p>}
     {groups.some(g=>g.id.startsWith('background-origin/')&&g.id.endsWith('/list'))&&<p className="mb-2 text-small text-text-secondary">{groups.some(g=>g.id==='human-origin/list')?'背景與人類專長各自授予一組法術新手，都需要分別選擇施法屬性、2 個戲法與 1 個一環法術。':'背景法術新手還需選擇施法屬性、2 個戲法與 1 個一環法術。'}完成數包含這些細項。</p>}
     {originHints.map(h=><p key={h.label} className="mb-1 text-small text-gold">{h.label}尚缺：{h.missing.join('、')}</p>)}

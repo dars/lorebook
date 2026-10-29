@@ -200,7 +200,7 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
     }
     if (hasSrdSubclass(c)) {
         if (cls === 'Bard') {
-            skill('lore-skills', '逸聞學院 · 額外技能', 3, 3);
+            skill('lore-skills', '學識學院 · 額外技能', 3, 3);
             spell('lore-spells', '魔法發現', 6, 2, ['Cleric', 'Druid', 'Wizard'], 0, maxRing, { always: true, replace: { when: 'level', count: 1 } });
         }
         if (cls === 'Druid')
@@ -259,6 +259,13 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
         const known=c.cantrips.some(x=>!x.homebrewId&&!x.progressionSource&&sameSpellName(x.nameEn,catalog.spells.find(v=>v.id===o.id)?.eng_name??''));
         if((other||known)&&!c.progression?.selections[g.id]?.includes(o.id))o.disabledReason='角色已由其他來源學會此戲法，請選另一個';
     }
+    const discoveries = groups.find(g => g.id === 'lore-spells');
+    if (discoveries) for (const o of discoveries.options) {
+        const name = catalog.spells.find(s => s.id === o.id)?.eng_name ?? '';
+        const other = groups.some(g => g.kind === 'spell' && g.id !== discoveries.id && values(g.id).includes(o.id));
+        const known = [...c.cantrips, ...c.spells].some(s => !s.homebrewId && s.progressionSource !== discoveries.id && sameSpellName(s.nameEn, name));
+        if ((other || known) && !c.progression?.selections[discoveries.id]?.includes(o.id)) o.disabledReason = '已由其他來源學會此法術，請選另一個';
+    }
     const alwaysIds = new Set(groups.filter(g => g.kind === 'spell' && g.always).flatMap(g => values(g.id)));
     const automatic = automaticSpellNames(c, selected);
     const basePrepared = groups.find(g => g.id === 'prepared');
@@ -285,6 +292,12 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
         for (const o of g.options) {
             if (g.family === 'origin' && bgOrigin === o.id && !['Skilled', 'Magic Initiate'].includes(o.id))
                 o.disabledReason = '背景已取得，請選另一個專長';
+            if (g.kind === 'skill') {
+                const own = c.progression?.selections[g.id]?.includes(o.id);
+                const existing = c.skills.some(s => s.nameEn === o.id && s.proficient && !c.progression?.grantedSkills.includes(o.id));
+                const other = groups.some(x => x.id !== g.id && (x.kind === 'skill' && values(x.id).includes(o.id) || x.kind === 'mixed' && values(x.id).includes(`skill:${o.id}`)));
+                if (other || (existing && !own)) o.disabledReason = '此技能已熟練，請選另一項';
+            }
             if (g.kind === 'mixed' && !values(g.id).includes(o.id)) {
                 const skillName = o.id.startsWith('skill:') ? o.id.slice(6) : '';
                 if (skillName && (c.skills.some(s => s.nameEn === skillName && s.proficient && !c.progression?.grantedSkills.includes(skillName)) || groups.some(other => other.id !== g.id && (other.kind === 'skill' && values(other.id).includes(skillName) || other.kind === 'mixed' && values(other.id).includes(o.id)))))
@@ -295,5 +308,13 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
             if (o.requires && !values(g.id).includes(o.requires))
                 o.disabledReason = `需要先選 ${o.requires}`;
         }
+    if (cls === 'Bard' && basePrepared) {
+        basePrepared.detail = [basePrepared.detail, lv >= 10 ? '魔法奧祕 · 10 級已解鎖：新增／替換的已備法術可選詩人、牧師、德魯伊、法師清單，共用原本已備名額，並非額外法術。每次升級仍只能替換 1 個舊法術。' : '魔法奧祕於 10 級解鎖跨職業清單，目前只能選詩人法術。'].filter(Boolean).join(' ');
+        if (lv >= 10) for (const o of basePrepared.options) {
+            const spell = catalog.spells.find(s => s.id === o.id);
+            const names: Record<string,string> = {Bard:'詩人',Cleric:'牧師',Druid:'德魯伊',Wizard:'法師'};
+            o.detail = `${o.detail} · ${spell?.classes.filter(k=>names[k]).map(k=>names[k]).join('／')}`;
+        }
+    }
     return groups;
 }

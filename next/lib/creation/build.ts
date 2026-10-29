@@ -1,3 +1,4 @@
+import { backfillBard } from '@/lib/rules/bard';
 import { backfillBarbarian } from '@/lib/rules/barbarian';
 import { backfillWizard } from '@/lib/rules/wizard';
 import { SECOND_WIND } from '@/lib/rules/fighter-features';
@@ -218,7 +219,7 @@ export function buildCharacter(input: CreationInput, id: string): Character {
     },
   ];
 
-  return backfillBarbarian(backfillWizard(CharacterSchema.parse({
+  return backfillBard(backfillBarbarian(backfillWizard(CharacterSchema.parse({
     id,
     name: name.trim(),
     species: species.cn,
@@ -258,7 +259,7 @@ export function buildCharacter(input: CreationInput, id: string): Character {
       ...speciesResources(species, PB),
     ],
     hitDieFaces: cls.hitDie,
-  })));
+  }))));
 }
 
 /**

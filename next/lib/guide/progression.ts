@@ -57,7 +57,7 @@ const CHOICES: Record<string, ChoiceSpec[]> = {
 
 const SUBCLASS_CHOICES: Record<string, ChoiceSpec[]> = {
   Bard: [
-    [3, 'lore-skills', '額外熟練：選 3 項技能', '逸聞學院額外取得 3 項自選技能熟練。', 'classOption', 35],
+    [3, 'lore-skills', '額外熟練：選 3 項技能', '學識學院額外取得 3 項自選技能熟練。', 'classOption', 35],
     [6, 'lore-spells', '魔法發現 Magical Discoveries：選 2 個法術', '從牧師、德魯伊、法師清單選 2 個法術，可混選；可以是戲法或已有法術位環數的法術。始終準備，不占基本已備名額。之後每升吟遊詩人等級可替換其中 1 個。', 'spells', 35],
   ],
   Druid: [[3, 'land', '結社法術：選 1 種地形', '乾旱、極地、溫帶或熱帶；每次長休後可重選。依地形與德魯伊等級取得始終準備的結社法術，不占基本名額。', 'classOption', 46]],

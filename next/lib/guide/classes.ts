@@ -16,8 +16,8 @@ export const GUIDE_CLASSES: GuideClass[] = [
   {
     en: 'Bard', cn: '吟遊詩人', page: 31, endPage: 35,
     features: { 1: '吟遊激勵 Bardic Inspiration・施法 Spellcasting', 2: '萬事通 Jack of All Trades', 5: '激勵之源 Font of Inspiration', 7: '反魅惑 Countercharm', 10: '魔法祕密 Magical Secrets', 18: '卓越激勵 Superior Inspiration', 20: '創生真言 Words of Creation' },
-    subclass: { name: '逸聞學院 College of Lore', page: 35, features: { 3: '語出驚人 Cutting Words', 14: '無雙技藝 Peerless Skill' } },
-    reminders: ['每升 1 級吟遊詩人，可替換 1 個戲法及 1 個已備法術。', '10 級起，新增或替換已備法術可從吟遊詩人、牧師、德魯伊、法師清單選；不是一次額外取得一組法術。', '逸聞學院 6 級魔法發現的兩個法術另外計算；之後每升吟遊詩人等級可替換其中 1 個。'],
+    subclass: { name: '學識學院 College of Lore', page: 35, features: { 3: '語出驚人 Cutting Words', 14: '無雙技藝 Peerless Skill' } },
+    reminders: ['每升 1 級吟遊詩人，可替換 1 個戲法及 1 個已備法術。', '10 級起，新增或替換已備法術可從吟遊詩人、牧師、德魯伊、法師清單選；不是一次額外取得一組法術。', '學識學院 6 級魔法發現的兩個法術另外計算；之後每升吟遊詩人等級可替換其中 1 個。'],
   },
   {
     en: 'Cleric', cn: '牧師', page: 36, endPage: 40,

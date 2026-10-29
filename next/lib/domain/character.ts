@@ -1,3 +1,4 @@
+import { backfillBard } from '../rules/bard';
 import { backfillBarbarian } from '../rules/barbarian';
 import { backfillWizard } from '../rules/wizard';
 import { backfillPaladin } from '@/lib/rules/paladin';
@@ -365,5 +366,5 @@ export const hitDiceRemaining = (c: Character) =>
 
 /** 解析雲端／快取的角色 JSON。失敗時拋出，由呼叫端決定如何呈現。 */
 export function parseCharacter(json: unknown): Character {
-  return backfillBarbarian(backfillWizard(backfillPaladin(repairFeatDescriptions(backfillFighterFeatures(backfillIndomitable(Character.parse(json)))))));
+  return backfillBard(backfillBarbarian(backfillWizard(backfillPaladin(repairFeatDescriptions(backfillFighterFeatures(backfillIndomitable(Character.parse(json))))))));
 }
