@@ -1,3 +1,4 @@
+import { backfillBarbarian } from '../barbarian';
 import { abilityModifier } from '../ability';
 import { featAbilityOptions } from '../feats';
 import { ftFlattenEntries } from '@/lib/catalog/fivetools';
@@ -283,7 +284,7 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
         }
     const hpDelta = (abilityScores.con.modifier - c.abilityScores.con.modifier) * c.level;
     const ability = (c.spellcastingAbility === 'INT' ? 'int_' : c.spellcastingAbility.toLowerCase()) as keyof Character['abilityScores'];
-    return recalculateChoiceSkills({ ...result, abilityScores, maxHp: result.maxHp + hpDelta, currentHp: result.currentHp + hpDelta, spellAttack: abilityScores[ability] ? c.proficiencyBonus + abilityScores[ability].modifier : result.spellAttack, spellDc: abilityScores[ability] ? 8 + c.proficiencyBonus + abilityScores[ability].modifier : result.spellDc });
+    return backfillBarbarian(recalculateChoiceSkills({ ...result, abilityScores, maxHp: result.maxHp + hpDelta, currentHp: result.currentHp + hpDelta, spellAttack: abilityScores[ability] ? c.proficiencyBonus + abilityScores[ability].modifier : result.spellAttack, spellDc: abilityScores[ability] ? 8 + c.proficiencyBonus + abilityScores[ability].modifier : result.spellDc }));
 }
 /** 集中重算，升級增加 PB／能力值後亦須使用，否則專精會悄悄退回普通熟練。 */
 export function recalculateChoiceSkills(c: Character): Character {

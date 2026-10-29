@@ -14,6 +14,7 @@ export function FeatureGroups({ c }: { c: Character }) {
 
 function Group({ group, c }: { group: FeatureGroup; c: Character }) {
   const [open, setOpen] = useState(true);
+  const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const allCustom = group.features.every(({ feature }) => feature.isCustom);
   return <section aria-label={[group.title, group.source].filter(Boolean).join(' · ')}>
     <h3><button type="button" aria-expanded={open} onClick={() => setOpen(!open)} className="flex min-h-11 w-full items-center gap-2 border-b border-border px-1 py-2 text-left hover:bg-gold/5">
@@ -25,8 +26,9 @@ function Group({ group, c }: { group: FeatureGroup; c: Character }) {
     {open && <div className="ml-5 divide-y divide-border-2 sm:ml-6">
       {group.features.map(({ feature: f, index, level }) => {
         const violation = featureArmorViolation(c, f);
-        return <details key={index}>
-          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 py-2 before:shrink-0 [&::-webkit-details-marker]:hidden">
+        return <div key={index}>
+          <button type="button" aria-expanded={expanded.has(index)} onClick={() => setExpanded(previous => { const next = new Set(previous); if (!next.delete(index)) next.add(index); return next; })} className="flex min-h-11 w-full cursor-pointer items-center gap-2 py-2 text-left">
+            <span aria-hidden className="shrink-0 text-text-secondary">{expanded.has(index) ? '▾' : '▸'}</span>
             <span className="min-w-0 flex-1">
               <span className={`break-words text-body font-medium ${violation ? 'text-text-secondary line-through' : 'text-text-primary'}`}>{f.name}</span>
               {f.nameEn && <span className="ml-2 break-words font-label text-small text-text-secondary">{f.nameEn}</span>}
@@ -34,12 +36,12 @@ function Group({ group, c }: { group: FeatureGroup; c: Character }) {
               {violation && <span className="block text-small text-danger">{violation}</span>}
             </span>
             <span className="flex shrink-0 flex-col items-end gap-1">{level !== null && <span className="font-label text-small text-section-label">Lv {level}</span>}{f.isCustom && !allCustom && <CustomBadge />}</span>
-          </summary>
-          <div className="border-t border-border-2 py-3 pl-6">
+          </button>
+          {expanded.has(index) && <div className="border-t border-border-2 py-3 pl-6">
             <p className="whitespace-pre-wrap break-words text-body text-text-primary">{f.description || '這項特性沒有說明文字。'}</p>
             {f.source && <p className="mt-3 text-small text-text-secondary">來源：{f.source}</p>}
-          </div>
-        </details>;
+          </div>}
+        </div>;
       })}
     </div>}
   </section>;

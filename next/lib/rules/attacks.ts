@@ -1,3 +1,4 @@
+import { rageActive, rageDamage } from './barbarian';
 import type { Character } from '@/lib/domain/character';
 
 /**
@@ -52,8 +53,9 @@ export function attackEntries(c: Character): AttackEntry[] {
     const ranged = ['Dart','Shortbow','Sling','Light Crossbow','Blowgun','Hand Crossbow','Heavy Crossbow','Longbow','Pistol','Musket'].includes(e.nameEn);
     const archery = ranged && c.features.some(f=>!f.isCustom&&f.nameEn==='Archery') ? 2 : 0;
     const mod = e.finesse ? Math.max(str, dex) : ranged ? dex : str;
-    const damage =
-      mod === 0 ? e.damage : `${e.damage}${mod > 0 ? `+${mod}` : `${mod}`}`;
+    const usesStrength = e.finesse ? str >= dex : !ranged;
+    const damageMod = mod + (usesStrength && rageActive(c) ? rageDamage(c) : 0);
+    const damage = damageMod === 0 ? e.damage : `${e.damage}${damageMod > 0 ? `+${damageMod}` : `${damageMod}`}`;
 
     entries.push({
       name: e.name,
@@ -71,7 +73,7 @@ export function attackEntries(c: Character): AttackEntry[] {
     name: '徒手攻擊',
     nameEn: 'Unarmed Strike',
     hitBonus: str + prof,
-    damage: `${Math.max(0, 1 + str)}`,
+    damage: `${Math.max(0, 1 + str + (rageActive(c) ? rageDamage(c) : 0))}`,
     damageType: 'bludgeoning',
     quantity: 1,
     unarmed: true,
@@ -79,4 +81,9 @@ export function attackEntries(c: Character): AttackEntry[] {
   });
 
   return entries;
+}
+
+export function attacksPerAction(c:Character):number {
+ if(c.classNameEn==='Fighter')return c.level>=20?4:c.level>=11?3:c.level>=5?2:1;
+ return ['Barbarian','Monk','Paladin','Ranger'].includes(c.classNameEn)&&c.level>=5?2:1;
 }

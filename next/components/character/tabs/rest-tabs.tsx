@@ -21,7 +21,7 @@ export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: Reac
   return (
     <div className="px-4 pb-10">
       <CollapsibleSection en="SPELLCASTING" cn="施法" first>
-        <SpellcastingCard c={c} />
+        {c.spellDc > 0 && <SpellcastingCard c={c} />}
         {!!c.spells.some(s=>s.alwaysPrepared)&&<p className="mt-2 text-small text-gold">已準備 {c.spells.filter(s=>s.prepared||s.alwaysPrepared).length} 個：一般 {c.spells.filter(s=>s.prepared&&!s.alwaysPrepared).length} 個 ＋ 始終準備 {c.spells.filter(s=>s.alwaysPrepared).length} 個（不占一般名額）</p>}
       </CollapsibleSection>
 

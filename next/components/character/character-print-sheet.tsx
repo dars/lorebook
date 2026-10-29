@@ -1,4 +1,5 @@
 import {cantripDamage} from '@/lib/rules/cantrip-damage';
+import { movementFeet } from '@/lib/rules/barbarian';
 import type { ReactNode } from 'react';
 
 import { hitDiceRemaining, type Character, type Spell } from '@/lib/domain/character';
@@ -25,7 +26,7 @@ export function CharacterPrintSheet({ c }: { c: Character }) {
     ['護甲等級 AC', <span key="ac">{ac.value} <WriteLine /></span>],
     [`目前 HP · 起始 ${c.currentHp}`, <span key="hp"><WriteLine /> / {c.maxHp}</span>],
     [`臨時 HP · 起始 ${c.tempHp}`, <WriteLine key="temp" />], ['先攻加值', sign(c.initiative)],
-    ['速度', c.speed], ['熟練加值', sign(c.proficiencyBonus)],
+    ['速度', `${movementFeet(c)} 呎`], ['熟練加值', sign(c.proficiencyBonus)],
     ['被動察覺', `${c.passivePerception}`], ['生命骰剩餘', `${hitDiceRemaining(c)} / ${c.level}（d${c.hitDieFaces}）`],
   ];
 

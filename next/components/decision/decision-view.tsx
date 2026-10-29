@@ -1,4 +1,5 @@
 'use client';
+import { movementFeet } from '@/lib/rules/barbarian';
 import {WizardMemory} from './wizard-memory';
 import {WizardRest} from './wizard-rest';
 import { displayedCharacter } from '@/lib/state/displayed-character';
@@ -249,7 +250,7 @@ export function DecisionView({
   // 對照 Flutter 的 movement_section：**速度與衝刺**，各帶格數。
   // 先前移植成「速度／困難地形／先攻」三個裸數字——先攻屬於戰鬥先後、
   // 不是移動，而格數（跑團在方格圖上跑最常用的換算）整個掉了。
-  const speedFt = Number(c.speed.replace(/[^0-9]/g, '')) || 0;
+  const speedFt = movementFeet(c);
   const movement = (
       <CollapsibleSection en="MOVEMENT" cn="移動">
         <ParchmentCard className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3">
@@ -297,7 +298,7 @@ export function DecisionView({
               title="短休"
               subtitle="職業能力"
               onConfirm={() => characterActions.shortRest()}
-              confirm="短休將回復標記為短休的職業資源。"
+              confirm={c.classNameEn==='Barbarian'?'短休恢復 1 次狂暴，並結束目前的狂暴。':'短休將回復標記為短休的職業資源。'}
               doneHint="短休資源已回復"
             />
             <RestButton

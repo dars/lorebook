@@ -1,4 +1,5 @@
 'use client';
+import { rageActive } from '@/lib/rules/barbarian';
 import { shortRestResource } from '@/lib/rules/paladin';
 import { beginChoiceRest } from '@/lib/rules/progression/engine';
 
@@ -65,7 +66,11 @@ export const useCharacterStore = create<State & Actions>((set) => ({
     ),
 
   update: (fn) =>
-    set((s) => (s.character ? { character: fn(s.character), dirty: true } : s)),
+    set((s) => {
+      if (!s.character) return s;
+      const character = fn(s.character);
+      return { character: character.raging && !rageActive(character) ? {...character, raging:false} : character, dirty:true };
+    }),
 
   markSynced: () => set({ dirty: false, syncError: null }),
   setSyncError: (message) => set({ syncError: message }),
@@ -137,6 +142,7 @@ export const characterActions = {
   shortRest() {
     useCharacterStore.getState().update((c) => ({
       ...beginChoiceRest(c, 'short'),
+      raging: false,
       resources: c.resources.map((r) =>
         shortRestResource(c, r),
       ),
@@ -160,6 +166,7 @@ export const characterActions = {
         tempHp: 0,
         concentrationSpell: null,
         mageArmorActive: false,
+        raging: false,
         spellSlots: c.spellSlots.map((s) => ({ ...s, used: 0 })),
         resources: c.resources.map((r) => ({ ...r, current: r.max })),
         exhaustionLevel: clamp(c.exhaustionLevel - 1, 0, 6),

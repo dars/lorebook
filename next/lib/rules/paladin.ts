@@ -47,6 +47,7 @@ export function restoreNimbus(c:Character):Character {
   return {...c,resources:c.resources.map(x=>x===r?{...x,current:1}:x),spellSlots:c.spellSlots.map(s=>s===slot?{...s,used:s.used+1}:s)};
 }
 export function shortRestResource(c:Character,r:ClassResource):ClassResource {
+  if(c.classNameEn==='Barbarian'&&(r.nameEn==='Rage'||r.name==='狂暴'))return {...r,current:Math.min(r.max,r.current+1)};
   if(r.recovery!=='short')return r;
   const one = (c.classNameEn==='Paladin'&&r.nameEn==='Channel Divinity') || (c.classNameEn==='Fighter'&&r.nameEn==='Second Wind');
   return {...r,current:one?Math.min(r.max,r.current+1):r.max};

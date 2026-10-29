@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { movementFeet } from '@/lib/rules/barbarian';
 import { CollapsibleSection } from '@/components/ui/collapsible-section';
 import { InfoField, ParchmentCard } from '@/components/ui/decorations';
 import { EditIcon } from '@/components/ui/editor-sheet';
@@ -46,7 +47,7 @@ export function OverviewTab({
   ];
 
   const stats = [
-    { value: c.speed.replace(/[^0-9]/g, ''), sub: '速度', icon: 'run' as const },
+    { value: String(movementFeet(c)), sub: '速度', icon: 'run' as const },
     {
       value:
         c.proficiencyBonus >= 0
@@ -56,7 +57,7 @@ export function OverviewTab({
       icon: 'verified' as const,
     },
     { value: `${c.passivePerception}`, sub: '察覺', icon: 'eye' as const },
-    { value: `${c.spellDc}`, sub: '法術 DC', icon: 'sparkle' as const },
+    ...(c.spellDc > 0 ? [{ value: `${c.spellDc}`, sub: '法術 DC', icon: 'sparkle' as const }] : []),
   ];
 
   return (
