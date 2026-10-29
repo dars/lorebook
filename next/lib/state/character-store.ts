@@ -159,6 +159,7 @@ export const characterActions = {
         currentHp: c.maxHp,
         tempHp: 0,
         concentrationSpell: null,
+        mageArmorActive: false,
         spellSlots: c.spellSlots.map((s) => ({ ...s, used: 0 })),
         resources: c.resources.map((r) => ({ ...r, current: r.max })),
         exhaustionLevel: clamp(c.exhaustionLevel - 1, 0, 6),

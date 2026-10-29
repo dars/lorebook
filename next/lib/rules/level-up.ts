@@ -1,3 +1,4 @@
+import { backfillWizard } from './wizard';
 import { recalculateChoiceSkills } from './progression/engine';
 import type { AbilityScores, Character, ClassResource } from '@/lib/domain/character';
 import {
@@ -245,7 +246,7 @@ export function applyLevelUp(
     spells: [...c.spells, ...(choices.spells ?? [])],
     resources: syncClassResources(c.resources, c.classNameEn, target, newScores),
   };
-  return c.progression ? recalculateChoiceSkills(result) : result;
+  return backfillWizard(c.progression ? recalculateChoiceSkills(result) : result);
 }
 
 /**

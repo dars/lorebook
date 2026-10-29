@@ -1,3 +1,4 @@
+import { backfillWizard } from '@/lib/rules/wizard';
 import { SECOND_WIND } from '@/lib/rules/fighter-features';
 import type { Character, ClassResource, Spell } from '@/lib/domain/character';
 import { Character as CharacterSchema } from '@/lib/domain/character';
@@ -216,7 +217,7 @@ export function buildCharacter(input: CreationInput, id: string): Character {
     },
   ];
 
-  return CharacterSchema.parse({
+  return backfillWizard(CharacterSchema.parse({
     id,
     name: name.trim(),
     species: species.cn,
@@ -256,7 +257,7 @@ export function buildCharacter(input: CreationInput, id: string): Character {
       ...speciesResources(species, PB),
     ],
     hitDieFaces: cls.hitDie,
-  });
+  }));
 }
 
 /**

@@ -1,3 +1,4 @@
+import {cantripDamage} from '@/lib/rules/cantrip-damage';
 import type { ReactNode } from 'react';
 
 import { hitDiceRemaining, type Character, type Spell } from '@/lib/domain/character';
@@ -126,7 +127,7 @@ export function CharacterPrintSheet({ c }: { c: Character }) {
       {caster && <Section title="施法與法術">
         <p>施法屬性：{c.spellcastingAbility || '—'} · 法術豁免 DC：{c.spellDc} · 法術命中：{sign(c.spellAttack)}</p>
         {c.spellSlots.length > 0 && <p className={styles.slots}>法術位（剩餘／上限）：{c.spellSlots.map((s) => `${s.level} 環 ${Math.max(0, s.total - s.used)} / ${s.total}`).join('　')}</p>}
-        {spells.map((spell, i) => <PrintSpell key={i} spell={spell} />)}
+        {spells.map((spell, i) => <PrintSpell key={i} spell={{...spell,damage:cantripDamage(spell,c.level)}} />)}
       </Section>}
 
       {(c.backstory || c.personalityTags.length > 0 || Object.values(c.personality).some(Boolean)) && <Section title="背景故事與性格" newPage>

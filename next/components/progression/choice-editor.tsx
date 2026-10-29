@@ -1,19 +1,21 @@
 'use client';
+import { normalizePreparedSelections } from '@/lib/rules/progression/granted-spells';
 import { CoinAmount } from '@/components/character/coins';
 import { useState } from 'react';
 import type { Character } from '@/lib/domain/character';
 import { choiceGroups, type ChoiceCatalog, type ChoiceGroup, type Selections } from '@/lib/rules/progression/groups';
 import { replacementLimit, validateChoices, type ChoiceContext } from '@/lib/rules/progression/engine';
-export function ChoiceEditor({ character, catalog, value, onChange, context = 'backfill' }: {
+export function ChoiceEditor({ character, catalog, value: rawValue, onChange, context = 'backfill' }: {
     character: Character;
     catalog: ChoiceCatalog;
     value: Selections;
     onChange: (v: Selections) => void;
     context?: ChoiceContext;
 }) {
+    const value=normalizePreparedSelections(character,rawValue,catalog.spells);
     const groups = choiceGroups(character, catalog, value);
     const issues = validateChoices(character, value, catalog, context);
-    const complete = groups.filter(g => (value[g.id]?.length ?? 0) === g.count).length;
+    const complete = groups.filter(g => (value[g.id]?.length ?? 0) === g.count && !issues.some(i=>i.group===g.id)).length;
     return <section aria-label="成長選擇" className="my-4">
     <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-border pb-2"><h2 className="font-cjk text-body font-bold text-gold">成長選擇</h2><span className="text-small text-text-secondary">{complete} / {groups.length} 項完成</span></div>
     <p className="mb-3 text-small leading-relaxed text-text-secondary">點選項目即可選取，再點一次取消。已選內容留在原位。既有法術選入名額後會歸到該來源，其他手動與自創內容會保留。{context === 'creation' && '起始組合會自動穿戴護甲並啟用武器，之後可在物品頁調整。'}</p>
@@ -32,7 +34,7 @@ function Group({ group: g, character: c, value, onChange, context, issues }: {
     const [open, setOpen] = useState(false);
     const before = c.progression?.selections[g.id] ?? [];
     const limit = replacementLimit(c, g, context);
-    const locked = before.length >= g.count && !limit && (g.kind === 'form' || before.every(id => g.options.some(o => o.id === id)));
+    const locked = !issues.length && before.length >= g.count && !limit && (g.kind === 'form' || before.every(id => g.options.some(o => o.id === id)));
     const available: ChoiceGroup['options'] = [...g.options, ...value.filter(id => g.kind !== 'form' && !g.options.some(o => o.id === id)).map(id => ({ id, name: '已選項目需重新確認', detail: '名額或前置條件已改變，請取消後重選。' }))];
     const matches = available.filter(o => `${o.name} ${o.id} ${o.detail ?? ''}`.toLowerCase().includes(search.toLowerCase()));
     const toggle = (id: string) => onChange(value.includes(id) ? value.filter(v => v !== id) : g.count === 1 ? [id] : [...value, id]);

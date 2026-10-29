@@ -1,4 +1,5 @@
 'use client';
+import {WizardRest} from './wizard-rest';
 import { displayedCharacter } from '@/lib/state/displayed-character';
 
 import { useEffect, useId, useState } from 'react';
@@ -305,6 +306,7 @@ export function DecisionView({
               doneHint="HP、法術位與資源已回滿，專注已結束"
             />
           </div>
+          <WizardRest c={c}/>
           {persist && c.progression?.rest && <CharacterFlowLink href="/character-choices?mode=rest" className="mt-2 flex min-h-11 items-center justify-center text-small text-gold">調整休息後可替換的選項</CharacterFlowLink>}
         </ParchmentCard>
       </CollapsibleSection>

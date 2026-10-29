@@ -98,6 +98,7 @@ function LevelUpForm({
   const plan = planFor(initial, initial.speciesHpPerLevel);
 
   const [choiceSelections, setChoiceSelections] = useState<Selections>(initial.progression?.selections ?? {});
+  const backfillDraft=useFormDraft<Selections>({key:`lorebook-progression-${initial.id}-${initial.level}-backfill`,value:choiceSelections,active:false});
   const [deferChoices, setDeferChoices] = useState(false);
   const [hpMode, setHpMode] = useState<'average' | 'roll'>('average');
   const [roll, setRoll] = useState<number | ''>('');
@@ -286,9 +287,10 @@ function LevelUpForm({
   const flowCatalog = { ...choiceCatalog, handledFeatLevel: plan.hasAsi && !subclassOnly ? plan.targetLevel : undefined };
   const choiceCharacter = customSubclass ? {...rawPreview, customSubclass} : rawPreview;
   const effectiveSelections = normalizePreparedSelections(choiceCharacter, choiceSelections, choiceCatalog.spells);
-  const choiceIssues = validateChoices(choiceCharacter, effectiveSelections, flowCatalog, 'level', !deferChoices);
-  const choiceReady = subclassOnly || choiceIssues.length === 0;
-  const preview = !subclassOnly && choiceReady ? applyChoices(choiceCharacter, effectiveSelections, flowCatalog, 'level', !deferChoices) : rawPreview;
+  const choiceIssues = validateChoices(choiceCharacter, effectiveSelections, flowCatalog, 'level', !deferChoices && !subclassOnly);
+  if(subclassOnly && choiceCharacter.classNameEn==='Wizard' && !choiceCharacter.customSubclass && choiceCharacter.subclassEn==='Evoker' && (effectiveSelections['evocation-3']?.length??0)!==2) choiceIssues.push({group:'evocation-3',message:'塑能學者：請選擇兩個起始法術。'});
+  const choiceReady = choiceIssues.length === 0;
+  const preview = choiceReady ? applyChoices(choiceCharacter, effectiveSelections, flowCatalog, 'level', !deferChoices && !subclassOnly) : rawPreview;
 
   /**
    * 草稿的鍵帶角色 id 與目標等級：切到別的角色、或這一級已經升完，
@@ -797,8 +799,9 @@ function LevelUpForm({
         </>
       )}
 
-      {!subclassOnly && <>
-        {effectiveSelections !== choiceSelections && <p role="status" className="text-small text-gold">原本準備的法術已轉為固定授予，不再占名額；請補選空出的準備名額。</p>}
+      {<>
+        {backfillDraft.pending && <p className="text-small text-gold">有未保存的成長補選。<button type="button" className="min-h-11 px-2 underline" onClick={()=>{setChoiceSelections({...choiceSelections,...backfillDraft.pending});backfillDraft.accept();}}>帶入補選草稿</button><button type="button" className="min-h-11 px-2" onClick={backfillDraft.discard}>捨棄</button></p>}
+        {(effectiveSelections.prepared?.length??0)!==(choiceSelections.prepared?.length??0) && <p role="status" className="text-small text-gold">原本準備的法術已轉為固定授予，不再占名額；請補選空出的準備名額。</p>}
         <ChoiceEditor character={choiceCharacter} catalog={flowCatalog} value={effectiveSelections} onChange={setChoiceSelections} context="level" />
         <label className="flex min-h-11 items-center gap-2 text-small text-text-secondary"><input type="checkbox" checked={deferChoices} onChange={e=>setDeferChoices(e.target.checked)} className="accent-gold"/>尚未開始的舊選項稍後到「成長選擇」補齊</label>
         {!choiceReady && <ul role="alert" className="list-disc space-y-1 pl-5 text-small text-danger">{[...new Set(choiceIssues.map(i => i.message))].map(message => <li key={message}>{message}</li>)}</ul>}

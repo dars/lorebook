@@ -1,5 +1,9 @@
 'use client';
 
+import {wearingArmor} from '@/lib/rules/ac';
+import {characterActions} from '@/lib/state/character-store';
+import type {Character} from '@/lib/domain/character';
+import {cantripDamage} from '@/lib/rules/cantrip-damage';
 import { EntryCard, damageClass } from '@/components/character/entry-card';
 import type { Spell } from '@/lib/domain/character';
 import { withGridSquares } from '@/lib/rules/range';
@@ -16,32 +20,39 @@ import { withGridSquares } from '@/lib/rules/range';
  */
 export function SpellCard({
   spell,
+  characterLevel = 1,
+  character,
   badge,
   emphasize = false,
   borderless = false,
 }: {
   spell: Spell;
+  characterLevel?: number;
+  character?: Character;
   /** 徽章文字；省略時戲法為「戲」、其餘為環數。 */
   badge?: string;
   /** 金色強調徽章（已備法術、附贈／反應法術）。 */
   emphasize?: boolean;
   borderless?: boolean;
 }) {
-  const hasDamage = spell.damage.length > 0;
+  const damage = cantripDamage(spell,characterLevel);
+  const hasDamage = damage.length > 0;
   return (
-    <EntryCard
+    <> <EntryCard
       borderless={borderless}
       badge={badge ?? (spell.level === 0 ? '戲' : `${spell.level}`)}
       title={spell.name}
-      subtitle={[spell.nameEn, spell.homebrewId ? '自創法術' : ''].filter(Boolean).join(' · ')}
+      subtitle={[spell.nameEn, spell.homebrewId ? '自創法術' : '', spell.castingSources?.some(s=>s.free==='atWill')?'最低環隨意施放':''].filter(Boolean).join(' · ')}
       // 射程附上格數——跑團在方格圖上跑，省掉「60 除以 5」這步心算。
       meta={spell.range ? withGridSquares(spell.range) : null}
       metaArrow={spell.range.length > 0}
-      value={hasDamage ? spell.damage : null}
+      value={hasDamage ? damage : null}
       valueClass={hasDamage ? damageClass(spell.damageType) : 'text-gold-dim'}
       description={[spell.homebrewId ? `施法：${spell.castingTime}${spell.concentration ? ' · 需要專注' : ''}` : '', spell.description].filter(Boolean).join('\n\n') || null}
       footnote={[spell.alwaysPrepared ? '始終準備 · 不占職業已備名額' : '', spell.castingSources?.length ? spell.castingSources.map(s=>`${s.title}${s.ability?` · ${s.ability}`:''}${s.free==='atWill'?' · 最低環無限施放':s.free?` · ${s.free==='short'?'短休或長休':'長休'}恢復一次免費施放`:''}`).join('；') : spell.spellAbility ? `施法屬性：${spell.spellAbility}` : '', spell.upgrade].filter(Boolean).join(' · ') || null}
       emphasizeBadge={emphasize}
     />
+    {character&&!spell.homebrewId&&(spell.nameEn==='Mage Armor'||spell.name==='法師護甲')&&<div className="px-3 pb-2"><button type="button" aria-pressed={character.mageArmorActive} disabled={wearingArmor(character)} onClick={()=>characterActions.setMageArmor(!character.mageArmorActive)} className="min-h-11 text-small text-gold disabled:opacity-40">{character.mageArmorActive?'結束法師護甲':wearingArmor(character)?'著甲中無法啟用':'啟用法師護甲 · AC 13＋敏捷'}</button><p className="text-small text-text-secondary">記錄施放在自己身上的效果，持續 8 小時；{spell.castingSources?.some(s=>s.free==='atWill')?'最低環施放不消耗法術位。':'若使用法術位施放，請另行扣除。'}</p></div>}
+    </>
   );
 }

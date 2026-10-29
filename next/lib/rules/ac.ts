@@ -32,7 +32,7 @@ export const wearingHeavyArmor = (c: Character) =>
 
 /** 角色是否已知法師護甲——決定行動頁的開關要不要出現。 */
 export const knowsMageArmor = (c: Character) =>
-  c.spells.some((s) => !s.homebrewId && s.nameEn === 'Mage Armor');
+  [...c.spells,...(c.spellbook??[])].some((s) => !s.homebrewId && (s.nameEn === 'Mage Armor'||s.name==='法師護甲'));
 
 /**
  * SRD 5.2 中帶「無甲／非重甲」條件的職業特性對照，移植自 Flutter 端的

@@ -202,7 +202,7 @@ export function ActionsSection({
                   onToggle={() => toggleRing('ring.cantrip')}
                 >
                   {cantrips.map((s) => (
-                    <SpellCard key={`${s.name}-${s.level}`} spell={s} badge="戲" />
+                    <SpellCard character={c} characterLevel={c.level} key={`${s.name}-${s.level}`} spell={s} badge="戲" />
                   ))}
                 </RingGroup>
               )}
@@ -217,7 +217,7 @@ export function ActionsSection({
                   {actionSpells
                     .filter((s) => s.level === ring)
                     .map((s) => (
-                      <SpellCard
+                      <SpellCard character={c} characterLevel={c.level}
                         key={`${s.name}-${s.level}`}
                         spell={s}
                         badge={`${ring}`}
@@ -269,7 +269,7 @@ export function ActionsSection({
               <EntryCard badge="贈" title="無附贈動作" subtitle="No Bonus Actions" />
             ) : (
               bonusSpells.map((s) => (
-                <SpellCard key={`${s.name}-${s.level}`} spell={s} badge="贈" emphasize />
+                <SpellCard character={c} characterLevel={c.level} key={`${s.name}-${s.level}`} spell={s} badge="贈" emphasize />
               ))
             )}
           </div>
@@ -284,7 +284,7 @@ export function ActionsSection({
         >
           <div className="flex flex-col gap-2">
             {reactionSpells.map((s) => (
-              <SpellCard key={`${s.name}-${s.level}`} spell={s} badge="盾" emphasize />
+              <SpellCard character={c} characterLevel={c.level} key={`${s.name}-${s.level}`} spell={s} badge="盾" emphasize />
             ))}
             <EntryCard
               badge="攻"

@@ -53,7 +53,7 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
     const values = (key: string) => selected[key] ?? [];
     const chosen = (key: string, id: string) => values(key).includes(id);
     const add = (g: ChoiceGroup) => { if (lv >= g.level && g.count > 0)
-        groups.push(g); };
+        groups.push({...g,options:g.options.map(o=>({...o}))}); };
     const simple = (id: string, title: string, level: number, count: number, options: Option[], extra: Partial<ChoiceGroup> = {}) => add({ id, title, level, count, options, kind: 'feature', ...extra });
     const all = (family: string) => groups.filter(g => g.family === family).flatMap(g => values(g.id));
     const spellOptions = (classes: string[], min: number, max: number, predicate: (s: CatalogSpell) => boolean = () => true) => catalog.spells.filter(s => s.level >= min && s.level <= max && (!classes.length || s.classes.some(k => classes.includes(k))) && predicate(s));
@@ -227,6 +227,9 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
             const inferred = source === 'background-origin' ? (bg?.name.includes('牧師') ? 'Cleric' : bg?.name.includes('法師') ? 'Wizard' : '') : '';
             simple(`${source}/list`, '法術新手 · 法術清單', 1, 1, opts(['Cleric|牧師', 'Druid|德魯伊', 'Wizard|法師']).filter(o => !inferred || o.id === inferred));
             const list = values(`${source}/list`)[0] || inferred;
+            const listGroup=groups.find(g=>g.id===`${source}/list`)!;
+            listGroup.detail='再次取得法術新手時，必須選不同的職業法術清單。';
+            for(const o of listGroup.options) if(Object.entries(selected).some(([key,ids])=>key!==`${source}/list`&&key.endsWith('/list')&&ids.includes(o.id)) || (source!=='background-origin' && o.id===(bg?.name.includes('法師')?'Wizard':bg?.name.includes('牧師')?'Cleric':''))) o.disabledReason='其他法術新手來源已使用此清單';
             simple(`${source}/ability`, '法術新手 · 施法屬性', 1, 1, opts(['INT|智力', 'WIS|感知', 'CHA|魅力']));
             if (list) {
                 const ability = values(`${source}/ability`)[0];
@@ -256,6 +259,9 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
     }
     for (const g of groups.filter(g => g.kind === 'book'))
         for (const o of g.options) {
+            const elsewhere=groups.some(other=>other.kind==='book'&&other.id!==g.id&&values(other.id).includes(o.id));
+            const recorded=(c.spellbook??[]).some(s=>s.progressionSource && s.progressionSource!==g.id && sameSpellName(s.nameEn,catalog.spells.find(x=>x.id===o.id)?.eng_name??''));
+            if(elsewhere||recorded) o.disabledReason='已由其他來源加入法術書';
             if (!c.progression?.selections[g.id]?.includes(o.id) && (c.spellbook ?? []).some(s => !s.progressionSource && sameSpellName(s.nameEn, catalog.spells.find(x => x.id === o.id)?.eng_name ?? '')))
                 o.detail = `${o.detail ?? ''} · 已在法術書（補登時可歸入此來源）`;
         }

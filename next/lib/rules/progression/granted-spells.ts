@@ -40,8 +40,12 @@ export function automaticSpellNames(c: Character, s: Record<string, string[]>): 
 
 /** 誓言等自動授予的法術不佔準備名額；移出一般清單，保留於自動授予清單。 */
 export function normalizePreparedSelections(c:Character, s:Record<string,string[]>, spells:{id:string;eng_name:string|null}[]):Record<string,string[]> {
+    const bg=c.features.find(f=>!f.isCustom&&f.source.startsWith('背景：'));
+    const inferred=bg?.name.includes('法師')?'Wizard':bg?.name.includes('牧師')?'Cleric':bg?.name.includes('德魯伊')?'Druid':'';
+    if(inferred&&!s['background-origin/list']?.length) s={...s,'background-origin/list':[inferred]};
     if(!s.prepared)return s;
     const names=automaticSpellNames(c,s);
-    const prepared=s.prepared.filter(id=>!names.some(n=>sameSpellName(n,spells.find(x=>x.id===id)?.eng_name??'')));
+    const extra = new Set(Object.entries(s).filter(([key]) => /^(spell-mastery-[12]|signature|lore-spells|arcanum-\d+|tome-rituals)$/.test(key) || key.endsWith('/spell')).flatMap(([, ids])=>ids));
+    const prepared=s.prepared.filter(id=>!extra.has(id)&&!names.some(n=>sameSpellName(n,spells.find(x=>x.id===id)?.eng_name??'')));
     return prepared.length===s.prepared.length?s:{...s,prepared};
 }

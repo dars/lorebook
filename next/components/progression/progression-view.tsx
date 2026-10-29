@@ -1,4 +1,5 @@
 'use client';
+import { choiceGroups } from '@/lib/rules/progression/groups';
 import { useState } from 'react';
 import { AppLink } from '@/components/ui/app-link';
 import type { Character } from '@/lib/domain/character';
@@ -26,8 +27,7 @@ export function ProgressionView({ initial, catalog, context = 'backfill' }: {
             clear();
     }
     catch (e) {
-        if (e instanceof Error && e.message.includes('NEXT_REDIRECT'))
-            throw e;
+        if (e instanceof Error && e.message.includes('NEXT_REDIRECT')) { clear(); throw e; }
         setError(e instanceof Error ? e.message : '保存失敗，請重試。');
         setBusy(false);
     } };
@@ -36,7 +36,7 @@ export function ProgressionView({ initial, catalog, context = 'backfill' }: {
     <h1 className="font-cjk text-h2 text-text-primary">{context === 'rest' ? '休息後調整' : '補齊成長選擇'}</h1><p className="mt-2 text-small text-text-secondary">{initial.name} · {initial.className} {initial.level} 級。此頁不會提升等級或回復生命與資源；尚未選取的項目可以分次補齊。</p>
     {pending && <div className="my-3 flex items-center gap-3 text-small"><span>有未完成的選擇。</span><button className="min-h-11 text-gold" onClick={() => { setValue(pending); accept(); }}>恢復草稿</button><button className="min-h-11 text-text-secondary" onClick={discard}>捨棄草稿</button></div>}
     <ChoiceEditor character={initial} catalog={catalog} value={value} onChange={setValue} context={context}/>
-    {(error || errors.length > 0) && <p role="alert" className="my-3 text-small text-danger">{error || '部分選擇還不完整或不符合條件，請展開檢查。'}</p>}
+    {(error || errors.length > 0) && <p role="alert" className="my-3 text-small text-danger">{error || errors.map(i=>`${choiceGroups(initial,catalog,value).find(g=>g.id===i.group)?.title??'起源專長'}：${i.message}`).join('；')}</p>}
     <button type="button" disabled={busy || errors.length > 0} onClick={save} className="min-h-12 w-full rounded-card border border-gold bg-gold/10 text-body font-bold text-gold disabled:opacity-40">{busy ? '保存中…' : '保存選擇'}</button>
   </main>;
 }

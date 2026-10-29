@@ -29,7 +29,7 @@ export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: Reac
           {c.cantrips.length === 0 && <p className="py-3 text-ui leading-relaxed text-text-secondary">尚未選用戲法，點標題右側「管理戲法」勾選加入。</p>}
           <div className="flex flex-col gap-2">
             {c.cantrips.map((s, i) => (
-              <SpellCard key={`${s.name}-${i}`} spell={s} badge="戲" />
+              <SpellCard character={tools?c:undefined} characterLevel={c.level} key={`${s.name}-${i}`} spell={s} badge="戲" />
             ))}
           </div>
         </CollapsibleSection>
@@ -37,7 +37,7 @@ export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: Reac
 
       {(!!c.spellbook?.length || tools?.book) && <CollapsibleSection en="SPELLBOOK" cn={`法術書 · ${c.spellbook?.length??0} 個`} trailing={tools?.book}>
         <p className="mb-2 text-small text-text-secondary">抄錄的法術與已備名額分開；休息後可調整準備清單。</p>
-        <div className="divide-y divide-border-2">{(c.spellbook??[]).map((s,i)=><SpellCard key={`${s.name}-${i}`} spell={s} badge={`${s.level}`}/>)}</div>
+        <div className="divide-y divide-border-2">{(c.spellbook??[]).map((s,i)=><SpellCard character={tools?c:undefined} characterLevel={c.level} key={`${s.name}-${i}`} spell={s} badge={`${s.level}`}/>)}</div>
       </CollapsibleSection>}
       {/* 已備法術：2024 的施法者是「準備」而非「習得即可用」。
           環數在區段**內部**用小膠囊分組，不是每一環各開一個可收合區段——
@@ -55,7 +55,7 @@ export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: Reac
               </span>
               <div className="flex flex-col gap-2">
                 {spells.map((s, i) => (
-                  <SpellCard key={`${s.name}-${i}`} spell={s} badge={`${lv}`} emphasize />
+                  <SpellCard character={tools?c:undefined} characterLevel={c.level} key={`${s.name}-${i}`} spell={s} badge={`${lv}`} emphasize />
                 ))}
               </div>
             </div>

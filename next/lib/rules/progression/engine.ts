@@ -61,8 +61,10 @@ export function validateChoices(c: Character, selections: Selections, catalog: C
             const extra = groups.filter(x => x.kind === 'spell' && x.always).flatMap(x => selections[x.id] ?? []);
             const auto = automaticSpellNames(c, selections);
             const replacedBefore = g.id === 'prepared' ? before.filter(id => !extra.includes(id) && !auto.some(n => sameSpellName(n, catalog.spells.find(s => s.id === id)?.eng_name ?? ''))) : before;
-            const dropped = removed(replacedBefore, v), limit = replacementLimit(c, g, context);
-            if (dropped > limit)
+            const validBefore = g.kind==='form'?replacedBefore:replacedBefore.filter(id=>{const o=g.options.find(o=>o.id===id);return o&&!o.disabledReason;});
+            const dropped = removed(validBefore, v), limit = replacementLimit(c, g, context);
+            const repairingOrigin=g.id.endsWith('/list')&&before.some(id=>g.options.find(o=>o.id===id)?.disabledReason);
+            if (dropped > limit && !repairingOrigin)
                 issue(g, limit ? `本次最多替換 ${limit} 項。` : '這項選擇目前不能替換。');
             if (g.replace?.budget && dropped) {
                 const budget = g.replace.budget ?? g.id;
@@ -89,6 +91,7 @@ export function validateChoices(c: Character, selections: Selections, catalog: C
                 issue(g, '所選項目不在目前合資格清單中。');
                 continue;
             }
+            if (option.disabledReason) issue(g, `${option.name}：${option.disabledReason}`);
             if (g.kind === 'book' && context !== 'backfill' && !before.includes(id) && (c.spellbook ?? []).some(s => !s.progressionSource && sameSpellName(s.nameEn, catalog.spells.find(x => x.id === id)?.eng_name ?? '')))
                 issue(g, '法術書已經有這個法術，免費抄錄請選新的法術。');
             if (option.requires && !has(selections, g.id, option.requires))
@@ -149,6 +152,7 @@ export function validateChoices(c: Character, selections: Selections, catalog: C
     for (const o of allOrigins) {
         if (o.id === 'Skilled')
             continue;
+        if(o.id==='Magic Initiate'&&!selections[`${o.source}/list`]?.length) continue;
         const key = o.id === 'Magic Initiate' ? `${o.id}:${selections[`${o.source}/list`]?.[0]}` : o.id;
         if (originSeen.has(key))
             issues.push({ group: o.source, message: '已取得相同專長；法術新手必須選不同職業清單。' });
@@ -156,7 +160,7 @@ export function validateChoices(c: Character, selections: Selections, catalog: C
     }
     // 解除父項時可以移除其子項，但不可刪掉無關的已選選項。
     for (const key of Object.keys(old))
-        if (groups.some(g => g.id === key) && !selections[key]?.length && old[key].length)
+        if (groups.some(g => g.id === key) && !(key==='prepared' && old[key].every(id=>!choiceGroups(c,catalog,selections).find(g=>g.id==='prepared')?.options.some(o=>o.id===id))) && !selections[key]?.length && old[key].length)
             issues.push({ group: key, message: '不能清除已完成的選擇。' });
     return issues;
 }
@@ -230,7 +234,7 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
             const n = removed(baseline(c)[g.id] ?? [], active[g.id] ?? []);
             if (n && g.replace) {
                 const key = g.replace.budget ?? g.id;
-                restSpent[key] = (restSpent[key] ?? 0) + (g.replace.count >= 99 ? 99 : n);
+                restSpent[key] = (restSpent[key] ?? 0) + (g.id==='prepared'&&c.classNameEn==='Wizard'&&c.progression?.rest==='short'?n:g.replace.count >= 99 ? 99 : n);
             }
         }
     const toolName = (id: string) => TOOLS.find(t => t.id === id)?.name ?? id;
