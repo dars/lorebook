@@ -312,6 +312,7 @@ function LevelUpForm({
       customName, customDesc, customBoost, customAbility, customEpic,
     },
     // 補選只有一個選擇，存草稿沒有意義；而且它與升級共用鍵會互相污染。
+    saving: busy,
     active: started && !busy && !subclassOnly,
   });
 

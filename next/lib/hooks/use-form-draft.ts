@@ -8,11 +8,12 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
  * 這兩個流程都要填好幾步才送出，中途離開等於全部重來。日誌編輯器早就有
  * 「尚未儲存」的攔截，這兩個更長的流程反而沒有。
  *
- * 兩層保護，缺一不可：
+ * 保護涵蓋編輯中與保存中：
  *
  * 1. **草稿存 sessionStorage** —— 主要防線。App Router 內的返回鍵是 client
  *    導覽，`beforeunload` 根本不會觸發；只有把值留下來，使用者走回來時才救得回。
  * 2. **beforeunload** —— 補重新整理與關分頁這兩種瀏覽器層級的離開。
+ * 3. 頁面連結離開前確認；即使中斷保存，也保留可恢復的草稿。
  *
  * 用 sessionStorage 而非 localStorage：草稿屬於「這次開著的分頁」，關掉瀏覽器
  * 之後還跳出三天前的半成品只會讓人困惑。
@@ -59,6 +60,7 @@ export function useFormDraft<T>({
   key,
   value,
   active,
+  saving = false,
 }: {
   /** sessionStorage 的鍵。同一流程的不同入口要用不同鍵。 */
   key: string;
@@ -66,36 +68,50 @@ export function useFormDraft<T>({
   value: T;
   /** false 時停止保存並解除攔截（例如已送出、或使用者根本還沒開始填）。 */
   active: boolean;
+  /** 送出尚未確認成功時也必須保護資料。 */
+  saving?: boolean;
 }) {
   const raw = useArrivalDraft(key);
   const [dismissed, setDismissed] = useState(false);
 
+  const cleared = useRef(false);
+  const protectedDraft = active || saving;
+  const checkpoint = () => {
+    cleared.current = false;
+    try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* 無痕模式可能不允許保存。 */ }
+  };
   useEffect(() => {
-    if (!active) return;
-    try {
-      sessionStorage.setItem(key, JSON.stringify(value));
-    } catch {
-      // 無痕模式或配額已滿。草稿是加分項，存不進去就算了。
-    }
-  }, [key, value, active]);
-
-  useEffect(() => {
-    if (!active) return;
-    const onBeforeUnload = (e: BeforeUnloadEvent) => e.preventDefault();
+    if (!protectedDraft) return;
+    cleared.current = false;
+    const persist = () => { try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* 保留離開提醒。 */ } };
+    persist();
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (cleared.current) return;
+      persist();
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    const onLink = (e: MouseEvent) => {
+      if(cleared.current || e.defaultPrevented || e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)return;
+      const link=e.target instanceof Element?e.target.closest('a[href]'):null;
+      if(!(link instanceof HTMLAnchorElement)||link.target==='_blank'||link.hasAttribute('download'))return;
+      const url=new URL(link.href,location.href);
+      if(url.origin===location.origin&&url.pathname===location.pathname&&url.search===location.search)return;
+      persist();
+      if(!window.confirm(saving?'仍在保存，離開可能中斷送出；草稿會留在這個分頁。確定離開？':'有尚未保存的選擇；離開後可在這個分頁恢復草稿。確定離開？')){e.preventDefault();e.stopImmediatePropagation();}
+    };
     window.addEventListener('beforeunload', onBeforeUnload);
-    return () => window.removeEventListener('beforeunload', onBeforeUnload);
-  }, [active]);
+    document.addEventListener('click',onLink,true);
+    return () => { window.removeEventListener('beforeunload', onBeforeUnload); document.removeEventListener('click',onLink,true); };
+  }, [protectedDraft, saving, key, value]);
 
   const clear = () => {
-    try {
-      sessionStorage.removeItem(key);
-    } catch {
-      // 同上，清不掉不影響流程。
-    }
+    cleared.current = true;
+    try { sessionStorage.removeItem(key); } catch { /* 不影響已確認的保存結果。 */ }
   };
 
   let pending: T | null = null;
-  if (raw && !dismissed && !active) {
+  if (raw && !dismissed && !protectedDraft) {
     try {
       pending = JSON.parse(raw) as T;
     } catch {
@@ -118,5 +134,6 @@ export function useFormDraft<T>({
       setDismissed(true);
     },
     clear,
+    checkpoint,
   };
 }

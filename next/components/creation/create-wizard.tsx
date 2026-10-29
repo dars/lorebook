@@ -223,6 +223,7 @@ export function CreateWizard({
   const { pending, accept, discard, clear } = useFormDraft({
     key: 'lorebook-draft-create',
     value: draft,
+    saving: busy,
     active: started && !busy,
   });
 
