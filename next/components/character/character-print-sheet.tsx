@@ -1,3 +1,4 @@
+import { featureSubtitle } from '@/lib/ui/feature-groups';
 import {cantripDamage} from '@/lib/rules/cantrip-damage';
 import { movementFeet } from '@/lib/rules/barbarian';
 import type { ReactNode } from 'react';
@@ -121,7 +122,7 @@ export function CharacterPrintSheet({ c }: { c: Character }) {
 
       {c.features.length > 0 && <Section title="特性與專長" newPage>{c.features.map((feature, i) => <PrintEntry key={i} text={feature.description}>
         <h3>{feature.name}{feature.isCustom && '（自創）'}</h3>
-        <p className={styles.meta}>{[feature.nameEn, feature.source, featureArmorViolation(c, feature)].filter(Boolean).join(' · ')}</p>
+        <p className={styles.meta}>{[featureSubtitle(feature), feature.source, featureArmorViolation(c, feature)].filter(Boolean).join(' · ')}</p>
         <p>{feature.description}</p>
       </PrintEntry>)}</Section>}
 

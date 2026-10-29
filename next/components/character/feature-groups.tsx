@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import type { Character } from '@/lib/domain/character';
 import { featureArmorViolation } from '@/lib/rules/ac';
-import { groupFeatures, type FeatureGroup } from '@/lib/ui/feature-groups';
+import { featureSubtitle, groupFeatures, type FeatureGroup } from '@/lib/ui/feature-groups';
 import { CustomBadge } from './custom-badge';
 
 export function FeatureGroups({ c }: { c: Character }) {
@@ -31,7 +31,7 @@ function Group({ group, c }: { group: FeatureGroup; c: Character }) {
             <span aria-hidden className="shrink-0 text-text-secondary">{expanded.has(index) ? '▾' : '▸'}</span>
             <span className="min-w-0 flex-1">
               <span className={`break-words text-body font-medium ${violation ? 'text-text-secondary line-through' : 'text-text-primary'}`}>{f.name}</span>
-              {f.nameEn && <span className="ml-2 break-words font-label text-small text-text-secondary">{f.nameEn}</span>}
+              {f.nameEn && <span className="ml-2 break-words font-label text-small text-text-secondary">{featureSubtitle(f)}</span>}
               {!group.source && f.source && <span className="ml-2 text-small text-section-label">{f.source}</span>}
               {violation && <span className="block text-small text-danger">{violation}</span>}
             </span>

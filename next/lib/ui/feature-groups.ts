@@ -24,3 +24,10 @@ export function groupFeatures(features: CharacterFeature[]): FeatureGroup[] {
     features: [...group.features].sort((a, b) => (a.level ?? 0) - (b.level ?? 0) || a.index - b.index),
   }));
 }
+
+/** 副標區分同名的高等級強化，保留資料中的規則名稱供能力比對使用。 */
+export function featureSubtitle(feature: CharacterFeature): string {
+  return !feature.isCustom && feature.nameEn === 'Improved Brutal Strike' && /\bLv\s*17\b/i.test(feature.source)
+    ? 'Improved Brutal Strike (Enhanced)'
+    : feature.nameEn;
+}

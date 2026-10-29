@@ -9,7 +9,7 @@ export type GuideClass = {
 export const GUIDE_CLASSES: GuideClass[] = [
   {
     en: 'Barbarian', cn: '野蠻人', page: 28, endPage: 30,
-    features: { 1: '狂暴 Rage・無甲防禦 Unarmored Defense', 2: '危險感知 Danger Sense・魯莽攻擊 Reckless Attack', 3: '原初知識 Primal Knowledge', 5: '額外攻擊 Extra Attack・快速移動 Fast Movement', 7: '野性直覺 Feral Instinct・本能猛撲 Instinctive Pounce', 9: '殘暴打擊 Brutal Strike', 11: '不屈狂暴 Relentless Rage', 13: '精通殘暴打擊 Improved Brutal Strike', 15: '持續狂暴 Persistent Rage', 17: '精通殘暴打擊：增強 Improved Brutal Strike', 18: '不屈之力 Indomitable Might', 20: '原初勇士 Primal Champion' },
+    features: { 1: '狂暴 Rage・無甲防禦 Unarmored Defense', 2: '危險感知 Danger Sense・魯莽攻擊 Reckless Attack', 3: '原初知識 Primal Knowledge', 5: '額外攻擊 Extra Attack・快速移動 Fast Movement', 7: '野性直覺 Feral Instinct・本能猛撲 Instinctive Pounce', 9: '殘暴打擊 Brutal Strike', 11: '不屈狂暴 Relentless Rage', 13: '精通殘暴打擊 Improved Brutal Strike', 15: '持續狂暴 Persistent Rage', 17: '精通殘暴打擊：增強 Improved Brutal Strike (Enhanced)', 18: '不屈之力 Indomitable Might', 20: '原初勇士 Primal Champion' },
     subclass: { name: '狂戰士道途 Path of the Berserker', page: 30, features: { 3: '狂亂 Frenzy', 6: '無心狂暴 Mindless Rage', 10: '報復 Retaliation', 14: '威嚇氣勢 Intimidating Presence' } },
     reminders: ['長休後可替換 1 種精通武器。', '殘暴打擊的效果在命中時選擇，不是升級時永久選定。狂暴中的原初知識也不另外授予技能熟練。'],
   },
