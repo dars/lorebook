@@ -36,3 +36,14 @@ describe('法術選擇草稿', () => {
     expect(applySpellSelection(current, 'cantrips', [a], [a]).cantrips).toEqual([b]);
   });
 });
+
+it('成長授予法術不可從一般面板移除',()=>{
+ const managed={...a,progressionSource:'cantrips'};const c={...character(),cantrips:[managed]};
+ expect(applySpellSelection(c,'cantrips',[managed],[]).cantrips).toEqual([managed]);
+});
+it('法術書與已備法術分開，刪除抄錄不清除正在專注的同名法術',()=>{
+ const c={...character(),spellbook:[a],spells:[a],concentrationSpell:a.name};
+ const result=applySpellSelection(c,'spellbook',[a],[]);
+ expect(result.spellbook).toEqual([]);expect(result.spells).toEqual([a]);expect(result.concentrationSpell).toBe(a.name);
+ expect(applySpellSelection(c,'spellbook',[a],[a,b]).spellbook?.[1].prepared).toBe(false);
+});

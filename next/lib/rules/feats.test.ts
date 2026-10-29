@@ -59,13 +59,13 @@ describe('fixture', () => {
 });
 
 describe('featCandidates', () => {
-  it('Lv4 只有擒抱大師——排除屬性值提升本身、戰鬥風格、起源、史詩恩賜', () => {
-    expect(featCandidates(FEATS, 4).map((f) => f.eng_name)).toEqual(['Grappler']);
+  it('Lv4 包含起源與風格類別，資格另外檢查；排除 ASI 按鈕與史詩', () => {
+    expect(featCandidates(FEATS, 4).map((f) => f.eng_name)).toEqual(['Archery','Defense','Great Weapon Fighting','Two-Weapon Fighting','Grappler','Alert','Magic Initiate','Savage Attacker','Skilled']);
   });
 
-  it('Lv19 為擒抱大師＋7 個史詩恩賜', () => {
+  it('Lv19 包含全部非 ASI 選項與7個史詩恩賜', () => {
     const c = featCandidates(FEATS, 19);
-    expect(c).toHaveLength(8);
+    expect(c).toHaveLength(16);
     expect(c.filter((f) => f.data.category === 'EB')).toHaveLength(7);
   });
 });

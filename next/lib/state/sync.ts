@@ -21,9 +21,12 @@ const DEBOUNCE_MS = 3000;
 
 async function push(c: Character): Promise<string | null> {
   const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if(!user)return '登入狀態已失效，請重新登入。';
   // 提升欄位（name/class_name/level）與 data 一起寫，供清單查詢用；
-  // 主鍵是複合的 (user_id, id)，user_id 由 RLS 的 default auth.uid() 帶入。
+  // 主鍵是複合的 (user_id, id)，明確綁定目前登入者。
   const { error } = await supabase.from('user_characters').upsert({
+    user_id: user.id,
     id: c.id,
     name: c.name,
     class_name: c.className,
@@ -31,6 +34,24 @@ async function push(c: Character): Promise<string | null> {
     data: c,
   });
   return error?.message ?? null;
+}
+
+// 同一張卡的推送串行化，避免較舊的 debounce 回應覆蓋成長流程的保存。
+let pendingPush: Promise<string | null> | null = null;
+export async function flushCharacterChanges(): Promise<string | null> {
+  while (useCharacterStore.getState().dirty) {
+    if (pendingPush) { const error = await pendingPush; if(error) return error; continue; }
+    const snapshot = useCharacterStore.getState().character;
+    if (!snapshot) return null;
+    pendingPush = push(snapshot).then(error => {
+      const store=useCharacterStore.getState();
+      if(error)store.setSyncError(error);
+      else if(store.character===snapshot)store.markSynced();
+      return error;
+    }).catch(()=>{const error='連線失敗，變更仍保留在本機。';useCharacterStore.getState().setSyncError(error);return error;}).finally(()=>{pendingPush=null;});
+    const error=await pendingPush;if(error)return error;
+  }
+  return null;
 }
 
 /**
@@ -41,25 +62,15 @@ async function push(c: Character): Promise<string | null> {
  */
 export function useCharacterSync(enabled = true) {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // 用 ref 保存最新值：debounce 觸發時要推的是「當下」的角色，不是排程當時的。
-  const latest = useRef<Character | null>(null);
 
   useEffect(() => {
     // 試玩模式不推雲端：訪客沒有帳號，寫入也會被 RLS 擋下。
     // 以參數而非在呼叫端條件呼叫——hook 不能有條件地執行。
     if (!enabled) return;
 
-    const flush = async () => {
-      const c = latest.current;
-      if (!c || !useCharacterStore.getState().dirty) return;
-      const err = await push(c);
-      const store = useCharacterStore.getState();
-      if (err) store.setSyncError(err);
-      else store.markSynced();
-    };
+    const flush = () => flushCharacterChanges();
 
     const unsub = useCharacterStore.subscribe((s) => {
-      latest.current = s.character;
       if (!s.dirty) return;
       if (timer.current) clearTimeout(timer.current);
       timer.current = setTimeout(flush, DEBOUNCE_MS);

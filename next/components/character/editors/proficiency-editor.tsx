@@ -37,23 +37,23 @@ function ProficiencyDraft({ initial, tools, onClose }: { initial: Character; too
         });
         onClose();
       }}>
-      <p className="mb-4 text-ui text-text-secondary">原地勾選或取消，儲存後才套用到角色。</p>
-      <Choices title="語言" options={[...LANGUAGES, ...before.languages]} selected={languages} onChange={setLanguages} />
-      <div className="mt-6"><Choices title="工具" options={[...tools.map(t => t.name), ...before.toolProficiencies]} selected={proficiencies} onChange={setProficiencies} /></div>
+      <p className="mb-4 text-ui text-text-secondary">原地勾選或取消，儲存後才套用到角色。成長選擇授予的熟練請至「成長選擇／補選」管理。</p>
+      <Choices title="語言" options={[...LANGUAGES, ...before.languages]} locked={before.progression?.grantedLanguages} selected={languages} onChange={setLanguages} />
+      <div className="mt-6"><Choices title="工具" options={[...tools.map(t => t.name), ...before.toolProficiencies]} locked={before.progression?.grantedTools} selected={proficiencies} onChange={setProficiencies} /></div>
       {!tools.length && <p className="text-small text-text-secondary">工具目錄暫無資料，仍可管理既有熟練或自行填寫。</p>}
     </EditorSheet>
     <EditorSheet open={discard} title="捨棄尚未儲存的熟練變更？" onClose={() => setDiscard(false)} closeLabel="繼續編輯" onSave={onClose} saveLabel="捨棄變更" saveTone="danger"><p>角色目前的熟練不會改變。</p></EditorSheet>
   </>;
 }
 
-function Choices({ title, options, selected, onChange }: { title: string; options: string[]; selected: string[]; onChange: (items: string[]) => void }) {
+function Choices({ title, options, selected, onChange, locked=[] }: { locked?:string[]; title: string; options: string[]; selected: string[]; onChange: (items: string[]) => void }) {
   const [custom, setCustom] = useState<string[]>([]);
   const [value, setValue] = useState('');
   const all = [...new Set([...options, ...custom])];
   return <section aria-label={title}>
     <FieldLabel>{title}</FieldLabel>
     <div className="grid gap-2 medium:grid-cols-2">{all.map(item => <label key={item} className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-card border px-3 py-2 text-ui ${selected.includes(item) ? 'border-gold bg-gold/10 text-gold' : 'border-border-2 text-text-primary'}`}>
-      <input type="checkbox" className="size-4 shrink-0 accent-gold" checked={selected.includes(item)} onChange={() => onChange(selected.includes(item) ? selected.filter(s => s !== item) : [...selected, item])} />
+      <input type="checkbox" className="size-4 shrink-0 accent-gold" checked={selected.includes(item)} disabled={locked.includes(item)} onChange={() => onChange(selected.includes(item) ? selected.filter(s => s !== item) : [...selected, item])} />
       <span className="break-words">{item}</span>
     </label>)}</div>
     <div className="mt-3 flex gap-2">

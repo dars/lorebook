@@ -1,0 +1,76 @@
+'use client';
+import { CoinAmount } from '@/components/character/coins';
+import { useState } from 'react';
+import type { Character } from '@/lib/domain/character';
+import { choiceGroups, type ChoiceCatalog, type ChoiceGroup, type Selections } from '@/lib/rules/progression/groups';
+import { replacementLimit, validateChoices, type ChoiceContext } from '@/lib/rules/progression/engine';
+export function ChoiceEditor({ character, catalog, value, onChange, context = 'backfill' }: {
+    character: Character;
+    catalog: ChoiceCatalog;
+    value: Selections;
+    onChange: (v: Selections) => void;
+    context?: ChoiceContext;
+}) {
+    const groups = choiceGroups(character, catalog, value);
+    const issues = validateChoices(character, value, catalog, context);
+    const complete = groups.filter(g => (value[g.id]?.length ?? 0) === g.count).length;
+    return <section aria-label="成長選擇" className="my-4">
+    <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-border pb-2"><h2 className="font-cjk text-body font-bold text-gold">成長選擇</h2><span className="text-small text-text-secondary">{complete} / {groups.length} 項完成</span></div>
+    <p className="mb-3 text-small leading-relaxed text-text-secondary">點選項目即可選取，再點一次取消。已選內容留在原位。既有法術選入名額後會歸到該來源，其他手動與自創內容會保留。</p>
+    <div className="divide-y divide-border-2">{groups.map(g => <Group key={g.id} group={g} character={character} value={value[g.id] ?? []} onChange={v => onChange({ ...value, [g.id]: v })} context={context} issues={issues.filter(i => i.group === g.id).map(i => i.message)}/>)}</div>
+  </section>;
+}
+function Group({ group: g, character: c, value, onChange, context, issues }: {
+    group: ChoiceGroup;
+    character: Character;
+    value: string[];
+    onChange: (v: string[]) => void;
+    context: ChoiceContext;
+    issues: string[];
+}) {
+    const [search, setSearch] = useState('');
+    const [open, setOpen] = useState(false);
+    const before = c.progression?.selections[g.id] ?? [];
+    const limit = replacementLimit(c, g, context);
+    const locked = before.length >= g.count && !limit && (g.kind === 'form' || before.every(id => g.options.some(o => o.id === id)));
+    const available: ChoiceGroup['options'] = [...g.options, ...value.filter(id => g.kind !== 'form' && !g.options.some(o => o.id === id)).map(id => ({ id, name: '已選項目需重新確認', detail: '名額或前置條件已改變，請取消後重選。' }))];
+    const matches = available.filter(o => `${o.name} ${o.id} ${o.detail ?? ''}`.toLowerCase().includes(search.toLowerCase()));
+    const toggle = (id: string) => onChange(value.includes(id) ? value.filter(v => v !== id) : g.count === 1 ? [id] : [...value, id]);
+    const preview = value.map(v => g.kind === 'form' ? formName(v) : g.options.find(o => o.id === v)?.name ?? '待確認項目').join('、');
+    return <div className="py-1">
+    <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="flex min-h-11 w-full items-center gap-2 text-left"><span aria-hidden className="text-gold">{open ? '▾' : '▸'}</span><span className="min-w-0 flex-1"><span className="text-ui font-semibold text-text-primary">{g.title}</span><span className="ml-2 text-small text-text-secondary">{preview || '尚未選擇'}</span></span><span className={`shrink-0 text-small ${issues.length ? 'text-text-secondary' : 'text-gold'}`}>{value.length}/{g.count}</span></button>
+    {open && <div className="pb-3 pl-5">
+      {g.detail && <p className="mb-2 text-small text-text-secondary">{g.detail}</p>}
+      {locked ? <p className="text-small text-text-secondary">已完成。{g.replace ? `可在${g.replace.when === 'level' ? '下次升級' : g.replace.when === 'long' ? '長休' : '短休或長休'}後替換。` : '此為取得時的固定選擇。'}</p> : <>
+        {before.length > 0 && limit > 0 && <p className="mb-2 text-small text-section-label">本次可替換 {limit >= 99 ? '整份清單' : `${limit} 項`}。請先取消舊項目，再選新項目。</p>}
+        {g.kind === 'form' ? <FormPicker value={value} onChange={onChange} count={g.count} level={c.level}/> : <>
+          {g.options.length > 8 && <input aria-label={`搜尋${g.title}`} placeholder="搜尋名稱…" value={search} onChange={e => setSearch(e.target.value)} className="mb-2 min-h-11 w-full rounded-chip border border-border bg-surface-2 px-3 text-ui text-text-primary"/>}
+          <div className="max-h-72 overflow-y-auto rounded-chip border border-border-2 divide-y divide-border-2">
+            {matches.map(o => <div key={o.id} className={`relative ${value.includes(o.id) ? 'bg-gold/10' : ''}`}><label className={`flex min-h-11 cursor-pointer items-start gap-2 px-3 py-2 ${o.description ? 'pr-24' : ''}`}><input type="checkbox" className="mt-1 size-4 shrink-0 accent-gold" checked={value.includes(o.id)} disabled={!value.includes(o.id) && (!!o.disabledReason || (value.length >= g.count && g.count !== 1))} onChange={() => toggle(o.id)}/><span className="min-w-0 text-ui text-text-primary">{o.name}{o.detail && <span className="mt-0.5 block text-small text-text-secondary">{o.detail}</span>}{o.priceCp !== undefined && <span className="mt-1 block"><CoinAmount cp={o.priceCp}/></span>}{o.disabledReason && <span className="block text-small text-section-label">{o.disabledReason}</span>}</span></label>{o.description && <details className="px-3 text-small text-text-secondary"><summary className="absolute right-3 top-0 inline-flex min-h-11 cursor-pointer items-center text-gold">查看效果</summary><p className="whitespace-pre-wrap pb-2 text-ui leading-relaxed text-text-primary">{o.description}</p></details>}</div>)}
+            {!matches.length && <p className="p-3 text-small text-text-secondary">目前沒有候選項目。法術書或前置選擇完成後會出現；若內容庫離線，請稍後重試。</p>}
+          </div>
+        </>}
+      </>}
+      {value.length > 0 && issues.length > 0 && <p className="mt-2 text-small text-danger">{[...new Set(issues)].join(' ')}</p>}
+    </div>}
+  </div>;
+}
+function formName(v: string) { try {
+    return JSON.parse(v).name;
+}
+catch {
+    return '待確認形態';
+} }
+function FormPicker({ value, onChange, count, level }: {
+    value: string[];
+    onChange: (v: string[]) => void;
+    count: number;
+    level: number;
+}) {
+    const [name, setName] = useState(''), [cr, setCr] = useState('0'), [fly, setFly] = useState(false);
+    return <div>
+    {value.map(v => <div key={v} className="flex min-h-11 items-center justify-between gap-2 border-b border-border-2 text-ui text-text-primary"><span>{formName(v)} · CR {JSON.parse(v).cr}{JSON.parse(v).fly ? ' · 飛行' : ''}</span><button type="button" onClick={() => onChange(value.filter(x => x !== v))} className="min-h-11 px-2 text-small text-gold">移除</button></div>)}
+    {value.length < count && <div className="mt-2 flex flex-wrap gap-2"><input aria-label="形態名稱" value={name} maxLength={100} onChange={e => setName(e.target.value)} placeholder="與 DM 確認的野獸名稱" className="min-h-11 min-w-0 flex-1 rounded-chip border border-border bg-surface-2 px-2 text-ui"/><select aria-label="挑戰等級" value={cr} onChange={e => setCr(e.target.value)} className="min-h-11 rounded-chip border border-border bg-surface-2 px-2 text-ui">{[0, .125, .25, ...(level >= 4 ? [.5] : []), ...(level >= 8 ? [1] : [])].map(v => <option key={v} value={v}>CR {v}</option>)}</select>{level >= 8 && <label className="flex min-h-11 items-center gap-1 text-small"><input type="checkbox" checked={fly} onChange={e => setFly(e.target.checked)}/>飛行</label>}<button type="button" disabled={!name.trim()} onClick={() => { const v = JSON.stringify({ name: name.trim(), cr: Number(cr), fly }); if (!value.includes(v))
+        onChange([...value, v]); setName(''); }} className="min-h-11 px-3 text-gold disabled:opacity-40">加入形態</button></div>}
+  </div>;
+}

@@ -11,7 +11,7 @@ import { FeatureGroups } from '../feature-groups';
 
 /** 法術／物品／傳記三個分頁。版面語彙與其他分頁一致（區段標題＋卡片）。 */
 
-export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: ReactNode; spells: ReactNode } }) {
+export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: ReactNode; spells: ReactNode; book?: ReactNode } }) {
   const prepared = RING_LEVELS.map((lv) => ({
     lv,
     spells: c.spells.filter((s) => s.level === lv),
@@ -34,6 +34,10 @@ export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: Reac
         </CollapsibleSection>
       )}
 
+      {(!!c.spellbook?.length || tools?.book) && <CollapsibleSection en="SPELLBOOK" cn={`法術書 · ${c.spellbook?.length??0} 個`} trailing={tools?.book}>
+        <p className="mb-2 text-small text-text-secondary">抄錄的法術與已備名額分開；休息後可調整準備清單。</p>
+        <div className="divide-y divide-border-2">{(c.spellbook??[]).map((s,i)=><SpellCard key={`${s.name}-${i}`} spell={s} badge={`${s.level}`}/>)}</div>
+      </CollapsibleSection>}
       {/* 已備法術：2024 的施法者是「準備」而非「習得即可用」。
           環數在區段**內部**用小膠囊分組，不是每一環各開一個可收合區段——
           後者在高階施法者身上會變成九個標題疊在一起。 */}

@@ -134,14 +134,14 @@ describe('休息', () => {
     expect(c().concentrationSpell).toBeNull();
   });
 
-  it('長休全回、清臨時 HP、力竭 −1、回一半生命骰', () => {
+  it('長休全回、清臨時 HP、力竭 −1、回全部生命骰', () => {
     characterActions.longRest();
     expect(c().currentHp).toBe(20);
     expect(c().tempHp).toBe(0);
     expect(c().spellSlots[0].used).toBe(0);
     expect(c().resources.every((r) => r.current === r.max)).toBe(true);
     expect(c().exhaustionLevel).toBe(2);
-    expect(c().hitDiceUsed).toBe(2); // 6 級回 3 顆：5 - 3
+    expect(c().hitDiceUsed).toBe(0); // SRD 2024 長休恢復全部生命骰
   });
 
   it('生命骰用完就不再減——不擲骰、不自動改 HP', () => {

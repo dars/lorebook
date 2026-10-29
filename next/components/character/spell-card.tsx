@@ -40,7 +40,7 @@ export function SpellCard({
       value={hasDamage ? spell.damage : null}
       valueClass={hasDamage ? damageClass(spell.damageType) : 'text-gold-dim'}
       description={[spell.homebrewId ? `施法：${spell.castingTime}${spell.concentration ? ' · 需要專注' : ''}` : '', spell.description].filter(Boolean).join('\n\n') || null}
-      footnote={spell.upgrade || null}
+      footnote={[spell.alwaysPrepared ? '始終準備 · 不占職業已備名額' : '', spell.castingSources?.length ? spell.castingSources.map(s=>`${s.title}${s.ability?` · ${s.ability}`:''}${s.free==='atWill'?' · 最低環無限施放':s.free?` · ${s.free==='short'?'短休或長休':'長休'}恢復一次免費施放`:''}`).join('；') : spell.spellAbility ? `施法屬性：${spell.spellAbility}` : '', spell.upgrade].filter(Boolean).join(' · ') || null}
       emphasizeBadge={emphasize}
     />
   );

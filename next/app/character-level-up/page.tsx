@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { LevelUpView } from '@/components/level-up/level-up-view';
-import { fetchClassProgression, fetchFeats } from '@/lib/catalog/fetch';
+import { fetchClassProgression, fetchFeats, fetchSpells, fetchItems } from '@/lib/catalog/fetch';
 import { fetchCustomSubclasses } from '@/lib/subclasses/actions';
 import { getCurrentCharacterId } from '@/lib/characters/current';
 import { fetchMyCharacter } from '@/lib/characters/fetch';
@@ -44,17 +44,19 @@ export default async function LevelUpPage({
   // 專長只在 ASI 等級用得到；補選子職不升級，也用不到。
   const needsFeats =
     !subclassOnly && planFor(character, character.speciesHpPerLevel).hasAsi;
-  const [{ subclasses, features, error }, { subclasses: custom }, feats] =
+  const [{ subclasses, features, error }, { subclasses: custom }, feats, spells, items] =
     await Promise.all([
       fetchClassProgression(character.classNameEn, throughLevel),
       // 只取母職業相符的——一次查全部再過濾只是白拿資料。
       fetchCustomSubclasses(character.classNameEn),
-      needsFeats ? fetchFeats() : Promise.resolve({ rows: [], error: null }),
+      fetchFeats(),
+      fetchSpells(), fetchItems(),
     ]);
 
   return (
     <LevelUpView
       initial={character}
+      choiceCatalog={{spells:spells.rows,items:items.rows,feats:feats.rows}}
       mode={subclassOnly ? 'subclass' : 'level-up'}
       subclasses={subclasses}
       customSubclasses={custom}

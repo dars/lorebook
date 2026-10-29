@@ -130,7 +130,7 @@ export function AbilitiesTab({ c }: { c: Character }) {
                     }`}
                   >
                     <span className="flex items-center gap-1.5">
-                      <ProfDot on={s.proficient} />
+                      <ProfDot on={s.proficient} />{s.expertise&&<span className="text-eyebrow text-gold">專精</span>}
                       <span
                         className={`text-ui ${
                           s.proficient ? 'text-text-primary' : 'text-text-secondary'

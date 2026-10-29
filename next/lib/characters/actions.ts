@@ -16,12 +16,18 @@ export async function updateCharacter(
   const c = parsed.data;
 
   const supabase = await createClient();
+  const {data:{user}} = await supabase.auth.getUser();
+  if (!user) return {error:'需要登入'};
   const { error } = await supabase
     .from('user_characters')
     .update({ name: c.name, class_name: c.className, level: c.level, data: c })
+    .eq('user_id', user.id)
     .eq('id', c.id);
 
   if (error) return { error: error.message };
+  revalidatePath('/main', 'layout');
+  revalidatePath('/character-select');
+  revalidatePath('/character-choices');
   redirect('/main/character');
 }
 

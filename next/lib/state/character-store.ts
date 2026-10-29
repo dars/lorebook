@@ -1,4 +1,5 @@
 'use client';
+import { beginChoiceRest } from '@/lib/rules/progression/engine';
 
 import { create } from 'zustand';
 
@@ -134,7 +135,7 @@ export const characterActions = {
    */
   shortRest() {
     useCharacterStore.getState().update((c) => ({
-      ...c,
+      ...beginChoiceRest(c, 'short'),
       resources: c.resources.map((r) =>
         r.recovery === 'short' ? { ...r, current: r.max } : r,
       ),
@@ -143,7 +144,7 @@ export const characterActions = {
 
   /**
    * 長休：HP 全滿、法術位全滿、職業資源全滿、臨時 HP 清空、力竭 −1、
-   * 回復一半生命骰（最少 1），**並結束專注**。
+   * 回復全部生命骰（SRD 5.2.1 Long Rest），**並結束專注**。
    *
    * 專注會被長休打斷是規則行為（長休包含睡眠，維持不了專注），不是 UI 便利
    * ——漏掉的話玩家會帶著一個早該結束的專注法術繼續跑，而畫面上看起來完全
@@ -151,9 +152,9 @@ export const characterActions = {
    */
   longRest() {
     useCharacterStore.getState().update((c) => {
-      const regain = Math.max(1, Math.floor(c.level / 2));
+      const regain = c.level;
       return {
-        ...c,
+        ...beginChoiceRest(c, 'long'),
         currentHp: c.maxHp,
         tempHp: 0,
         concentrationSpell: null,

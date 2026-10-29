@@ -83,6 +83,7 @@ export function computeAc(c: Character): AcResult {
   const shieldBonus = shield ? 2 : 0;
   const shieldSuffix = shield ? '・盾牌' : '';
 
+  const defense = wearingArmor(c) && c.features.some(f=>!f.isCustom&&f.nameEn==='Defense') ? 1 : 0;
   const armor = equippedBodyArmor(c);
   if (armor) {
     let base: number;
@@ -104,7 +105,7 @@ export function computeAc(c: Character): AcResult {
         }
         base = armor.acBase;
     }
-    return { value: base + shieldBonus, label: `${armor.name}${shieldSuffix}` };
+    return { value: base + shieldBonus + defense, label: `${armor.name}${shieldSuffix}${defense ? '・防禦風格' : ''}` };
   }
 
   // 未著甲：候選公式**取最高**，不是後者覆蓋前者。

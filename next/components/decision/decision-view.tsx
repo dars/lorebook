@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useState } from 'react';
 
+import { CharacterFlowLink } from '@/components/progression/character-flow-link';
 import { ActionsSection } from '@/components/decision/actions-section';
 import { ConditionsPanel } from '@/components/decision/conditions-panel';
 import { HpUndoBar, useHpUndo } from '@/components/decision/hp-undo';
@@ -299,10 +300,11 @@ export function DecisionView({
               title="長休"
               subtitle="完全恢復"
               onConfirm={() => characterActions.longRest()}
-              confirm="長休將回滿 HP、法術位、職業資源，清除臨時 HP，降低 1 級力竭，並回復一半生命骰。"
+              confirm="長休將回滿 HP、法術位、職業資源，清除臨時 HP，降低 1 級力竭，並回復全部生命骰。"
               doneHint="HP、法術位與資源已回滿，專注已結束"
             />
           </div>
+          {persist && c.progression?.rest && <CharacterFlowLink href="/character-choices?mode=rest" className="mt-2 flex min-h-11 items-center justify-center text-small text-gold">調整休息後可替換的選項</CharacterFlowLink>}
         </ParchmentCard>
       </CollapsibleSection>
   );

@@ -3,7 +3,7 @@ import { SpellPicker } from '@/components/spells/spell-picker';
 
 import { useEffect, useState, type ReactNode } from 'react';
 
-import { AppLink } from '@/components/ui/app-link';
+import { CharacterFlowLink as AppLink } from '@/components/progression/character-flow-link';
 import type { CatalogItem } from '@/lib/catalog/types';
 import type { Character } from '@/lib/domain/character';
 import { needsSubclassPick } from '@/lib/rules/level-up';
@@ -87,8 +87,13 @@ export function CharacterSheetLive({
           </div>
         </div>
       )}
+      {persist && <div className="mx-auto flex w-full max-w-[700px] flex-wrap gap-x-4 px-4">
+        <AppLink href="/character-choices" className="inline-flex min-h-11 items-center text-small text-gold">成長選擇／補選</AppLink>
+        {c.progression?.rest && <AppLink href="/character-choices?mode=rest" className="inline-flex min-h-11 items-center text-small text-gold">休息後調整</AppLink>}
+      </div>}
       <CharacterSheet
         spellTools={persist ? {
+          book: c.classNameEn==='Wizard' ? <SpellPicker c={c} kind="spellbook"/> : undefined,
           cantrips: <SpellPicker c={c} kind="cantrips" />,
           spells: <SpellPicker c={c} kind="spells" />,
         } : undefined}

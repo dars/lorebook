@@ -43,7 +43,7 @@ const TAB_SLUG: Record<string, string> = {
   傳記: 'bio',
 };
 type SheetProps = {
-  spellTools?: { cantrips: ReactNode; spells: ReactNode };
+  spellTools?: { cantrips: ReactNode; spells: ReactNode; book?: ReactNode };
   c: Character;
   /** 分享區塊。唯讀檢視不傳，該區塊即不渲染。 */
   share?: ReactNode;

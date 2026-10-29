@@ -49,14 +49,16 @@ export function attackEntries(c: Character): AttackEntry[] {
       continue;
     }
 
-    const mod = e.finesse ? Math.max(str, dex) : str;
+    const ranged = ['Dart','Shortbow','Sling','Light Crossbow','Blowgun','Hand Crossbow','Heavy Crossbow','Longbow','Pistol','Musket'].includes(e.nameEn);
+    const archery = ranged && c.features.some(f=>!f.isCustom&&f.nameEn==='Archery') ? 2 : 0;
+    const mod = e.finesse ? Math.max(str, dex) : ranged ? dex : str;
     const damage =
       mod === 0 ? e.damage : `${e.damage}${mod > 0 ? `+${mod}` : `${mod}`}`;
 
     entries.push({
       name: e.name,
       nameEn: e.nameEn,
-      hitBonus: mod + prof,
+      hitBonus: mod + prof + archery,
       damage,
       damageType: e.damageType,
       quantity: e.quantity,

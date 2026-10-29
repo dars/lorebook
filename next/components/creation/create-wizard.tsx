@@ -1,18 +1,14 @@
 'use client';
 
+import { ChoiceEditor } from '@/components/progression/choice-editor';
+import { applyChoices, validateChoices } from '@/lib/rules/progression/engine';
+import type { Selections } from '@/lib/rules/progression/groups';
 import { ClassIcon } from '@/components/ui/class-icon';
 import { useState } from 'react';
 
 import { AppLink } from '@/components/ui/app-link';
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
-import { EditorSheet } from '@/components/ui/editor-sheet';
 import type { CatalogSpell } from '@/lib/catalog/types';
-import {
-  ftFlattenEntries,
-  ftFormatCastingTime,
-  ftFormatRange,
-} from '@/lib/catalog/fivetools';
-import { spellSchoolCn } from '@/lib/catalog/schools';
 import { createCharacter } from '@/lib/creation/actions';
 import {
   autofillBonus,
@@ -63,10 +59,12 @@ import { AbilityStep, type Method } from './ability-step';
 
 export function CreateWizard({
   spells,
+  items = [],
   customBackgrounds = [],
   customSpecies = [],
   customSpeciesOffline = false,
 }: {
+  items?: import('@/lib/catalog/types').CatalogItem[];
   spells: CatalogSpell[];
   /** 自訂背景，與內建並列供選擇。 */
   customBackgrounds?: BackgroundOption[];
@@ -75,6 +73,8 @@ export function CreateWizard({
   /** 自訂種族取不到（離線）。與「一個都還沒建」不同，提示也不同。 */
   customSpeciesOffline?: boolean;
 }) {
+  const [choices, setChoices] = useState<Selections>({});
+  const [deferChoices, setDeferChoices] = useState(false);
   const [step, setStep] = useState(0);
   // 角色 id 一次產生後固定：角色圖要在建立前就以它為檔名上傳，每次 render
   // 重抽一個新的會讓圖與角色對不起來。
@@ -107,11 +107,10 @@ export function CreateWizard({
   const cls = CLASSES.find((c) => c.cn === classCn) ?? null;
   const allBackgrounds = [...BACKGROUNDS, ...customBackgrounds];
   const bg = allBackgrounds.find((b) => b.cn === bgCn) ?? null;
-  const caster = cls ? isCaster(cls) : false;
 
   const steps = [
     '基本', '職業', '背景', '能力值', '技能',
-    ...(caster ? ['法術'] : []),
+    '成長選擇',
     '確認',
   ];
   const current = steps[Math.min(step, steps.length - 1)];
@@ -122,7 +121,7 @@ export function CreateWizard({
     : Object.fromEntries(ABILITY_ORDER.map((a) => [a, 0]));
 
   const filled = ABILITY_ORDER.every((a) => base[a] !== null);
-  const canNext = (() => {
+  const baseCanNext = (() => {
     switch (current) {
       case '基本':
         return name.trim().length > 0 && species !== null;
@@ -179,7 +178,7 @@ export function CreateWizard({
     return spellFromCatalog(s);
   };
 
-  const preview = () =>
+  const basePreview = () =>
     species && cls && bg && filled
       ? buildCharacter(
           {
@@ -203,12 +202,18 @@ export function CreateWizard({
         )
       : null;
 
+  const baseCharacter = basePreview();
+  const choiceCatalog = {spells, items};
+  const choicesReady = !!baseCharacter && validateChoices(baseCharacter, choices, choiceCatalog, 'creation', !deferChoices).length === 0;
+  const preview = () => baseCharacter && choicesReady ? applyChoices(baseCharacter, choices, choiceCatalog, 'creation', !deferChoices) : baseCharacter;
+  const canNext = baseCanNext && (!['成長選擇','確認'].includes(current) || choicesReady);
+
   /**
    * 草稿。**只存使用者的選擇**，不存 `steps` / `preview()` 這類推導值——
    * 那些會隨規則資料演進，存下來只會在資料更新後變成過期的快照。
    */
   const draft = {
-    step, name, alignment, speciesCn, sizeChoice, classCn, bgCn,
+    choices, deferChoices, step, name, alignment, speciesCn, sizeChoice, classCn, bgCn,
     bonusMode, plus2, plus1, method, base,
     classSkills, speciesSkills, selCantrips, selSpells,
   };
@@ -221,6 +226,8 @@ export function CreateWizard({
   });
 
   const resume = (d: typeof draft) => {
+    setChoices(d.choices ?? {});
+    setDeferChoices(d.deferChoices ?? false);
     setStep(d.step);
     setName(d.name);
     setAlignment(d.alignment ?? '');
@@ -692,54 +699,10 @@ export function CreateWizard({
           </div>
         )}
 
-        {current === '法術' && cls && (
-          <>
-            {spells.length === 0 ? (
-              <p className="text-ui text-text-secondary">
-                內容庫目前無法取得，法術可於建立後再補。
-              </p>
-            ) : (
-              <>
-                {/* 聖騎士與遊俠在 2024 規則下**沒有戲法**（法術從一環開始）。
-                    無條件渲染會給他們一個空的「戲法 0/0」標題，底下什麼都沒有。 */}
-                {cls.cantripsKnown > 0 && (
-                  <>
-                    <SectionTitle
-                      en="CANTRIPS"
-                      cn={`戲法（已選 ${selCantrips.length}/${cls.cantripsKnown}）`}
-                      first
-                    />
-                    <SpellPicker
-                      options={spells.filter(
-                        (s) => s.level === 0 && s.classes.includes(cls.en),
-                      )}
-                      selected={selCantrips}
-                      max={cls.cantripsKnown}
-                      onToggle={setSelCantrips}
-                    />
-                  </>
-                )}
-                {cls.preparedSpells > 0 && (
-                  <>
-                    <SectionTitle
-                      en="SPELLS"
-                      cn={`一環法術（已選 ${selSpells.length}/${cls.preparedSpells}）`}
-                      first={cls.cantripsKnown === 0}
-                    />
-                    <SpellPicker
-                      options={spells.filter(
-                        (s) => s.level === 1 && s.classes.includes(cls.en),
-                      )}
-                      selected={selSpells}
-                      max={cls.preparedSpells}
-                      onToggle={setSelSpells}
-                    />
-                  </>
-                )}
-              </>
-            )}
-          </>
-        )}
+        {current === '成長選擇' && baseCharacter && <>
+          <ChoiceEditor character={baseCharacter} catalog={choiceCatalog} value={choices} onChange={setChoices} context="creation"/>
+          <label className="flex min-h-11 items-center gap-2 text-small text-text-secondary"><input type="checkbox" checked={deferChoices} onChange={e=>setDeferChoices(e.target.checked)} className="accent-gold"/>未開始的項目稍後補選（不會自動幫你選擇）</label>
+        </>}
 
         {current === '確認' && <Confirm c={preview()} />}
       </div>
@@ -855,118 +818,6 @@ function SkillPicker({
  * 等於要使用者憑法術名猜效果。詳情走對話框而不是就地展開，避免清單在
  * 展開時整個跳動。
  */
-function SpellPicker({
-  options,
-  selected,
-  max,
-  onToggle,
-}: {
-  options: CatalogSpell[];
-  selected: string[];
-  max: number;
-  onToggle: (v: string[]) => void;
-}) {
-  const [detail, setDetail] = useState<CatalogSpell | null>(null);
-  return (
-    <>
-      <div className="grid gap-1.5 medium:grid-cols-2 expanded:grid-cols-3">
-        {options.map((s) => {
-          const on = selected.includes(s.name);
-          const disabled = !on && selected.length >= max;
-          return (
-            <div
-              key={s.id}
-              className={`flex items-center rounded-card border ${
-                on ? 'border-gold bg-gold/10' : 'border-border-2 bg-surface-1'
-              } ${disabled ? 'opacity-40' : ''}`}
-            >
-              <button
-                type="button"
-                disabled={disabled}
-                role="checkbox"
-                aria-checked={on}
-                onClick={() =>
-                  onToggle(
-                    on ? selected.filter((x) => x !== s.name) : [...selected, s.name],
-                  )
-                }
-                // items-center 而非 items-baseline：容器有 min-h-11，而
-                // baseline 會把整行推到交叉軸起點，多出來的高度全落在文字下方
-                // ——文字貼頂、ⓘ 偏低。中英文的基線對齊改由內層那一段負責。
-                className="flex min-h-11 min-w-0 flex-1 items-center gap-1.5 px-3 text-left"
-              >
-                <span aria-hidden className="shrink-0 text-gold">{on ? '☑' : '☐'}</span>
-                <span className="flex min-w-0 flex-1 items-baseline gap-1.5">
-                  <span
-                    className={`truncate text-ui ${on ? 'text-gold' : 'text-text-primary'}`}
-                  >
-                    {s.name}
-                  </span>
-                  {s.eng_name && (
-                    <span className="font-label truncate text-eyebrow text-text-secondary">
-                      {s.eng_name}
-                    </span>
-                  )}
-                </span>
-                {s.concentration && (
-                  <span className="shrink-0 text-eyebrow text-text-secondary">
-                    專注
-                  </span>
-                )}
-              </button>
-              <button
-                type="button"
-                aria-label={`${s.name} 的說明`}
-                onClick={() => setDetail(s)}
-                className="flex size-11 shrink-0 items-center justify-center text-ui text-text-secondary hover:text-gold"
-              >
-                ⓘ
-              </button>
-            </div>
-          );
-        })}
-      </div>
-
-      <EditorSheet
-        open={detail !== null}
-        title={detail?.name ?? ''}
-        closeLabel="關閉"
-        onClose={() => setDetail(null)}
-      >
-        {detail && (
-          <>
-            <div className="font-label -mt-2 text-tiny text-text-secondary">
-              {detail.eng_name}
-            </div>
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              <StatChip
-                label="環數"
-                value={detail.level === 0 ? '戲法' : `${detail.level} 環`}
-              />
-              {(detail.school || detail.school_name) && (
-                <StatChip
-                  label="學派"
-                  value={spellSchoolCn(detail.school, detail.school_name)}
-                />
-              )}
-              <StatChip
-                label="施法"
-                value={ftFormatCastingTime(detail.casting_time)}
-              />
-              <StatChip label="射程" value={ftFormatRange(detail.range)} />
-              {detail.concentration && <StatChip label="專注" value="需要" />}
-              {detail.ritual && <StatChip label="儀式" value="可" />}
-            </div>
-            <p className="mt-3 whitespace-pre-wrap text-ui leading-relaxed text-text-light">
-              {ftFlattenEntries(detail.entries) || '這個法術沒有說明文字。'}
-            </p>
-          </>
-        )}
-      </EditorSheet>
-    </>
-  );
-}
-
 /** 確認頁顯示的是**實際會存下的角色**，不是另外算一次的預覽。 */
 /**
  * 種族步驟的一行提示。

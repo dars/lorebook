@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { AppLink } from '@/components/ui/app-link';
 import { EditorSheet } from '@/components/ui/editor-sheet';
 import { fetchCatalogSpellOptions, fetchCustomSpells, type CatalogSpellOption } from '@/lib/spells/actions';
 import { spellFromCustom, type CustomSpell } from '@/lib/spells/types';
@@ -9,17 +10,17 @@ import { useCharacterStore } from '@/lib/state/character-store';
 import type { Character, Spell } from '@/lib/domain/character';
 
 type Source = 'catalog' | 'custom';
-export function SpellPicker({ c, kind }: { c: Character; kind: 'cantrips' | 'spells' }) {
+export function SpellPicker({ c, kind }: { c: Character; kind: 'cantrips' | 'spells' | 'spellbook' }) {
   const [open, setOpen] = useState(false);
   return <>
-    <button type="button" aria-haspopup="dialog" className="min-h-11 shrink-0 px-2 text-small text-gold hover:text-text-primary" onClick={() => setOpen(true)}>管理{kind === 'cantrips' ? '戲法' : '法術'}</button>
+    <button type="button" aria-haspopup="dialog" className="min-h-11 shrink-0 px-2 text-small text-gold hover:text-text-primary" onClick={() => setOpen(true)}>{kind === 'spellbook' ? '抄錄法術' : `管理${kind === 'cantrips' ? '戲法' : '法術'}`}</button>
     {open && <SpellSelection key={`${c.id}-${kind}`} c={c} kind={kind} onClose={() => setOpen(false)} />}
   </>;
 }
 
-function SpellSelection({ c, kind, onClose }: { c: Character; kind: 'cantrips' | 'spells'; onClose: () => void }) {
+function SpellSelection({ c, kind, onClose }: { c: Character; kind: 'cantrips' | 'spells' | 'spellbook'; onClose: () => void }) {
   const label = kind === 'cantrips' ? '戲法' : '法術';
-  const [initial] = useState(() => c[kind]);
+  const [initial] = useState(() => c[kind]??[]);
   const [selected, setSelected] = useState(initial);
   const [source, setSource] = useState<Source>('catalog');
   const [onlySelected, setOnlySelected] = useState(false);
@@ -34,7 +35,7 @@ function SpellSelection({ c, kind, onClose }: { c: Character; kind: 'cantrips' |
   const dirty = added.length + removed.length > 0;
   useEffect(() => {
     let active = true;
-    const request = source === 'catalog' ? fetchCatalogSpellOptions(kind) : fetchCustomSpells();
+    const request = source === 'catalog' ? fetchCatalogSpellOptions(kind==='spellbook'?'spells':kind) : fetchCustomSpells();
     void request.then(result => {
       if (!active) return;
       if (result.error) setError(result.error);
@@ -79,6 +80,8 @@ function SpellSelection({ c, kind, onClose }: { c: Character; kind: 'cantrips' |
         <button type="button" aria-pressed={source === 'catalog'} className={tabClass(source === 'catalog')} onClick={() => { setSource('catalog'); setError(null); }}>系統法術</button>
         <button type="button" aria-pressed={source === 'custom'} className={tabClass(source === 'custom')} onClick={() => { setSource('custom'); setError(null); }}>自創收藏</button>
       </div>}
+      {initial.some(s=>s.progressionSource)&&<p className="my-2 text-small text-text-secondary">成長選擇授予的法術會保留；名額與替換請到 <AppLink href="/character-choices" className="text-gold underline">成長選擇</AppLink> 調整。</p>}
+      {kind==='spellbook'&&<p className="my-2 text-small text-text-secondary">抄錄冒險中獲得的法術；請與 DM 確認資格、抄錄時間與費用。加入法術書不會自動準備。</p>}
       <input type="search" name="spellSearch" autoComplete="off" aria-label={`搜尋${label}`} placeholder="搜尋中文或英文名稱…" className="min-h-11 w-full rounded-card border border-border bg-surface-0 px-3 text-body" value={search} onChange={e => setSearch(e.target.value)} />
       {!onlySelected && source === 'catalog' && classKnown && <label className="flex min-h-11 items-center gap-2 text-ui text-text-secondary"><input type="checkbox" checked={ownClassOnly} onChange={e => setOwnClassOnly(e.target.checked)} />只顯示{c.className || c.classNameEn}的{label}</label>}
       {onlySelected && <p className="mt-2 text-small text-text-secondary">包含所有來源與角色既有版本；取消只影響角色，不會刪除收藏。</p>}
@@ -99,7 +102,7 @@ function SelectionRow({ spell, checked, onToggle }: { spell: Spell; checked: boo
   return <div className={`rounded-card border ${checked ? 'border-gold bg-gold/10' : 'border-border-2 bg-surface-0'}`}>
     <div className="flex items-center gap-1 p-2">
       <label className="flex min-h-11 min-w-0 flex-1 cursor-pointer items-center gap-3 px-1">
-        <input type="checkbox" className="size-5 shrink-0 accent-gold" checked={checked} onChange={onToggle} />
+        <input type="checkbox" className="size-5 shrink-0 accent-gold" checked={checked} disabled={!!spell.progressionSource} onChange={onToggle} />
         <span className="min-w-0"><span className="block break-words text-body font-semibold text-text-primary">{spell.name}</span><span className="block break-words text-small text-text-secondary">{[spell.nameEn, spell.level ? `${spell.level} 環` : '戲法', spell.homebrewId ? '自創' : '', spell.range].filter(Boolean).join(' · ')}</span></span>
       </label>
       <button type="button" aria-label={`${spell.name}的說明`} aria-expanded={details} onClick={() => setDetails(!details)} className="min-h-11 shrink-0 px-2 text-small text-gold">說明 {details ? '▴' : '▾'}</button>

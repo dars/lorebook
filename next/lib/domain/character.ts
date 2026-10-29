@@ -45,6 +45,7 @@ export const AbilityScores = z.object({
 });
 
 export const Skill = z.object({
+  expertise: z.boolean().optional(),
   name: z.string(),
   nameEn: z.string().default(''),
   abilityType: z.string(),
@@ -53,6 +54,10 @@ export const Skill = z.object({
 });
 
 export const Spell = z.object({
+  spellAbility: z.string().optional(),
+  castingSources: z.array(z.object({source:z.string(),title:z.string(),ability:z.string().optional(),free:z.enum(['atWill','short','long']).optional()})).optional(),
+  alwaysPrepared: z.boolean().optional(),
+  progressionSource: z.string().optional(),
   homebrewId: z.string().optional(),
   name: z.string(),
   nameEn: z.string().default(''),
@@ -132,6 +137,7 @@ export const Personality = z.object({
 });
 
 export const CharacterFeature = z.object({
+  progressionSource: z.string().optional(),
   name: z.string(),
   nameEn: z.string().default(''),
   source: z.string().default(''),
@@ -157,6 +163,7 @@ export const FEAT_NAME_MAX = 20;
 export const FEAT_DESC_MAX = 200;
 
 export const ClassResource = z.object({
+  progressionSource: z.string().optional(),
   name: z.string(),
   nameEn: z.string().default(''),
   current: z.number().int().default(0),
@@ -191,7 +198,17 @@ export const JournalEntry = z.object({
 });
 
 // ── 角色卡 ────────────────────────────────────
+export const Progression = z.object({
+  selections: z.record(z.string(), z.array(z.string())).default({}),
+  rest: z.enum(['short', 'long']).optional(),
+  restSpent: z.record(z.string(), z.number().int().nonnegative()).default({}),
+  grantedSkills: z.array(z.string()).default([]),
+  grantedTools: z.array(z.string()).default([]),
+  grantedLanguages: z.array(z.string()).default([]),
+});
 export const Character = z.object({
+  progression: Progression.optional(),
+  spellbook: z.array(Spell).optional(),
   id: z.string(),
   name: z.string(),
   nameEn: z.string().default(''),

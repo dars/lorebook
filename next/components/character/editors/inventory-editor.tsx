@@ -1,10 +1,10 @@
 'use client';
+import { toEquipment } from '@/lib/items/from-catalog';
 
 import { useEffect, useId, useState } from 'react';
 
 import { EditorSheet, FieldLabel } from '@/components/ui/editor-sheet';
 import type { CatalogItem } from '@/lib/catalog/types';
-import type { Equipment } from '@/lib/domain/character';
 import { payFrom, totalCp } from '@/lib/rules/currency';
 import { useContainerWidth } from '@/lib/hooks/use-container-width';
 import { CoinAmount } from '../coins';
@@ -371,37 +371,5 @@ function ItemList({
 }
 
 /** 目錄品項 → 角色物品。保留 catalogRef 供「再次取得」與詳情回查。 */
-function toEquipment(i: CatalogItem): Equipment {
-  return {
-    name: i.name,
-    nameEn: i.eng_name ?? '',
-    type: '',
-    description: '',
-    equipped: false,
-    itemType:
-      i.category === 'weapon'
-        ? 'weapon'
-        : i.category === 'armor'
-          ? 'armor'
-          : 'gear',
-    source: 'catalog',
-    quantity: 1,
-    quest: false,
-    priceCp: i.price_cp ?? 0,
-    catalogRef: i.name,
-    damage: i.damage_dice ?? '',
-    damageType: i.damage_type ?? '',
-    finesse: i.properties.some((p) => p.toLowerCase().includes('finesse')),
-    properties: i.properties,
-    armorCategory:
-      i.armor_category === 'light' ||
-      i.armor_category === 'medium' ||
-      i.armor_category === 'heavy' ||
-      i.armor_category === 'shield'
-        ? i.armor_category
-        : 'none',
-    acBase: i.ac_base ?? 0,
-  };
-}
 
 /** 財富編輯：直接改各幣別數量。 */

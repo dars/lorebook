@@ -1,3 +1,4 @@
+import { recalculateChoiceSkills } from './progression/engine';
 import type { AbilityScores, Character, ClassResource } from '@/lib/domain/character';
 import {
   abilityModifier,
@@ -216,7 +217,7 @@ export function applyLevelUp(
     KEYS.map(([code, key]) => [key, scores[code]]),
   ) as unknown as AbilityScores;
 
-  return {
+  const result: Character = {
     ...c,
     level: target,
     proficiencyBonus: pb,
@@ -244,6 +245,7 @@ export function applyLevelUp(
     spells: [...c.spells, ...(choices.spells ?? [])],
     resources: syncClassResources(c.resources, c.classNameEn, target, newScores),
   };
+  return c.progression ? recalculateChoiceSkills(result) : result;
 }
 
 /**

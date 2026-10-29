@@ -3,7 +3,7 @@
 import { ClassIcon } from '@/components/ui/class-icon';
 import { usePathname } from 'next/navigation';
 
-import { AppLink } from '@/components/ui/app-link';
+import { CharacterFlowLink as AppLink } from '@/components/progression/character-flow-link';
 import { CharacterAvatar } from '@/components/character/character-avatar';
 import type { Character } from '@/lib/domain/character';
 

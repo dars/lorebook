@@ -1,5 +1,8 @@
 'use client';
 
+import { ChoiceEditor } from '@/components/progression/choice-editor';
+import { applyChoices, validateChoices } from '@/lib/rules/progression/engine';
+import type { ChoiceCatalog, Selections } from '@/lib/rules/progression/groups';
 import { ClassIcon } from '@/components/ui/class-icon';
 import { useState } from 'react';
 
@@ -59,8 +62,10 @@ export function LevelUpView({
   catalogOffline,
   feats = [],
   featsOffline = false,
+  choiceCatalog,
 }: {
   initial: Character;
+  choiceCatalog: ChoiceCatalog;
   /**
    * `subclass`＝補選子職：升級當時內容庫離線而跳過的角色回來補。
    * 只選子職，等級與所有數值都不動，而且**不可跳過**——會走到這裡就是為了
@@ -84,6 +89,8 @@ export function LevelUpView({
   // 這個欄位由 lib/characters/backfill.ts 於讀入時補齊。
   const plan = planFor(initial, initial.speciesHpPerLevel);
 
+  const [choiceSelections, setChoiceSelections] = useState<Selections>(initial.progression?.selections ?? {});
+  const [deferChoices, setDeferChoices] = useState(false);
   const [hpMode, setHpMode] = useState<'average' | 'roll'>('average');
   const [roll, setRoll] = useState<number | ''>('');
   const [asiMode, setAsiMode] = useState<'2' | '1+1'>('2');
@@ -203,6 +210,7 @@ export function LevelUpView({
     showSubclass || activeCustom ? null : findSrdSubclass(subclasses, initial);
 
   const newFeatures = [
+    ...(!subclassOnly && plan.hasAsi && featMode === 'asi' && !classFeatures.some(f=>!f.is_subclass&&f.level===plan.targetLevel&&f.eng_name==='Ability Score Improvement') ? [{name:'能力值提升',nameEn:'Ability Score Improvement',source:`職業：${initial.className} Lv${plan.targetLevel}`,description:'本級已套用能力值提升。',isCustom:false}] : []),
     // 補選不是升級：這一趟不該拿到任何職業特性，只補子職那一份。
     ...(subclassOnly
       ? []
@@ -251,7 +259,7 @@ export function LevelUpView({
       : []),
   ];
 
-  const preview = subclassOnly
+  const rawPreview = subclassOnly
     ? applySubclassPick(initial, {
         subclass: subclass?.name ?? customSubclass?.name ?? '',
         subclassEn: subclass?.eng_name ?? customSubclass?.nameEn ?? undefined,
@@ -267,11 +275,17 @@ export function LevelUpView({
         features: newFeatures,
       });
 
+  const choiceCharacter = customSubclass ? {...rawPreview, customSubclass} : rawPreview;
+  const choiceIssues = validateChoices(choiceCharacter, choiceSelections, choiceCatalog, 'level', !deferChoices);
+  const choiceReady = subclassOnly || choiceIssues.length === 0;
+  const preview = !subclassOnly && choiceReady ? applyChoices(choiceCharacter, choiceSelections, choiceCatalog, 'level', !deferChoices) : rawPreview;
+
   /**
    * 草稿的鍵帶角色 id 與目標等級：切到別的角色、或這一級已經升完，
    * 都不該把上一輪的選擇帶過來。
    */
   const started =
+    JSON.stringify(choiceSelections) !== JSON.stringify(initial.progression?.selections ?? {}) ||
     hpMode !== 'average' ||
     roll !== '' ||
     asiA !== null ||
@@ -281,7 +295,7 @@ export function LevelUpView({
   const { pending, accept, discard, clear } = useFormDraft({
     key: `lorebook-draft-levelup-${initial.id}-${plan.targetLevel}`,
     value: {
-      hpMode, roll, asiMode, asiA, asiB, subclass, customSubclass,
+      choiceSelections, deferChoices, hpMode, roll, asiMode, asiA, asiB, subclass, customSubclass,
       featMode, catalogFeatId, catalogAbility,
       customName, customDesc, customBoost, customAbility, customEpic,
     },
@@ -290,6 +304,8 @@ export function LevelUpView({
   });
 
   const resume = (d: NonNullable<typeof pending>) => {
+    setChoiceSelections(d.choiceSelections ?? initial.progression?.selections ?? {});
+    setDeferChoices(d.deferChoices ?? false);
     setHpMode(d.hpMode);
     setRoll(d.roll);
     setAsiMode(d.asiMode);
@@ -310,6 +326,7 @@ export function LevelUpView({
   };
 
   const submit = async () => {
+    if (!choiceReady) return;
     setBusy(true);
     // 選用自訂子職時把整份定義快照進角色卡；SRD 子職維持 null。
     const r = await updateCharacter(
@@ -765,6 +782,11 @@ export function LevelUpView({
         </>
       )}
 
+      {!subclassOnly && <>
+        <ChoiceEditor character={choiceCharacter} catalog={choiceCatalog} value={choiceSelections} onChange={setChoiceSelections} context="level" />
+        <label className="flex min-h-11 items-center gap-2 text-small text-text-secondary"><input type="checkbox" checked={deferChoices} onChange={e=>setDeferChoices(e.target.checked)} className="accent-gold"/>尚未開始的舊選項稍後到「成長選擇」補齊</label>
+        {!choiceReady && <p className="text-small text-danger">尚有選項未完成；已開始的項目需選滿指定數量。</p>}
+      </>}
       {newFeatures.length > 0 && (
         <>
           <SectionTitle en="NEW FEATURES" cn="本級獲得" />
@@ -844,7 +866,7 @@ export function LevelUpView({
             onClick={submit}
             disabled={
               busy ||
-              !subclassReady ||
+              !subclassReady || !choiceReady ||
               (!subclassOnly && (!featChoice.ready || !hpReady))
             }
             className="min-h-12 w-full rounded-card border border-gold bg-gold/10 text-body font-bold text-gold disabled:opacity-40"

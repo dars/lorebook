@@ -141,7 +141,7 @@ export async function fetchClassProgression(
 /**
  * 升級可選的專長：只取通用（G）與史詩恩賜（EB）。
  *
- * 戰鬥風格與起源專長不是 ASI 等級能選的，在伺服器端就濾掉；是否到 19 級、
+ * 所有 SRD 專長類別都取回；是否具備戰鬥風格特性、是否到 19 級、
  * 先決條件是否滿足由 `lib/rules/feats.ts` 判斷——那是規則，不是查詢。
  */
 export async function fetchFeats(): Promise<CatalogResult<CatalogFeat>> {
@@ -150,7 +150,7 @@ export async function fetchFeats(): Promise<CatalogResult<CatalogFeat>> {
     .from('feats')
     .select('id, name, eng_name, data')
     .eq('source', CATALOG_SOURCE)
-    .in('data->>category', ['G', 'EB'])
+    .in('data->>category', ['G', 'EB', 'O', 'FS'])
     .order('page');
 
   if (error) return { rows: [], error: error.message };

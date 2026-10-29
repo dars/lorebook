@@ -81,7 +81,7 @@ export function CharacterPrintSheet({ c }: { c: Character }) {
       <div className={styles.columns}>
         <Section title="技能">
           <table><colgroup><col style={{ width: '40%' }} /><col style={{ width: '18%' }} /><col style={{ width: '18%' }} /><col style={{ width: '24%' }} /></colgroup><thead><tr><th>技能</th><th>屬性</th><th>加值</th><th className={styles.handwriteCell}>調整後</th></tr></thead><tbody>
-            {c.skills.map((skill, i) => <tr key={i}><td>{skill.proficient ? '● ' : ''}{skill.name}</td><td>{skill.abilityType}</td><td>{sign(skill.modifier)}</td><td className={styles.handwriteCell} /></tr>)}
+            {c.skills.map((skill, i) => <tr key={i}><td>{skill.expertise ? '◆ ' : skill.proficient ? '● ' : ''}{skill.name}</td><td>{skill.abilityType}</td><td>{sign(skill.modifier)}</td><td className={styles.handwriteCell} /></tr>)}
             {c.skills.length === 0 && <tr><td colSpan={4}>尚無技能</td></tr>}
           </tbody></table>
         </Section>

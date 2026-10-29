@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 
 import { CreateWizard } from '@/components/creation/create-wizard';
 import { fetchCustomBackgrounds } from '@/lib/backgrounds/actions';
-import { fetchSpells } from '@/lib/catalog/fetch';
+import { fetchSpells, fetchItems } from '@/lib/catalog/fetch';
 import { OfflineNotice } from '@/components/shell/offline-notice';
 import { fetchCustomSpecies } from '@/lib/species/actions';
 import { toSpeciesOption } from '@/lib/species/types';
@@ -21,7 +21,7 @@ export default async function CharacterCreatePage() {
   if (auth.status === 'unauthenticated') redirect('/login');
   if (auth.status === 'unknown') return <OfflineNotice />;
 
-  const { rows } = await fetchSpells();
+  const [{ rows }, {rows:items}] = await Promise.all([fetchSpells(),fetchItems()]);
   // 只有 0 與 1 環用得到——339 筆全傳會讓 HTML 多出數百 KB。
   const spells = rows.filter((s) => s.level <= 1);
 
@@ -48,6 +48,7 @@ export default async function CharacterCreatePage() {
   return (
     <CreateWizard
       spells={spells}
+      items={items}
       customBackgrounds={custom}
       customSpecies={species.map(toSpeciesOption)}
       // 取不到自訂種族（離線）與「一個都還沒建」是兩件事，種族步驟的提示
