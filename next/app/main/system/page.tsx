@@ -6,7 +6,7 @@ import { SignOutButton } from '@/components/shell/sign-out-button';
 import { getCurrentCharacterId } from '@/lib/characters/current';
 import { fetchMyCharacter } from '@/lib/characters/fetch';
 import { getSessionUser } from '@/lib/supabase/server';
-import { GuideLink } from '@/components/guide/guide-link';
+import { RulesLinks } from '@/components/shell/rules-links';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,7 +36,6 @@ export default async function SystemPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-[700px] flex-col gap-4 px-4 py-2">
-      <GuideLink />
       <ParchmentCard className="p-4">
         <h2 className="text-body font-semibold text-text-primary">角色</h2>
         {character && (
@@ -69,6 +68,8 @@ export default async function SystemPage() {
         </AppLink>
       </ParchmentCard>
 
+      <RulesLinks />
+
       <ParchmentCard className="p-4">
         <h2 className="text-body font-semibold text-text-primary">外觀主題</h2>
         <div className="mt-3">
@@ -97,15 +98,6 @@ export default async function SystemPage() {
           {`本作品收錄之遊戲規則內容取自 System Reference Document 5.2（"SRD 5.2"），著作權為 Wizards of the Coast LLC 所有，依 Creative Commons Attribution 4.0 International License（CC-BY-4.0）授權使用。
 
 This work includes material from the System Reference Document 5.2 ("SRD 5.2") by Wizards of the Coast LLC, licensed under the Creative Commons Attribution 4.0 International License (https://creativecommons.org/licenses/by/4.0/legalcode).`}
-        </p>
-        <p className="mt-3 text-small leading-relaxed text-text-secondary">
-          <AppLink href="/catalog/spells" className="text-gold underline">
-            法術目錄
-          </AppLink>
-          {' · '}
-          <AppLink href="/catalog/items" className="text-gold underline">
-            裝備目錄
-          </AppLink>
         </p>
       </ParchmentCard>
     </div>
