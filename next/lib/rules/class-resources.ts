@@ -1,4 +1,4 @@
-import type { AbilityScores, ClassResource } from '@/lib/domain/character';
+import type { AbilityScores, ClassResource, Character } from '@/lib/domain/character';
 
 /**
  * 職業資源規則表（SRD 5.2 / D&D 2024），移植自 Flutter 端的
@@ -93,6 +93,15 @@ export const CLASS_RESOURCE_RULES: Rule[] = [
     formula: 'levelTable',
     levelTable: [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2],
     recovery: 'short',
+  },
+  {
+    classEn: 'Fighter',
+    name: '不屈不撓',
+    nameEn: 'Indomitable',
+    fromLevel: 9,
+    formula: 'levelTable',
+    levelTable: [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3],
+    recovery: 'long',
   },
   {
     classEn: 'Monk',
@@ -200,4 +209,11 @@ export function deriveClassResources(
   return CLASS_RESOURCE_RULES.filter(
     (r) => r.classEn === classEn && level >= (r.fromLevel ?? 1),
   ).map((r) => build(r, level, scores));
+}
+
+/** 舊版漏建的資源只補缺項，不重設玩家已消耗的次數或其他自訂資源。 */
+export function backfillIndomitable(c: Character): Character {
+  if (c.classNameEn !== 'Fighter' || c.level < 9 || c.resources.some(r => r.nameEn === 'Indomitable' || r.name === '不屈不撓')) return c;
+  const resource = deriveClassResources('Fighter', c.level, c.abilityScores).find(r => r.nameEn === 'Indomitable')!;
+  return { ...c, resources: [...c.resources, resource] };
 }

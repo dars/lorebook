@@ -297,3 +297,14 @@ export function syncClassResources(
   }
   return result;
 }
+
+/** 保存前檢查實際分配，避免僅依賴按鈕 disabled 或前一次表單狀態。 */
+export function levelUpFeatIssue(c: Character, choices: LevelUpChoices): string | null {
+  if (!planFor(c, c.speciesHpPerLevel).hasAsi) return null;
+  if (choices.feat?.name.trim()) return null;
+  const entries = Object.entries(choices.asi ?? {});
+  const keys: Record<string, keyof AbilityScores> = { STR:'str', DEX:'dex', CON:'con', INT:'int_', WIS:'wis', CHA:'cha' };
+  if (!entries.length || entries.some(([k,v]) => !keys[k] || !Number.isInteger(v) || v < 1 || v > 2) || entries.reduce((sum,[,n])=>sum+n,0)!==2) return '請完成本級的能力值提升或專長選擇。';
+  if(entries.some(([k,v])=>c.abilityScores[keys[k]].score+v>20)) return '能力值提升不能超過 20，請重新分配或選擇專長。';
+  return null;
+}

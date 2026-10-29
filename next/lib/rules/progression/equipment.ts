@@ -32,7 +32,7 @@ export const STARTING: Record<string, Kit[]> = {
 export function startingOptions(cls: string, items: CatalogItem[]) {
     return (STARTING[cls] ?? []).map((k, i) => ({ id: String(i), name: k.items.length ? `裝備組合 ${String.fromCharCode(65 + i)}` : '領取購裝金幣', detail: [...k.items.map(([name, n]) => `${items.find(x => sameSpellName(x.eng_name ?? '', name))?.name ?? name}${n > 1 ? ` ×${n}` : ''}`),].join('、'), priceCp: k.gold * 100 }));
 }
-export function applyStartingEquipment(c: Character, s: Record<string, string[]>, items: CatalogItem[]): Character {
+export function applyStartingEquipment(c: Character, s: Record<string, string[]>, items: CatalogItem[], equipOnReceipt = false): Character {
     if (c.progression?.selections.equipment?.length || !s.equipment?.length || s.equipment[0] === 'already')
         return c;
     const k = STARTING[c.classNameEn]?.[Number(s.equipment[0])];
@@ -58,7 +58,9 @@ export function applyStartingEquipment(c: Character, s: Record<string, string[]>
         }
         if (!item)
             throw Error(`起始裝備「${name}」目前無法從內容庫取得，請稍後重試。`);
-        equipment.push({ ...toEquipment(item), quantity, priceCp: 0 });
+        const entry = toEquipment(item);
+        const alreadyArmored = equipment.some(e => e.equipped && e.itemType === 'armor' && (entry.armorCategory === 'shield' ? e.armorCategory === 'shield' : e.armorCategory !== 'shield'));
+        equipment.push({ ...entry, quantity, priceCp: 0, equipped: equipOnReceipt && (entry.itemType === 'weapon' || (entry.itemType === 'armor' && !alreadyArmored)) });
     }
     return { ...c, equipment, currency: { ...c.currency, gp: c.currency.gp + k.gold } };
 }

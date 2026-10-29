@@ -13,6 +13,8 @@ export type ChoiceCatalog = {
     spells: CatalogSpell[];
     items: CatalogItem[];
     feats?: CatalogFeat[];
+    /** 本次升級由主表單處理的專長等級，避免另開一次補選名額。 */
+    handledFeatLevel?: number;
 };
 export type ChoiceGroup = {
     id: string;
@@ -78,9 +80,9 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
     const skill = (id: string, title: string, level: number, count: number, from = skillOptions, expertise = false) => simple(id, title, level, count, from, { kind: expertise ? 'expertise' : 'skill', family: expertise ? 'expertise' : 'skill' });
     const language = (id: string, title: string, level: number, count: number, options = LANGUAGES) => simple(id, title, level, count, options, { kind: 'language', family: 'language' });
     language('creation-languages', '額外語言', 1, 2, LANGUAGES.slice(1, 10));
-    const style = (id: string, level: number, extra: Option[] = []) => simple(id, '戰鬥風格', level, 1, [...STYLES, ...extra], { family: 'style', replace: cls === 'Fighter' ? { when: 'level', count: 1, budget: 'style' } : undefined });
+    const style = (id: string, level: number, extra: Option[] = []) => simple(id, '戰鬥風格', level, 1, [...STYLES, ...extra], { detail: 'SRD 5.2.1 收錄四種戰鬥風格；此處只列 SRD 內容。', family: 'style', replace: cls === 'Fighter' ? { when: 'level', count: 1, budget: 'style' } : undefined });
     for (const level of asiLevelsFor(cls)) {
-        if (level > lv)
+        if (level > lv || level === catalog.handledFeatLevel)
             continue;
         const id = `feat-${level}`;
         const recorded = c.features.some(f => !f.progressionSource && new RegExp(`Lv\\s*${level}\\b`).test(f.source) && (f.nameEn === 'Ability Score Improvement' || /^(專長|史詩恩賜)/.test(f.source)));

@@ -249,7 +249,7 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
         else
             result.push({ ...spell });
     } return result; };
-    const equipped = applyStartingEquipment(c, active, catalog.items);
+    const equipped = applyStartingEquipment(c, active, catalog.items, context === 'creation');
     const result: Character = { ...equipped, progression, features, resources,
         skills: c.skills.map(s => ({ ...s, proficient: skills.has(s.nameEn) || (s.proficient && !c.progression?.grantedSkills.includes(s.nameEn)), expertise: expertise.has(s.nameEn) || (s.expertise === true && !groups.filter(g => g.kind === 'expertise').some(g => baseline(c)[g.id]?.includes(s.nameEn))) })),
         toolProficiencies: [...new Set([...c.toolProficiencies.filter(v => !c.progression?.grantedTools.includes(v)), ...newTools])],

@@ -1,10 +1,11 @@
 'use client';
 
+import { levelUpFeatIssue } from '@/lib/rules/level-up';
 import { ChoiceEditor } from '@/components/progression/choice-editor';
 import { applyChoices, validateChoices } from '@/lib/rules/progression/engine';
 import type { ChoiceCatalog, Selections } from '@/lib/rules/progression/groups';
 import { ClassIcon } from '@/components/ui/class-icon';
-import { useState } from 'react';
+import { useState, type ComponentProps } from 'react';
 
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import { AppLink } from '@/components/ui/app-link';
@@ -53,7 +54,12 @@ const FEAT_MODES: [FeatMode, string][] = [
   ['custom', '自訂專長'],
 ];
 
-export function LevelUpView({
+export function LevelUpView(props: ComponentProps<typeof LevelUpForm>) {
+  // App Router 保留元件時，下一級必須取得全新的本級選擇；草稿本身仍依等級保存。
+  return <LevelUpForm key={`${props.initial.id}:${props.initial.level}:${props.mode ?? 'level-up'}`} {...props} />;
+}
+
+function LevelUpForm({
   initial,
   mode = 'level-up',
   subclasses,
@@ -98,7 +104,7 @@ export function LevelUpView({
   const [asiB, setAsiB] = useState<string | null>(null);
   // 2024 的 ASI 等級給的是「一個通用專長」，屬性值提升只是其中之一。
   // 各模式的輸入分開存：切模式只決定送出哪一份，切回來不必重填。
-  const [featMode, setFeatMode] = useState<FeatMode>('asi');
+  const [featMode, setFeatMode] = useState<FeatMode>(plan.targetLevel === 19 ? 'catalog' : 'asi');
   const [catalogFeatId, setCatalogFeatId] = useState<string | null>(null);
   const [catalogAbility, setCatalogAbility] = useState<string | null>(null);
   const [customName, setCustomName] = useState('');
@@ -275,10 +281,11 @@ export function LevelUpView({
         features: newFeatures,
       });
 
+  const flowCatalog = { ...choiceCatalog, handledFeatLevel: plan.hasAsi && !subclassOnly ? plan.targetLevel : undefined };
   const choiceCharacter = customSubclass ? {...rawPreview, customSubclass} : rawPreview;
-  const choiceIssues = validateChoices(choiceCharacter, choiceSelections, choiceCatalog, 'level', !deferChoices);
+  const choiceIssues = validateChoices(choiceCharacter, choiceSelections, flowCatalog, 'level', !deferChoices);
   const choiceReady = subclassOnly || choiceIssues.length === 0;
-  const preview = !subclassOnly && choiceReady ? applyChoices(choiceCharacter, choiceSelections, choiceCatalog, 'level', !deferChoices) : rawPreview;
+  const preview = !subclassOnly && choiceReady ? applyChoices(choiceCharacter, choiceSelections, flowCatalog, 'level', !deferChoices) : rawPreview;
 
   /**
    * 草稿的鍵帶角色 id 與目標等級：切到別的角色、或這一級已經升完，
@@ -325,8 +332,10 @@ export function LevelUpView({
     accept();
   };
 
+  const featIssue = subclassOnly ? null : levelUpFeatIssue(initial, featChoice);
+  const canSubmit = subclassReady && choiceReady && (subclassOnly || (featChoice.ready && hpReady && !featIssue));
   const submit = async () => {
-    if (!choiceReady) return;
+    if (busy || !canSubmit) { setError(featIssue ?? '請完成本級必選項目。'); return; }
     setBusy(true);
     // 選用自訂子職時把整份定義快照進角色卡；SRD 子職維持 null。
     const r = await updateCharacter(
@@ -456,7 +465,7 @@ export function LevelUpView({
 
       {plan.hasAsi && (
         <>
-          <SectionTitle en="ABILITY SCORE / FEAT" cn="屬性值提升或專長" />
+          <SectionTitle en="ABILITY SCORE / FEAT" cn={plan.targetLevel === 19 ? '史詩恩賜或其他專長' : '屬性值提升或專長'} />
           <div className="mb-2 flex gap-2">
             {FEAT_MODES.map(([m, label]) => (
               <button
@@ -783,7 +792,7 @@ export function LevelUpView({
       )}
 
       {!subclassOnly && <>
-        <ChoiceEditor character={choiceCharacter} catalog={choiceCatalog} value={choiceSelections} onChange={setChoiceSelections} context="level" />
+        <ChoiceEditor character={choiceCharacter} catalog={flowCatalog} value={choiceSelections} onChange={setChoiceSelections} context="level" />
         <label className="flex min-h-11 items-center gap-2 text-small text-text-secondary"><input type="checkbox" checked={deferChoices} onChange={e=>setDeferChoices(e.target.checked)} className="accent-gold"/>尚未開始的舊選項稍後到「成長選擇」補齊</label>
         {!choiceReady && <p className="text-small text-danger">尚有選項未完成；已開始的項目需選滿指定數量。</p>}
       </>}
@@ -861,13 +870,12 @@ export function LevelUpView({
 
       <div className="fixed inset-x-0 bottom-0 border-t border-border-2 bg-surface-0 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <div className="mx-auto max-w-[700px]">
+          {featIssue && <p role="status" className="mb-2 text-small text-text-secondary">{featIssue}</p>}
           <button
             type="button"
             onClick={submit}
             disabled={
-              busy ||
-              !subclassReady || !choiceReady ||
-              (!subclassOnly && (!featChoice.ready || !hpReady))
+              busy || !canSubmit
             }
             className="min-h-12 w-full rounded-card border border-gold bg-gold/10 text-body font-bold text-gold disabled:opacity-40"
           >
@@ -919,6 +927,7 @@ function AbilityPicker({
             <button
               key={code}
               type="button"
+              aria-pressed={value === code}
               disabled={code === exclude || maxed}
               onClick={() => onPick(code)}
               className={`min-h-11 rounded-chip border text-small disabled:opacity-30 ${

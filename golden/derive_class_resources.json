@@ -2101,6 +2101,16 @@
         "recovery": "short",
         "unit": "",
         "display": "pips"
+      },
+      {
+        "name": "不屈不撓",
+        "nameEn": "Indomitable",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
       }
     ]
   },
@@ -2132,6 +2142,16 @@
         "current": 1,
         "dieFaces": 0,
         "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "不屈不撓",
+        "nameEn": "Indomitable",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "long",
         "unit": "",
         "display": "pips"
       }
@@ -2167,6 +2187,16 @@
         "recovery": "short",
         "unit": "",
         "display": "pips"
+      },
+      {
+        "name": "不屈不撓",
+        "nameEn": "Indomitable",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
       }
     ]
   },
@@ -2198,6 +2228,16 @@
         "current": 1,
         "dieFaces": 0,
         "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "不屈不撓",
+        "nameEn": "Indomitable",
+        "max": 1,
+        "current": 1,
+        "dieFaces": 0,
+        "recovery": "long",
         "unit": "",
         "display": "pips"
       }
@@ -2233,6 +2273,16 @@
         "recovery": "short",
         "unit": "",
         "display": "pips"
+      },
+      {
+        "name": "不屈不撓",
+        "nameEn": "Indomitable",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
       }
     ]
   },
@@ -2264,6 +2314,16 @@
         "current": 1,
         "dieFaces": 0,
         "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "不屈不撓",
+        "nameEn": "Indomitable",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "long",
         "unit": "",
         "display": "pips"
       }
@@ -2299,6 +2359,16 @@
         "recovery": "short",
         "unit": "",
         "display": "pips"
+      },
+      {
+        "name": "不屈不撓",
+        "nameEn": "Indomitable",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
       }
     ]
   },
@@ -2330,6 +2400,16 @@
         "current": 1,
         "dieFaces": 0,
         "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "不屈不撓",
+        "nameEn": "Indomitable",
+        "max": 2,
+        "current": 2,
+        "dieFaces": 0,
+        "recovery": "long",
         "unit": "",
         "display": "pips"
       }
@@ -2365,6 +2445,16 @@
         "recovery": "short",
         "unit": "",
         "display": "pips"
+      },
+      {
+        "name": "不屈不撓",
+        "nameEn": "Indomitable",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
       }
     ]
   },
@@ -2396,6 +2486,16 @@
         "current": 2,
         "dieFaces": 0,
         "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "不屈不撓",
+        "nameEn": "Indomitable",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "long",
         "unit": "",
         "display": "pips"
       }
@@ -2431,6 +2531,16 @@
         "recovery": "short",
         "unit": "",
         "display": "pips"
+      },
+      {
+        "name": "不屈不撓",
+        "nameEn": "Indomitable",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "long",
+        "unit": "",
+        "display": "pips"
       }
     ]
   },
@@ -2462,6 +2572,16 @@
         "current": 2,
         "dieFaces": 0,
         "recovery": "short",
+        "unit": "",
+        "display": "pips"
+      },
+      {
+        "name": "不屈不撓",
+        "nameEn": "Indomitable",
+        "max": 3,
+        "current": 3,
+        "dieFaces": 0,
+        "recovery": "long",
         "unit": "",
         "display": "pips"
       }

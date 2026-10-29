@@ -16,7 +16,7 @@ export function ChoiceEditor({ character, catalog, value, onChange, context = 'b
     const complete = groups.filter(g => (value[g.id]?.length ?? 0) === g.count).length;
     return <section aria-label="成長選擇" className="my-4">
     <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-border pb-2"><h2 className="font-cjk text-body font-bold text-gold">成長選擇</h2><span className="text-small text-text-secondary">{complete} / {groups.length} 項完成</span></div>
-    <p className="mb-3 text-small leading-relaxed text-text-secondary">點選項目即可選取，再點一次取消。已選內容留在原位。既有法術選入名額後會歸到該來源，其他手動與自創內容會保留。</p>
+    <p className="mb-3 text-small leading-relaxed text-text-secondary">點選項目即可選取，再點一次取消。已選內容留在原位。既有法術選入名額後會歸到該來源，其他手動與自創內容會保留。{context === 'creation' && '起始組合會自動穿戴護甲並啟用武器，之後可在物品頁調整。'}</p>
     <div className="divide-y divide-border-2">{groups.map(g => <Group key={g.id} group={g} character={character} value={value[g.id] ?? []} onChange={v => onChange({ ...value, [g.id]: v })} context={context} issues={issues.filter(i => i.group === g.id).map(i => i.message)}/>)}</div>
   </section>;
 }
