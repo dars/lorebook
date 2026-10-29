@@ -1,4 +1,5 @@
 'use client';
+import { displayedCharacter } from '@/lib/state/displayed-character';
 
 import { useEffect, useId, useState } from 'react';
 
@@ -52,7 +53,7 @@ export function DecisionView({
   const [editTempHp, setEditTempHp] = useState(false);
   const hpUndo = useHpUndo();
 
-  const c = stored ?? initial;
+  const c = displayedCharacter(initial, stored);
   // 快照在調整**之前**取，所以要用當下這一輪 render 的值。
   const adjustHp = (d: number) =>
     hpUndo.adjust(d, { currentHp: c.currentHp, tempHp: c.tempHp });

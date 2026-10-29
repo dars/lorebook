@@ -1,4 +1,5 @@
 'use client';
+import { displayedCharacter } from '@/lib/state/displayed-character';
 import { SpellPicker } from '@/components/spells/spell-picker';
 
 import { useEffect, useState, type ReactNode } from 'react';
@@ -61,7 +62,7 @@ export function CharacterSheetLive({
   }, [initial, load]);
   useCharacterSync(persist);
 
-  const c = stored ?? initial;
+  const c = displayedCharacter(initial, stored);
 
   return (
     <>

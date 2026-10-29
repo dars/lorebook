@@ -50,6 +50,8 @@ export function ftDisplay(t: FtToken): string {
   if (FT_DICE_TAGS.has(t.tag)) {
     return t.parts.length >= 2 && t.parts[1] !== '' ? t.parts[1] : t.parts[0];
   }
+  // filter 的第一欄就是標籤，後面是頁面與查詢條件，並非參照類的顯示名。
+  if (t.tag === 'filter') return t.parts[0];
   if (FT_REF_TAGS.has(t.tag)) {
     return t.parts.length >= 3 && t.parts[2] !== '' ? t.parts[2] : t.parts[0];
   }

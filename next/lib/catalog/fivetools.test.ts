@@ -46,3 +46,17 @@ describe('ftFormatCastingTime / ftFormatRange 對拍', () => {
     expect(actual).toBe(c.output.text);
   });
 });
+
+import feats from '@/lib/rules/fixtures/srd-feats.json';
+it('filter 顯示第一欄標籤，不顯示查詢條件', () => {
+  expect(ftPlainText("{@filter 工具|items|type=tool;artisan's tools;instrument;gaming set}")).toBe('工具');
+  expect(ftPlainText('{@filter 牧師|spells|level=0;1|class=Cleric}')).toBe('牧師');
+  expect(ftPlainText('{@spell Fireball|XPHB|火球術}')).toBe('火球術');
+});
+it('實際技藝精湛與法術新手專長文字沒有篩選語法', () => {
+  const skilled = ftFlattenEntries(feats.find(f => f.eng_name === 'Skilled')!.data.entries);
+  const magic = ftFlattenEntries(feats.find(f => f.eng_name === 'Magic Initiate')!.data.entries);
+  expect(skilled).toContain('技能或工具熟練');
+  expect(magic).toContain('牧師、德魯伊或法師法術列表');
+  expect(skilled + magic).not.toMatch(/type=|level=|class=/);
+});

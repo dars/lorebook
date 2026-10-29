@@ -1,5 +1,7 @@
 'use client';
 
+import { useCharacterStore } from '@/lib/state/character-store';
+import { displayedCharacter } from '@/lib/state/displayed-character';
 import { ClassIcon } from '@/components/ui/class-icon';
 import { usePathname } from 'next/navigation';
 
@@ -16,7 +18,10 @@ import type { Character } from '@/lib/domain/character';
  *
  * 徽章可點擊與否用外觀區分：角色頁可升級時加金框膠囊，其餘頁面純顯示。
  */
-export function CharacterHeader({ c }: { c: Character }) {
+export function CharacterHeader({ c: initial }: { c: Character }) {
+  // Layout 可被路由保留；頁首與角色內容訂閱同一份資料，避免升級後留在舊等級。
+  const stored = useCharacterStore(s => s.character);
+  const c = displayedCharacter(initial, stored);
   // LEVEL 徽章僅在角色頁可點擊觸發升級；其他分頁純顯示，避免跑團中誤觸。
   // 20 級為上限，沒得升時也不該是可點的。
   const pathname = usePathname();
