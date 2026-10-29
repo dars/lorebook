@@ -404,6 +404,11 @@ body {
   outline-offset: 2px;
 }
 
+/* 主題選單由外層呈現鍵盤焦點，避免原生選單與外層出現雙重框線。 */
+.theme-select:focus-visible {
+  outline: none;
+}
+
 /*
  * 觸控行為：
  * - manipulation 關掉雙擊縮放的判定，省去每次點擊約 300ms 的等待。

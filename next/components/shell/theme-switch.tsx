@@ -65,9 +65,9 @@ export function ThemeSwitch({ compact = false }: { compact?: boolean }) {
 
   if (compact) {
     return (
-      <label className="flex min-h-11 shrink-0 items-center gap-2 rounded-card border border-border px-3 text-small text-text-light focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-gold">
+      <label className="flex min-h-11 shrink-0 items-center gap-2 rounded-card border border-border px-3 text-small text-text-light has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-gold">
         <span>外觀</span>
-        <select aria-label="外觀主題" name="theme" value={mode} onChange={(event) => pick(event.target.value as Mode)} className="min-h-11 min-w-[5rem] cursor-pointer bg-surface-0 text-small text-text-primary outline-none">
+        <select aria-label="外觀主題" name="theme" value={mode} onChange={(event) => pick(event.target.value as Mode)} className="theme-select min-h-11 min-w-[5rem] cursor-pointer bg-surface-0 text-small text-text-primary outline-none">
           <option value="system">跟隨系統</option>
           <option value="light">淺色</option>
           <option value="dark">深色</option>

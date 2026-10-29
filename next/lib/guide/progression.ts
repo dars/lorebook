@@ -93,7 +93,7 @@ export function guideLevels(cls: GuideClass, withSubclass = false): GuideLevel[]
     const growth: string[] = [];
     if (level === 1) {
       choices.unshift({ id: 'class-skills', title: `職業技能：選 ${basics.skillCount} 項熟練`, detail: `從${basics.skillChoices.join('、')}中選擇；與背景等來源重複熟練時，依建角規則調整。`, coverage: 'skills', page: cls.page });
-      choices.push({ id: 'equipment', title: '起始裝備：選裝備組合或金幣', detail: '依本職業 Core Traits 的 Starting Equipment 選 A 或 B（戰士有 A／B／C）。完整組合見本級規則來源；以金幣購裝與直接取得裝備組合是替代方案。', coverage: 'equipment', page: cls.page });
+      choices.push({ id: 'equipment', title: '起始裝備：選裝備組合或金幣', detail: '建立角色時，選一種方式取得職業的起始裝備：① 直接領取職業提供的整套裝備（可能包含少量金幣）；② 領取指定金額的金幣，再自行購買裝備。兩種方式只能選一種，不能整套裝備和購裝金幣都拿。各職業提供的物品與金額不同，戰士另有兩套裝備可擇一；完整清單可點下方「規則來源」查看。', coverage: 'equipment', page: cls.page });
       if (cls.en === 'Bard') choices.push({ id: 'instruments', title: '樂器熟練：選 3 種', detail: '選 3 種樂器取得熟練。', coverage: 'languages', page: 31 });
     }
     const mastery = cls.en === 'Fighter' ? ({ 1: 3, 4: 1, 10: 1, 16: 1 } as Record<number, number>) : cls.en === 'Barbarian' ? { 1: 2, 4: 1, 10: 1 } as Record<number, number> : ['Paladin', 'Ranger', 'Rogue'].includes(cls.en) ? { 1: 2 } as Record<number, number> : {};

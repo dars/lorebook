@@ -18,13 +18,13 @@
 }
 
 @media print {
-  /* portal 是 body 的直屬子項；display:none 讓導覽與彈窗不佔紙面。 */
-  :global(body:has(> [data-character-print]) > :not([data-character-print])) {
+  /* portal 是 body 的直屬子項；區域 class 同時符合兩種編譯器的純選擇器規則。 */
+  :global(body):has(> .document) > :not(.document) {
     display: none !important;
   }
 
-  :global(html:has([data-character-print])),
-  :global(body:has(> [data-character-print])) {
+  :global(html):has(.document),
+  :global(body):has(> .document) {
     display: block !important;
     height: auto !important;
     min-height: 0 !important;

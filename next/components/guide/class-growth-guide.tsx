@@ -2,13 +2,30 @@
 
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import { AppLink } from '@/components/ui/app-link';
 import { ThemeSwitch } from '@/components/shell/theme-switch';
 import { GUIDE_CLASSES } from '@/lib/guide/classes';
 import { COVERAGE, COVERAGE_CHECKED_ON, COVERAGE_LABELS, type CoverageKey } from '@/lib/guide/coverage';
 import { filterGuideLevels, getGuideClass, guideLevels, SRD_URL } from '@/lib/guide/progression';
+import styles from './class-growth-guide.module.css';
+import { GuideGlyph } from './guide-glyph';
 
 const focus = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold';
+const CLASS_ARTWORK: Readonly<Partial<Record<string, string>>> = {
+  Wizard: '/images/guide/wizard-expressive-v1.webp',
+  Fighter: '/images/guide/fighter-expressive-v1.webp',
+  Barbarian: '/images/guide/barbarian-expressive-v1.webp',
+  Bard: '/images/guide/bard-expressive-v1.webp',
+  Cleric: '/images/guide/cleric-expressive-v1.webp',
+  Druid: '/images/guide/druid-expressive-v1.webp',
+  Monk: '/images/guide/monk-expressive-v1.webp',
+  Paladin: '/images/guide/paladin-expressive-v1.webp',
+  Ranger: '/images/guide/ranger-expressive-v1.webp',
+  Rogue: '/images/guide/rogue-expressive-v1.webp',
+  Sorcerer: '/images/guide/sorcerer-expressive-v1.webp',
+  Warlock: '/images/guide/warlock-expressive-v1.webp',
+};
 
 function CoverageNote({ coverageKey }: { coverageKey: CoverageKey }) {
   const item = COVERAGE[coverageKey];
@@ -28,6 +45,7 @@ function CoverageNote({ coverageKey }: { coverageKey: CoverageKey }) {
 export function ClassGrowthGuide() {
   const params = useSearchParams();
   const cls = getGuideClass(params.get('class'));
+  const artwork = CLASS_ARTWORK[cls.en];
   const checking = params.get('view') === 'check';
   const choicesOnly = params.get('choices') === '1';
   const withSubclass = params.get('subclass') === 'srd';
@@ -42,7 +60,13 @@ export function ClassGrowthGuide() {
   }
 
   return (
-    <main id="main-content" className="mx-auto w-full max-w-[1160px] flex-1 px-4 pb-12 font-reading medium:px-6 expanded:px-10">
+    <main id="main-content" className={`${styles.page} flex-1 font-reading`}>
+      {artwork && (
+        <div key={cls.en} aria-hidden="true" className={styles.artwork}>
+          <Image src={artwork} alt="" width={768} height={768} unoptimized loading="eager" draggable={false} className={styles.artImage} />
+        </div>
+      )}
+      <div className="mx-auto w-full max-w-[1160px] px-4 pb-12 medium:px-6 expanded:px-10">
       <header className="border-b border-border pb-3 pt-2">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
           <AppLink href="/" className={`inline-flex min-h-11 items-center font-display text-heading text-gold ${focus}`}>Lorebook</AppLink>
@@ -52,7 +76,7 @@ export function ClassGrowthGuide() {
           </div>
         </div>
 
-        <h1 className="mt-1 font-cjk text-title font-bold text-text-primary">職業成長指南</h1>
+        <h1 className="mt-1 flex items-center gap-3 font-cjk text-title font-bold text-text-primary"><span className="-rotate-6 text-gold"><GuideGlyph kind="dice" className="size-7" /></span>職業成長指南</h1>
         <p className="mt-1 text-body text-text-light">D&D 2024 · SRD 5.2.1 · 查閱 1–20 級的選擇與成長。</p>
 
       </header>
@@ -63,7 +87,7 @@ export function ClassGrowthGuide() {
             <p className="mb-2 font-label text-small tracking-widest text-text-secondary">職業索引</p>
             {GUIDE_CLASSES.map((item) => (
               <button key={item.en} type="button" aria-pressed={cls.en === item.en} onClick={() => changeParam('class', item.en.toLowerCase())} className={`flex min-h-11 w-full flex-wrap items-center gap-x-2 border-l-2 px-3 py-2 text-left ${focus} ${cls.en === item.en ? 'border-gold bg-gold/10 text-gold' : 'border-transparent text-text-light hover:bg-surface-1'}`}>
-                <span className="text-body">{item.cn}</span><span className="text-small text-text-secondary">{item.en}</span>
+                <GuideGlyph kind={item.en} className="size-4" /><span className="text-body">{item.cn}</span><span className="text-small text-text-secondary">{item.en}</span>
               </button>
             ))}
           </div>
@@ -71,7 +95,7 @@ export function ClassGrowthGuide() {
 
         <div className="min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="font-cjk text-heading font-bold text-text-primary">{cls.cn} <span className="font-display text-body font-normal text-gold">{cls.en}</span></h2>
+            <h2 className="flex flex-wrap items-center gap-2 font-cjk text-heading font-bold text-text-primary"><span className="inline-flex size-9 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-gold"><GuideGlyph kind={cls.en} /></span>{cls.cn} <span className="font-display text-body font-normal text-gold">{cls.en}</span></h2>
             <label className="flex min-h-11 items-center gap-2 text-small text-text-light min-[1200px]:hidden">
               <span className="sr-only">選擇職業</span>
               <select aria-label="選擇職業" value={cls.en} onChange={(event) => changeParam('class', event.target.value.toLowerCase())} className={`min-h-11 max-w-full rounded-card border border-border bg-surface-1 px-3 text-small text-text-primary ${focus}`}>
@@ -122,9 +146,10 @@ export function ClassGrowthGuide() {
           <div key={`${cls.en}-${withSubclass}-${checking}`}>
             {rows.map((row) => (
               <section key={row.level} aria-labelledby={`level-${row.level}`} className="border-t border-border pb-3">
-                <div className="flex items-center gap-3 border-l-2 border-gold bg-surface-1 px-3 py-2">
+                <div className="flex items-center gap-3 border-l-2 border-gold bg-surface-1/60 px-3 py-2">
                   <h3 id={`level-${row.level}`} className="font-cjk text-body font-bold text-gold">第 <span className="font-display tabular-nums">{row.level}</span> 級</h3>
                   <span className="text-small text-text-secondary">{row.choices.length ? `${row.choices.length} 項選擇` : '自動成長'}</span>
+                  {[1, 5, 11, 17, 20].includes(row.level) && <span className="ml-auto text-gold/60"><GuideGlyph kind="spark" className="size-4" /></span>}
                 </div>
                 <div className="min-w-0 px-3">
                   {row.choices.map((choice) => (
@@ -170,6 +195,7 @@ export function ClassGrowthGuide() {
             <p className="mt-2">This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by Wizards of the Coast LLC, available at <a href="https://www.dndbeyond.com/srd" className="text-gold underline">https://www.dndbeyond.com/srd</a>. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at <a href="https://creativecommons.org/licenses/by/4.0/legalcode" className="break-all text-gold underline">https://creativecommons.org/licenses/by/4.0/legalcode</a>.</p>
           </footer>
         </div>
+      </div>
       </div>
     </main>
   );

@@ -1,0 +1,61 @@
+.page {
+  position: relative;
+  isolation: isolate;
+  /* 混色在整個閱讀頁的底色上進行，避免置中容器邊界出現明暗接縫。 */
+  background: var(--color-surface-0);
+}
+
+.artwork {
+  position: fixed;
+  z-index: -1;
+  right: max(0.5rem, env(safe-area-inset-right));
+  bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  width: clamp(9rem, 38vw, 11rem);
+  max-width: 42svh;
+  aspect-ratio: 1;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.22;
+  mix-blend-mode: soft-light;
+  mask-image:
+    linear-gradient(to right, transparent, var(--color-surface-0) 32%),
+    linear-gradient(to bottom, transparent, var(--color-surface-0) 24%);
+  mask-composite: intersect;
+}
+
+.artImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: saturate(0.65);
+}
+
+/*
+ * 深色以柔光保留原色而不大幅抬亮底色，淺色以低濃度正片疊底呈現。
+ * 全白／全黑插畫的保守估算：text-secondary 對比為深色 4.86:1、淺色 4.56:1。
+ */
+:global(:root[data-theme='light']) .artwork {
+  opacity: 0.07;
+  mix-blend-mode: multiply;
+}
+
+@media (min-width: 600px) {
+  .artwork {
+    right: max(1.25rem, env(safe-area-inset-right));
+    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    width: 17rem;
+  }
+}
+
+@media (min-width: 840px) {
+  .artwork {
+    right: max(2rem, env(safe-area-inset-right));
+    width: 21rem;
+  }
+}
+
+@media print {
+  .artwork {
+    display: none;
+  }
+}

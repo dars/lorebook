@@ -1,0 +1,55 @@
+{
+  "tool": "built-in image_gen",
+  "items": [
+    {
+      "id": "barbarian",
+      "prompt": "Create ONE new full-body D&D-inspired class character for the Lorebook class guide. Match reference's warm brown hand-ink contours, muted watercolor and colored-pencil textures, cute Japanese tabletop chibi aesthetic. True THREE-head-tall proportions: large round head one third of total skull-to-sole height, compact torso one third, short legs one third. Same illustration family but distinct identity. Square composition, centered whole figure, breathing margin, all props and feet inside canvas. Genuine transparent background. No text, lettering, labels, border, scenery, floor, cast ground shadow, glossy 3D, or additional characters. Reference is STYLE ONLY, do not copy fighter outfit. Barbarian: cheerful sturdy female warrior with auburn braids, fur shoulder wrap, leather armor and a compact two-handed axe.",
+      "path": "/Users/dars94/.codex/generated_images/01a0612c-648b-7ad0-a104-a58c40f678af/exec-59c98f15-8e92-4b16-aa30-835d199d91f9.png"
+    },
+    {
+      "id": "bard",
+      "prompt": "Create ONE new full-body D&D-inspired class character for the Lorebook class guide. Match reference's warm brown hand-ink contours, muted watercolor and colored-pencil textures, cute Japanese tabletop chibi aesthetic. True THREE-head-tall proportions: large round head one third of total skull-to-sole height, compact torso one third, short legs one third. Same illustration family but distinct identity. Square composition, centered whole figure, breathing margin, all props and feet inside canvas. Genuine transparent background. No text, lettering, labels, border, scenery, floor, cast ground shadow, glossy 3D, or additional characters. Reference is STYLE ONLY, do not copy fighter outfit. Bard: smiling male half-elf with wavy dark hair, plum traveling coat, small feather cap, holding a wooden lute.",
+      "path": "/Users/dars94/.codex/generated_images/01a0612c-648b-7ad0-a104-a58c40f678af/exec-cc19e9ff-7b2d-4375-8139-dd6311fbde1f.png"
+    },
+    {
+      "id": "cleric",
+      "prompt": "Create ONE new full-body D&D-inspired class character for the Lorebook class guide. Match reference's warm brown hand-ink contours, muted watercolor and colored-pencil textures, cute Japanese tabletop chibi aesthetic. True THREE-head-tall proportions: large round head one third of total skull-to-sole height, compact torso one third, short legs one third. Same illustration family but distinct identity. Square composition, centered whole figure, breathing margin, all props and feet inside canvas. Genuine transparent background. No text, lettering, labels, border, scenery, floor, cast ground shadow, glossy 3D, or additional characters. Reference is STYLE ONLY, do not copy fighter outfit. Cleric: warm smiling female dwarf with silver braid, ivory and gold vestments over chainmail, round sun medallion, small mace and shield.",
+      "path": "/Users/dars94/.codex/generated_images/01a0612c-648b-7ad0-a104-a58c40f678af/exec-decb05d5-1fff-4d32-94aa-3d8bfec82bca.png"
+    },
+    {
+      "id": "druid",
+      "prompt": "Create ONE new full-body D&D-inspired class character for the Lorebook class guide. Match reference's warm brown hand-ink contours, muted watercolor and colored-pencil textures, cute Japanese tabletop chibi aesthetic. True THREE-head-tall proportions: large round head one third of total skull-to-sole height, compact torso one third, short legs one third. Same illustration family but distinct identity. Square composition, centered whole figure, breathing margin, all props and feet inside canvas. Genuine transparent background. No text, lettering, labels, border, scenery, floor, cast ground shadow, glossy 3D, or additional characters. Reference is STYLE ONLY, do not copy fighter outfit. Druid: gentle male elf with green eyes, moss cloak, leaf ornaments, wooden staff with tiny sprout.",
+      "path": "/Users/dars94/.codex/generated_images/01a0612c-648b-7ad0-a104-a58c40f678af/exec-4bf8fd46-45dc-42b3-a30d-6bad8b8eedcc.png"
+    },
+    {
+      "id": "monk",
+      "prompt": "Create ONE new full-body D&D-inspired class character for the Lorebook class guide. Match reference's warm brown hand-ink contours, muted watercolor and colored-pencil textures, cute Japanese tabletop chibi aesthetic. True THREE-head-tall proportions: large round head one third of total skull-to-sole height, compact torso one third, short legs one third. Same illustration family but distinct identity. Square composition, centered whole figure, breathing margin, all props and feet inside canvas. Genuine transparent background. No text, lettering, labels, border, scenery, floor, cast ground shadow, glossy 3D, or additional characters. Reference is STYLE ONLY, do not copy fighter outfit. Monk: calm female human with dark hair in bun, ochre training robes, cloth hand wraps, wooden prayer beads, relaxed martial stance.",
+      "path": "/Users/dars94/.codex/generated_images/01a0612c-648b-7ad0-a104-a58c40f678af/exec-ec9d08e9-6acb-4f69-802c-53de29740828.png"
+    },
+    {
+      "id": "paladin",
+      "prompt": "Create ONE new full-body D&D-inspired class character for the Lorebook class guide. Match reference's warm brown hand-ink contours, muted watercolor and colored-pencil textures, cute Japanese tabletop chibi aesthetic. True THREE-head-tall proportions: large round head one third of total skull-to-sole height, compact torso one third, short legs one third. Same illustration family but distinct identity. Square composition, centered whole figure, breathing margin, all props and feet inside canvas. Genuine transparent background. No text, lettering, labels, border, scenery, floor, cast ground shadow, glossy 3D, or additional characters. Reference is STYLE ONLY, do not copy fighter outfit. Paladin: kind male human knight with sandy hair, polished silver armor, cream blue tabard, sword and heraldic sun shield.",
+      "path": "/Users/dars94/.codex/generated_images/01a0612c-648b-7ad0-a104-a58c40f678af/exec-ad3e4a1b-4255-4d65-8051-e7e4855f4562.png"
+    },
+    {
+      "id": "ranger",
+      "prompt": "Create ONE new full-body D&D-inspired class character for the Lorebook class guide. Match reference's warm brown hand-ink contours, muted watercolor and colored-pencil textures, cute Japanese tabletop chibi aesthetic. True THREE-head-tall proportions: large round head one third of total skull-to-sole height, compact torso one third, short legs one third. Same illustration family but distinct identity. Square composition, centered whole figure, breathing margin, all props and feet inside canvas. Genuine transparent background. No text, lettering, labels, border, scenery, floor, cast ground shadow, glossy 3D, or additional characters. Reference is STYLE ONLY, do not copy fighter outfit. Ranger: friendly female elf with red ponytail, forest green hood lowered, leather armor, short bow and quiver.",
+      "path": "/Users/dars94/.codex/generated_images/01a0612c-648b-7ad0-a104-a58c40f678af/exec-533f990d-ffe5-415f-ad15-10d2fae2730f.png"
+    },
+    {
+      "id": "rogue",
+      "prompt": "Create ONE new full-body D&D-inspired class character for the Lorebook class guide. Match reference's warm brown hand-ink contours, muted watercolor and colored-pencil textures, cute Japanese tabletop chibi aesthetic. True THREE-head-tall proportions: large round head one third of total skull-to-sole height, compact torso one third, short legs one third. Same illustration family but distinct identity. Square composition, centered whole figure, breathing margin, all props and feet inside canvas. Genuine transparent background. No text, lettering, labels, border, scenery, floor, cast ground shadow, glossy 3D, or additional characters. Reference is STYLE ONLY, do not copy fighter outfit. Rogue: mischievous male halfling with black tousled hair, charcoal hood lowered, leather vest, belt pouches, small sheathed daggers.",
+      "path": "/Users/dars94/.codex/generated_images/01a0612c-648b-7ad0-a104-a58c40f678af/exec-6e38cb68-f75a-4658-a98d-75f9594f8a07.png"
+    },
+    {
+      "id": "sorcerer",
+      "prompt": "Create ONE new full-body D&D-inspired class character for the Lorebook class guide. Match reference's warm brown hand-ink contours, muted watercolor and colored-pencil textures, cute Japanese tabletop chibi aesthetic. True THREE-head-tall proportions: large round head one third of total skull-to-sole height, compact torso one third, short legs one third. Same illustration family but distinct identity. Square composition, centered whole figure, breathing margin, all props and feet inside canvas. Genuine transparent background. No text, lettering, labels, border, scenery, floor, cast ground shadow, glossy 3D, or additional characters. Reference is STYLE ONLY, do not copy fighter outfit. Sorcerer: confident female tiefling with small curved horns, copper red hair, burgundy robe, tiny amber magical flame above open palm.",
+      "path": "/Users/dars94/.codex/generated_images/01a0612c-648b-7ad0-a104-a58c40f678af/exec-ec64ac4a-f86d-4d8e-bad3-597f1a34a8b1.png"
+    },
+    {
+      "id": "warlock",
+      "prompt": "Create ONE new full-body D&D-inspired class character for the Lorebook class guide. Match reference's warm brown hand-ink contours, muted watercolor and colored-pencil textures, cute Japanese tabletop chibi aesthetic. True THREE-head-tall proportions: large round head one third of total skull-to-sole height, compact torso one third, short legs one third. Same illustration family but distinct identity. Square composition, centered whole figure, breathing margin, all props and feet inside canvas. Genuine transparent background. No text, lettering, labels, border, scenery, floor, cast ground shadow, glossy 3D, or additional characters. Reference is STYLE ONLY, do not copy fighter outfit. Warlock: mysterious but friendly male elf with pale lavender hair, deep teal coat, crescent pendant, small closed grimoire and tiny violet wisp.",
+      "path": "/Users/dars94/.codex/generated_images/01a0612c-648b-7ad0-a104-a58c40f678af/exec-510d709f-4587-454e-80aa-d16b890fe997.png"
+    }
+  ]
+}
