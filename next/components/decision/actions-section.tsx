@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { PaladinPowers } from './paladin-power';
+import { paladinPowers } from '@/lib/rules/paladin';
 import { fighterActions } from '@/lib/rules/fighter-features';
 
 import { EntryCard, damageClass } from '@/components/character/entry-card';
@@ -147,6 +149,7 @@ export function ActionsSection({
       return next;
     });
 
+  const paladin = paladinPowers(c);
   const classActions = fighterActions(c);
   const bonusFeatures = classActions.filter(a => a.kind === 'bonus');
   const freeFeatures = classActions.filter(a => a.kind === 'free');
@@ -226,6 +229,7 @@ export function ActionsSection({
             </Category>
           )}
 
+          {paladin.some(p=>p.kind==='action'||p.kind==='free'||p.kind==='passive') && <Category label="職業能力" count={`${paladin.filter(p=>p.kind!=='bonus').length} 項`} open={!collapsed.has('cat.paladin')} onToggle={()=>toggle('cat.paladin')}><PaladinPowers c={c} kind="action"/><PaladinPowers c={c} kind="free"/><PaladinPowers c={c} kind="passive"/></Category>}
           {freeFeatures.length > 0 && <Category label="職業能力 · 不耗動作" count={`${freeFeatures.length} 項`} open={!collapsed.has('cat.class')} onToggle={() => toggle('cat.class')}>{freeFeatures.map(featureCard)}</Category>}
           <Category
             label="其他"
@@ -253,14 +257,15 @@ export function ActionsSection({
           en="BONUS ACTION"
           cn="附贈動作"
           summary={
-            bonusSpells.length + bonusFeatures.length === 0
+            bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length === 0
               ? '無可用'
-              : [...bonusFeatures, ...bonusSpells].map((s) => s.name).join('・')
+              : [...bonusFeatures, ...bonusSpells, ...paladin.filter(p=>p.kind==='bonus')].map((s) => s.name).join('・')
           }
         >
           <div className="flex flex-col gap-2">
             {bonusFeatures.map(featureCard)}
-            {bonusSpells.length + bonusFeatures.length === 0 ? (
+            <PaladinPowers c={c} kind="bonus"/>
+            {bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length === 0 ? (
               <EntryCard badge="贈" title="無附贈動作" subtitle="No Bonus Actions" />
             ) : (
               bonusSpells.map((s) => (

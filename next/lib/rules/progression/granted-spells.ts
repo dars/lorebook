@@ -37,3 +37,11 @@ export function automaticSpellNames(c: Character, s: Record<string, string[]>): 
             out.push(spells[id]);
     return [...new Set(out)];
 }
+
+/** 誓言等自動授予的法術不佔準備名額；移出一般清單，保留於自動授予清單。 */
+export function normalizePreparedSelections(c:Character, s:Record<string,string[]>, spells:{id:string;eng_name:string|null}[]):Record<string,string[]> {
+    if(!s.prepared)return s;
+    const names=automaticSpellNames(c,s);
+    const prepared=s.prepared.filter(id=>!names.some(n=>sameSpellName(n,spells.find(x=>x.id===id)?.eng_name??'')));
+    return prepared.length===s.prepared.length?s:{...s,prepared};
+}

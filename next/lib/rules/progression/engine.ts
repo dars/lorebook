@@ -6,7 +6,7 @@ import type { Character, CharacterFeature, Spell, ClassResource } from '@/lib/do
 import { spellFromCatalog } from '@/lib/creation/spell-from-catalog';
 import { choiceGroups, type ChoiceCatalog, type ChoiceGroup, type Selections } from './groups';
 import { LANGUAGES, TOOLS, originId, featOriginKey } from './options';
-import { automaticSpellNames, sameSpellName } from './granted-spells';
+import { automaticSpellNames, sameSpellName, normalizePreparedSelections } from './granted-spells';
 export type ChoiceContext = 'level' | 'backfill' | 'rest' | 'creation';
 export type ChoiceIssue = {
     group: string;
@@ -34,6 +34,7 @@ export function replacementLimit(c: Character, g: ChoiceGroup, context: ChoiceCo
 }
 /** 選擇以整份結果驗證，祈喚與來源子選項不能只驗證點下去的那一格。 */
 export function validateChoices(c: Character, selections: Selections, catalog: ChoiceCatalog, context: ChoiceContext, requireComplete = true): ChoiceIssue[] {
+    selections = normalizePreparedSelections(c, selections, catalog.spells);
     const groups = choiceGroups(c, catalog, selections), issues: ChoiceIssue[] = [];
     const equipmentIssue = startingEquipmentIssue(c, selections, catalog.items);
     if (equipmentIssue)
@@ -160,6 +161,7 @@ export function validateChoices(c: Character, selections: Selections, catalog: C
     return issues;
 }
 export function applyChoices(c: Character, selections: Selections, catalog: ChoiceCatalog, context: ChoiceContext, requireComplete = true): Character {
+    selections = normalizePreparedSelections(c, selections, catalog.spells);
     const issues = validateChoices(c, selections, catalog, context, requireComplete);
     if (issues.length)
         throw new Error(issues.map(i => i.message).join(' '));

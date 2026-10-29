@@ -1,4 +1,5 @@
 'use client';
+import { shortRestResource } from '@/lib/rules/paladin';
 import { beginChoiceRest } from '@/lib/rules/progression/engine';
 
 import { create } from 'zustand';
@@ -137,7 +138,7 @@ export const characterActions = {
     useCharacterStore.getState().update((c) => ({
       ...beginChoiceRest(c, 'short'),
       resources: c.resources.map((r) =>
-        r.recovery === 'short' ? { ...r, current: r.max } : r,
+        shortRestResource(c, r),
       ),
     }));
   },

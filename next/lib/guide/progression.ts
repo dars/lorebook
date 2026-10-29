@@ -105,7 +105,7 @@ export function guideLevels(cls: GuideClass, withSubclass = false): GuideLevel[]
       if (cls.subclass.features[level]) features.push(`${cls.subclass.name}：${cls.subclass.features[level]}`);
       choices.push(...(SUBCLASS_CHOICES[cls.en] ?? []).filter((item) => item[0] === level).map((item) => fromSpec(item, cls.subclass.name)));
     }
-    if (asiLevelsFor(cls.en).has(level)) choices.push({ id: `feat-${level}`, title: level === 19 ? '史詩恩賜 Epic Boon：選 1 個專長' : '能力值提升或專長：二選一', detail: level === 19 ? '選 1 個史詩恩賜專長，或改選任何符合先決條件的其他專長；能力值提升也是可選專長。不是同時取得恩賜與能力值提升。' : '選能力值提升專長：一項能力 +2 或兩項各 +1，上限 20；也可改選 1 個符合先決條件的其他專長。專長本身可能另外要求選屬性、技能或法術。', coverage: 'feat', page: cls.page });
+    if (asiLevelsFor(cls.en).has(level)) choices.push({ id: `feat-${level}`, title: level === 19 ? '史詩恩賜或其他合資格專長：選 1 個' : '能力值提升或專長：二選一', detail: level === 19 ? '選 1 個史詩恩賜專長，或改選任何符合先決條件的其他專長；能力值提升也是可選專長。不是同時取得恩賜與能力值提升。' : '選能力值提升專長：一項能力 +2 或兩項各 +1，上限 20；也可改選 1 個符合先決條件的其他專長。專長本身可能另外要求選屬性、技能或法術。', coverage: 'feat', page: cls.page });
     const cantrips = CANTRIPS_KNOWN[cls.en]?.[index] ?? 0;
     const previousCantrips = CANTRIPS_KNOWN[cls.en]?.[index - 1] ?? 0;
     if (cantrips > previousCantrips) choices.push({ id: `cantrips-${level}`, title: `基本戲法：${level === 1 ? '選' : '新增'} ${cantrips - previousCantrips} 個，共 ${cantrips} 個`, detail: `從${cls.cn}戲法清單選擇。職責、戰鬥風格替代方案、專長或子職額外給予的戲法另計。`, coverage: 'spells', page: cls.page });

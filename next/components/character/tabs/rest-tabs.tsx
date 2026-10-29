@@ -1,4 +1,5 @@
 'use client';
+import { showCantrips } from '@/lib/rules/cantrips-visible';
 import type { ReactNode } from 'react';
 
 import { CollapsibleSection } from '@/components/ui/collapsible-section';
@@ -23,7 +24,7 @@ export function SpellsTab({ c, tools }: { c: Character; tools?: { cantrips: Reac
         <SpellcastingCard c={c} />
       </CollapsibleSection>
 
-      {(c.cantrips.length > 0 || tools?.cantrips) && (
+      {(showCantrips(c) && (c.cantrips.length > 0 || tools?.cantrips)) && (
         <CollapsibleSection en="CANTRIPS" cn="戲法" trailing={tools?.cantrips}>
           {c.cantrips.length === 0 && <p className="py-3 text-ui leading-relaxed text-text-secondary">尚未選用戲法，點標題右側「管理戲法」勾選加入。</p>}
           <div className="flex flex-col gap-2">

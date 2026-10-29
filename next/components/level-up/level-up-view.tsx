@@ -1,5 +1,7 @@
 'use client';
 
+import { PALADIN_NAMES, backfillPaladin } from '@/lib/rules/paladin';
+import { automaticSpellNames, normalizePreparedSelections, sameSpellName } from '@/lib/rules/progression/granted-spells';
 import { levelUpFeatIssue } from '@/lib/rules/level-up';
 import { ChoiceEditor } from '@/components/progression/choice-editor';
 import { applyChoices, validateChoices } from '@/lib/rules/progression/engine';
@@ -200,7 +202,7 @@ function LevelUpForm({
   // 子職特性取「≤ 目標等級」而非「＝目標等級」：3 級才選子職，但子職的
   // 1–3 級特性都該一次補上。
   const toFeature = (f: CatalogClassFeature, source: string) => ({
-    name: f.name,
+    name: initial.classNameEn === 'Paladin' ? PALADIN_NAMES[f.eng_name ?? ''] ?? f.name : f.name,
     nameEn: f.eng_name ?? '',
     source,
     description: ftFlattenEntries((f.data.entries as unknown[]) ?? []),
@@ -283,9 +285,10 @@ function LevelUpForm({
 
   const flowCatalog = { ...choiceCatalog, handledFeatLevel: plan.hasAsi && !subclassOnly ? plan.targetLevel : undefined };
   const choiceCharacter = customSubclass ? {...rawPreview, customSubclass} : rawPreview;
-  const choiceIssues = validateChoices(choiceCharacter, choiceSelections, flowCatalog, 'level', !deferChoices);
+  const effectiveSelections = normalizePreparedSelections(choiceCharacter, choiceSelections, choiceCatalog.spells);
+  const choiceIssues = validateChoices(choiceCharacter, effectiveSelections, flowCatalog, 'level', !deferChoices);
   const choiceReady = subclassOnly || choiceIssues.length === 0;
-  const preview = !subclassOnly && choiceReady ? applyChoices(choiceCharacter, choiceSelections, flowCatalog, 'level', !deferChoices) : rawPreview;
+  const preview = !subclassOnly && choiceReady ? applyChoices(choiceCharacter, effectiveSelections, flowCatalog, 'level', !deferChoices) : rawPreview;
 
   /**
    * 草稿的鍵帶角色 id 與目標等級：切到別的角色、或這一級已經升完，
@@ -332,14 +335,16 @@ function LevelUpForm({
     accept();
   };
 
-  const featIssue = subclassOnly ? null : levelUpFeatIssue(initial, featChoice);
+  const featIssue = subclassOnly ? null : (featMode === 'catalog' && catalogFeat && catalogOpts && !featChoice.ready ? `「${catalogFeat.name}」尚需選擇一項 +1 能力值。` : levelUpFeatIssue(initial, featChoice));
+  const newAutomatic = automaticSpellNames(choiceCharacter, effectiveSelections).filter(n=>!automaticSpellNames(initial, initial.progression?.selections??{}).some(old=>sameSpellName(old,n)));
+  const conHpBonus = (preview.abilityScores.con.modifier - initial.abilityScores.con.modifier) * plan.targetLevel;
   const canSubmit = subclassReady && choiceReady && (subclassOnly || (featChoice.ready && hpReady && !featIssue));
   const submit = async () => {
     if (busy || !canSubmit) { setError(featIssue ?? '請完成本級必選項目。'); return; }
     setBusy(true);
     // 選用自訂子職時把整份定義快照進角色卡；SRD 子職維持 null。
     const r = await updateCharacter(
-      customSubclass ? { ...preview, customSubclass } : preview,
+      backfillPaladin(customSubclass ? { ...preview, customSubclass } : preview),
     );
     if (r.error) {
       setError(r.error);
@@ -408,6 +413,98 @@ function LevelUpForm({
         )}
       </div>
 
+      {showSubclass && (
+        <>
+          <SectionTitle en="SUBCLASS" cn="子職業" />
+          {subclasses.length === 0 && customSubclasses.length === 0 && (
+            <ParchmentCard className="mb-2 px-4 py-3">
+              <p className="text-small leading-relaxed text-text-secondary">
+                {subclassOnly
+                  ? '子職清單目前無法取得（內容庫離線）。連線後再回來補選。'
+                  : '子職清單目前無法取得（內容庫離線）。可先完成升級，之後再自角色頁補選——數值不受影響。'}
+              </p>
+            </ParchmentCard>
+          )}
+          {(subclasses.length > 0 || customSubclasses.length > 0) && (
+            <div className="flex flex-col gap-2">
+              {subclasses.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => {
+                    setSubclass(s);
+                    setCustomSubclass(null);
+                  }}
+                  className="text-left"
+                >
+                  <ParchmentCard
+                    className={`px-4 py-3 ${subclass?.id === s.id ? 'border-gold' : ''}`}
+                  >
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-body font-semibold text-text-primary">
+                        {s.name}
+                      </span>
+                      <span className="font-label text-tiny text-text-primary/70">
+                        {s.eng_name}
+                      </span>
+                    </div>
+                  </ParchmentCard>
+                </button>
+              ))}
+
+              {customSubclasses.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => {
+                    setCustomSubclass(s);
+                    setSubclass(null);
+                  }}
+                  className="text-left"
+                >
+                  <ParchmentCard
+                    className={`px-4 py-3 ${customSubclass?.id === s.id ? 'border-gold' : ''}`}
+                  >
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-body font-semibold text-text-primary">
+                        {s.name}
+                      </span>
+                      {s.nameEn && (
+                        <span className="font-label text-tiny text-text-primary/70">
+                          {s.nameEn}
+                        </span>
+                      )}
+                      <span className="ml-auto text-small text-section-label">
+                        自訂
+                      </span>
+                    </div>
+                    <p className="mt-1 text-small text-text-secondary">
+                      {[...new Set(s.features.map((f) => f.level))]
+                        .sort((a, b) => a - b)
+                        .join('/')}{' '}
+                      級共 {s.features.length} 個特性
+                    </p>
+                  </ParchmentCard>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* 自創內容的編輯一律在收藏紀錄，升級流程不長出編輯器（見
+              docs/flutter-parity.md 的〈設計決定〉）。這裡只指路——不指路的話，
+              沒有子職可選的人會以為這個 App 不支援自創。
+              升級的選擇由 use-form-draft 的草稿保全接住，離開再回來不會白填。 */}
+          <p className="mt-2 text-small leading-relaxed text-text-secondary">
+            SRD 每個職業只收錄一個子職。想用自創或他人分享的子職，先到
+            <AppLink href="/library" className="mx-1 text-gold underline">
+              收藏紀錄
+            </AppLink>
+            建立或收藏，再回來這裡選用——這一頁的選擇會留著。自己設計的子職請與
+            DM 確認後使用。
+          </p>
+        </>
+      )}
+
       {!subclassOnly && (
         <>
       <SectionTitle en="HIT POINTS" cn="生命值" />
@@ -458,6 +555,7 @@ function LevelUpForm({
         )}
         <p className="mt-3 text-small text-text-secondary">
           最大生命值 {initial.maxHp} → <span className="text-gold">{preview.maxHp}</span>
+          {conHpBonus > 0 && `（含體質提升：${plan.targetLevel} 級共 +${conHpBonus} HP）`}
           {plan.speciesHpPerLevel > 0 &&
             `（含${initial.species}每級 +${plan.speciesHpPerLevel}）`}
         </p>
@@ -584,11 +682,8 @@ function LevelUpForm({
 
                   {catalogFeat && (
                     <>
-                      <p className="mt-3 whitespace-pre-wrap text-ui leading-relaxed text-text-light">
-                        {catalogFeatFeature(catalogFeat, plan.targetLevel).description}
-                      </p>
                       {catalogOpts && (
-                        <div className="mt-3">
+                        <div id="feat-ability" className="mt-3 scroll-mt-6">
                           <AbilityPicker
                             label="+1 給誰"
                             value={catalogAbility}
@@ -603,6 +698,9 @@ function LevelUpForm({
                           </p>
                         </div>
                       )}
+                      <p className="mt-3 whitespace-pre-wrap text-ui leading-relaxed text-text-light">
+                        {catalogFeatFeature(catalogFeat, plan.targetLevel).description}
+                      </p>
                     </>
                   )}
 
@@ -699,100 +797,9 @@ function LevelUpForm({
         </>
       )}
 
-      {showSubclass && (
-        <>
-          <SectionTitle en="SUBCLASS" cn="子職業" />
-          {subclasses.length === 0 && customSubclasses.length === 0 && (
-            <ParchmentCard className="mb-2 px-4 py-3">
-              <p className="text-small leading-relaxed text-text-secondary">
-                {subclassOnly
-                  ? '子職清單目前無法取得（內容庫離線）。連線後再回來補選。'
-                  : '子職清單目前無法取得（內容庫離線）。可先完成升級，之後再自角色頁補選——數值不受影響。'}
-              </p>
-            </ParchmentCard>
-          )}
-          {(subclasses.length > 0 || customSubclasses.length > 0) && (
-            <div className="flex flex-col gap-2">
-              {subclasses.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => {
-                    setSubclass(s);
-                    setCustomSubclass(null);
-                  }}
-                  className="text-left"
-                >
-                  <ParchmentCard
-                    className={`px-4 py-3 ${subclass?.id === s.id ? 'border-gold' : ''}`}
-                  >
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-body font-semibold text-text-primary">
-                        {s.name}
-                      </span>
-                      <span className="font-label text-tiny text-text-primary/70">
-                        {s.eng_name}
-                      </span>
-                    </div>
-                  </ParchmentCard>
-                </button>
-              ))}
-
-              {customSubclasses.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => {
-                    setCustomSubclass(s);
-                    setSubclass(null);
-                  }}
-                  className="text-left"
-                >
-                  <ParchmentCard
-                    className={`px-4 py-3 ${customSubclass?.id === s.id ? 'border-gold' : ''}`}
-                  >
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-body font-semibold text-text-primary">
-                        {s.name}
-                      </span>
-                      {s.nameEn && (
-                        <span className="font-label text-tiny text-text-primary/70">
-                          {s.nameEn}
-                        </span>
-                      )}
-                      <span className="ml-auto text-small text-section-label">
-                        自訂
-                      </span>
-                    </div>
-                    <p className="mt-1 text-small text-text-secondary">
-                      {[...new Set(s.features.map((f) => f.level))]
-                        .sort((a, b) => a - b)
-                        .join('/')}{' '}
-                      級共 {s.features.length} 個特性
-                    </p>
-                  </ParchmentCard>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* 自創內容的編輯一律在收藏紀錄，升級流程不長出編輯器（見
-              docs/flutter-parity.md 的〈設計決定〉）。這裡只指路——不指路的話，
-              沒有子職可選的人會以為這個 App 不支援自創。
-              升級的選擇由 use-form-draft 的草稿保全接住，離開再回來不會白填。 */}
-          <p className="mt-2 text-small leading-relaxed text-text-secondary">
-            SRD 每個職業只收錄一個子職。想用自創或他人分享的子職，先到
-            <AppLink href="/library" className="mx-1 text-gold underline">
-              收藏紀錄
-            </AppLink>
-            建立或收藏，再回來這裡選用——這一頁的選擇會留著。自己設計的子職請與
-            DM 確認後使用。
-          </p>
-        </>
-      )}
-
       {!subclassOnly && <>
-        <ChoiceEditor character={choiceCharacter} catalog={flowCatalog} value={choiceSelections} onChange={setChoiceSelections} context="level" />
+        {effectiveSelections !== choiceSelections && <p role="status" className="text-small text-gold">原本準備的法術已轉為固定授予，不再占名額；請補選空出的準備名額。</p>}
+        <ChoiceEditor character={choiceCharacter} catalog={flowCatalog} value={effectiveSelections} onChange={setChoiceSelections} context="level" />
         <label className="flex min-h-11 items-center gap-2 text-small text-text-secondary"><input type="checkbox" checked={deferChoices} onChange={e=>setDeferChoices(e.target.checked)} className="accent-gold"/>尚未開始的舊選項稍後到「成長選擇」補齊</label>
         {!choiceReady && <ul role="alert" className="list-disc space-y-1 pl-5 text-small text-danger">{[...new Set(choiceIssues.map(i => i.message))].map(message => <li key={message}>{message}</li>)}</ul>}
       </>}
@@ -826,6 +833,7 @@ function LevelUpForm({
       {!subclassOnly && (
         <>
       <SectionTitle en="PREVIEW" cn="升級後" />
+      {newAutomatic.length > 0 && <div className="mb-3 rounded-card border border-border p-3 text-small"><p className="font-semibold text-gold">新增固定準備法術（不占準備名額）</p><p className="mt-1 text-text-primary">{newAutomatic.map(n=>choiceCatalog.spells.find(s=>sameSpellName(s.eng_name??'',n))?.name??n).join('、')}</p></div>}
       <div className="grid grid-cols-3 gap-2">
         {[
           ['生命值', `${preview.maxHp}`, `${initial.maxHp}`],
@@ -870,7 +878,8 @@ function LevelUpForm({
 
       <div className="fixed inset-x-0 bottom-0 border-t border-border-2 bg-surface-0 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <div className="mx-auto max-w-[700px]">
-          {featIssue && <p role="status" className="mb-2 text-small text-text-secondary">{featIssue}</p>}
+          {(featIssue || !subclassReady || !choiceReady || !hpReady) && <p role="status" className="mb-2 text-small text-text-secondary">{featIssue || (!subclassReady ? '請先選擇子職業。' : !hpReady ? '請填寫生命骰結果。' : '請完成下方成長選擇。')}</p>}
+          {featMode === 'catalog' && catalogOpts && !featChoice.ready && <button type="button" onClick={()=>document.getElementById('feat-ability')?.scrollIntoView({block:'center',behavior:'smooth'})} className="mb-1 min-h-11 text-small text-gold underline">前往選擇 +1 能力值</button>}
           <button
             type="button"
             onClick={submit}
