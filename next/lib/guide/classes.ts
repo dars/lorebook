@@ -35,7 +35,7 @@ export const GUIDE_CLASSES: GuideClass[] = [
     en: 'Fighter', cn: '戰士', page: 47, endPage: 49,
     features: { 1: '回氣 Second Wind', 2: '動作如潮 Action Surge・戰術思維 Tactical Mind', 5: '額外攻擊 Extra Attack・戰術移步 Tactical Shift', 9: '不屈 Indomitable・戰術大師 Tactical Master', 11: '額外攻擊：共 3 次 Two Extra Attacks', 13: '不屈：2 次・研究攻擊 Studied Attacks', 17: '動作如潮：2 次・不屈：3 次', 20: '額外攻擊：共 4 次 Three Extra Attacks' },
     subclass: { name: '勇士 Champion', page: 49, features: { 3: '精通重擊 Improved Critical・卓越運動員 Remarkable Athlete', 10: '英雄戰士 Heroic Warrior', 15: '高等重擊 Superior Critical', 18: '倖存者 Survivor' } },
-    reminders: ['每升戰士等級可替換 1 個戰鬥風格專長；長休後可重選精通武器種類。', '戰術大師的推撞、削弱、緩速替代效果在攻擊時選擇，不需升級時永久選定。'],
+    reminders: ['每升戰士等級可替換 1 個戰鬥風格專長；每次長休後可替換 1 種精通武器。', '戰術大師的推撞、削弱、緩速替代效果在攻擊時選擇，不需升級時永久選定。'],
   },
   {
     en: 'Monk', cn: '武僧', page: 49, endPage: 52,
@@ -74,7 +74,7 @@ export const GUIDE_CLASSES: GuideClass[] = [
     reminders: ['每升邪術師等級，可各替換 1 個戲法、1 個已備法術及 1 個祈喚。祈喚須符合先決條件，且不能替換仍被其他已知祈喚依賴的項目。', '取得祕法奧秘後，每升邪術師等級可替換其中 1 個法術，必須保持相同環數。它不使用契約法術位。', '魔刃契約、魔鏈契約、魔書契約都是祈喚選項，沒有獨立的 3 級「契約恩賜」選擇。魔書的戲法與儀式法術在召喚書本時選。'],
   },
   {
-    en: 'Wizard', cn: '法師', page: 76, endPage: 82,
+    en: 'Wizard', cn: '法師', page: 77, endPage: 82,
     features: { 1: '施法 Spellcasting・儀式專家 Ritual Adept・奧術回復 Arcane Recovery', 5: '記憶法術 Memorize Spell' },
     subclass: { name: '塑能師 Evoker', page: 82, features: { 3: '強效戲法 Potent Cantrip', 6: '法術塑形 Sculpt Spells', 10: '強化塑能 Empowered Evocation', 14: '超載導能 Overchannel' } },
     reminders: ['長休後可替換 1 個法師戲法，並從法術書重新準備整份法術清單；5 級起短休後還能替換 1 個已備法術。', '每級免費加入法術書的 2 個法術，與已備法術上限是不同概念；冒險中抄錄的法術另外處理。', '18 級的法術精通在長休後可替換其中 1 個，須同環且符合施法時間限制。'],

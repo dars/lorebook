@@ -90,3 +90,25 @@ describe('SRD 5.2.1 職業成長指南', () => {
     expect(getGuideClass('PALADIN').en).toBe('Paladin');
   });
 });
+
+
+describe('SRD 武器精通限制與章節來源', () => {
+  it('戰士長休只換一種，不能整組重選', () => {
+    expect(getGuideClass('Fighter').reminders[0]).toContain('每次長休後可替換 1 種');
+    expect(choice('Fighter', 1, 'mastery-1')?.page).toBe(48);
+  });
+  it('野蠻人在所有取得精通的等級都限定近戰武器', () => {
+    const mastery = rows('Barbarian').flatMap(row => row.choices).filter(item => item.id.startsWith('mastery-'));
+    expect(mastery.length).toBeGreaterThan(0);
+    for (const item of mastery) {
+      expect(item.detail).toContain('簡易近戰武器或軍用近戰武器');
+      expect(item.detail).toContain('不能選長弓等遠程武器');
+      expect(item.page).toBe(29);
+    }
+  });
+  it('法師章節與建角來源從 77 頁開始，邪魔宗主仍是 76 頁', () => {
+    expect(getGuideClass('Wizard').page).toBe(77);
+    expect(choice('Wizard', 1, 'equipment')?.page).toBe(77);
+    expect(getGuideClass('Warlock').subclass.page).toBe(76);
+  });
+});

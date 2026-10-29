@@ -97,7 +97,7 @@ export function guideLevels(cls: GuideClass, withSubclass = false): GuideLevel[]
       if (cls.en === 'Bard') choices.push({ id: 'instruments', title: '樂器熟練：選 3 種', detail: '選 3 種樂器取得熟練。', coverage: 'languages', page: 31 });
     }
     const mastery = cls.en === 'Fighter' ? ({ 1: 3, 4: 1, 10: 1, 16: 1 } as Record<number, number>) : cls.en === 'Barbarian' ? { 1: 2, 4: 1, 10: 1 } as Record<number, number> : ['Paladin', 'Ranger', 'Rogue'].includes(cls.en) ? { 1: 2 } as Record<number, number> : {};
-    if (mastery[level]) choices.push({ id: `mastery-${level}`, title: `武器精通 Weapon Mastery：${level === 1 ? '選' : '再選'} ${mastery[level]} 種武器`, detail: cls.en === 'Rogue' ? '選簡易武器或具靈巧／輕型屬性的軍用武器種類；長休後可重選。' : '從自己熟練的武器種類中選擇，才能使用該種類的精通屬性；替換時機見上方提醒。', coverage: 'mastery', page: cls.page });
+    if (mastery[level]) choices.push({ id: `mastery-${level}`, title: `武器精通 Weapon Mastery：${level === 1 ? '選' : '再選'} ${mastery[level]} 種武器`, detail: cls.en === 'Barbarian' ? '只能選簡易近戰武器或軍用近戰武器種類，不能選長弓等遠程武器；每次長休後可替換其中 1 種。' : cls.en === 'Rogue' ? '選簡易武器或具靈巧／輕型屬性的軍用武器種類；長休後可重選。' : '從自己熟練的武器種類中選擇，才能使用該種類的精通屬性；替換時機見上方提醒。', coverage: 'mastery', page: cls.en === 'Barbarian' ? 29 : cls.en === 'Fighter' ? 48 : cls.page });
     if (level === 3) choices.push({ id: 'subclass', title: '選擇子職業 Subclass', detail: `選 1 個子職業並取得其 3 級能力。SRD 收錄：${cls.subclass.name}。其他自創子職依各自設計，後續選項可能不同。`, coverage: 'subclass', page: cls.subclass.page });
     const milestones = subclassLevels[cls.en as keyof typeof subclassLevels];
     if (!withSubclass && milestones.includes(level)) features.push(level === 3 ? '取得所選子職業的初始能力' : '取得所選子職業的新能力（依子職內容）');
