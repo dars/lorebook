@@ -1,5 +1,6 @@
 'use client';
 
+import { ClassIcon } from '@/components/ui/class-icon';
 import { usePathname } from 'next/navigation';
 
 import { AppLink } from '@/components/ui/app-link';
@@ -30,6 +31,7 @@ export function CharacterHeader({ c }: { c: Character }) {
             {c.name}
           </div>
           <div className="truncate text-small text-text-secondary">
+            <ClassIcon name={c.classNameEn || c.className} className="mr-1 size-4" />
             {[c.species, c.className].filter(Boolean).join(' · ')} {c.level}
           </div>
         </div>

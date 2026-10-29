@@ -1,5 +1,6 @@
 'use client';
 
+import { ClassIcon } from '@/components/ui/class-icon';
 import { useState } from 'react';
 
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
@@ -358,7 +359,7 @@ export function LevelUpView({
               補選子職
             </div>
             <p className="mt-1 text-ui text-text-light">
-              {initial.name}・{initial.className} {initial.level}
+              <ClassIcon name={initial.classNameEn || initial.className} className="mr-1 size-4" />{initial.name}・{initial.className} {initial.level}
             </p>
             <p className="mt-1 text-small leading-relaxed text-text-secondary">
               升級當時內容庫離線，這個角色的子職被跳過了。選定後會一併補上
@@ -375,7 +376,7 @@ export function LevelUpView({
               {plan.targetLevel}
             </span>
             <span className="ml-2 text-ui text-text-light">
-              {initial.name}・{initial.className}
+              <ClassIcon name={initial.classNameEn || initial.className} className="mr-1 size-4" />{initial.name}・{initial.className}
             </span>
           </div>
         )}

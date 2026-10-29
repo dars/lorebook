@@ -1,5 +1,6 @@
 'use client';
 
+import { ClassIcon } from '@/components/ui/class-icon';
 import { useState } from 'react';
 
 import { AppLink } from '@/components/ui/app-link';
@@ -431,7 +432,7 @@ export function CreateWizard({
           <>
             <OptionChips
               ariaLabel="職業"
-              options={CLASSES.map((c) => ({ key: c.cn, label: c.cn }))}
+              options={CLASSES.map((c) => ({ key: c.cn, label: c.cn, icon: <ClassIcon name={c.en} /> }))}
               selected={classCn}
               onSelect={(k) => {
                 setClassCn(k);

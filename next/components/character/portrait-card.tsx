@@ -1,3 +1,4 @@
+import { ClassIcon } from '@/components/ui/class-icon';
 import type { Character } from '@/lib/domain/character';
 import { CustomBadge } from './custom-badge';
 
@@ -71,6 +72,7 @@ export function PortraitCard({
         <div className="absolute inset-0 flex flex-col justify-end p-5">
           {(c.className || c.subclass) && (
             <p className="text-ui tracking-[2px] text-gold">
+              <ClassIcon name={c.classNameEn || c.className} className="mr-1.5 size-4" />
               {[
                 c.className,
                 c.classNameEn.toUpperCase(),

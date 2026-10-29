@@ -19,7 +19,7 @@ export function OptionChips({
   onSelect,
   ariaLabel,
 }: {
-  options: { key: string; label: string; suffix?: string }[];
+  options: { key: string; label: string; icon?: ReactNode; suffix?: string }[];
   selected: string | null;
   onSelect: (key: string) => void;
   ariaLabel: string;
@@ -41,6 +41,7 @@ export function OptionChips({
                 : 'border-border-2 bg-surface-1 text-text-primary hover:border-gold/50'
             }`}
           >
+            {o.icon && <span className="mr-1.5">{o.icon}</span>}
             {o.label}
             {o.suffix && (
               <span className="font-label ml-1.5 text-tiny text-text-secondary">

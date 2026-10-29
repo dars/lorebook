@@ -1,5 +1,6 @@
 'use client';
 
+import { ClassIcon } from '@/components/ui/class-icon';
 import { useState } from 'react';
 
 import { AppLink } from '@/components/ui/app-link';
@@ -77,6 +78,7 @@ export function CharacterList({
                     {c.name}
                   </span>
                   <span className="block truncate text-small text-text-secondary">
+                    <ClassIcon name={c.className} className="mr-1 size-4" />
                     {[c.species, c.className, c.subclass].filter(Boolean).join(' · ')}
                   </span>
                 </span>
@@ -102,7 +104,8 @@ export function CharacterList({
                         {c.name}
                       </span>
                       <span className="block truncate text-small text-text-secondary">
-                        {[c.species, c.className, c.subclass].filter(Boolean).join(' · ')}
+                        <ClassIcon name={c.className} className="mr-1 size-4" />
+                    {[c.species, c.className, c.subclass].filter(Boolean).join(' · ')}
                       </span>
                     </span>
                     <span className="flex shrink-0 flex-col items-center">
