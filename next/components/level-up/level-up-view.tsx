@@ -794,7 +794,7 @@ function LevelUpForm({
       {!subclassOnly && <>
         <ChoiceEditor character={choiceCharacter} catalog={flowCatalog} value={choiceSelections} onChange={setChoiceSelections} context="level" />
         <label className="flex min-h-11 items-center gap-2 text-small text-text-secondary"><input type="checkbox" checked={deferChoices} onChange={e=>setDeferChoices(e.target.checked)} className="accent-gold"/>尚未開始的舊選項稍後到「成長選擇」補齊</label>
-        {!choiceReady && <p className="text-small text-danger">尚有選項未完成；已開始的項目需選滿指定數量。</p>}
+        {!choiceReady && <ul role="alert" className="list-disc space-y-1 pl-5 text-small text-danger">{[...new Set(choiceIssues.map(i => i.message))].map(message => <li key={message}>{message}</li>)}</ul>}
       </>}
       {newFeatures.length > 0 && (
         <>

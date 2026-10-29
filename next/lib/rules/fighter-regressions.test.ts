@@ -46,3 +46,17 @@ it('本次19級專長由主表單處理，補選頁仍保留缺漏的19級選擇
  expect(choiceGroups(c,{...catalog,handledFeatLevel:19}).some(g=>g.id==='feat-19')).toBe(false);
  expect(choiceGroups(c,{...catalog,handledFeatLevel:19}).some(g=>g.id==='feat-16')).toBe(true);
 });
+
+import {fighterActions,backfillFighterFeatures} from './fighter-features';
+it('舊戰士補第二風，不重複新增或覆蓋說明',()=>{
+ const c=fighter(20);const filled=backfillFighterFeatures(c);
+ expect(filled.features.filter(f=>f.nameEn==='Second Wind')).toHaveLength(1);
+ expect(backfillFighterFeatures(filled)).toBe(filled);
+ expect(parseCharacter(c).features.some(f=>f.nameEn==='Second Wind')).toBe(true);
+});
+it('第二風屬附贈動作，動作如潮不耗動作並沿用剩餘次數',()=>{
+ const c=fighter(20);c.resources=deriveClassResources('Fighter',20,c.abilityScores).map(r=>({...r,current:0}));
+ expect(fighterActions(c)).toEqual(expect.arrayContaining([expect.objectContaining({nameEn:'Second Wind',kind:'bonus',value:'恢復 1d10＋20 HP',meta:'剩餘 0/4 次'}),expect.objectContaining({nameEn:'Action Surge',kind:'free',meta:'剩餘 0/2 次'})]));
+ expect(fighterActions(fighter(1))).toHaveLength(1);
+ expect(fighterActions({...c,classNameEn:'Wizard'})).toEqual([]);
+});

@@ -57,7 +57,7 @@ export function originId(name: string, nameEn = ''): string {
         return 'Savage Attacker';
     if (name === '警覺')
         return 'Alert';
-    if (name === '熟練')
+    if (['熟練', '技藝精湛'].includes(name))
         return 'Skilled';
     return '';
 }

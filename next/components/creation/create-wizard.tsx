@@ -5,6 +5,7 @@ import { applyChoices, validateChoices } from '@/lib/rules/progression/engine';
 import type { Selections } from '@/lib/rules/progression/groups';
 import { ClassIcon } from '@/components/ui/class-icon';
 import { useState } from 'react';
+import { computeAc } from '@/lib/rules/ac';
 
 import { AppLink } from '@/components/ui/app-link';
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
@@ -866,7 +867,7 @@ function Confirm({ c }: { c: ReturnType<typeof buildCharacter> | null }) {
   // 施法者在這裡看不到自己的法術 DC 與命中，就得建完再回頭查一次。
   const stats: [string, string][] = [
     ['生命值', `${c.maxHp}`],
-    ['護甲等級', `${c.ac}`],
+    ['護甲等級', `${computeAc(c).value}`],
     ['先攻', fmtMod(c.initiative)],
     ['熟練加值', fmtMod(c.proficiencyBonus)],
     ['被動察覺', `${c.passivePerception}`],

@@ -1,3 +1,4 @@
+import { SECOND_WIND } from '@/lib/rules/fighter-features';
 import type { Character, ClassResource, Spell } from '@/lib/domain/character';
 import { Character as CharacterSchema } from '@/lib/domain/character';
 import { abilityModifier, spellAttackFor, spellSaveDcFor } from '@/lib/rules/ability';
@@ -196,6 +197,7 @@ export function buildCharacter(input: CreationInput, id: string): Character {
   };
 
   const features = [
+    ...(cls.en === 'Fighter' ? [{ ...SECOND_WIND }] : []),
     // 種族特性（含由 darkvisionFt 推導的黑暗視覺，匯出時已併入）。
     ...species.traits.map((t) => ({
       name: t.name,

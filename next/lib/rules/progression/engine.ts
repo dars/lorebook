@@ -38,6 +38,8 @@ export function validateChoices(c: Character, selections: Selections, catalog: C
     const equipmentIssue = startingEquipmentIssue(c, selections, catalog.items);
     if (equipmentIssue)
         issues.push({ group: 'equipment', message: equipmentIssue });
+    // 延後只適用於舊選項；本級專長新授予的技能／法術仍須選完。
+    const requiredSources = catalog.handledFeatLevel === undefined ? [] : c.features.filter(f => f.source === `專長：Lv${catalog.handledFeatLevel}` && !f.isCustom).map(f => featOriginKey(f.source, f.nameEn));
     const old = baseline(c), budgets: Record<string, number> = {};
     const issue = (g: ChoiceGroup, message: string) => issues.push({ group: g.id, message });
     const pickedSkills = groups.flatMap(g => g.kind === 'skill' ? (selections[g.id] ?? []) : g.kind === 'mixed' ? (selections[g.id] ?? []).filter(v => v.startsWith('skill:')).map(v => v.slice(6)) : []);
@@ -48,7 +50,7 @@ export function validateChoices(c: Character, selections: Selections, catalog: C
     const shapeNames = new Set<string>();
     for (const g of groups) {
         const v = selections[g.id] ?? [], before = old[g.id] ?? [];
-        if (!requireComplete && !v.length)
+        if (!requireComplete && !v.length && !requiredSources.some(source => g.id.startsWith(`${source}/`)))
             continue;
         if (v.length !== g.count)
             issue(g, `需選 ${g.count} 項，目前 ${v.length} 項。`);
@@ -108,7 +110,7 @@ export function validateChoices(c: Character, selections: Selections, catalog: C
                 if (g.kind === 'language' && context !== 'backfill' && !before.includes(id) && c.languages.includes(option.name) && !c.progression?.grantedLanguages.includes(option.name))
                     issue(g, '已經會此語言，請選另一種。');
             }
-            if (g.family) {
+            if (g.family && !(g.family === 'origin' && ['Skilled', 'Magic Initiate'].includes(id))) {
                 const key = `${g.family}/${id}`;
                 if (seen.has(key))
                     issue(g, `${option.name} 已在另一個來源選過。`);

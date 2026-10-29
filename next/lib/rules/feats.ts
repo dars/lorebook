@@ -1,3 +1,4 @@
+import { originId } from './progression/options';
 import { ABILITY_LABELS } from '@/lib/backgrounds/types';
 import type { CatalogFeat } from '@/lib/catalog/types';
 import { ftFlattenEntries } from '@/lib/catalog/fivetools';
@@ -107,7 +108,7 @@ export function featPrereqUnmet(
   targetLevel: number,
 ): string | null {
   if (feat.data.category === 'FS' && !(c.classNameEn === 'Fighter' || (['Paladin','Ranger'].includes(c.classNameEn) && targetLevel >= 2))) return '需要戰鬥風格特性';
-  if (!['Skilled','Magic Initiate','Ability Score Improvement'].includes(feat.eng_name ?? '') && c.features.some(f=>!f.isCustom&&f.nameEn===feat.eng_name)) return '已取得此專長';
+  if (!['Skilled','Magic Initiate','Ability Score Improvement'].includes(feat.eng_name ?? '') && c.features.some(f=>!f.isCustom && (f.nameEn === feat.eng_name || originId(f.name, f.nameEn) === feat.eng_name))) return '已取得此專長';
   const groups = feat.data.prerequisite;
   if (groups.length === 0) return null;
   const unmet = groups.map((g) => unmetInGroup(g, c, targetLevel));

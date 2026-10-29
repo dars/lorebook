@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { fighterActions } from '@/lib/rules/fighter-features';
 
 import { EntryCard, damageClass } from '@/components/character/entry-card';
 import { SpellCard } from '@/components/character/spell-card';
@@ -146,6 +147,10 @@ export function ActionsSection({
       return next;
     });
 
+  const classActions = fighterActions(c);
+  const bonusFeatures = classActions.filter(a => a.kind === 'bonus');
+  const freeFeatures = classActions.filter(a => a.kind === 'free');
+  const featureCard = (a: (typeof classActions)[number]) => <EntryCard key={a.nameEn} badge={a.kind === 'bonus' ? '贈' : '職'} title={a.name} subtitle={a.nameEn} meta={a.meta} value={a.value} description={a.description} />;
   const attacks = attackEntries(c);
   const cantrips = c.cantrips;
   const actionSpells = c.spells.filter(
@@ -221,6 +226,7 @@ export function ActionsSection({
             </Category>
           )}
 
+          {freeFeatures.length > 0 && <Category label="職業能力 · 不耗動作" count={`${freeFeatures.length} 項`} open={!collapsed.has('cat.class')} onToggle={() => toggle('cat.class')}>{freeFeatures.map(featureCard)}</Category>}
           <Category
             label="其他"
             count={`${OTHER_ACTIONS.length} 項`}
@@ -247,13 +253,14 @@ export function ActionsSection({
           en="BONUS ACTION"
           cn="附贈動作"
           summary={
-            bonusSpells.length === 0
+            bonusSpells.length + bonusFeatures.length === 0
               ? '無可用'
-              : bonusSpells.map((s) => s.name).join('・')
+              : [...bonusFeatures, ...bonusSpells].map((s) => s.name).join('・')
           }
         >
           <div className="flex flex-col gap-2">
-            {bonusSpells.length === 0 ? (
+            {bonusFeatures.map(featureCard)}
+            {bonusSpells.length + bonusFeatures.length === 0 ? (
               <EntryCard badge="贈" title="無附贈動作" subtitle="No Bonus Actions" />
             ) : (
               bonusSpells.map((s) => (
