@@ -260,7 +260,9 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
         if(spell?.level!==0)continue;
         const other=groups.some(x=>x.kind==='spell'&&x.id!==g.id&&values(x.id).includes(o.id));
         const known=c.cantrips.some(x=>!x.homebrewId&&x.progressionSource!==g.id&&(!!x.progressionSource||g.id!=='cantrips')&&sameSpellName(x.nameEn,spell.eng_name??''));
-        if((other||known)&&!c.progression?.selections[g.id]?.includes(o.id))o.disabledReason='角色已由其他來源學會此戲法，請選另一個';
+        const priorOwners=groups.filter(x=>x.kind==='spell'&&c.progression?.selections[x.id]?.includes(o.id));
+        const duplicateLegacy=priorOwners.length>1&&priorOwners[priorOwners.length-1].id!==g.id;
+        if(duplicateLegacy||((other||known)&&!c.progression?.selections[g.id]?.includes(o.id)))o.disabledReason='角色已由其他來源學會此戲法，請選另一個';
     }
     const discoveries = groups.find(g => g.id === 'lore-spells');
     if (discoveries) for (const o of discoveries.options) {

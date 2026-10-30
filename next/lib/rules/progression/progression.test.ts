@@ -95,13 +95,12 @@ it('多筆舊ASI補選合計不得超過上限', () => {
     c.abilityScores.con = { score: 18, modifier: 4, proficientSave: false };
     expect(valid(c, { 'feat-4': ['ASI'], 'feat-4/ability': ['CON:2'], 'feat-6': ['ASI'], 'feat-6/ability': ['CON:2'] })).toEqual(expect.arrayContaining([expect.objectContaining({ message: expect.stringContaining('合計超過') })]));
 });
-it('舊資料同名戲法保留不同來源與施法屬性，不強迫刪除既有選擇', () => {
+it('舊資料重複戲法提示補選，保留另一來源', () => {
     const d = { ...data, spells: [spell('shared', 0, ['Cleric', 'Wizard']), spell('extra', 0, ['Wizard']), spell('first', 1, ['Wizard'])] };
     const c = { ...character('Cleric'), speciesEn: 'Human' };
     const s = { 'divine-order': ['Thaumaturge'], 'order-cantrip': ['shared'], 'human-origin': ['Magic Initiate'], 'human-origin/list': ['Wizard'], 'human-origin/ability': ['INT'], 'human-origin/cantrips': ['shared', 'extra'], 'human-origin/spell': ['first'] };
     c.progression={selections:s,grantedSkills:[],grantedTools:[],grantedLanguages:[],restSpent:{}};
-    const next = applyChoices(c, s, d, 'backfill', false);
-    expect(next.cantrips.find(s => s.nameEn === 'shared')?.castingSources?.map(s => s.ability)).toEqual(['WIS', 'INT']);
+    expect(validateChoices(c,s,d,'backfill',false).some(i=>i.group==='order-cantrip')).toBe(true);
 });
 it('精通能力名稱不顯示內容庫識別碼', () => {
     const next = applyChoices(character(), { mastery: ['axe', 'bow', 'dagger'] }, data, 'backfill', false);

@@ -20,6 +20,16 @@ describe('牧師 SRD 5.2.1 回歸',()=>{
   const prior={...c,cantrips:[Spell.parse({name:'修補術',nameEn:'Mending',level:0,progressionSource:'human-origin/cantrips'})]};
   expect(choiceGroups(prior,cat).find(g=>g.id==='cantrips')?.options.find(o=>o.id==='mending')?.disabledReason).toBeTruthy();
  });
+ it('舊角色重複戲法會提示並可補選，不消耗替換額度',()=>{
+  const c=cleric(1),selections={cantrips:['mending','flame','guidance'],'human-origin':['Magic Initiate'],'human-origin/list':['Cleric'],'human-origin/ability':['WIS'],'human-origin/cantrips':['mending','light'],'human-origin/spell':['bless']};
+  c.progression={selections,grantedSkills:[],grantedTools:[],grantedLanguages:[],restSpent:{}};
+  expect(validateChoices(c,selections,cat,'backfill',false).some(i=>i.group==='cantrips')).toBe(true);
+  const fixed={...selections,cantrips:['resistance','flame','guidance']};
+  expect(validateChoices(c,fixed,cat,'backfill',false)).toEqual([]);
+  const saved=applyChoices(c,fixed,cat,'backfill',false);
+  expect(saved.cantrips).toHaveLength(5);
+  expect(saved.cantrips.filter(s=>s.nameEn==='Mending')).toHaveLength(1);
+ });
  it('法術新手選已準備法術明確回傳來源變更，仍保留法術及免費次數',()=>{
   const c={...cleric(1),subclassEn:'',subclass:''};
   const s={'human-origin':['Magic Initiate'],'human-origin/list':['Cleric'],'human-origin/ability':['WIS'],'human-origin/cantrips':['mending','light'],prepared:['bless','cure','bane','command']};

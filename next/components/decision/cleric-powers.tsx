@@ -6,7 +6,7 @@ import {useCharacterStore} from '@/lib/state/character-store';
 const button='mb-2 min-h-11 w-full rounded-chip border border-gold px-2 text-small text-gold disabled:opacity-40';
 function PowerCard({c,p}:{c:Character;p:ClericPower}){
  const [wish,setWish]=useState(false),[rests,setRests]=useState(''),[message,setMessage]=useState('');
- const [targets,setTargets]=useState<HealingTarget[]>([c.currentHp<=Math.floor(c.maxHp/2)?{name:'自己',current:c.currentHp,max:c.maxHp,amount:0,self:true}:{name:'其他目標',current:0,max:20,amount:0,self:false}]);
+ const [targets,setTargets]=useState<HealingTarget[]>([]);
  const r=p.resource==='Channel Divinity'?channelResource(c):c.resources.find(r=>r.nameEn===p.resource);
  const cooldown=p.id==='intervention'?(c.divineInterventionRests??0):0;
  const updateTarget=(index:number,patch:Partial<HealingTarget>)=>setTargets(old=>old.map((t,i)=>i===index?{...t,...patch}:t));

@@ -7,7 +7,7 @@ export const channelResource = (c:Character) => c.resources.find(r=>r.nameEn==='
 const feat=(name:string,nameEn:string,level:number,description:string,sub=false):CharacterFeature=>({name,nameEn,source:`${sub?'子職：生命領域':'職業：牧師'} Lv${level}`,description,isCustom:false});
 export function backfillCleric(c:Character):Character {
  if(c.classNameEn!=='Cleric')return c;
- let features=c.features.map(f=>!f.isCustom&&f.nameEn==='Blessed Strikes'?{...f,name:'祝福打擊',description:'7級選擇神聖打擊或強效施法，只套用所選的分支。'}:f);
+ let features=c.features.map(f=>!f.isCustom&&['Divine Intervention','Greater Divine Intervention'].includes(f.nameEn)?{...f,name:f.nameEn==='Divine Intervention'?'神聖介入':'高等神聖介入'}:!f.isCustom&&f.nameEn==='Blessed Strikes'?{...f,name:'祝福打擊',description:'7級選擇神聖打擊或強效施法，只套用所選的分支。'}:f);
  const choice=blessedStrikeChoice(c);
  let selectedFeature:CharacterFeature|undefined;
  if(c.level>=7&&['Divine Strike','Potent Spellcasting'].includes(choice??'')){
