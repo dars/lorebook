@@ -39,9 +39,9 @@ export const GUIDE_CLASSES: GuideClass[] = [
   },
   {
     en: 'Monk', cn: '武僧', page: 49, endPage: 52,
-    features: { 1: '武藝 Martial Arts・無甲防禦 Unarmored Defense', 2: '武僧專注 Monk’s Focus・無甲移動 Unarmored Movement・異常代謝 Uncanny Metabolism', 3: '撥擋攻擊 Deflect Attacks', 4: '緩落 Slow Fall', 5: '額外攻擊 Extra Attack・震懾擊 Stunning Strike', 6: '強化打擊 Empowered Strikes', 7: '反射閃避 Evasion', 9: '特技移動 Acrobatic Movement', 10: '高度專注 Heightened Focus・自我恢復 Self-Restoration', 13: '撥擋能量 Deflect Energy', 14: '自律倖存者 Disciplined Survivor', 15: '完美專注 Perfect Focus', 18: '卓越防禦 Superior Defense', 20: '身心合一 Body and Mind' },
-    subclass: { name: '散打武者 Warrior of the Open Hand', page: 52, features: { 3: '散打技巧 Open Hand Technique', 6: '混元體 Wholeness of Body', 11: '迅捷步伐 Fleet Step', 17: '滲透勁 Quivering Palm' } },
-    reminders: ['2 級的連擊、耐心防禦、疾風步都能使用；這些不是永久三選一。', '散打技巧的附加效果、強化打擊的傷害類型，都是使用時才選擇。'],
+    features: { 1: '武藝 Martial Arts・無甲防禦 Unarmored Defense', 2: '武僧專注 Monk’s Focus・無甲移動 Unarmored Movement・超凡代謝 Uncanny Metabolism', 3: '撥擋攻擊 Deflect Attacks', 4: '緩落 Slow Fall', 5: '額外攻擊 Extra Attack・震懾拳 Stunning Strike', 6: '強化打擊 Empowered Strikes', 7: '迴避閃避 Evasion', 9: '特技移動 Acrobatic Movement', 10: '強化專注 Heightened Focus・自我復原 Self-Restoration', 13: '撥擋能量 Deflect Energy', 14: '嚴律生還者 Disciplined Survivor', 15: '完滿專注 Perfect Focus', 18: '卓絕防禦 Superior Defense', 20: '身心合一 Body and Mind' },
+    subclass: { name: '散打武者 Warrior of the Open Hand', page: 52, features: { 3: '散打技巧 Open Hand Technique', 6: '全身之愈 Wholeness of Body', 11: '迅捷步伐 Fleet Step', 17: '顫掌 Quivering Palm' } },
+    reminders: ['2 級的疾風連擊、堅忍防禦、疾步如風都能使用；這些不是永久三選一。', '散打技巧的附加效果、強化打擊的傷害類型，都是使用時才選擇。'],
   },
   {
     en: 'Paladin', cn: '聖騎士', page: 53, endPage: 57,
@@ -57,7 +57,7 @@ export const GUIDE_CLASSES: GuideClass[] = [
   },
   {
     en: 'Rogue', cn: '盜賊', page: 61, endPage: 64,
-    features: { 1: '偷襲 Sneak Attack・盜賊黑話 Thieves’ Cant', 2: '靈巧動作 Cunning Action', 3: '穩定瞄準 Steady Aim', 5: '狡詐打擊 Cunning Strike・直覺閃避 Uncanny Dodge', 7: '反射閃避 Evasion・可靠才能 Reliable Talent', 11: '精通狡詐打擊 Improved Cunning Strike', 14: '詭詐打擊 Devious Strikes', 15: '圓滑心智 Slippery Mind', 18: '飄忽不定 Elusive', 20: '幸運一擊 Stroke of Luck' },
+    features: { 1: '偷襲 Sneak Attack・盜賊黑話 Thieves’ Cant', 2: '靈巧動作 Cunning Action', 3: '穩定瞄準 Steady Aim', 5: '狡詐打擊 Cunning Strike・直覺閃避 Uncanny Dodge', 7: '迴避閃避 Evasion・可靠才能 Reliable Talent', 11: '精通狡詐打擊 Improved Cunning Strike', 14: '詭詐打擊 Devious Strikes', 15: '圓滑心智 Slippery Mind', 18: '飄忽不定 Elusive', 20: '幸運一擊 Stroke of Luck' },
     subclass: { name: '竊賊 Thief', page: 64, features: { 3: '快手 Fast Hands・梁上君子 Second-Story Work', 9: '高等潛行 Supreme Sneak', 13: '使用魔法裝置 Use Magic Device', 17: '竊賊反射 Thief’s Reflexes' } },
     reminders: ['長休後可重選精通武器種類（僅限簡易武器或具靈巧／輕型屬性的軍用武器）。', '狡詐打擊與詭詐打擊的效果，是偷襲時支付傷害骰選用；不需在升級時永久挑選。'],
   },

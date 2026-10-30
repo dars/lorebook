@@ -73,6 +73,8 @@ const SCORE_KEY: Record<string, keyof Character['abilityScores']> = {
 function unmetInGroup(group: unknown, c: Character, targetLevel: number): string[] {
   const g = obj(group);
   const unmet: string[] = [];
+  const fighting=c.classNameEn==='Fighter'||(['Paladin','Ranger'].includes(c.classNameEn)&&targetLevel>=2)||c.features.some(f=>!f.isCustom&&f.nameEn==='Fighting Style');
+  if(!fighting&&JSON.stringify(g).match(/fighting\s*style|fightingStyle|戰鬥風格/i))unmet.push('戰鬥風格特性');
   if (typeof g.level === 'number' && targetLevel < g.level) {
     unmet.push(`等級 ${g.level}`);
   }

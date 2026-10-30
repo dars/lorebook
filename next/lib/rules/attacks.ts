@@ -1,3 +1,4 @@
+import {martialArtsActive,martialDie,monkWeapon} from './monk';
 import { rageActive, rageDamage } from './barbarian';
 import type { Character } from '@/lib/domain/character';
 
@@ -29,6 +30,7 @@ export function attackEntries(c: Character): AttackEntry[] {
   const str = c.abilityScores.str.modifier;
   const dex = c.abilityScores.dex.modifier;
   const prof = c.proficiencyBonus;
+  const martial=martialArtsActive(c), die=martialDie(c.level), unarmedMod=martial?Math.max(str,dex):str;
 
   const entries: AttackEntry[] = [];
 
@@ -52,10 +54,12 @@ export function attackEntries(c: Character): AttackEntry[] {
 
     const ranged = ['Dart','Shortbow','Sling','Light Crossbow','Blowgun','Hand Crossbow','Heavy Crossbow','Longbow','Pistol','Musket'].includes(e.nameEn);
     const archery = ranged && c.features.some(f=>!f.isCustom&&f.nameEn==='Archery') ? 2 : 0;
-    const mod = e.finesse ? Math.max(str, dex) : ranged ? dex : str;
-    const usesStrength = e.finesse ? str >= dex : !ranged;
+    const monk=martial&&monkWeapon(e);
+    const mod = (e.finesse||monk) ? Math.max(str, dex) : ranged ? dex : str;
+    const usesStrength = (e.finesse||monk) ? str >= dex : !ranged;
     const damageMod = mod + (usesStrength && rageActive(c) ? rageDamage(c) : 0);
-    const damage = damageMod === 0 ? e.damage : `${e.damage}${damageMod > 0 ? `+${damageMod}` : `${damageMod}`}`;
+    const baseDamage=monk&&/^1d(\d+)$/.test(e.damage)&&Number(e.damage.slice(2))<die?`1d${die}`:e.damage;
+    const damage = damageMod === 0 ? baseDamage : `${baseDamage}${damageMod > 0 ? `+${damageMod}` : `${damageMod}`}`;
 
     entries.push({
       name: e.name,
@@ -72,8 +76,8 @@ export function attackEntries(c: Character): AttackEntry[] {
   entries.push({
     name: '徒手攻擊',
     nameEn: 'Unarmed Strike',
-    hitBonus: str + prof,
-    damage: `${Math.max(0, 1 + str + (rageActive(c) ? rageDamage(c) : 0))}`,
+    hitBonus: unarmedMod + prof,
+    damage: martial?`1d${die}${unarmedMod===0?'':unarmedMod>0?`+${unarmedMod}`:unarmedMod}`:`${Math.max(0, 1 + str + (rageActive(c) ? rageDamage(c) : 0))}`,
     damageType: 'bludgeoning',
     quantity: 1,
     unarmed: true,

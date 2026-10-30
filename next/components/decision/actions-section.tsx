@@ -1,5 +1,7 @@
 'use client';
 
+import {MonkPowers} from './monk-powers';
+import {monkPowers} from '@/lib/rules/monk';
 import { useState } from 'react';
 import { DruidPowers } from './druid-powers';
 import { ClericPowers } from './cleric-powers';
@@ -159,6 +161,7 @@ export function ActionsSection({
   const paladin = paladinPowers(c);
   const bard = bardPowers(c);
   const cleric = clericPowers(c);
+  const monk=monkPowers(c);
   const classActions = fighterActions(c);
   const bonusFeatures = classActions.filter(a => a.kind === 'bonus');
   const freeFeatures = classActions.filter(a => a.kind === 'free');
@@ -239,6 +242,7 @@ export function ActionsSection({
           )}
 
           {paladin.some(p=>p.kind==='action'||p.kind==='free'||p.kind==='passive') && <Category label="職業能力" count={`${paladin.filter(p=>p.kind!=='bonus').length} 項`} open={!collapsed.has('cat.paladin')} onToggle={()=>toggle('cat.paladin')}><PaladinPowers c={c} kind="action"/><PaladinPowers c={c} kind="free"/><PaladinPowers c={c} kind="passive"/></Category>}
+          {c.classNameEn==='Monk'&&<Category label="武僧能力" count="專注與效果" open={!collapsed.has('cat.monk')} onToggle={()=>toggle('cat.monk')}><MonkPowers c={c} kind="other"/></Category>}
           {c.classNameEn==='Druid'&&c.level>=2&&<Category label="德魯伊能力" count="動作與資源" open={!collapsed.has('cat.druid')} onToggle={()=>toggle('cat.druid')}><DruidPowers c={c}/></Category>}
           {cleric.length>0&&<Category label="牧師能力" count={`${cleric.length} 項魔法動作`} open={!collapsed.has('cat.cleric')} onToggle={()=>toggle('cat.cleric')}><ClericPowers c={c}/></Category>}
           {bard.some(p=>p.kind==='free'||p.kind==='passive')&&<Category label="能力 · 不耗動作／被動" count={`${bard.filter(p=>p.kind==='free'||p.kind==='passive').length} 項`} open={!collapsed.has('cat.bard')} onToggle={()=>toggle('cat.bard')}><BardPowers c={c} kind="free"/><BardPowers c={c} kind="passive"/></Category>}
@@ -269,18 +273,19 @@ export function ActionsSection({
           en="BONUS ACTION"
           cn="附贈動作"
           summary={
-            bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && !(c.classNameEn==='Druid'&&c.level>=2)
+            bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && !(c.classNameEn==='Druid'&&c.level>=2)
               ? '無可用'
-              : [...(c.classNameEn==='Druid'&&c.level>=2?[{name:'荒野變身'}]:[]), ...(c.classNameEn==='Barbarian'?[{name:'狂暴'}]:[]), ...bonusFeatures, ...bonusSpells, ...paladin.filter(p=>p.kind==='bonus'), ...bard.filter(p=>p.kind==='bonus')].map((s) => s.name).join('・')
+              : [...monk.filter(p=>p.kind==='bonus'), ...(c.classNameEn==='Druid'&&c.level>=2?[{name:'荒野變身'}]:[]), ...(c.classNameEn==='Barbarian'?[{name:'狂暴'}]:[]), ...bonusFeatures, ...bonusSpells, ...paladin.filter(p=>p.kind==='bonus'), ...bard.filter(p=>p.kind==='bonus')].map((s) => s.name).join('・')
           }
         >
           <div className="flex flex-col gap-2">
+            <MonkPowers c={c} kind="bonus"/>
             <RageControl c={c}/>
             <DruidPowers c={c} bonusOnly/>
             <BardPowers c={c} kind="bonus"/>
             {bonusFeatures.map(featureCard)}
             <PaladinPowers c={c} kind="bonus"/>
-            {bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && !(c.classNameEn==='Druid'&&c.level>=2) ? (
+            {bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && !(c.classNameEn==='Druid'&&c.level>=2) ? (
               <EntryCard badge="贈" title="無附贈動作" subtitle="No Bonus Actions" />
             ) : (
               bonusSpells.map((s) => (
@@ -298,6 +303,7 @@ export function ActionsSection({
           summary={[...reactionSpells.map((s) => s.name), ...bard.filter(p=>p.kind==='reaction').map(p=>p.name), '機會攻擊'].join('・')}
         >
           <div className="flex flex-col gap-2">
+            <MonkPowers c={c} kind="reaction"/>
             <BardPowers c={c} kind="reaction"/>
             {isBerserker(c)&&c.classNameEn==='Barbarian'&&c.level>=10&&<EntryCard badge="反" title="報復" subtitle="Retaliation" value="1 次近戰攻擊" description="受到 5 呎內生物的傷害時，可用反應以武器或徒手對其進行一次近戰攻擊。"/>}
             {reactionSpells.map((s) => (

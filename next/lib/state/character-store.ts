@@ -70,7 +70,8 @@ export const useCharacterStore = create<State & Actions>((set) => ({
   update: (fn) =>
     set((s) => {
       if (!s.character) return s;
-      const character = endIncapacitatedDruidEffects(fn(s.character));
+      let character = endIncapacitatedDruidEffects(fn(s.character));
+      if(character.monkSuperiorDefense&&character.conditions.some(x=>['失能','昏迷','麻痺','石化','震懾','Incapacitated','Unconscious','Paralyzed','Petrified','Stunned'].includes(x)))character={...character,monkSuperiorDefense:false};
       return { character: character.raging && !rageActive(character) ? {...character, raging:false} : character, dirty:true };
     }),
 
@@ -173,6 +174,7 @@ export const characterActions = {
         concentrationSpell: null,
         mageArmorActive: false,
         raging: false,
+        monkSuperiorDefense: false,
         spellSlots: c.spellSlots.map((s) => ({ ...s, total: s.total-(c.druidCreatedSlots?.[s.level]??0), used: 0 })).filter(s=>s.total>0),
         resources: c.resources.map((r) => interventionAfterLongRest(c,r)),
         ...(c.divineInterventionRests!==undefined?{divineInterventionRests:Math.max(0,c.divineInterventionRests-1)}:{}),

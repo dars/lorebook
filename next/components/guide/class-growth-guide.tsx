@@ -1,5 +1,6 @@
 'use client';
 
+import {martialDie,monkMoveBonus} from '@/lib/rules/monk';
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
@@ -167,6 +168,7 @@ export function ClassGrowthGuide() {
                     </details>
                   ))}
                   {row.features.length > 0 && <p className="py-1 text-small leading-relaxed text-text-light"><span className="mr-2 text-text-secondary">自動獲得</span>{row.features.join('；')}</p>}
+                  {cls.en==='Monk'&&<div className="grid grid-cols-3 gap-2 py-2 text-small text-text-secondary"><span>武藝骰 <strong className="text-gold">1d{martialDie(row.level)}</strong></span><span>專注 <strong className="text-gold">{row.level>=2?row.level:0} 點</strong></span><span>無甲移動 <strong className="text-gold">+{monkMoveBonus(row.level)} 呎</strong></span></div>}
                   {row.growth.length > 0 && <p className="py-0.5 text-small leading-relaxed text-text-secondary"><span className="mr-2">數值成長</span>{row.growth.join(' · ')}</p>}
 
                 </div>
