@@ -14,6 +14,20 @@ describe('德魯伊 SRD 5.2.1',()=>{
  it('型態CR及飛行限制',()=>{expect(formLimits(2)).toEqual({count:4,cr:.25,fly:false});expect(formLimits(4)).toEqual({count:6,cr:.5,fly:false});expect(formLimits(8)).toEqual({count:8,cr:1,fly:true});});
  it('荒野夥伴可選法術位或變身，不能免費召喚',()=>{const c=druid();expect(druidAction(c,'companion',2).spellSlots[1].used).toBe(3);expect(wildShape(druidAction(c,'companion'))?.current).toBe(3);expect(()=>druidAction(c,'companion',6)).toThrow();});
  it('荒野重生僅耗盡時能換變身，反向每長休一次；新增位長休移除',()=>{let c=druid();expect(()=>druidAction(c,'slot-to-shape',1)).toThrow();c={...c,resources:c.resources.map(r=>r.nameEn==='Wild Shape'?{...r,current:0}:r)};c=druidAction(c,'slot-to-shape',1);expect(wildShape(c)?.current).toBe(1);expect(c.spellSlots[0].used).toBe(4);c=druidAction(c,'shape-to-slot');expect(c.spellSlots[0].used).toBe(3);expect(()=>druidAction(c,'shape-to-slot')).toThrow();const full=druid();full.spellSlots[0].used=0;const extra=druidAction(full,'shape-to-slot');expect(extra.spellSlots[0].total).toBe(5);load(extra);characterActions.longRest();expect(useCharacterStore.getState().character!.spellSlots[0]).toEqual({level:1,total:4,used:0});});
+ it('法術位換變身可跨回合重複使用，不受反向轉換已耗盡影響',()=>{
+  let c=druid();c.spellSlots[0].used=0;
+  c=druidAction(c,'shape-to-slot');
+  c={...c,resources:c.resources.map(r=>r.nameEn==='Wild Shape'?{...r,current:0}:r)};
+  for(let turn=0;turn<3;turn++){
+   c=druidAction(c,'slot-to-shape',1);
+   expect(wildShape(c)?.current).toBe(1);
+   expect(c.resources.find(r=>r.nameEn==='Wild Resurgence')?.current).toBe(0);
+   expect(()=>druidAction(c,'slot-to-shape',1)).toThrow();
+   c=druidAction(c,'companion');
+  }
+  expect(c.spellSlots[0].used).toBe(3);
+  expect(wildShape(c)?.current).toBe(0);
+ });
  it('常青僅先攻且0次補1，自然術士換單一法術位每長休一次',()=>{const c=druid();expect(()=>druidAction(c,'evergreen')).toThrow();const empty={...c,resources:c.resources.map(r=>r.nameEn==='Wild Shape'?{...r,current:0}:r)};expect(wildShape(druidAction(empty,'evergreen'))?.current).toBe(1);const next=druidAction(c,'magician',3);expect(next.spellSlots.find(s=>s.level===6)?.used).toBe(0);expect(wildShape(next)?.current).toBe(1);expect(()=>druidAction(next,'magician',1)).toThrow();expect(()=>druidAction(druid(19),'evergreen')).toThrow();});
  it('大地之助等級骰與庇所共享變身資源；自訂子職不套用',()=>{expect([3,10,14].map(l=>landDice(druid(l)))).toEqual([2,3,4]);const c=druid();expect(wildShape(druidAction(c,'aid'))?.current).toBe(3);expect(druidAction(c,'sanctuary').natureSanctuaryActive).toBe(true);expect(isLandDruid({...c,customSubclass:{}} as Character)).toBe(false);expect(()=>druidAction({...c,subclassEn:'Other'},'aid')).toThrow();});
  it('自然復甦兩種用途獨立、回復單環<=5及總環預算',()=>{let c=druid(6);expect(()=>recoverArcaneSlots(c,{1:1})).toThrow();c=beginChoiceRest(c,'short');expect(()=>recoverArcaneSlots(c,{6:1})).toThrow();expect(()=>recoverArcaneSlots(c,{2:2})).toThrow();c=recoverArcaneSlots(c,{1:1,2:1});expect(c.spellSlots[0].used).toBe(2);expect(c.resources.find(r=>r.nameEn==='Natural Recovery Casting')?.current).toBe(1);expect(()=>recoverArcaneSlots(c,{1:1})).toThrow();c.spells=[Spell.parse({name:'迷蹤步',nameEn:'Misty Step',level:2,alwaysPrepared:true})];const next=druidAction(c,'circle-cast','Misty Step');expect(next.spellSlots).toEqual(c.spellSlots);expect(next.resources.find(r=>r.nameEn==='Natural Recovery Casting')?.current).toBe(0);expect(circleSpellNames(c)).toContain('Lightning Bolt');expect(()=>druidAction(c,'circle-cast','Cure Wounds')).toThrow();});

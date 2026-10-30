@@ -11,10 +11,10 @@ export const landDice=(c:Character)=>c.level>=14?4:c.level>=10?3:2;
 const feature=(level:number,name:string,nameEn:string,description:string,sub=false):CharacterFeature=>({name,nameEn,description,source:`${sub?'子職：大地結社':'職業：德魯伊'} Lv${level}`,isCustom:false});
 export function backfillDruid(c:Character):Character{
  if(c.classNameEn!=='Druid')return c;
- const resources=[...c.resources];
+ const resources=c.resources.map(r=>r.nameEn==='Wild Resurgence'?{...r,name:'荒野重生 · 變身換1環'}:r);
  if(c.level>=2&&!wildShape(c))resources.push(...deriveClassResources('Druid',c.level,c.abilityScores).filter(r=>r.nameEn==='Wild Shape'));
  const add=(name:string,nameEn:string)=>{if(!resources.some(r=>r.nameEn===nameEn))resources.push({name,nameEn,current:1,max:1,recovery:'long',display:'pips',dieFaces:0,unit:'次'});};
- if(c.level>=5)add('荒野重生 · 換法術位','Wild Resurgence');
+ if(c.level>=5)add('荒野重生 · 變身換1環','Wild Resurgence');
  if(c.level>=20)add('自然術士 · 換法術位','Nature Magician');
  if(isLandDruid(c)&&c.level>=6){add('自然復甦 · 回復法術位','Natural Recovery');add('自然復甦 · 免費施法','Natural Recovery Casting');}
  let features=c.features.filter(f=>f.isCustom||!isLandDruid(c)||!/Subclass Feature|子職業特性/i.test(f.nameEn+' '+f.name));
