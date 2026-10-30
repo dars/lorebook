@@ -1,3 +1,4 @@
+import {backfillDruid} from '../rules/druid';
 import { backfillCleric } from '../rules/cleric';
 import { backfillBard } from '../rules/bard';
 import { backfillBarbarian } from '../rules/barbarian';
@@ -297,6 +298,10 @@ export const Character = z.object({
   ac: z.number().int().default(10),
   maxHp: z.number().int().default(1),
   currentHp: z.number().int().default(1),
+  wildShapeForm: z.string().optional(),
+  wildCompanionActive: z.boolean().optional(),
+  natureSanctuaryActive: z.boolean().optional(),
+  druidCreatedSlots: z.record(z.string(),z.number().int().min(0)).optional(),
   tempHp: z.number().int().default(0),
   speed: z.string().default('30ft'),
   initiative: z.number().int().default(0),
@@ -368,5 +373,5 @@ export const hitDiceRemaining = (c: Character) =>
 
 /** 解析雲端／快取的角色 JSON。失敗時拋出，由呼叫端決定如何呈現。 */
 export function parseCharacter(json: unknown): Character {
-  return backfillCleric(backfillBard(backfillBarbarian(backfillWizard(backfillPaladin(repairFeatDescriptions(backfillFighterFeatures(backfillIndomitable(Character.parse(json)))))))));
+  return backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(backfillPaladin(repairFeatDescriptions(backfillFighterFeatures(backfillIndomitable(Character.parse(json))))))))));
 }

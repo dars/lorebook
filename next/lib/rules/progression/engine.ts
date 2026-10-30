@@ -1,3 +1,4 @@
+import {backfillDruid} from '../druid';
 import { backfillCleric } from '../cleric';
 import { backfillBard } from '../bard';
 import { backfillBarbarian } from '../barbarian';
@@ -65,7 +66,7 @@ export function validateChoices(c: Character, selections: Selections, catalog: C
             const auto = automaticSpellNames(c, selections);
             const replacedBefore = g.id === 'prepared' ? before.filter(id => !extra.includes(id) && !auto.some(n => sameSpellName(n, catalog.spells.find(s => s.id === id)?.eng_name ?? ''))) : before;
             const validBefore = g.kind==='form'?replacedBefore:replacedBefore.filter(id=>{const o=g.options.find(o=>o.id===id);return o&&!o.disabledReason;});
-            const dropped = removed(validBefore, v), limit = replacementLimit(c, g, context);
+            const dropped = g.kind==='form'?validBefore.filter(old=>!v.some(next=>{try{return JSON.parse(old).name===JSON.parse(next).name;}catch{return false;}})).length:removed(validBefore, v), limit = replacementLimit(c, g, context);
             const repairingOrigin=g.id.endsWith('/list')&&before.some(id=>g.options.find(o=>o.id===id)?.disabledReason);
             if (dropped > limit && !repairingOrigin)
                 issue(g, limit ? `本次最多替換 ${limit} 項。` : '這項選擇目前不能替換。');
@@ -239,7 +240,7 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
     if (context === 'rest')
         for (const g of groups) {
             const before = normalizePreparedSelections(c, {...baseline(c), ...Object.fromEntries(Object.entries(active).filter(([key])=>key!=='prepared'))}, catalog.spells);
-            const n = removed((g.id==='prepared'?before[g.id]:baseline(c)[g.id]) ?? [], active[g.id] ?? []);
+            const n = g.kind==='form'?(baseline(c)[g.id]??[]).filter(old=>!(active[g.id]??[]).some(next=>JSON.parse(old).name===JSON.parse(next).name)).length:removed((g.id==='prepared'?before[g.id]:baseline(c)[g.id]) ?? [], active[g.id] ?? []);
             if (n && g.replace) {
                 const key = g.replace.budget ?? g.id;
                 restSpent[key] = (restSpent[key] ?? 0) + (g.id==='prepared'&&c.classNameEn==='Wizard'&&c.progression?.rest==='short'?n:g.replace.count >= 99 ? 99 : n);
@@ -290,7 +291,7 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
         }
     const hpDelta = (abilityScores.con.modifier - c.abilityScores.con.modifier) * c.level;
     const ability = (c.spellcastingAbility === 'INT' ? 'int_' : c.spellcastingAbility.toLowerCase()) as keyof Character['abilityScores'];
-    return backfillCleric(backfillBard(backfillBarbarian(recalculateChoiceSkills({ ...result, abilityScores, maxHp: result.maxHp + hpDelta, currentHp: result.currentHp + hpDelta, spellAttack: abilityScores[ability] ? c.proficiencyBonus + abilityScores[ability].modifier : result.spellAttack, spellDc: abilityScores[ability] ? 8 + c.proficiencyBonus + abilityScores[ability].modifier : result.spellDc }))));
+    return backfillDruid(backfillCleric(backfillBard(backfillBarbarian(recalculateChoiceSkills({ ...result, abilityScores, maxHp: result.maxHp + hpDelta, currentHp: result.currentHp + hpDelta, spellAttack: abilityScores[ability] ? c.proficiencyBonus + abilityScores[ability].modifier : result.spellAttack, spellDc: abilityScores[ability] ? 8 + c.proficiencyBonus + abilityScores[ability].modifier : result.spellDc })))));
 }
 /** 集中重算，升級增加 PB／能力值後亦須使用，否則專精會悄悄退回普通熟練。 */
 export function recalculateChoiceSkills(c: Character): Character {

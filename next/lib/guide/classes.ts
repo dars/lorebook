@@ -27,9 +27,9 @@ export const GUIDE_CLASSES: GuideClass[] = [
   },
   {
     en: 'Druid', cn: '德魯伊', page: 41, endPage: 46,
-    features: { 1: '施法 Spellcasting・德魯伊語 Druidic', 2: '荒野形態 Wild Shape・荒野伙伴 Wild Companion', 5: '荒野復甦 Wild Resurgence', 15: '精通元素之怒 Improved Elemental Fury', 18: '野獸施法 Beast Spells', 20: '大德魯伊 Archdruid' },
-    subclass: { name: '大地結社 Circle of the Land', page: 46, features: { 3: '大地援助 Land’s Aid', 5: '新增結社法術', 6: '自然恢復 Natural Recovery', 7: '新增結社法術', 9: '新增結社法術', 10: '自然守護 Nature’s Ward', 14: '自然庇護 Nature’s Sanctuary' } },
-    reminders: ['每升德魯伊等級可替換 1 個德魯伊戲法；長休後可重新準備整份法術清單，並替換 1 個已知野獸形態。', '大地結社的地形於每次長休後選擇：乾旱、極地、溫帶、熱帶；結社法術隨地形改變，不是永久子職分支。'],
+    features: { 1: '施法 Spellcasting・德魯伊語 Druidic', 2: '荒野變身 Wild Shape：2次、最高 CR 1/4・荒野夥伴 Wild Companion', 4: '荒野變身：2次、最高 CR 1/2', 6: '荒野變身：3次', 8: '荒野變身：3次、最高 CR 1，允許飛行', 17: '荒野變身：4次', 5: '荒野復甦 Wild Resurgence', 15: '精通元素之怒 Improved Elemental Fury', 18: '野獸施法 Beast Spells', 20: '大德魯伊 Archdruid' },
+    subclass: { name: '大地結社 Circle of the Land', page: 46, features: { 3: '大地之助 Land’s Aid', 5: '新增結社法術', 6: '自然復甦 Natural Recovery', 7: '新增結社法術', 9: '新增結社法術', 10: '自然守護 Nature’s Ward', 14: '自然庇所 Nature’s Sanctuary' } },
+    reminders: ['荒野變身：2–5級2次、6–16級3次、17–20級4次；短休恢復1次、長休恢復全部。最高 CR：2級1/4、4級1/2、8級1；8級起可飛行。', '每升德魯伊等級可替換 1 個德魯伊戲法；長休後可重新準備整份法術清單，並替換 1 個已知野獸形態。', '大地結社的地形於每次長休後選擇：乾旱、極地、溫帶、熱帶；結社法術隨地形改變，不是永久子職分支。'],
   },
   {
     en: 'Fighter', cn: '戰士', page: 47, endPage: 49,

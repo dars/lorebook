@@ -1,4 +1,5 @@
 'use client';
+import {endIncapacitatedDruidEffects} from '@/lib/rules/druid';
 import { interventionAfterLongRest } from '@/lib/rules/cleric';
 import { rageActive } from '@/lib/rules/barbarian';
 import { shortRestResource } from '@/lib/rules/paladin';
@@ -69,7 +70,7 @@ export const useCharacterStore = create<State & Actions>((set) => ({
   update: (fn) =>
     set((s) => {
       if (!s.character) return s;
-      const character = fn(s.character);
+      const character = endIncapacitatedDruidEffects(fn(s.character));
       return { character: character.raging && !rageActive(character) ? {...character, raging:false} : character, dirty:true };
     }),
 
@@ -163,12 +164,16 @@ export const characterActions = {
       const regain = c.level;
       return {
         ...beginChoiceRest(c, 'long'),
+        wildShapeForm: undefined,
+        wildCompanionActive: false,
+        natureSanctuaryActive: false,
+        druidCreatedSlots: {},
         currentHp: c.maxHp,
         tempHp: 0,
         concentrationSpell: null,
         mageArmorActive: false,
         raging: false,
-        spellSlots: c.spellSlots.map((s) => ({ ...s, used: 0 })),
+        spellSlots: c.spellSlots.map((s) => ({ ...s, total: s.total-(c.druidCreatedSlots?.[s.level]??0), used: 0 })).filter(s=>s.total>0),
         resources: c.resources.map((r) => interventionAfterLongRest(c,r)),
         ...(c.divineInterventionRests!==undefined?{divineInterventionRests:Math.max(0,c.divineInterventionRests-1)}:{}),
         exhaustionLevel: clamp(c.exhaustionLevel - 1, 0, 6),

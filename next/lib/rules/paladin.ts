@@ -48,7 +48,7 @@ export function restoreNimbus(c:Character):Character {
 }
 export function shortRestResource(c:Character,r:ClassResource):ClassResource {
   if(c.classNameEn==='Barbarian'&&(r.nameEn==='Rage'||r.name==='狂暴'))return {...r,current:Math.min(r.max,r.current+1)};
-  const one = (['Paladin','Cleric'].includes(c.classNameEn)&&(r.nameEn==='Channel Divinity'||r.name==='引導神力')) || (c.classNameEn==='Fighter'&&r.nameEn==='Second Wind');
+  const one = (c.classNameEn==='Druid'&&(r.nameEn==='Wild Shape'||r.name==='荒野變身')) || (['Paladin','Cleric'].includes(c.classNameEn)&&(r.nameEn==='Channel Divinity'||r.name==='引導神力')) || (c.classNameEn==='Fighter'&&r.nameEn==='Second Wind');
   if(one)return {...r,current:Math.min(r.max,r.current+1)};
   return r.recovery==='short'?{...r,current:r.max}:r;
 }

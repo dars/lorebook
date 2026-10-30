@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DruidPowers } from './druid-powers';
 import { ClericPowers } from './cleric-powers';
 import { clericPowers } from '@/lib/rules/cleric';
 import { BardPowers } from './bard-powers';
@@ -238,6 +239,7 @@ export function ActionsSection({
           )}
 
           {paladin.some(p=>p.kind==='action'||p.kind==='free'||p.kind==='passive') && <Category label="職業能力" count={`${paladin.filter(p=>p.kind!=='bonus').length} 項`} open={!collapsed.has('cat.paladin')} onToggle={()=>toggle('cat.paladin')}><PaladinPowers c={c} kind="action"/><PaladinPowers c={c} kind="free"/><PaladinPowers c={c} kind="passive"/></Category>}
+          {c.classNameEn==='Druid'&&c.level>=2&&<Category label="德魯伊能力" count="動作與資源" open={!collapsed.has('cat.druid')} onToggle={()=>toggle('cat.druid')}><DruidPowers c={c}/></Category>}
           {cleric.length>0&&<Category label="牧師能力" count={`${cleric.length} 項魔法動作`} open={!collapsed.has('cat.cleric')} onToggle={()=>toggle('cat.cleric')}><ClericPowers c={c}/></Category>}
           {bard.some(p=>p.kind==='free'||p.kind==='passive')&&<Category label="能力 · 不耗動作／被動" count={`${bard.filter(p=>p.kind==='free'||p.kind==='passive').length} 項`} open={!collapsed.has('cat.bard')} onToggle={()=>toggle('cat.bard')}><BardPowers c={c} kind="free"/><BardPowers c={c} kind="passive"/></Category>}
           {freeFeatures.length > 0 && <Category label="職業能力 · 不耗動作" count={`${freeFeatures.length} 項`} open={!collapsed.has('cat.class')} onToggle={() => toggle('cat.class')}>{freeFeatures.map(featureCard)}</Category>}
@@ -267,17 +269,18 @@ export function ActionsSection({
           en="BONUS ACTION"
           cn="附贈動作"
           summary={
-            bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian'
+            bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && !(c.classNameEn==='Druid'&&c.level>=2)
               ? '無可用'
-              : [...(c.classNameEn==='Barbarian'?[{name:'狂暴'}]:[]), ...bonusFeatures, ...bonusSpells, ...paladin.filter(p=>p.kind==='bonus'), ...bard.filter(p=>p.kind==='bonus')].map((s) => s.name).join('・')
+              : [...(c.classNameEn==='Druid'&&c.level>=2?[{name:'荒野變身'}]:[]), ...(c.classNameEn==='Barbarian'?[{name:'狂暴'}]:[]), ...bonusFeatures, ...bonusSpells, ...paladin.filter(p=>p.kind==='bonus'), ...bard.filter(p=>p.kind==='bonus')].map((s) => s.name).join('・')
           }
         >
           <div className="flex flex-col gap-2">
             <RageControl c={c}/>
+            <DruidPowers c={c} bonusOnly/>
             <BardPowers c={c} kind="bonus"/>
             {bonusFeatures.map(featureCard)}
             <PaladinPowers c={c} kind="bonus"/>
-            {bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' ? (
+            {bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && !(c.classNameEn==='Druid'&&c.level>=2) ? (
               <EntryCard badge="贈" title="無附贈動作" subtitle="No Bonus Actions" />
             ) : (
               bonusSpells.map((s) => (

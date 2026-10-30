@@ -298,7 +298,7 @@ export function DecisionView({
               title="短休"
               subtitle="職業能力"
               onConfirm={() => characterActions.shortRest()}
-              confirm={c.classNameEn==='Barbarian'?'短休恢復 1 次狂暴，並結束目前的狂暴。':c.classNameEn==='Cleric'?'短休恢復 1 次引導神力，以及其他短休資源。':'短休將回復標記為短休的職業資源。'}
+              confirm={c.classNameEn==='Druid'?'短休恢復 1 次荒野變身；大地結社可在休息區另選自然復甦的法術位。':c.classNameEn==='Barbarian'?'短休恢復 1 次狂暴，並結束目前的狂暴。':c.classNameEn==='Cleric'?'短休恢復 1 次引導神力，以及其他短休資源。':'短休將回復標記為短休的職業資源。'}
               doneHint="短休資源已回復"
             />
             <RestButton

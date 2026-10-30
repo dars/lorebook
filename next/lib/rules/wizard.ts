@@ -1,3 +1,4 @@
+import {isLandDruid} from './druid';
 import type {Character, CharacterFeature} from '@/lib/domain/character';
 export const WIZARD_FEATURES: (CharacterFeature & {level:number})[] = [
  {level:1,name:'施法',nameEn:'Spellcasting',source:'職業：法師 Lv1',isCustom:false,description:'以智力施放法師法術。法術書起始記錄六個一環法術，每次法師升級再加入兩個符合環數的法術。長休後可更換準備法術。'},
@@ -13,9 +14,10 @@ export function backfillWizard(c:Character):Character {
  return {...c,resources,features:[...c.features,...WIZARD_FEATURES.filter(f=>f.level<=c.level&&!c.features.some(x=>!x.isCustom&&(x.nameEn===f.nameEn||x.name===f.name))).map(f=>({name:f.name,nameEn:f.nameEn,source:f.source,description:f.description,isCustom:f.isCustom}))]};
 }
 export function recoverArcaneSlots(c:Character,counts:Record<number,number>):Character {
- if(c.classNameEn!=='Wizard'||c.progression?.rest!=='short')throw Error('請先完成短休，再使用奧術回復。');
- const resource=c.resources.find(r=>r.nameEn==='Arcane Recovery');
- if(!resource||resource.current<1)throw Error('奧術回復已使用，須長休後恢復。');
+ const natural=isLandDruid(c)&&c.level>=6;
+ if((c.classNameEn!=='Wizard'&&!natural)||c.progression?.rest!=='short')throw Error('請先完成短休，再回復法術位。');
+ const resource=c.resources.find(r=>r.nameEn===(natural?'Natural Recovery':'Arcane Recovery'));
+ if(!resource||resource.current<1)throw Error('回復法術位的能力已使用，須長休後恢復。');
  let total=0;
  for(const [key,n] of Object.entries(counts)){
   const level=Number(key),slot=c.spellSlots.find(s=>s.level===level);

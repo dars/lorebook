@@ -219,13 +219,15 @@ function LevelUpForm({
     showSubclass || activeCustom ? null : findSrdSubclass(subclasses, initial);
 
   const newFeatures = [
+    ...(!subclassOnly&&plan.targetLevel===19?[{name:'史詩恩賜',nameEn:'Epic Boon',source:`職業：${initial.className} Lv19`,description:'選擇史詩恩賜或其他符合條件的專長。',isCustom:false}]:[]),
     ...(!subclassOnly && plan.hasAsi && featMode === 'asi' && !classFeatures.some(f=>!f.is_subclass&&f.level===plan.targetLevel&&f.eng_name==='Ability Score Improvement') ? [{name:'能力值提升',nameEn:'Ability Score Improvement',source:`職業：${initial.className} Lv${plan.targetLevel}`,description:'本級已套用能力值提升。',isCustom:false}] : []),
     // 補選不是升級：這一趟不該拿到任何職業特性，只補子職那一份。
     ...(subclassOnly
       ? []
       : classFeatures
           .filter((f) => !f.is_subclass && f.level === plan.targetLevel)
-          .filter((f) => featMode === 'asi' || !isFeatSlotFeature(f.eng_name))
+          .filter(f=>initial.classNameEn!=='Druid'||!['Primal Strike','Potent Spellcasting'].includes(f.eng_name??''))
+          .filter((f) => (featMode === 'asi' || !isFeatSlotFeature(f.eng_name))&&!(plan.targetLevel===19&&f.eng_name==='Epic Boon'))
           .map((f) =>
             toFeature(f, `職業：${initial.className} Lv${plan.targetLevel}`),
           )),
@@ -291,6 +293,8 @@ function LevelUpForm({
   if(subclassOnly && choiceCharacter.classNameEn==='Wizard' && !choiceCharacter.customSubclass && choiceCharacter.subclassEn==='Evoker' && (effectiveSelections['evocation-3']?.length??0)!==2) choiceIssues.push({group:'evocation-3',message:'塑能學者：請選擇兩個起始法術。'});
   const choiceReady = choiceIssues.length === 0;
   const preview = choiceReady ? applyChoices(choiceCharacter, effectiveSelections, flowCatalog, 'level', !deferChoices && !subclassOnly) : rawPreview;
+
+  const displayedFeatures = initial.classNameEn==='Druid' ? [...newFeatures.filter(f=>!['Primal Strike','Potent Spellcasting','Subclass Feature'].includes(f.nameEn)),...preview.features.filter(f=>f.source.endsWith(`Lv${plan.targetLevel}`)&&!newFeatures.some(n=>n.nameEn===f.nameEn))] : newFeatures;
 
   /**
    * 草稿的鍵帶角色 id 與目標等級：切到別的角色、或這一級已經升完，
@@ -557,7 +561,7 @@ function LevelUpForm({
           </div>
         )}
         <p className="mt-3 text-small text-text-secondary">
-          最大生命值 {initial.maxHp} → <span className="text-gold">{preview.maxHp}</span>
+          最大生命值（含本次能力值提升）{initial.maxHp} → <span className="text-gold">{preview.maxHp}</span>
           {conHpBonus > 0 && `（含體質提升：${plan.targetLevel} 級共 +${conHpBonus} HP）`}
           {plan.speciesHpPerLevel > 0 &&
             `（含${initial.species}每級 +${plan.speciesHpPerLevel}）`}
@@ -807,11 +811,11 @@ function LevelUpForm({
         <label className="flex min-h-11 items-center gap-2 text-small text-text-secondary"><input type="checkbox" checked={deferChoices} onChange={e=>setDeferChoices(e.target.checked)} className="accent-gold"/>尚未開始的舊選項稍後到「成長選擇」補齊</label>
         {!choiceReady && <ul role="alert" className="list-disc space-y-1 pl-5 text-small text-danger">{[...new Set(choiceIssues.map(i => i.message))].map(message => <li key={message}>{message}</li>)}</ul>}
       </>}
-      {newFeatures.length > 0 && (
+      {displayedFeatures.length > 0 && (
         <>
           <SectionTitle en="NEW FEATURES" cn="本級獲得" />
           <ParchmentCard className="px-4">
-            {newFeatures.map((f, i) => (
+            {displayedFeatures.map((f, i) => (
               <details
                 key={`${f.name}-${i}`}
                 className={`py-2 ${i > 0 ? 'border-t border-border/40' : ''}`}
