@@ -174,6 +174,10 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
         throw new Error(issues.map(i => i.message).join(' '));
     const groups = choiceGroups(c, catalog, selections);
     const active = Object.fromEntries(groups.filter(g => selections[g.id] && selections[g.id].length >= (g.minCount??g.count) && selections[g.id].length <= g.count).map(g => [g.id, selections[g.id]]));
+    for(const g of groups)if(g.legacyDuplicateIds){
+        const kept=(selections[`keep-duplicate:${g.id}`]??[]).filter(id=>g.legacyDuplicateIds!.includes(id)&&(active[g.id]??[]).includes(id));
+        if(kept.length)active[`keep-duplicate:${g.id}`]=kept;
+    }
     const features: CharacterFeature[] = c.features.filter(f => !f.progressionSource);
     const oldResources = c.resources.filter(r => r.progressionSource);
     const resources: ClassResource[] = c.resources.filter(r => !r.progressionSource);

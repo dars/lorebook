@@ -23,6 +23,7 @@ export type ChoiceGroup = {
     level: number;
     count: number;
     minCount?: number;
+    legacyDuplicateIds?: string[];
     options: Option[];
     kind: 'feature' | 'skill' | 'expertise' | 'tool' | 'language' | 'spell' | 'book' | 'form' | 'mixed';
     detail?: string;
@@ -263,6 +264,17 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
         const priorOwners=groups.filter(x=>x.kind==='spell'&&c.progression?.selections[x.id]?.includes(o.id));
         const duplicateLegacy=priorOwners.length>1&&priorOwners[priorOwners.length-1].id!==g.id;
         if(duplicateLegacy||((other||known)&&!c.progression?.selections[g.id]?.includes(o.id)))o.disabledReason='角色已由其他來源學會此戲法，請選另一個';
+    }
+    // 內容範圍內已無新戲法時，讓玩家明確保留舊來源，不假造第八個法術。
+    for(const g of groups.filter(g=>g.kind==='spell')){
+        const old=c.progression?.selections[g.id]??[];
+        const duplicates=g.options.filter(o=>old.includes(o.id)&&o.disabledReason==='角色已由其他來源學會此戲法，請選另一個');
+        const alternatives=g.options.filter(o=>!o.disabledReason&&!values(g.id).includes(o.id));
+        if(duplicates.length&&!alternatives.length){
+            g.legacyDuplicateIds=duplicates.map(o=>o.id);
+            g.detail=[g.detail,'目前清單沒有可補選的不同戲法。可保留既有重複選擇並繼續保存；不同戲法總數不會因此增加，日後仍可依替換規則調整來源。'].filter(Boolean).join(' ');
+            for(const o of duplicates)if(values(`keep-duplicate:${g.id}`).includes(o.id))delete o.disabledReason;
+        }
     }
     const discoveries = groups.find(g => g.id === 'lore-spells');
     if (discoveries) for (const o of discoveries.options) {

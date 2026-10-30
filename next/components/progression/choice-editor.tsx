@@ -28,6 +28,7 @@ export function ChoiceEditor({ character, catalog, value: rawValue, onChange, co
     {always.size>0&&<p role="status" className="mb-3 text-small text-gold">目前已準備 {(value.prepared?.length??0)+always.size} 個法術：一般準備 {value.prepared?.length??0} 個 ＋ 始終準備 {always.size} 個（不占名額）。空出的名額可稍後補選，原有法術仍可施放。</p>}
     {groups.some(g=>g.id.startsWith('background-origin/')&&g.id.endsWith('/list'))&&<p className="mb-2 text-small text-text-secondary">{groups.some(g=>g.id==='human-origin/list')?'背景與人類專長各自授予一組法術新手，都需要分別選擇施法屬性、2 個戲法與 1 個一環法術。':'背景法術新手還需選擇施法屬性、2 個戲法與 1 個一環法術。'}完成數包含這些細項。</p>}
     {originHints.map(h=><p key={h.label} className="mb-1 text-small text-gold">{h.label}尚缺：{h.missing.join('、')}</p>)}
+    {groups.filter(g=>g.legacyDuplicateIds?.length).map(g=><label key={g.id} className="mb-3 flex min-h-11 items-start gap-2 border-l-2 border-gold pl-3 text-small text-text-secondary"><input type="checkbox" className="mt-1" checked={g.legacyDuplicateIds!.every(id=>value[`keep-duplicate:${g.id}`]?.includes(id))} onChange={e=>onChange({...value,[`keep-duplicate:${g.id}`]:e.target.checked?g.legacyDuplicateIds!:[]})}/><span>{g.title}：沒有其他可選戲法。保留既有重複選擇並允許保存（不同戲法總數不會增加；不消耗替換額度）。</span></label>)}
     {notice&&<p role="status" className="my-2 text-small text-gold">{notice}</p>}
     <div className="divide-y divide-border-2">{groups.map(g => <Group key={g.id} group={g} character={character} value={value[g.id] ?? []} onChange={v => change(g.id,v)} context={context} issues={issues.filter(i => i.group === g.id).map(i => i.message)}/>)}</div>
   </section>;
