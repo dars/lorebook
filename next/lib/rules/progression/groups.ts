@@ -254,9 +254,12 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
         if (g)
             g.options = g.options.filter(o => ids.has(o.id));
     }
-    for(const g of groups.filter(g=>g.id.endsWith('/cantrips'))) for(const o of g.options){
+    // 所有戲法來源雙向檢查：職業、職責、專長與子職皆不能用新名額重複學習。
+    for(const g of groups.filter(g=>g.kind==='spell')) for(const o of g.options){
+        const spell=catalog.spells.find(s=>s.id===o.id);
+        if(spell?.level!==0)continue;
         const other=groups.some(x=>x.kind==='spell'&&x.id!==g.id&&values(x.id).includes(o.id));
-        const known=c.cantrips.some(x=>!x.homebrewId&&!x.progressionSource&&sameSpellName(x.nameEn,catalog.spells.find(v=>v.id===o.id)?.eng_name??''));
+        const known=c.cantrips.some(x=>!x.homebrewId&&x.progressionSource!==g.id&&(!!x.progressionSource||g.id!=='cantrips')&&sameSpellName(x.nameEn,spell.eng_name??''));
         if((other||known)&&!c.progression?.selections[g.id]?.includes(o.id))o.disabledReason='角色已由其他來源學會此戲法，請選另一個';
     }
     const discoveries = groups.find(g => g.id === 'lore-spells');

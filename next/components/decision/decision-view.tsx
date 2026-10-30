@@ -298,15 +298,15 @@ export function DecisionView({
               title="短休"
               subtitle="職業能力"
               onConfirm={() => characterActions.shortRest()}
-              confirm={c.classNameEn==='Barbarian'?'短休恢復 1 次狂暴，並結束目前的狂暴。':'短休將回復標記為短休的職業資源。'}
+              confirm={c.classNameEn==='Barbarian'?'短休恢復 1 次狂暴，並結束目前的狂暴。':c.classNameEn==='Cleric'?'短休恢復 1 次引導神力，以及其他短休資源。':'短休將回復標記為短休的職業資源。'}
               doneHint="短休資源已回復"
             />
             <RestButton
               title="長休"
               subtitle="完全恢復"
               onConfirm={() => characterActions.longRest()}
-              confirm="長休將回滿 HP、法術位、職業資源，清除臨時 HP，降低 1 級力竭，並回復全部生命骰。"
-              doneHint="HP、法術位與資源已回滿，專注已結束"
+              confirm={`長休將回滿 HP、法術位、一般職業資源，清除臨時 HP，降低 1 級力竭，並回復全部生命骰。${(c.divineInterventionRests??0)>0?`神聖介入等待減少 1 次長休，完成後剩餘 ${Math.max(0,(c.divineInterventionRests??0)-1)} 次。`:''}`}
+              doneHint={(c.divineInterventionRests??0)>0?`長休完成；神聖介入還需 ${c.divineInterventionRests} 次長休。`:'HP、法術位與資源已回滿，專注已結束'}
             />
           </div>
           <WizardRest c={c}/>

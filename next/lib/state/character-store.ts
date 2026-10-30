@@ -1,4 +1,5 @@
 'use client';
+import { interventionAfterLongRest } from '@/lib/rules/cleric';
 import { rageActive } from '@/lib/rules/barbarian';
 import { shortRestResource } from '@/lib/rules/paladin';
 import { beginChoiceRest } from '@/lib/rules/progression/engine';
@@ -168,7 +169,8 @@ export const characterActions = {
         mageArmorActive: false,
         raging: false,
         spellSlots: c.spellSlots.map((s) => ({ ...s, used: 0 })),
-        resources: c.resources.map((r) => ({ ...r, current: r.max })),
+        resources: c.resources.map((r) => interventionAfterLongRest(c,r)),
+        ...(c.divineInterventionRests!==undefined?{divineInterventionRests:Math.max(0,c.divineInterventionRests-1)}:{}),
         exhaustionLevel: clamp(c.exhaustionLevel - 1, 0, 6),
         hitDiceUsed: clamp(c.hitDiceUsed - regain, 0, c.level),
       };

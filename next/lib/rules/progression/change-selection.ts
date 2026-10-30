@@ -18,5 +18,7 @@ export function changeSelection(c:Character,catalog:ChoiceCatalog,current:Select
    });
   }
  }
- return {value:next,removed};
+ const normalized=normalizePreparedSelections(c,next,catalog.spells);
+ const promoted=(value.prepared??[]).filter(id=>!(normalized.prepared??[]).includes(id)).map(id=>catalog.spells.find(s=>s.id===id)?.name??id);
+ return {value:normalized,removed,promoted};
 }
