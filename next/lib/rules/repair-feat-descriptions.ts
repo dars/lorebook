@@ -4,6 +4,7 @@ import type { Character } from '@/lib/domain/character';
 export function repairFeatDescriptions(c: Character): Character {
   return { ...c, features: c.features.map(f => {
     if (f.isCustom) return f;
+    if(f.nameEn==='Savage Attacker'||f.name==='野蠻攻擊者')f={...f,name:'野蠻打擊'};
     let description = f.description;
     if (f.nameEn === 'Skilled' || ['技藝精湛', '熟練'].includes(f.name))
       description = description.replaceAll("type=tool;artisan's tools;instrument;gaming set", '工具');

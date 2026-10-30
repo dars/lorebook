@@ -57,9 +57,9 @@ export const GUIDE_CLASSES: GuideClass[] = [
   },
   {
     en: 'Rogue', cn: '盜賊', page: 61, endPage: 64,
-    features: { 1: '偷襲 Sneak Attack・盜賊黑話 Thieves’ Cant', 2: '靈巧動作 Cunning Action', 3: '穩定瞄準 Steady Aim', 5: '狡詐打擊 Cunning Strike・直覺閃避 Uncanny Dodge', 7: '迴避閃避 Evasion・可靠才能 Reliable Talent', 11: '精通狡詐打擊 Improved Cunning Strike', 14: '詭詐打擊 Devious Strikes', 15: '圓滑心智 Slippery Mind', 18: '飄忽不定 Elusive', 20: '幸運一擊 Stroke of Luck' },
-    subclass: { name: '竊賊 Thief', page: 64, features: { 3: '快手 Fast Hands・梁上君子 Second-Story Work', 9: '高等潛行 Supreme Sneak', 13: '使用魔法裝置 Use Magic Device', 17: '竊賊反射 Thief’s Reflexes' } },
-    reminders: ['長休後可重選精通武器種類（僅限簡易武器或具靈巧／輕型屬性的軍用武器）。', '狡詐打擊與詭詐打擊的效果，是偷襲時支付傷害骰選用；不需在升級時永久挑選。'],
+    features: { 1: '偷襲 Sneak Attack・盜賊黑話 Thieves’ Cant', 2: '靈巧動作 Cunning Action', 3: '穩定瞄準 Steady Aim', 5: '狡詐打擊 Cunning Strike・直覺閃避 Uncanny Dodge', 7: '迴避閃避 Evasion・可靠才能 Reliable Talent', 11: '精進狡詐打擊 Improved Cunning Strike', 14: '陰險打擊 Devious Strikes', 15: '心靈滑溜 Slippery Mind', 18: '難以捉摸 Elusive', 20: '幸運一擊 Stroke of Luck' },
+    subclass: { name: '竊賊 Thief', page: 64, features: { 3: '快手 Fast Hands・飛簷走壁 Second-Story Work', 9: '至高潛行 Supreme Sneak', 13: '使用魔法裝置 Use Magic Device', 17: '竊賊反射 Thief’s Reflexes' } },
+    reminders: ['長休後可重選精通武器種類（僅限簡易武器或具靈巧／輕型屬性的軍用武器）。', '狡詐打擊與陰險打擊的效果，是偷襲時支付傷害骰選用；不需在升級時永久挑選。'],
   },
   {
     en: 'Sorcerer', cn: '術士', page: 64, endPage: 70,

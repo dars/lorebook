@@ -1,3 +1,4 @@
+import {sneakDice} from './rogue';
 import {martialArtsActive,martialDie,monkWeapon} from './monk';
 import { rageActive, rageDamage } from './barbarian';
 import type { Character } from '@/lib/domain/character';
@@ -18,6 +19,8 @@ export type AttackEntry = {
   unarmed: boolean;
   /** 武器屬性標籤（thrown/versatile…），展開卡片時顯示。 */
   properties: string[];
+  sneakAttack?: string;
+  mastery?: string;
 };
 
 /**
@@ -70,6 +73,8 @@ export function attackEntries(c: Character): AttackEntry[] {
       quantity: e.quantity,
       unarmed: false,
       properties: e.properties,
+      ...(c.classNameEn==='Rogue'&&(e.finesse||ranged)?{sneakAttack:`${sneakDice(c.level)}d6`}:{}),
+      ...weaponMastery(c,e.nameEn),
     });
   }
 
@@ -90,4 +95,11 @@ export function attackEntries(c: Character): AttackEntry[] {
 export function attacksPerAction(c:Character):number {
  if(c.classNameEn==='Fighter')return c.level>=20?4:c.level>=11?3:c.level>=5?2:1;
  return ['Barbarian','Monk','Paladin','Ranger'].includes(c.classNameEn)&&c.level>=5?2:1;
+}
+
+function weaponMastery(c:Character,name:string):{mastery?:string}{
+ const feature=c.features.find(f=>!f.isCustom&&f.nameEn===name&&(f.progressionSource==='mastery'||f.name.startsWith('武器精通')));
+ if(!feature)return {};
+ const property=feature.description.match(/\b(Cleave|Graze|Nick|Push|Sap|Slow|Topple|Vex)\b/i)?.[0];
+ return property?{mastery:property}:{};
 }

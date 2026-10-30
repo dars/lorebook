@@ -27,7 +27,7 @@ export const METAMAGIC = opts([
     'Transmuted Spell|轉化法術|1 術法點；強酸、寒冷、火焰、閃電、毒素、雷鳴之間替換傷害類型。',
     'Twinned Spell|孿生法術|1 術法點；對升環可增加目標的法術，視為提高一環。',
 ]);
-export const ORIGINS = opts(['Alert|警覺|先攻加入熟練加值，可與自願同伴交換先攻。', 'Magic Initiate|法術新手|選牧師／德魯伊／法師清單：2 戲法、1 一環法術與施法屬性。', 'Savage Attacker|野蠻攻擊者|每回合一次武器命中，可擲兩組武器傷害骰並取其一。', 'Skilled|熟練|任選三項技能或工具熟練，可重複取得。']);
+export const ORIGINS = opts(['Alert|警覺|先攻加入熟練加值，可與自願同伴交換先攻。', 'Magic Initiate|法術新手|選牧師／德魯伊／法師清單：2 戲法、1 一環法術與施法屬性。', 'Savage Attacker|野蠻打擊|每回合一次武器命中，可擲兩組武器傷害骰並取其一。', 'Skilled|熟練|任選三項技能或工具熟練，可重複取得。']);
 export const INVOCATIONS: Option[] = [
     ...opts(['Armor of Shadows|陰影護甲|可對自己無限施放法師護甲。', 'Eldritch Mind|祕法心智|維持專注的體質豁免有優勢。', 'Pact of the Blade|魔刃契約|以附贈動作建立契約武器，可使用魅力攻擊。', 'Pact of the Chain|魔鏈契約|取得尋獲魔寵，可用魔法動作免費施放。', 'Pact of the Tome|魔書契約|休息後召喚魔書，選 3 戲法與 2 個一環儀式。']),
     ...opts(['Devil’s Sight|魔鬼視界|120 呎內可正常看見微光及魔法與非魔法黑暗。', 'Fiendish Vigor|邪魔活力|無限施放虛假生命，獲得最大暫時生命值。', 'Mask of Many Faces|千面之貌|無限施放易容術。', 'Misty Visions|迷霧幻象|無限施放無聲幻影。', 'Otherworldly Leap|異界躍動|對自己無限施放跳躍術。']).map(x => ({ ...x, level: 2 })),

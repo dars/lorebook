@@ -17,12 +17,15 @@ export function ChoiceEditor({ character, catalog, value: rawValue, onChange, co
     const value=normalizePreparedSelections(character,rawValue,catalog.spells);
     const groups = choiceGroups(character, catalog, value);
     const issues = validateChoices(character, value, catalog, context);
-    const complete = groups.filter(g => (value[g.id]?.length ?? 0) >= (g.minCount??g.count) && (value[g.id]?.length??0)<=g.count && !issues.some(i=>i.group===g.id)).length;
+    const historical=groups.filter(g=>context==='level'&&g.level<character.level&&!replacementLimit(character,g,context)&&!issues.some(i=>i.group===g.id)&&(character.progression?.selections[g.id]?.length??0)>=g.count);
+    const visible=groups.filter(g=>!historical.includes(g));
+    const renderGroup=(g:ChoiceGroup)=><Group key={g.id} group={g} character={character} value={value[g.id] ?? []} onChange={v => change(g.id,v)} context={context} issues={issues.filter(i => i.group === g.id).map(i => i.message)}/>;
+    const complete = visible.filter(g => (value[g.id]?.length ?? 0) >= (g.minCount??g.count) && (value[g.id]?.length??0)<=g.count && !issues.some(i=>i.group===g.id)).length;
     const always=new Set([...groups.filter(g=>g.kind==='spell'&&g.always).flatMap(g=>(value[g.id]??[]).filter(id=>catalog.spells.some(s=>s.id===id&&s.level>0))),...catalog.spells.filter(s=>s.level>0&&automaticSpellNames(character,value).includes(s.eng_name??'')).map(s=>s.id)]);
     const originHints=['background-origin','human-origin'].filter(source=>groups.some(g=>g.id===source+'/list')).map(source=>({label:source==='background-origin'?'背景法術新手':'人類法術新手',missing:groups.filter(g=>g.id.startsWith(source+'/')&&(value[g.id]?.length??0)<g.count).map(g=>`${g.title.split(' · ').at(-1)} ${value[g.id]?.length??0}/${g.count}`)})).filter(x=>x.missing.length);
     const change=(id:string,ids:string[])=>{const result=changeSelection(character,catalog,value,id,ids);onChange(result.value);if(result.promoted.length)setNotice(`已改為始終準備：${result.promoted.join('、')}。法術仍保留，新來源與免費施放資格會一併記錄；釋出的職業準備名額可另選法術。`);else if(id.endsWith('/list'))setNotice(result.removed.length?`已切換法術清單，清除不適用的舊選擇：${result.removed.join('、')}。請補選空出的名額。`:'已切換法術清單，仍符合資格的選擇已保留。');};
     return <section aria-label="成長選擇" className="my-4">
-    <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-border pb-2"><h2 className="font-cjk text-body font-bold text-gold">成長選擇</h2><span className="text-small text-text-secondary">{complete} / {groups.length} 項完成</span></div>
+    <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-border pb-2"><h2 className="font-cjk text-body font-bold text-gold">成長選擇</h2><span className="text-small text-text-secondary">{complete} / {visible.length} 項完成</span></div>
     <p className="mb-3 text-small leading-relaxed text-text-secondary">點選項目即可選取，再點一次取消。已選內容留在原位。既有法術選入名額後會歸到該來源，其他手動與自創內容會保留。{context === 'creation' && '起始組合會自動穿戴護甲並啟用武器，之後可在物品頁調整。'}</p>
     {character.classNameEn==='Bard'&&character.level>=10&&<aside className="mb-3 border-l-2 border-gold pl-3 text-small"><strong className="text-gold">魔法奧祕 · 10 級已解鎖</strong><p className="text-text-secondary">新增或替換的已備法術可從詩人、牧師、德魯伊、法師清單選擇，共用已備名額。每次升級可替換 1 個舊法術。</p><a href="#choice-prepared" className="inline-flex min-h-11 items-center text-gold underline">前往已備法術選擇</a></aside>}
     {always.size>0&&<p role="status" className="mb-3 text-small text-gold">目前已準備 {(value.prepared?.length??0)+always.size} 個法術：一般準備 {value.prepared?.length??0} 個 ＋ 始終準備 {always.size} 個（不占名額）。空出的名額可稍後補選，原有法術仍可施放。</p>}
@@ -30,7 +33,8 @@ export function ChoiceEditor({ character, catalog, value: rawValue, onChange, co
     {originHints.map(h=><p key={h.label} className="mb-1 text-small text-gold">{h.label}尚缺：{h.missing.join('、')}</p>)}
     {groups.filter(g=>g.legacyDuplicateIds?.length).map(g=><label key={g.id} className="mb-3 flex min-h-11 items-start gap-2 border-l-2 border-gold pl-3 text-small text-text-secondary"><input type="checkbox" className="mt-1" checked={g.legacyDuplicateIds!.every(id=>value[`keep-duplicate:${g.id}`]?.includes(id))} onChange={e=>onChange({...value,[`keep-duplicate:${g.id}`]:e.target.checked?g.legacyDuplicateIds!:[]})}/><span>{g.title}：沒有其他可選戲法。保留既有重複選擇並允許保存（不同戲法總數不會增加；不消耗替換額度）。</span></label>)}
     {notice&&<p role="status" className="my-2 text-small text-gold">{notice}</p>}
-    <div className="divide-y divide-border-2">{groups.map(g => <Group key={g.id} group={g} character={character} value={value[g.id] ?? []} onChange={v => change(g.id,v)} context={context} issues={issues.filter(i => i.group === g.id).map(i => i.message)}/>)}</div>
+    <div className="divide-y divide-border-2">{visible.map(renderGroup)}</div>
+    {historical.length>0&&<details className="mt-3 border-t border-border text-small"><summary className="min-h-11 cursor-pointer py-3 text-text-secondary">先前已完成的選擇 · {historical.length} 項</summary>{historical.map(renderGroup)}</details>}
   </section>;
 }
 function Group({ group: g, character: c, value, onChange, context, issues }: {

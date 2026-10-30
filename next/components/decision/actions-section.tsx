@@ -1,5 +1,6 @@
 'use client';
 
+import {RoguePowers} from './rogue-powers';
 import {MonkPowers} from './monk-powers';
 import {monkPowers} from '@/lib/rules/monk';
 import { useState } from 'react';
@@ -43,19 +44,13 @@ const OTHER_ACTIONS: OtherAction[] = [
 ];
 
 function attackCard(a: AttackEntry, i: number) {
-  return (
-    <EntryCard
-      key={`${a.name}-${i}`}
-      badge="攻"
-      title={a.quantity > 1 ? `${a.name} ×${a.quantity}` : a.name}
-      subtitle={a.nameEn}
-      meta={a.hitBonus === null ? null : `命中 ${a.hitBonus >= 0 ? '+' : ''}${a.hitBonus}`}
-      value={a.damage}
+  return <div key={`${a.name}-${i}`}>
+    <EntryCard badge="攻" title={a.quantity > 1 ? `${a.name} ×${a.quantity}` : a.name} subtitle={a.nameEn}
+      meta={a.hitBonus === null ? null : `命中 ${a.hitBonus >= 0 ? '+' : ''}${a.hitBonus}`} value={a.damage}
       valueClass={a.damage ? damageClass(a.damageType) : 'text-gold-dim'}
-      description={a.properties.length > 0 ? a.properties.join(' · ') : null}
-      emphasizeBadge
-    />
-  );
+      description={[...a.properties,a.mastery?`武器精通：${a.mastery}${a.mastery.toLowerCase()==='nick'?' — 輕型武器的額外攻擊可納入攻擊動作，不耗附贈動作；每回合一次。':a.mastery.toLowerCase()==='vex'?' — 命中並造成傷害後，你對該目標的下一次攻擊有優勢，須在下回合結束前使用。':''}`:''].filter(Boolean).join(' · ')||null} emphasizeBadge/>
+    {(a.sneakAttack||a.mastery)&&<p className="px-3 py-1 text-small text-gold">{[a.mastery?`精通 ${a.mastery}`:'',a.sneakAttack?`偷襲 +${a.sneakAttack}（符合條件時）`:''].filter(Boolean).join(' · ')}</p>}
+  </div>;
 }
 
 
@@ -242,6 +237,7 @@ export function ActionsSection({
           )}
 
           {paladin.some(p=>p.kind==='action'||p.kind==='free'||p.kind==='passive') && <Category label="職業能力" count={`${paladin.filter(p=>p.kind!=='bonus').length} 項`} open={!collapsed.has('cat.paladin')} onToggle={()=>toggle('cat.paladin')}><PaladinPowers c={c} kind="action"/><PaladinPowers c={c} kind="free"/><PaladinPowers c={c} kind="passive"/></Category>}
+          {c.classNameEn==='Rogue'&&<Category label="盜賊能力" count="偷襲與效果" open={!collapsed.has('cat.rogue')} onToggle={()=>toggle('cat.rogue')}><RoguePowers c={c} kind="other"/></Category>}
           {c.classNameEn==='Monk'&&<Category label="武僧能力" count="專注與效果" open={!collapsed.has('cat.monk')} onToggle={()=>toggle('cat.monk')}><MonkPowers c={c} kind="other"/></Category>}
           {c.classNameEn==='Druid'&&c.level>=2&&<Category label="德魯伊能力" count="動作與資源" open={!collapsed.has('cat.druid')} onToggle={()=>toggle('cat.druid')}><DruidPowers c={c}/></Category>}
           {cleric.length>0&&<Category label="牧師能力" count={`${cleric.length} 項魔法動作`} open={!collapsed.has('cat.cleric')} onToggle={()=>toggle('cat.cleric')}><ClericPowers c={c}/></Category>}
@@ -273,19 +269,19 @@ export function ActionsSection({
           en="BONUS ACTION"
           cn="附贈動作"
           summary={
-            bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && !(c.classNameEn==='Druid'&&c.level>=2)
+            bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && !(c.classNameEn==='Rogue'&&c.level>=2) && !(c.classNameEn==='Druid'&&c.level>=2)
               ? '無可用'
-              : [...monk.filter(p=>p.kind==='bonus'), ...(c.classNameEn==='Druid'&&c.level>=2?[{name:'荒野變身'}]:[]), ...(c.classNameEn==='Barbarian'?[{name:'狂暴'}]:[]), ...bonusFeatures, ...bonusSpells, ...paladin.filter(p=>p.kind==='bonus'), ...bard.filter(p=>p.kind==='bonus')].map((s) => s.name).join('・')
+              : [...(c.classNameEn==='Rogue'&&c.level>=2?[{name:'靈巧動作'},{name:c.level>=3?'穩定瞄準':''}]:[]), ...monk.filter(p=>p.kind==='bonus'), ...(c.classNameEn==='Druid'&&c.level>=2?[{name:'荒野變身'}]:[]), ...(c.classNameEn==='Barbarian'?[{name:'狂暴'}]:[]), ...bonusFeatures, ...bonusSpells, ...paladin.filter(p=>p.kind==='bonus'), ...bard.filter(p=>p.kind==='bonus')].map((s) => s.name).join('・')
           }
         >
           <div className="flex flex-col gap-2">
-            <MonkPowers c={c} kind="bonus"/>
+            <RoguePowers c={c} kind="bonus"/><MonkPowers c={c} kind="bonus"/>
             <RageControl c={c}/>
             <DruidPowers c={c} bonusOnly/>
             <BardPowers c={c} kind="bonus"/>
             {bonusFeatures.map(featureCard)}
             <PaladinPowers c={c} kind="bonus"/>
-            {bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && !(c.classNameEn==='Druid'&&c.level>=2) ? (
+            {bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && !(c.classNameEn==='Rogue'&&c.level>=2) && !(c.classNameEn==='Druid'&&c.level>=2) ? (
               <EntryCard badge="贈" title="無附贈動作" subtitle="No Bonus Actions" />
             ) : (
               bonusSpells.map((s) => (
@@ -300,10 +296,10 @@ export function ActionsSection({
         <CollapsibleSection
           en="REACTION"
           cn="反應"
-          summary={[...reactionSpells.map((s) => s.name), ...bard.filter(p=>p.kind==='reaction').map(p=>p.name), '機會攻擊'].join('・')}
+          summary={[...(c.classNameEn==='Rogue'&&c.level>=5?['直覺閃避']:[]), ...reactionSpells.map((s) => s.name), ...bard.filter(p=>p.kind==='reaction').map(p=>p.name), '機會攻擊'].join('・')}
         >
           <div className="flex flex-col gap-2">
-            <MonkPowers c={c} kind="reaction"/>
+            <RoguePowers c={c} kind="reaction"/><MonkPowers c={c} kind="reaction"/>
             <BardPowers c={c} kind="reaction"/>
             {isBerserker(c)&&c.classNameEn==='Barbarian'&&c.level>=10&&<EntryCard badge="反" title="報復" subtitle="Retaliation" value="1 次近戰攻擊" description="受到 5 呎內生物的傷害時，可用反應以武器或徒手對其進行一次近戰攻擊。"/>}
             {reactionSpells.map((s) => (

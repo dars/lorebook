@@ -387,7 +387,8 @@
         "damageType": "piercing",
         "quantity": 1,
         "unarmed": false,
-        "properties": []
+        "properties": [],
+        "sneakAttack": "1d6"
       },
       {
         "name": "徒手攻擊",
@@ -531,7 +532,8 @@
         "damageType": "piercing",
         "quantity": 1,
         "unarmed": false,
-        "properties": []
+        "properties": [],
+        "sneakAttack": "1d6"
       },
       {
         "name": "徒手攻擊",

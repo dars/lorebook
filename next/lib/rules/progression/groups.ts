@@ -320,6 +320,11 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
                 if (skillName && (c.skills.some(s => s.nameEn === skillName && s.proficient && !c.progression?.grantedSkills.includes(skillName)) || groups.some(other => other.id !== g.id && (other.kind === 'skill' && values(other.id).includes(skillName) || other.kind === 'mixed' && values(other.id).includes(o.id)))))
                     o.disabledReason = '此技能已熟練，請選另一項';
             }
+            if (g.kind === 'expertise') {
+                const other = groups.some(x=>x.kind==='expertise'&&x.id!==g.id&&values(x.id).includes(o.id));
+                const own = c.progression?.selections[g.id]?.includes(o.id);
+                if(other || (!own && c.skills.some(s=>s.nameEn===o.id&&s.expertise))) o.disabledReason='此技能已專精，請選另一項';
+            }
             if (g.kind === 'expertise' && !c.skills.some(s => s.nameEn === o.id && s.proficient) && !pendingSkills.includes(o.id))
                 o.disabledReason = '需要先取得此技能熟練';
             if (o.requires && !values(g.id).includes(o.requires))
