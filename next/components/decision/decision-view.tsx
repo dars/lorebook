@@ -906,7 +906,7 @@ function Pips({
                 : `${label} 第 ${i + 1} 格，已消耗；點擊回復至剩 ${i + 1} 格`
             }
             className={`relative size-4 rounded-full border before:absolute before:-inset-y-3 before:-inset-x-0.5 before:content-[''] ${
-              singleStep?`${label} 第 ${i+1} 格；點擊${filled?'消耗':'回復'}1格`:filled
+              filled
                 ? 'border-[#E0C56A] bg-gold hover:brightness-110'
                 : 'border-border bg-surface-2 hover:border-gold/60'
             }`}
