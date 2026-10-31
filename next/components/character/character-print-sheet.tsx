@@ -1,3 +1,4 @@
+import {effectiveSpellDc} from '@/lib/rules/sorcerer';
 import { featureSubtitle } from '@/lib/ui/feature-groups';
 import {cantripDamage} from '@/lib/rules/cantrip-damage';
 import { movementFeet } from '@/lib/rules/barbarian';
@@ -94,7 +95,7 @@ export function CharacterPrintSheet({ c }: { c: Character }) {
               {attackEntries(c).map((attack, i) => <tr key={i}><td>{attack.name}</td><td>{attack.hitBonus === null ? '—' : sign(attack.hitBonus)}</td><td>{[attack.damage, attack.damageType].filter(Boolean).join(' ') || '—'}</td></tr>)}
             </tbody></table>
           </Section>
-          {caster && <Section title="施法數值"><p>{c.spellcastingAbility || '—'} · 法術 DC {c.spellDc} · 命中 {sign(c.spellAttack)}</p></Section>}
+          {caster && <Section title="施法數值"><p>{c.spellcastingAbility || '—'} · 法術 DC {effectiveSpellDc(c)} · 命中 {sign(c.spellAttack)}</p></Section>}
           <Section title="戰鬥狀態" keepTogether>
             <div className={styles.quickRow}><span>先攻結果 <WriteLine /></span><span>英雄靈感 <PrintMarks count={1} label="英雄靈感" /></span></div>
             <p>死亡豁免</p>
@@ -127,7 +128,7 @@ export function CharacterPrintSheet({ c }: { c: Character }) {
       </PrintEntry>)}</Section>}
 
       {caster && <Section title="施法與法術">
-        <p>施法屬性：{c.spellcastingAbility || '—'} · 法術豁免 DC：{c.spellDc} · 法術命中：{sign(c.spellAttack)}</p>
+        <p>施法屬性：{c.spellcastingAbility || '—'} · 法術豁免 DC：{effectiveSpellDc(c)} · 法術命中：{sign(c.spellAttack)}</p>
         {c.spellSlots.length > 0 && <p className={styles.slots}>法術位（剩餘／上限）：{c.spellSlots.map((s) => `${s.level} 環 ${Math.max(0, s.total - s.used)} / ${s.total}`).join('　')}</p>}
         {spells.map((spell, i) => <PrintSpell key={i} spell={{...spell,damage:cantripDamage(spell,c.level)}} />)}
       </Section>}

@@ -1,3 +1,4 @@
+import {effectiveSpellDc,affinity} from '@/lib/rules/sorcerer';
 import type { ReactNode } from 'react';
 
 import { movementFeet } from '@/lib/rules/barbarian';
@@ -57,7 +58,7 @@ export function OverviewTab({
       icon: 'verified' as const,
     },
     { value: `${c.passivePerception}`, sub: '察覺', icon: 'eye' as const },
-    ...(c.spellDc > 0 ? [{ value: `${c.spellDc}`, sub: '法術 DC', icon: 'sparkle' as const }] : []),
+    ...(c.spellDc > 0 ? [{ value: `${effectiveSpellDc(c)}`, sub: '法術 DC', icon: 'sparkle' as const }] : []),
   ];
 
   return (
@@ -107,6 +108,8 @@ export function OverviewTab({
       </CollapsibleSection>
 
       {c.classNameEn==='Ranger'&&c.level>=6&&<p className="py-2 text-small text-gold">健行 · 攀爬 {movementFeet(c)} 呎 · 游泳 {movementFeet(c)} 呎{c.level>=18?' · 盲視30呎':''}</p>}
+      {affinity(c)&&<p className="py-2 text-small text-gold">元素親和 · {affinity(c)!.name}抗性 · 對應法術一次傷害擲骰＋{c.abilityScores.cha.modifier}</p>}
+      {c.dragonWingsActive&&<p className="py-2 text-small text-gold">龍翼 · 飛行60呎</p>}
       {share}
     </div>
   );

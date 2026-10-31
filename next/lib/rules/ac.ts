@@ -1,3 +1,4 @@
+import {draconic} from './sorcerer';
 import type { Character, Equipment } from '@/lib/domain/character';
 
 /**
@@ -128,6 +129,7 @@ export function computeAc(c: Character): AcResult {
       label = '無甲防禦';
     }
   }
+  if(draconic(c)){const v=10+dex+c.abilityScores.cha.modifier;if(v>value){value=v;label='龍族韌性';}}
   if (c.mageArmorActive) {
     const v = 13 + dex;
     if (v > value) {

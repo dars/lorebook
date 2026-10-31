@@ -1,4 +1,5 @@
 'use client';
+import {SorcererPowers} from './sorcerer-powers';
 import { movementFeet } from '@/lib/rules/barbarian';
 import {WizardMemory} from './wizard-memory';
 import {WizardRest} from './wizard-rest';
@@ -17,7 +18,7 @@ import { CollapsibleSection } from '@/components/ui/collapsible-section';
 import { ParchmentCard } from '@/components/ui/decorations';
 import type { Character } from '@/lib/domain/character';
 import { computeAc, knowsMageArmor, wearingArmor } from '@/lib/rules/ac';
-import { pipDelta, pipFilled } from '@/lib/rules/pips';
+import { pipDelta, pipFilled, singlePipDelta } from '@/lib/rules/pips';
 import {
   characterActions,
   useCharacterStore,
@@ -205,7 +206,7 @@ export function DecisionView({
                 <Pips
                   total={s.total}
                   used={s.used}
-                  label={`${s.level} 環法術位`}
+                  label={`${s.level} 環法術位`} singleStep
                   onChange={(d) => characterActions.adjustSpellSlot(s.level, d)}
                 />
                 <span className="ml-auto text-ui tabular-nums text-gold">
@@ -220,11 +221,11 @@ export function DecisionView({
                 </span>
                 {r.display === 'number' ? (
                   <span className="flex items-center gap-2">
-                    <StepBtn label={`${r.name} 減 5`} onClick={() => characterActions.adjustResource(r.name, -5)}>−5</StepBtn>
+                    <StepBtn label={`${r.name} 減 1`} onClick={() => characterActions.adjustResource(r.name, -1)}>−1</StepBtn>
                     <span className="text-ui tabular-nums text-gold">
                       {r.current}/{r.max} {r.unit}
                     </span>
-                    <StepBtn label={`${r.name} 加 5`} onClick={() => characterActions.adjustResource(r.name, 5)}>+5</StepBtn>
+                    <StepBtn label={`${r.name} 加 1`} onClick={() => characterActions.adjustResource(r.name, 1)}>+1</StepBtn>
                   </span>
                 ) : (
                   <>
@@ -254,6 +255,7 @@ export function DecisionView({
   const movement = (
       <CollapsibleSection en="MOVEMENT" cn="移動">
         <ParchmentCard className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3">
+          {c.dragonWingsActive&&<span className="text-small text-gold">龍翼 · 飛行60呎</span>}
           <MovementStat icon="walk" label="速度" feet={speedFt} />
           <MovementStat icon="dash" label="衝刺" feet={speedFt * 2} dim />
           {c.classNameEn==='Ranger'&&c.level>=6&&<span className="text-small text-gold">攀爬 {speedFt} 呎 · 游泳 {speedFt} 呎</span>}
@@ -299,8 +301,8 @@ export function DecisionView({
               title="短休"
               subtitle="職業能力"
               onConfirm={() => characterActions.shortRest()}
-              confirm={c.classNameEn==='Ranger'?'遊俠的宿敵、不知疲倦及自然面紗次數須長休恢復。10級起，短休降低1級力竭。':c.classNameEn==='Druid'?'短休恢復 1 次荒野變身；大地結社可在休息區另選自然復甦的法術位。':c.classNameEn==='Barbarian'?'短休恢復 1 次狂暴，並結束目前的狂暴。':c.classNameEn==='Cleric'?'短休恢復 1 次引導神力，以及其他短休資源。':'短休將回復標記為短休的職業資源。'}
-              doneHint={c.classNameEn==='Ranger'?(c.level>=10?'短休完成，力竭已減1級；遊俠能力次數須長休恢復。':'短休完成；宿敵次數須長休恢復。'):'短休資源已回復'}
+              confirm={c.classNameEn==='Sorcerer'?'短休不自動恢復術法點。5級起可在休息區使用術法回復，每長休一次。':c.classNameEn==='Ranger'?'遊俠的宿敵、不知疲倦及自然面紗次數須長休恢復。10級起，短休降低1級力竭。':c.classNameEn==='Druid'?'短休恢復 1 次荒野變身；大地結社可在休息區另選自然復甦的法術位。':c.classNameEn==='Barbarian'?'短休恢復 1 次狂暴，並結束目前的狂暴。':c.classNameEn==='Cleric'?'短休恢復 1 次引導神力，以及其他短休資源。':'短休將回復標記為短休的職業資源。'}
+              doneHint={c.classNameEn==='Sorcerer'?'短休完成；可於下方使用術法回復。':c.classNameEn==='Ranger'?(c.level>=10?'短休完成，力竭已減1級；遊俠能力次數須長休恢復。':'短休完成；宿敵次數須長休恢復。'):'短休資源已回復'}
             />
             <RestButton
               title="長休"
@@ -311,7 +313,7 @@ export function DecisionView({
             />
           </div>
           {c.classNameEn==='Ranger'&&<p className="py-2 text-small text-text-secondary">{c.level>=10?`不知疲倦：短休力竭減1級，目前${c.exhaustionLevel}級。`:''}宿敵、不知疲倦與自然面紗的使用次數在長休回滿，短休不恢復。</p>}
-          <WizardRest c={c}/>
+          <SorcererPowers c={c} kind="rest"/><WizardRest c={c}/>
           {persist && c.progression?.rest && <CharacterFlowLink href="/character-choices?mode=rest" className="mt-2 flex min-h-11 items-center justify-center text-small text-gold">調整休息後可替換的選項</CharacterFlowLink>}
         </ParchmentCard>
       </CollapsibleSection>
@@ -877,7 +879,9 @@ function Pips({
   used,
   onChange,
   label,
+  singleStep=false,
 }: {
+  singleStep?:boolean;
   total: number;
   used: number;
   onChange: (delta: number) => void;
@@ -887,7 +891,7 @@ function Pips({
     <span className="flex flex-wrap gap-1.5">
       {Array.from({ length: total }, (_, i) => {
         const filled = pipFilled(i, total, used);
-        const delta = pipDelta(i, total, used);
+        const delta = singleStep ? singlePipDelta(i, total, used) : pipDelta(i, total, used);
         return (
           // 16px 的格子太小點不準，但橫向擴張會與相鄰格重疊、反而更容易點錯。
           // 因此只往上下延伸（那個方向沒有鄰居），左右僅補滿 gap 的一半消除死區。
@@ -896,12 +900,12 @@ function Pips({
             type="button"
             onClick={() => onChange(delta)}
             aria-label={
-              filled
+              singleStep?`${label} 第 ${i+1} 格；點擊${filled?'消耗':'回復'}1格`:filled
                 ? `${label} 第 ${i + 1} 格，可用；點擊消耗至剩 ${i} 格`
                 : `${label} 第 ${i + 1} 格，已消耗；點擊回復至剩 ${i + 1} 格`
             }
             className={`relative size-4 rounded-full border before:absolute before:-inset-y-3 before:-inset-x-0.5 before:content-[''] ${
-              filled
+              singleStep?`${label} 第 ${i+1} 格；點擊${filled?'消耗':'回復'}1格`:filled
                 ? 'border-[#E0C56A] bg-gold hover:brightness-110'
                 : 'border-border bg-surface-2 hover:border-gold/60'
             }`}

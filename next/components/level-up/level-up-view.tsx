@@ -294,7 +294,7 @@ function LevelUpForm({
   const choiceReady = choiceIssues.length === 0;
   const preview = choiceReady ? applyChoices(choiceCharacter, effectiveSelections, flowCatalog, 'level', !deferChoices && !subclassOnly) : rawPreview;
 
-  const displayedFeatures = initial.classNameEn==='Druid' ? [...newFeatures.filter(f=>!['Primal Strike','Potent Spellcasting','Subclass Feature'].includes(f.nameEn)),...preview.features.filter(f=>f.source.endsWith(`Lv${plan.targetLevel}`)&&!newFeatures.some(n=>n.nameEn===f.nameEn))] : initial.classNameEn==='Ranger'?newFeatures.map(f=>preview.features.find(p=>!p.isCustom&&p.nameEn.replaceAll("'",'’')===f.nameEn.replaceAll("'",'’'))??f):newFeatures;
+  const displayedFeatures = initial.classNameEn==='Druid' ? [...newFeatures.filter(f=>!['Primal Strike','Potent Spellcasting','Subclass Feature'].includes(f.nameEn)),...preview.features.filter(f=>f.source.endsWith(`Lv${plan.targetLevel}`)&&!newFeatures.some(n=>n.nameEn===f.nameEn))] : ['Ranger','Sorcerer'].includes(initial.classNameEn)?newFeatures.map(f=>preview.features.find(p=>!p.isCustom&&p.nameEn.replaceAll("'",'’')===f.nameEn.replaceAll("'",'’'))??f):newFeatures;
 
   /**
    * 草稿的鍵帶角色 id 與目標等級：切到別的角色、或這一級已經升完，

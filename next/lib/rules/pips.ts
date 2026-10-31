@@ -27,3 +27,8 @@ export function pipDelta(index: number, total: number, used: number): number {
   const desired = pipFilled(index, total, used) ? index : index + 1;
   return desired - remaining;
 }
+
+/** 法術位逐次使用，避免誤觸第一格便消耗整排。 */
+export function singlePipDelta(index: number, total: number, used: number): number {
+  return pipFilled(index, total, used) ? -1 : 1;
+}

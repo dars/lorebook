@@ -63,7 +63,7 @@ export const GUIDE_CLASSES: GuideClass[] = [
   },
   {
     en: 'Sorcerer', cn: '術士', page: 64, endPage: 70,
-    features: { 1: '施法 Spellcasting・天生術法 Innate Sorcery', 2: '魔力之源 Font of Magic', 5: '術法恢復 Sorcerous Restoration', 7: '術法化身 Sorcery Incarnate', 20: '奧術昇華 Arcane Apotheosis' },
+    features: { 1: '施法 Spellcasting・天生術法 Innate Sorcery', 2: '魔力之泉 Font of Magic', 5: '術法恢復 Sorcerous Restoration', 7: '術法化身 Sorcery Incarnate', 20: '奧術神化 Arcane Apotheosis' },
     subclass: { name: '龍族術法 Draconic Sorcery', page: 69, features: { 3: '龍族韌性 Draconic Resilience・龍族法術', 5: '新增龍族法術', 7: '新增龍族法術', 9: '新增龍族法術', 14: '龍翼 Dragon Wings', 18: '巨龍伙伴 Dragon Companion' } },
     reminders: ['每升術士等級，可各替換 1 個戲法、1 個已備法術、1 個已知超魔選項。', '超魔在 2、10、17 級各新增 2 項，合計為 2／4／6 項；術法點總數不等於超魔選項數。'],
   },

@@ -1,4 +1,6 @@
 'use client';
+import {effectiveSpellDc} from '@/lib/rules/sorcerer';
+
 import { showCantrips } from '@/lib/rules/cantrips-visible';
 import type { ReactNode } from 'react';
 
@@ -95,7 +97,7 @@ function SpellcastingCard({ c }: { c: Character }) {
       v: abilityCn || '—',
       sub: c.spellcastingAbility ? `施法屬性 ${c.spellcastingAbility}` : '施法屬性',
     },
-    { en: 'SAVE DC', v: `${c.spellDc}`, sub: '法術豁免' },
+    { en: 'SAVE DC', v: `${effectiveSpellDc(c)}`, sub: '法術豁免' },
     {
       en: 'ATTACK',
       v: c.spellAttack >= 0 ? `+${c.spellAttack}` : `${c.spellAttack}`,

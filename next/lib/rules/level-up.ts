@@ -1,3 +1,4 @@
+import {backfillSorcerer} from './sorcerer';
 import {backfillRanger} from './ranger';
 import {backfillRogue} from './rogue';
 import {backfillMonk} from './monk';
@@ -214,8 +215,8 @@ export function applyLevelUp(
   const oldUsed = Object.fromEntries(c.spellSlots.map((s) => [s.level, s.used]));
   const spellSlots = Object.entries(plan.newSlotTotals).map(([lvl, total]) => ({
     level: Number(lvl),
-    total,
-    used: Math.min(Math.max(oldUsed[Number(lvl)] ?? 0, 0), total),
+    total: total+(c.sorceryCreatedSlots?.[lvl]??0),
+    used: Math.min(Math.max(oldUsed[Number(lvl)] ?? 0, 0), total+(c.sorceryCreatedSlots?.[lvl]??0)),
   }));
 
   const caster = c.spellcastingAbility !== '';
@@ -253,7 +254,7 @@ export function applyLevelUp(
     spells: [...c.spells, ...(choices.spells ?? [])],
     resources: syncClassResources(c.resources, c.classNameEn, target, newScores),
   };
-  return backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(c.progression ? recalculateChoiceSkills(result) : result))))))));
+  return backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(c.progression ? recalculateChoiceSkills(result) : result)))))))));
 }
 
 /**
