@@ -145,6 +145,8 @@ export const characterActions = {
   shortRest() {
     useCharacterStore.getState().update((c) => ({
       ...beginChoiceRest(c, 'short'),
+      exhaustionLevel: c.classNameEn==='Ranger'&&c.level>=10?Math.max(0,c.exhaustionLevel-1):c.exhaustionLevel,
+      rangerVeilActive:false,
       raging: false,
       resources: c.resources.map((r) =>
         shortRestResource(c, r),
@@ -172,6 +174,7 @@ export const characterActions = {
         currentHp: c.maxHp,
         tempHp: 0,
         concentrationSpell: null,
+        rangerVeilActive:false,
         mageArmorActive: false,
         raging: false,
         monkSuperiorDefense: false,

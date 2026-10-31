@@ -1,5 +1,6 @@
 'use client';
 
+import {RangerPowers} from './ranger-powers';
 import {RoguePowers} from './rogue-powers';
 import {MonkPowers} from './monk-powers';
 import {monkPowers} from '@/lib/rules/monk';
@@ -237,6 +238,7 @@ export function ActionsSection({
           )}
 
           {paladin.some(p=>p.kind==='action'||p.kind==='free'||p.kind==='passive') && <Category label="職業能力" count={`${paladin.filter(p=>p.kind!=='bonus').length} 項`} open={!collapsed.has('cat.paladin')} onToggle={()=>toggle('cat.paladin')}><PaladinPowers c={c} kind="action"/><PaladinPowers c={c} kind="free"/><PaladinPowers c={c} kind="passive"/></Category>}
+          {c.classNameEn==='Ranger'&&c.level>=10&&<Category label="遊俠能力" count="能力與感官" open={!collapsed.has('cat.ranger')} onToggle={()=>toggle('cat.ranger')}><RangerPowers c={c} kind="other"/></Category>}
           {c.classNameEn==='Rogue'&&<Category label="盜賊能力" count="偷襲與效果" open={!collapsed.has('cat.rogue')} onToggle={()=>toggle('cat.rogue')}><RoguePowers c={c} kind="other"/></Category>}
           {c.classNameEn==='Monk'&&<Category label="武僧能力" count="專注與效果" open={!collapsed.has('cat.monk')} onToggle={()=>toggle('cat.monk')}><MonkPowers c={c} kind="other"/></Category>}
           {c.classNameEn==='Druid'&&c.level>=2&&<Category label="德魯伊能力" count="動作與資源" open={!collapsed.has('cat.druid')} onToggle={()=>toggle('cat.druid')}><DruidPowers c={c}/></Category>}
@@ -269,19 +271,19 @@ export function ActionsSection({
           en="BONUS ACTION"
           cn="附贈動作"
           summary={
-            bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && !(c.classNameEn==='Rogue'&&c.level>=2) && !(c.classNameEn==='Druid'&&c.level>=2)
+            bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && !(c.classNameEn==='Ranger'&&c.level>=14) && !(c.classNameEn==='Rogue'&&c.level>=2) && !(c.classNameEn==='Druid'&&c.level>=2)
               ? '無可用'
-              : [...(c.classNameEn==='Rogue'&&c.level>=2?[{name:'靈巧動作'},{name:c.level>=3?'穩定瞄準':''}]:[]), ...monk.filter(p=>p.kind==='bonus'), ...(c.classNameEn==='Druid'&&c.level>=2?[{name:'荒野變身'}]:[]), ...(c.classNameEn==='Barbarian'?[{name:'狂暴'}]:[]), ...bonusFeatures, ...bonusSpells, ...paladin.filter(p=>p.kind==='bonus'), ...bard.filter(p=>p.kind==='bonus')].map((s) => s.name).join('・')
+              : [...(c.classNameEn==='Ranger'&&c.level>=14?[{name:'自然面紗'}]:[]), ...(c.classNameEn==='Rogue'&&c.level>=2?[{name:'靈巧動作'},{name:c.level>=3?'穩定瞄準':''}]:[]), ...monk.filter(p=>p.kind==='bonus'), ...(c.classNameEn==='Druid'&&c.level>=2?[{name:'荒野變身'}]:[]), ...(c.classNameEn==='Barbarian'?[{name:'狂暴'}]:[]), ...bonusFeatures, ...bonusSpells, ...paladin.filter(p=>p.kind==='bonus'), ...bard.filter(p=>p.kind==='bonus')].map((s) => s.name).join('・')
           }
         >
           <div className="flex flex-col gap-2">
-            <RoguePowers c={c} kind="bonus"/><MonkPowers c={c} kind="bonus"/>
+            <RangerPowers c={c} kind="bonus"/><RoguePowers c={c} kind="bonus"/><MonkPowers c={c} kind="bonus"/>
             <RageControl c={c}/>
             <DruidPowers c={c} bonusOnly/>
             <BardPowers c={c} kind="bonus"/>
             {bonusFeatures.map(featureCard)}
             <PaladinPowers c={c} kind="bonus"/>
-            {bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && !(c.classNameEn==='Rogue'&&c.level>=2) && !(c.classNameEn==='Druid'&&c.level>=2) ? (
+            {bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && !(c.classNameEn==='Ranger'&&c.level>=14) && !(c.classNameEn==='Rogue'&&c.level>=2) && !(c.classNameEn==='Druid'&&c.level>=2) ? (
               <EntryCard badge="贈" title="無附贈動作" subtitle="No Bonus Actions" />
             ) : (
               bonusSpells.map((s) => (

@@ -106,8 +106,10 @@ export function CoinAmount({
   coinSize = 16,
   className = '',
   textClassName = 'text-body',
+  goldOnly = false,
 }: {
   cp: number;
+  goldOnly?: boolean;
   coinSize?: number;
   className?: string;
   /** 數字的字級。外層 className 蓋不到它——數字有自己的 span。 */
@@ -116,7 +118,7 @@ export function CoinAmount({
   let rest = cp;
   const parts: [CoinCode, number][] = [];
   for (const [code, value] of [
-    ['pp', 1000],
+    ...(goldOnly ? [] : [['pp', 1000]]),
     ['gp', 100],
     ['sp', 10],
     ['cp', 1],

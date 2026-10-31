@@ -1,0 +1,28 @@
+import {describe,it,expect,afterEach} from 'vitest';
+import {Character,Equipment,parseCharacter} from '../domain/character';
+import {backfillRanger,favoredUses,isHuntersMark,rangerAction} from './ranger';
+import {movementFeet} from './barbarian';
+import {characterActions,useCharacterStore} from '../state/character-store';
+import {choiceGroups} from './progression/groups';
+import {validateChoices} from './progression/engine';
+import {startingOptions,applyStartingEquipment} from './progression/equipment';
+import {CatalogSpell,CatalogItem,CatalogFeat} from '../catalog/types';
+import {groupFeatures} from '../ui/feature-groups';
+import {catalogFeatFeature} from './feats';
+import feats from './fixtures/srd-feats.json';
+const ranger=(level=20,wis=5)=>backfillRanger(Character.parse({id:'ranger-test',name:'遊俠',classNameEn:'Ranger',level,maxHp:100,currentHp:60,speed:'30',abilityScores:Object.fromEntries(['str','dex','con','int_','wis','cha'].map(k=>[k,{score:k==='wis'?wis*2+10:12,modifier:k==='wis'?wis:1}])),languages:['通用語']}));
+afterEach(()=>useCharacterStore.getState().clear());
+describe('遊俠 SRD 5.2.1',()=>{
+ it.each([[1,2],[4,2],[5,3],[9,4],[13,5],[17,6],[20,6]])('%i級宿敵%i次且獵人印記始終準備',(level,max)=>{const c=ranger(level);expect(favoredUses(level)).toBe(max);expect(c.resources.find(r=>r.nameEn==='Favored Enemy')?.max).toBe(max);expect(c.spells.find(isHuntersMark)?.alwaysPrepared).toBe(true);});
+ it('免費施放扣宿敵、不扣法術位且啟動專注',()=>{const c=rangerAction({...ranger(1),spellSlots:[{level:1,total:2,used:0}],concentrationSpell:'其他法術'},'mark');expect(c.resources[0].current).toBe(1);expect(c.concentrationSpell).toBe('獵人印記');expect(c.spellSlots[0].used).toBe(0);expect(()=>rangerAction(rangerAction(c,'mark'),'mark')).toThrow();});
+ it('健行只在6級起加10，重甲不加；重讀不累加',()=>{expect(movementFeet(ranger(5))).toBe(30);const c=ranger(6);expect(movementFeet(parseCharacter(c))).toBe(40);c.equipment=[Equipment.parse({name:'重甲',itemType:'armor',armorCategory:'heavy',equipped:true})];expect(movementFeet(c)).toBe(30);});
+ it.each([[-2,1],[0,1],[3,3],[5,5]])('感知修正%i時能力各%i次',(wis,max)=>{const c=ranger(20,wis);for(const name of ['Tireless','Nature’s Veil'])expect(c.resources.find(r=>r.nameEn===name)?.max).toBe(max);});
+ it('臨時HP取較高，自然面紗消耗次數，短休只減力竭長休才回滿',()=>{let c=rangerAction({...ranger(),exhaustionLevel:2,tempHp:2},'tireless',8);expect(c.tempHp).toBe(13);c=rangerAction(c,'veil');expect(c.rangerVeilActive).toBe(true);useCharacterStore.getState().load(c);characterActions.shortRest();const short=useCharacterStore.getState().character!;expect(short.exhaustionLevel).toBe(1);expect(short.resources.find(r=>r.nameEn==='Tireless')?.current).toBe(4);expect(short.resources.find(r=>r.nameEn==='Nature’s Veil')?.current).toBe(4);characterActions.longRest();expect(useCharacterStore.getState().character!.resources.every(r=>r.current===r.max)).toBe(true);expect(()=>rangerAction(c,'tireless',9)).toThrow();});
+ it('20級印記1d10，不影響其他職業或自創法術',()=>{expect(ranger(19).spells.find(isHuntersMark)?.damage).toBe('1d6');expect(ranger().spells.find(isHuntersMark)?.damage).toBe('1d10');const c={...ranger(),classNameEn:'Fighter'};expect(backfillRanger(c)).toBe(c);expect(isHuntersMark({...ranger().spells[0],homebrewId:'custom'})).toBe(false);});
+ it('舊角色補1級能力及18級盲視，不重複新增',()=>{const c=ranger();expect(parseCharacter(c)).toEqual(c);for(const en of ['Spellcasting','Favored Enemy','Feral Senses'])expect(c.features.filter(f=>f.nameEn===en)).toHaveLength(1);});
+ it('3級準備4個，獵人印記不占名額，不允許3個就完成',()=>{const spells=Array.from({length:5},(_,i)=>CatalogSpell.parse({id:`s${i}`,name:`法術${i}`,eng_name:`Spell${i}`,level:1,classes:['Ranger']}));const data={spells,items:[],feats:[]},c=ranger(3);const group=choiceGroups(c,data).find(g=>g.id==='prepared')!;expect(group.count).toBe(4);expect(validateChoices(c,{prepared:['s0','s1','s2']},data,'level').some(i=>i.group==='prepared')).toBe(true);expect(validateChoices(c,{prepared:['s0','s1','s2','s3']},data,'level').some(i=>i.group==='prepared')).toBe(false);});
+ it('起始金幣B確為150GP',()=>{expect(startingOptions('Ranger',[])[1].priceCp).toBe(15000);expect(applyStartingEquipment(ranger(1),{equipment:['1']},[]).currency.gp).toBe(150);});
+ it('熟練探索者排除通用語與已知語言，也檢查本次其他來源',()=>{const c=ranger(2),data={spells:[],items:[],feats:[]};const s={'creation-languages':['Elvish','Dwarvish']};const g=choiceGroups(c,data,s).find(g=>g.id==='deft-languages')!;for(const id of ['Common','Elvish','Dwarvish'])expect(g.options.find(o=>o.id===id)?.disabledReason).toBeTruthy();expect(g.options.find(o=>o.id==='Giant')?.disabledReason).toBeUndefined();});
+ it('SRD91頁的火繩槍和手槍維持合法精通候選',()=>{const items=['Musket','Pistol'].map(en=>CatalogItem.parse({id:en,name:en,eng_name:en,category:'weapon',subcategory:'軍用遠程',mastery:['Slow']}));expect(choiceGroups(ranger(),{spells:[],items,feats:[]}).find(g=>g.id==='mastery')!.options).toHaveLength(2);});
+ it('史詩恩賜歸入專長而非其他特性，保留19級',()=>{const feat=CatalogFeat.array().parse(feats).find(f=>f.eng_name==='Boon of Combat Prowess')!;const groups=groupFeatures([catalogFeatFeature(feat,19)]);expect(groups[0].title).toBe('專長');expect(groups[0].features[0].level).toBe(19);});
+});

@@ -1,3 +1,4 @@
+import {backfillRanger} from '../rules/ranger';
 import {backfillRogue} from '../rules/rogue';
 import {backfillMonk} from '../rules/monk';
 import {backfillDruid} from '../rules/druid';
@@ -300,6 +301,7 @@ export const Character = z.object({
   ac: z.number().int().default(10),
   maxHp: z.number().int().default(1),
   currentHp: z.number().int().default(1),
+  rangerVeilActive: z.boolean().optional(),
   bodyAndMindApplied: z.boolean().optional(),
   monkSuperiorDefense: z.boolean().optional(),
   quiveringPalmTarget: z.string().optional(),
@@ -378,5 +380,5 @@ export const hitDiceRemaining = (c: Character) =>
 
 /** 解析雲端／快取的角色 JSON。失敗時拋出，由呼叫端決定如何呈現。 */
 export function parseCharacter(json: unknown): Character {
-  return backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(backfillPaladin(repairFeatDescriptions(backfillFighterFeatures(backfillIndomitable(Character.parse(json))))))))))));
+  return backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(backfillPaladin(repairFeatDescriptions(backfillFighterFeatures(backfillIndomitable(Character.parse(json)))))))))))));
 }

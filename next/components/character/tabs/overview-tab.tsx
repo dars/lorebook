@@ -106,6 +106,7 @@ export function OverviewTab({
         </div>
       </CollapsibleSection>
 
+      {c.classNameEn==='Ranger'&&c.level>=6&&<p className="py-2 text-small text-gold">健行 · 攀爬 {movementFeet(c)} 呎 · 游泳 {movementFeet(c)} 呎{c.level>=18?' · 盲視30呎':''}</p>}
       {share}
     </div>
   );

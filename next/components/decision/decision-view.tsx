@@ -256,6 +256,7 @@ export function DecisionView({
         <ParchmentCard className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3">
           <MovementStat icon="walk" label="速度" feet={speedFt} />
           <MovementStat icon="dash" label="衝刺" feet={speedFt * 2} dim />
+          {c.classNameEn==='Ranger'&&c.level>=6&&<span className="text-small text-gold">攀爬 {speedFt} 呎 · 游泳 {speedFt} 呎</span>}
         </ParchmentCard>
       </CollapsibleSection>
   );
@@ -298,8 +299,8 @@ export function DecisionView({
               title="短休"
               subtitle="職業能力"
               onConfirm={() => characterActions.shortRest()}
-              confirm={c.classNameEn==='Druid'?'短休恢復 1 次荒野變身；大地結社可在休息區另選自然復甦的法術位。':c.classNameEn==='Barbarian'?'短休恢復 1 次狂暴，並結束目前的狂暴。':c.classNameEn==='Cleric'?'短休恢復 1 次引導神力，以及其他短休資源。':'短休將回復標記為短休的職業資源。'}
-              doneHint="短休資源已回復"
+              confirm={c.classNameEn==='Ranger'?'遊俠的宿敵、不知疲倦及自然面紗次數須長休恢復。10級起，短休降低1級力竭。':c.classNameEn==='Druid'?'短休恢復 1 次荒野變身；大地結社可在休息區另選自然復甦的法術位。':c.classNameEn==='Barbarian'?'短休恢復 1 次狂暴，並結束目前的狂暴。':c.classNameEn==='Cleric'?'短休恢復 1 次引導神力，以及其他短休資源。':'短休將回復標記為短休的職業資源。'}
+              doneHint={c.classNameEn==='Ranger'?(c.level>=10?'短休完成，力竭已減1級；遊俠能力次數須長休恢復。':'短休完成；宿敵次數須長休恢復。'):'短休資源已回復'}
             />
             <RestButton
               title="長休"
@@ -309,6 +310,7 @@ export function DecisionView({
               doneHint={(c.divineInterventionRests??0)>0?`長休完成；神聖介入還需 ${c.divineInterventionRests} 次長休。`:'HP、法術位與資源已回滿，專注已結束'}
             />
           </div>
+          {c.classNameEn==='Ranger'&&<p className="py-2 text-small text-text-secondary">{c.level>=10?`不知疲倦：短休力竭減1級，目前${c.exhaustionLevel}級。`:''}宿敵、不知疲倦與自然面紗的使用次數在長休回滿，短休不恢復。</p>}
           <WizardRest c={c}/>
           {persist && c.progression?.rest && <CharacterFlowLink href="/character-choices?mode=rest" className="mt-2 flex min-h-11 items-center justify-center text-small text-gold">調整休息後可替換的選項</CharacterFlowLink>}
         </ParchmentCard>

@@ -51,7 +51,7 @@ export const GUIDE_CLASSES: GuideClass[] = [
   },
   {
     en: 'Ranger', cn: '遊俠', page: 57, endPage: 61,
-    features: { 1: '施法 Spellcasting・宿敵 Favored Enemy', 5: '額外攻擊 Extra Attack', 6: '漫遊者 Roving', 10: '不倦 Tireless', 13: '不屈獵手 Relentless Hunter', 14: '自然面紗 Nature’s Veil', 17: '精準獵手 Precise Hunter', 18: '野性感官 Feral Senses', 20: '屠敵者 Foe Slayer' },
+    features: { 1: '施法 Spellcasting・宿敵 Favored Enemy', 5: '額外攻擊 Extra Attack', 6: '健行 Roving', 10: '不知疲倦 Tireless', 13: '不懈獵手 Relentless Hunter', 14: '自然面紗 Nature’s Veil', 17: '精準獵手 Precise Hunter', 18: '野性感官 Feral Senses', 20: '殺敵者 Foe Slayer' },
     subclass: { name: '獵人 Hunter', page: 61, features: { 3: '獵人知識 Hunter’s Lore', 11: '高等獵物 Superior Hunter’s Prey', 15: '高等獵人防禦 Superior Hunter’s Defense' } },
     reminders: ['長休後可替換 1 個已備遊俠法術，並重選精通武器種類。', '若選德魯伊戰士，每升遊俠等級可替換其中 1 個德魯伊戲法。基本遊俠沒有戰士那項每級替換戰鬥風格的規則。', '獵人 3 級獵物與 7 級防禦戰術的選項，都可在短休或長休後切換。'],
   },

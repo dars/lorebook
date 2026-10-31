@@ -287,8 +287,8 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
     const automatic = automaticSpellNames(c, selected);
     const basePrepared = groups.find(g => g.id === 'prepared');
     if (basePrepared && (automatic.length || [...alwaysIds].some(id=>catalog.spells.some(s=>s.id===id&&s.level>0)))) {
-        basePrepared.minCount=0;
-        basePrepared.detail='始終準備法術另列、不占一般名額；空出的名額可稍後補選。';
+        basePrepared.minCount=cls==='Ranger'?basePrepared.count:0;
+        basePrepared.detail=cls==='Ranger'?'獵人印記始終準備、不占名額；請另外選滿職業已備法術。':'始終準備法術另列、不占一般名額；空出的名額可稍後補選。';
     }
     if (basePrepared)
         basePrepared.options = basePrepared.options.filter(o => !alwaysIds.has(o.id) && !automatic.some(n => sameSpellName(n, catalog.spells.find(s => s.id === o.id)?.eng_name ?? '')));
@@ -319,6 +319,12 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
                 const skillName = o.id.startsWith('skill:') ? o.id.slice(6) : '';
                 if (skillName && (c.skills.some(s => s.nameEn === skillName && s.proficient && !c.progression?.grantedSkills.includes(skillName)) || groups.some(other => other.id !== g.id && (other.kind === 'skill' && values(other.id).includes(skillName) || other.kind === 'mixed' && values(other.id).includes(o.id)))))
                     o.disabledReason = '此技能已熟練，請選另一項';
+            }
+            if(g.kind==='language'){
+                const own=c.progression?.selections[g.id]?.includes(o.id);
+                const other=groups.some(x=>x.kind==='language'&&x.id!==g.id&&values(x.id).includes(o.id));
+                const known=o.id==='Common'||c.languages.some(v=>v===o.name||v===o.id);
+                if(other||(!own&&known))o.disabledReason='已學會此語言，請選另一種';
             }
             if (g.kind === 'expertise') {
                 const other = groups.some(x=>x.kind==='expertise'&&x.id!==g.id&&values(x.id).includes(o.id));

@@ -26,7 +26,7 @@ export const isBerserker = (c:Character) => !c.customSubclass && (['Path of the 
 export const rageDamage = (c:Character) => c.level>=16?4:c.level>=9?3:2;
 const incapacitated = (c:Character) => c.conditions.some(x=>['失能','昏迷','麻痺','石化','震懾','Incapacitated','Unconscious','Paralyzed','Petrified','Stunned'].includes(x));
 export const rageActive = (c:Character) => c.classNameEn==='Barbarian' && !!c.raging && !wearingHeavyArmor(c) && !c.conditions.some(x=>['昏迷','Unconscious',...(c.level<15?['失能','麻痺','石化','震懾','Incapacitated','Paralyzed','Petrified','Stunned']:[])].includes(x));
-export const movementFeet = (c:Character) => (Number(c.speed.replace(/[^0-9]/g,''))||0)+(c.classNameEn==='Barbarian'&&c.level>=5&&!wearingHeavyArmor(c)?10:0)+(unarmoredMonk(c)?monkMoveBonus(c.level):0);
+export const movementFeet = (c:Character) => (Number(c.speed.replace(/[^0-9]/g,''))||0)+(((c.classNameEn==='Barbarian'&&c.level>=5)||(c.classNameEn==='Ranger'&&c.level>=6))&&!wearingHeavyArmor(c)?10:0)+(unarmoredMonk(c)?monkMoveBonus(c.level):0);
 export function setRage(c:Character,active:boolean):Character {
  if(!active)return {...c,raging:false};
  if(rageActive(c))return c;
