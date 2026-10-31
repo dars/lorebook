@@ -1,3 +1,4 @@
+import {hasInvocation,pactAttacks} from './warlock';
 import {sneakDice} from './rogue';
 import {martialArtsActive,martialDie,monkWeapon} from './monk';
 import { rageActive, rageDamage } from './barbarian';
@@ -78,6 +79,10 @@ export function attackEntries(c: Character): AttackEntry[] {
     });
   }
 
+  if(c.pactWeapon&&hasInvocation(c,'Pact of the Blade')){
+    const w=c.pactWeapon,mod=c.abilityScores.cha.modifier;
+    entries.push({name:`契約武器 · ${w.name}`,nameEn:w.nameEn,hitBonus:mod+prof,damage:`${w.damage}${mod>=0?'+':''}${mod}`,damageType:w.damageType,quantity:1,unarmed:false,properties:[`${w.damageType} 傷害`,...(['Glaive','Greataxe','Greatsword','Halberd','Lance','Maul','Pike'].includes(w.nameEn)&&c.abilityScores.str.score<13?['重型武器：力量未達13，攻擊擲骰具有劣勢。']:[]),`魅力攻擊 · 每個攻擊動作${pactAttacks(c)}次（僅限契約武器）`,'可作施法法器；離身超過5呎滿1分鐘或死亡時解除契約。']});
+  }
   entries.push({
     name: '徒手攻擊',
     nameEn: 'Unarmed Strike',

@@ -110,7 +110,8 @@ export function featPrereqUnmet(
   targetLevel: number,
 ): string | null {
   if (feat.data.category === 'FS' && !(c.classNameEn === 'Fighter' || (['Paladin','Ranger'].includes(c.classNameEn) && targetLevel >= 2))) return '需要戰鬥風格特性';
-  if (!['Skilled','Magic Initiate','Ability Score Improvement'].includes(feat.eng_name ?? '') && c.features.some(f=>!f.isCustom && (f.nameEn === feat.eng_name || originId(f.name, f.nameEn) === feat.eng_name))) return '已取得此專長';
+  const originSelections=Object.entries(c.progression?.selections??{}).filter(([key])=>key==='human-origin'||key==='background-origin'||key.startsWith('feat-origin-')||key.startsWith('invocation-origin-')).flatMap(([,ids])=>ids);
+  if (!['Skilled','Magic Initiate','Ability Score Improvement'].includes(feat.eng_name ?? '') && (originSelections.includes(feat.eng_name??'')||c.features.some(f=>!f.isCustom && (f.nameEn === feat.eng_name || originId(f.name, f.nameEn) === feat.eng_name)))) return '已取得此專長';
   const groups = feat.data.prerequisite;
   if (groups.length === 0) return null;
   const unmet = groups.map((g) => unmetInGroup(g, c, targetLevel));

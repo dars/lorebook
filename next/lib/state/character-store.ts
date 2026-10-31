@@ -1,4 +1,5 @@
 'use client';
+import {recoverPact} from '../rules/warlock';
 import {endIncapacitatedDruidEffects} from '@/lib/rules/druid';
 import { interventionAfterLongRest } from '@/lib/rules/cleric';
 import { rageActive } from '@/lib/rules/barbarian';
@@ -144,7 +145,7 @@ export const characterActions = {
    */
   shortRest() {
     useCharacterStore.getState().update((c) => ({
-      ...beginChoiceRest(c, 'short'),
+      ...recoverPact(beginChoiceRest(c, 'short')),
       exhaustionLevel: c.classNameEn==='Ranger'&&c.level>=10?Math.max(0,c.exhaustionLevel-1):c.exhaustionLevel,
       innateSorceryActive:false,
       dragonWingsActive:false,

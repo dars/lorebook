@@ -1,3 +1,4 @@
+import {backfillWarlock} from '../rules/warlock';
 import {backfillSorcerer} from '../rules/sorcerer';
 import {backfillRanger} from '../rules/ranger';
 import {backfillRogue} from '../rules/rogue';
@@ -302,6 +303,7 @@ export const Character = z.object({
   ac: z.number().int().default(10),
   maxHp: z.number().int().default(1),
   currentHp: z.number().int().default(1),
+  pactWeapon: z.object({name:z.string(),nameEn:z.string(),damage:z.string(),damageType:z.string()}).optional(),
   draconicHpApplied: z.number().optional(),
   innateSorceryActive: z.boolean().optional(),
   dragonWingsActive: z.boolean().optional(),
@@ -387,5 +389,5 @@ export const hitDiceRemaining = (c: Character) =>
 
 /** 解析雲端／快取的角色 JSON。失敗時拋出，由呼叫端決定如何呈現。 */
 export function parseCharacter(json: unknown): Character {
-  return backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(backfillPaladin(repairFeatDescriptions(backfillFighterFeatures(backfillIndomitable(Character.parse(json))))))))))))));
+  return backfillWarlock(backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(backfillPaladin(repairFeatDescriptions(backfillFighterFeatures(backfillIndomitable(Character.parse(json)))))))))))))));
 }

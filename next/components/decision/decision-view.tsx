@@ -1,4 +1,5 @@
 'use client';
+import {WarlockPowers} from './warlock-powers';
 import {SorcererPowers} from './sorcerer-powers';
 import { movementFeet } from '@/lib/rules/barbarian';
 import {WizardMemory} from './wizard-memory';
@@ -301,7 +302,7 @@ export function DecisionView({
               title="短休"
               subtitle="職業能力"
               onConfirm={() => characterActions.shortRest()}
-              confirm={c.classNameEn==='Sorcerer'?'短休不自動恢復術法點。5級起可在休息區使用術法回復，每長休一次。':c.classNameEn==='Ranger'?'遊俠的宿敵、不知疲倦及自然面紗次數須長休恢復。10級起，短休降低1級力竭。':c.classNameEn==='Druid'?'短休恢復 1 次荒野變身；大地結社可在休息區另選自然復甦的法術位。':c.classNameEn==='Barbarian'?'短休恢復 1 次狂暴，並結束目前的狂暴。':c.classNameEn==='Cleric'?'短休恢復 1 次引導神力，以及其他短休資源。':'短休將回復標記為短休的職業資源。'}
+              confirm={c.classNameEn==='Warlock'?'短休回復全部契約法術位；魔法機巧、聯絡宗主、宗主能力與祕法奧秘的次數須長休回復。':c.classNameEn==='Sorcerer'?'短休不自動恢復術法點。5級起可在休息區使用術法回復，每長休一次。':c.classNameEn==='Ranger'?'遊俠的宿敵、不知疲倦及自然面紗次數須長休恢復。10級起，短休降低1級力竭。':c.classNameEn==='Druid'?'短休恢復 1 次荒野變身；大地結社可在休息區另選自然復甦的法術位。':c.classNameEn==='Barbarian'?'短休恢復 1 次狂暴，並結束目前的狂暴。':c.classNameEn==='Cleric'?'短休恢復 1 次引導神力，以及其他短休資源。':'短休將回復標記為短休的職業資源。'}
               doneHint={c.classNameEn==='Sorcerer'?'短休完成；可於下方使用術法回復。':c.classNameEn==='Ranger'?(c.level>=10?'短休完成，力竭已減1級；遊俠能力次數須長休恢復。':'短休完成；宿敵次數須長休恢復。'):'短休資源已回復'}
             />
             <RestButton
@@ -313,7 +314,7 @@ export function DecisionView({
             />
           </div>
           {c.classNameEn==='Ranger'&&<p className="py-2 text-small text-text-secondary">{c.level>=10?`不知疲倦：短休力竭減1級，目前${c.exhaustionLevel}級。`:''}宿敵、不知疲倦與自然面紗的使用次數在長休回滿，短休不恢復。</p>}
-          <SorcererPowers c={c} kind="rest"/><WizardRest c={c}/>
+          <WarlockPowers c={c} kind="rest"/><SorcererPowers c={c} kind="rest"/><WizardRest c={c}/>
           {persist && c.progression?.rest && <CharacterFlowLink href="/character-choices?mode=rest" className="mt-2 flex min-h-11 items-center justify-center text-small text-gold">調整休息後可替換的選項</CharacterFlowLink>}
         </ParchmentCard>
       </CollapsibleSection>

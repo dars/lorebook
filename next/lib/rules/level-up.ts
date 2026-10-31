@@ -1,3 +1,4 @@
+import {backfillWarlock} from './warlock';
 import {backfillSorcerer} from './sorcerer';
 import {backfillRanger} from './ranger';
 import {backfillRogue} from './rogue';
@@ -254,7 +255,7 @@ export function applyLevelUp(
     spells: [...c.spells, ...(choices.spells ?? [])],
     resources: syncClassResources(c.resources, c.classNameEn, target, newScores),
   };
-  return backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(c.progression ? recalculateChoiceSkills(result) : result)))))))));
+  return backfillWarlock(backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(c.progression ? recalculateChoiceSkills(result) : result))))))))));
 }
 
 /**

@@ -1,3 +1,4 @@
+import {INVOCATION_SPELLS} from '../warlock';
 import {normalizeOrigins} from './origins';
 import type { Character } from '@/lib/domain/character';
 /** 固定授予與名額分開。SRD 5.2.1 pp. 35, 40, 46, 54–56, 58, 70, 72, 76。 */
@@ -32,7 +33,7 @@ export function automaticSpellNames(c: Character, s: Record<string, string[]>): 
     if (c.classNameEn === 'Warlock')
         take({ 9: ['Contact Other Plane'] });
     const inv = s.invocations ?? [];
-    const spells: Record<string, string> = { 'Armor of Shadows': 'Mage Armor', 'Ascendant Step': 'Levitate', 'Fiendish Vigor': 'False Life', 'Gift of the Depths': 'Water Breathing', 'Mask of Many Faces': 'Disguise Self', 'Master of Myriad Forms': 'Alter Self', 'Misty Visions': 'Silent Image', 'One with Shadows': 'Invisibility', 'Otherworldly Leap': 'Jump', 'Pact of the Chain': 'Find Familiar', 'Visions of Distant Realms': 'Arcane Eye', 'Whispers of the Grave': 'Speak with Dead' };
+    const spells: Record<string, string> = {...Object.fromEntries(Object.entries(INVOCATION_SPELLS).map(([id,v])=>[id,v.spell])), 'Gift of the Depths':'Water Breathing'};
     for (const id of inv)
         if (spells[id])
             out.push(spells[id]);

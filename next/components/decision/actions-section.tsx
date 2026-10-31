@@ -1,5 +1,7 @@
 'use client';
 
+import {WarlockPowers} from './warlock-powers';
+import {hasInvocation,pactAttacks} from '@/lib/rules/warlock';
 import {SorcererPowers} from './sorcerer-powers';
 import {RangerPowers} from './ranger-powers';
 import {RoguePowers} from './rogue-powers';
@@ -189,7 +191,7 @@ export function ActionsSection({
         >
           <Category
             label="攻擊"
-            count={`每次攻擊動作 ${attacksPerAction(c)} 次 · ${attacks.length} 種攻擊`}
+            count={c.pactWeapon&&hasInvocation(c,'Pact of the Blade')?`契約武器 ${pactAttacks(c)} 次；其他武器 ${attacksPerAction(c)} 次 · ${attacks.length} 種攻擊`:`每次攻擊動作 ${attacksPerAction(c)} 次 · ${attacks.length} 種攻擊`}
             open={!collapsed.has('cat.attack')}
             onToggle={() => toggle('cat.attack')}
           >
@@ -239,6 +241,7 @@ export function ActionsSection({
           )}
 
           {paladin.some(p=>p.kind==='action'||p.kind==='free'||p.kind==='passive') && <Category label="職業能力" count={`${paladin.filter(p=>p.kind!=='bonus').length} 項`} open={!collapsed.has('cat.paladin')} onToggle={()=>toggle('cat.paladin')}><PaladinPowers c={c} kind="action"/><PaladinPowers c={c} kind="free"/><PaladinPowers c={c} kind="passive"/></Category>}
+          {c.classNameEn==='Warlock'&&<Category label="邪術師能力" count="契約與宗主" open={!collapsed.has('cat.warlock')} onToggle={()=>toggle('cat.warlock')}><WarlockPowers c={c} kind="other"/></Category>}
           {c.classNameEn==='Sorcerer'&&<Category label="術士能力" count="術法點與超魔" open={!collapsed.has('cat.sorcerer')} onToggle={()=>toggle('cat.sorcerer')}><SorcererPowers c={c} kind="other"/></Category>}
           {c.classNameEn==='Ranger'&&c.level>=10&&<Category label="遊俠能力" count="能力與感官" open={!collapsed.has('cat.ranger')} onToggle={()=>toggle('cat.ranger')}><RangerPowers c={c} kind="other"/></Category>}
           {c.classNameEn==='Rogue'&&<Category label="盜賊能力" count="偷襲與效果" open={!collapsed.has('cat.rogue')} onToggle={()=>toggle('cat.rogue')}><RoguePowers c={c} kind="other"/></Category>}
@@ -273,19 +276,19 @@ export function ActionsSection({
           en="BONUS ACTION"
           cn="附贈動作"
           summary={
-            bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && c.classNameEn !== 'Sorcerer' && !(c.classNameEn==='Ranger'&&c.level>=14) && !(c.classNameEn==='Rogue'&&c.level>=2) && !(c.classNameEn==='Druid'&&c.level>=2)
+            bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && c.classNameEn !== 'Sorcerer' && !hasInvocation(c,'Pact of the Blade') && !(c.classNameEn==='Ranger'&&c.level>=14) && !(c.classNameEn==='Rogue'&&c.level>=2) && !(c.classNameEn==='Druid'&&c.level>=2)
               ? '無可用'
-              : [...(c.classNameEn==='Sorcerer'?[{name:'天生術法'},{name:'魔力之泉'}]:[]), ...(c.classNameEn==='Ranger'&&c.level>=14?[{name:'自然面紗'}]:[]), ...(c.classNameEn==='Rogue'&&c.level>=2?[{name:'靈巧動作'},{name:c.level>=3?'穩定瞄準':''}]:[]), ...monk.filter(p=>p.kind==='bonus'), ...(c.classNameEn==='Druid'&&c.level>=2?[{name:'荒野變身'}]:[]), ...(c.classNameEn==='Barbarian'?[{name:'狂暴'}]:[]), ...bonusFeatures, ...bonusSpells, ...paladin.filter(p=>p.kind==='bonus'), ...bard.filter(p=>p.kind==='bonus')].map((s) => s.name).join('・')
+              : [...(hasInvocation(c,'Pact of the Blade')?[{name:'刃契'}]:[]), ...(c.classNameEn==='Sorcerer'?[{name:'天生術法'},{name:'魔力之泉'}]:[]), ...(c.classNameEn==='Ranger'&&c.level>=14?[{name:'自然面紗'}]:[]), ...(c.classNameEn==='Rogue'&&c.level>=2?[{name:'靈巧動作'},{name:c.level>=3?'穩定瞄準':''}]:[]), ...monk.filter(p=>p.kind==='bonus'), ...(c.classNameEn==='Druid'&&c.level>=2?[{name:'荒野變身'}]:[]), ...(c.classNameEn==='Barbarian'?[{name:'狂暴'}]:[]), ...bonusFeatures, ...bonusSpells, ...paladin.filter(p=>p.kind==='bonus'), ...bard.filter(p=>p.kind==='bonus')].map((s) => s.name).join('・')
           }
         >
           <div className="flex flex-col gap-2">
-            <SorcererPowers c={c} kind="bonus"/><RangerPowers c={c} kind="bonus"/><RoguePowers c={c} kind="bonus"/><MonkPowers c={c} kind="bonus"/>
+            <WarlockPowers c={c} kind="bonus"/><SorcererPowers c={c} kind="bonus"/><RangerPowers c={c} kind="bonus"/><RoguePowers c={c} kind="bonus"/><MonkPowers c={c} kind="bonus"/>
             <RageControl c={c}/>
             <DruidPowers c={c} bonusOnly/>
             <BardPowers c={c} kind="bonus"/>
             {bonusFeatures.map(featureCard)}
             <PaladinPowers c={c} kind="bonus"/>
-            {bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && c.classNameEn !== 'Sorcerer' && !(c.classNameEn==='Ranger'&&c.level>=14) && !(c.classNameEn==='Rogue'&&c.level>=2) && !(c.classNameEn==='Druid'&&c.level>=2) ? (
+            {bonusSpells.length + bonusFeatures.length + paladin.filter(p=>p.kind==='bonus').length + bard.filter(p=>p.kind==='bonus').length === 0 && c.classNameEn !== 'Barbarian' && c.classNameEn !== 'Monk' && c.classNameEn !== 'Sorcerer' && !hasInvocation(c,'Pact of the Blade') && !(c.classNameEn==='Ranger'&&c.level>=14) && !(c.classNameEn==='Rogue'&&c.level>=2) && !(c.classNameEn==='Druid'&&c.level>=2) ? (
               <EntryCard badge="贈" title="無附贈動作" subtitle="No Bonus Actions" />
             ) : (
               bonusSpells.map((s) => (

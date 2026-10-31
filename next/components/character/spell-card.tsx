@@ -1,4 +1,5 @@
 'use client';
+import {warlockDamage} from '@/lib/rules/warlock';
 
 import {affinityMatches,affinity,innateActive} from '@/lib/rules/sorcerer';
 import {RangerPowers} from '@/components/decision/ranger-powers';
@@ -26,6 +27,7 @@ export function SpellCard({
   spell,
   characterLevel = 1,
   character,
+  interactive = true,
   badge,
   emphasize = false,
   borderless = false,
@@ -33,6 +35,7 @@ export function SpellCard({
   spell: Spell;
   characterLevel?: number;
   character?: Character;
+  interactive?: boolean;
   /** 徽章文字；省略時戲法為「戲」、其餘為環數。 */
   badge?: string;
   /** 金色強調徽章（已備法術、附贈／反應法術）。 */
@@ -40,7 +43,7 @@ export function SpellCard({
   borderless?: boolean;
 }) {
   const rangerMark=!!character&&character.classNameEn==='Ranger'&&isHuntersMark(spell);
-  const damage = rangerMark?markDie(character!):cantripDamage(spell,characterLevel);
+  const damage = rangerMark?markDie(character!):character?.classNameEn==='Warlock'?warlockDamage(character,spell):cantripDamage(spell,characterLevel);
   const lifeBonus=character&&!spell.homebrewId&&/Cure Wounds|Healing Word|Prayer of Healing|Mass Heal|^Heal$/.test(spell.nameEn)?discipleHealingBonus(character,spell.level):0;
   const hasDamage = damage.length > 0;
   return (
@@ -58,11 +61,11 @@ export function SpellCard({
       footnote={[spell.alwaysPrepared ? '始終準備 · 不占職業已備名額' : '', spell.castingSources?.length ? spell.castingSources.map(s=>`${s.title}${s.ability?` · ${s.ability}`:''}${s.free==='atWill'?' · 最低環無限施放':s.free?` · ${s.free==='short'?'短休或長休':'長休'}恢復一次免費施放`:''}`).join('；') : spell.spellAbility ? `施法屬性：${spell.spellAbility}` : '', spell.upgrade].filter(Boolean).join(' · ') || null}
       emphasizeBadge={emphasize}
     />
-    {rangerMark&&<div className="px-3 pb-2"><RangerPowers c={character!} kind="mark"/></div>}
+    {interactive&&rangerMark&&<div className="px-3 pb-2"><RangerPowers c={character!} kind="mark"/></div>}
     {character&&affinityMatches(character,spell)&&<p className="px-3 pb-2 text-small text-gold">元素親和：此法術一次{affinity(character)!.name}傷害擲骰＋{character.abilityScores.cha.modifier}（不重複加到每顆骰或每次命中）。</p>}
     {character&&innateActive(character)&&<p className="px-3 pb-2 text-small text-gold">天生術法：若作為術士法術施放，DC＋1、法術攻擊有優勢。</p>}
     {(spell.alwaysPrepared||lifeBonus>0)&&<div className="flex flex-wrap gap-2 px-3 pb-2 text-small text-gold">{spell.alwaysPrepared&&<span>始終準備 · 不占名額</span>}{lifeBonus>0&&<span>生命門徒：使用 {spell.level} 環法術位額外 +{lifeBonus} HP</span>}</div>}
-    {character&&!spell.homebrewId&&(spell.nameEn==='Mage Armor'||spell.name==='法師護甲')&&<div className="px-3 pb-2"><button type="button" aria-pressed={character.mageArmorActive} disabled={wearingArmor(character)} onClick={()=>characterActions.setMageArmor(!character.mageArmorActive)} className="min-h-11 text-small text-gold disabled:opacity-40">{character.mageArmorActive?'結束法師護甲':wearingArmor(character)?'著甲中無法啟用':'啟用法師護甲 · AC 13＋敏捷'}</button><p className="text-small text-text-secondary">記錄施放在自己身上的效果，持續 8 小時；{spell.castingSources?.some(s=>s.free==='atWill')?'最低環施放不消耗法術位。':'若使用法術位施放，請另行扣除。'}</p></div>}
+    {interactive&&character&&!spell.homebrewId&&(spell.nameEn==='Mage Armor'||spell.name==='法師護甲')&&<div className="px-3 pb-2"><button type="button" aria-pressed={character.mageArmorActive} disabled={wearingArmor(character)} onClick={()=>characterActions.setMageArmor(!character.mageArmorActive)} className="min-h-11 text-small text-gold disabled:opacity-40">{character.mageArmorActive?'結束法師護甲':wearingArmor(character)?'著甲中無法啟用':'啟用法師護甲 · AC 13＋敏捷'}</button><p className="text-small text-text-secondary">記錄施放在自己身上的效果，持續 8 小時；{spell.castingSources?.some(s=>s.free==='atWill')?'最低環施放不消耗法術位。':'若使用法術位施放，請另行扣除。'}</p></div>}
     </>
   );
 }

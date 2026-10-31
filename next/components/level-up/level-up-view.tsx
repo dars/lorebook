@@ -133,7 +133,7 @@ function LevelUpForm({
   const asiReady =
     asiMode === '2' ? asiA !== null : asiA !== null && asiB !== null && asiA !== asiB;
 
-  const candidates = plan.hasAsi ? featCandidates(feats, plan.targetLevel) : [];
+  const candidates = plan.hasAsi ? featCandidates(feats, plan.targetLevel).filter(f=>featPrereqUnmet(f,initial,plan.targetLevel)!=='已取得此專長') : [];
   const catalogFeat = candidates.find((f) => f.id === catalogFeatId) ?? null;
   const catalogOpts = catalogFeat ? featAbilityOptions(catalogFeat) : null;
   const catalogCap = catalogOpts?.cap ?? 20;

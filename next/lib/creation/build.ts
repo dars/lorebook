@@ -1,3 +1,4 @@
+import {backfillWarlock} from '@/lib/rules/warlock';
 import {backfillSorcerer} from '@/lib/rules/sorcerer';
 import {backfillRanger} from '@/lib/rules/ranger';
 import {backfillRogue} from '@/lib/rules/rogue';
@@ -223,7 +224,7 @@ export function buildCharacter(input: CreationInput, id: string): Character {
     },
   ];
 
-  return backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillBard(backfillBarbarian(backfillWizard(CharacterSchema.parse({
+  return backfillWarlock(backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillBard(backfillBarbarian(backfillWizard(CharacterSchema.parse({
     id,
     name: name.trim(),
     species: species.cn,
@@ -263,7 +264,7 @@ export function buildCharacter(input: CreationInput, id: string): Character {
       ...speciesResources(species, PB),
     ],
     hitDieFaces: cls.hitDie,
-  }))))))));
+  })))))))));
 }
 
 /**

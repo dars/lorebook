@@ -215,7 +215,7 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
         if (cls === 'Sorcerer')
             simple('elemental-affinity', '龍族 · 元素親和', 6, 1, DAMAGE.slice(0, 5));
         if (cls === 'Warlock')
-            simple('fiendish-resilience', '邪魔韌性 · 抗性', 10, 1, DAMAGE, { replace: { when: 'short', count: 1 } });
+            simple('fiendish-resilience', '邪魔韌性 · 抗性', 10, 1, DAMAGE.filter(o=>o.id!=='Force'), { replace: { when: 'short', count: 1 } });
         if (cls === 'Wizard') {
             spell('evocation-3', '塑能學者 · 初始法術書', 3, 2, ['Wizard'], 1, 2, { kind: 'book', family: 'book' }, s => s.school === 'V' || s.school === 'Evocation' || s.school_name === '塑能');
             for (const l of [5, 7, 9, 11, 13, 15, 17])
