@@ -66,33 +66,35 @@ export function CharacterSheetLive({
 
   return (
     <>
-      {/* 補選子職的入口。掛在角色卡而不是升級對話框裡（Flutter 的位置）：
-          20 級角色的 LEVEL 徽章不可點，藏在那裡等於還是進不去。
-          試玩模式不顯示——訪客的角色寫不回雲端。 */}
-      {persist && needsSubclassPick(c) && (
-        <div className="mx-auto mt-3 w-full max-w-[700px] px-4">
-          <div className="rounded-card border border-gold/55 bg-gold/10 px-4 py-3">
-            <p className="text-ui text-text-primary">
-              這個角色還沒有子職。
-            </p>
-            <p className="mt-1 text-small leading-relaxed text-text-secondary">
-              升級當時內容庫離線，子職那一步被跳過了。補選後會一併補上到
-              {c.level} 級為止的子職特性。
-            </p>
-            <AppLink
-              href="/character-level-up?mode=subclass"
-              className="mt-2 flex min-h-11 items-center justify-center rounded-chip border border-gold text-ui font-bold text-gold hover:bg-gold/10"
-            >
-              補選子職
-            </AppLink>
-          </div>
-        </div>
-      )}
-      {persist && <div className="mx-auto flex w-full max-w-[700px] flex-wrap gap-x-4 px-4">
-        <AppLink href="/character-choices" className="inline-flex min-h-11 items-center text-small text-gold">成長選擇／補選</AppLink>
-        {c.progression?.rest && <AppLink href="/character-choices?mode=rest" className="inline-flex min-h-11 items-center text-small text-gold">休息後調整</AppLink>}
-      </div>}
       <CharacterSheet
+        growthTools={persist ? <>
+          {/* 補選子職的入口。掛在角色卡而不是升級對話框裡（Flutter 的位置）：
+              20 級角色的 LEVEL 徽章不可點，藏在那裡等於還是進不去。
+              試玩模式不顯示——訪客的角色寫不回雲端。 */}
+          {needsSubclassPick(c) && (
+            <div className="w-full">
+              <div className="rounded-card border border-gold/55 bg-gold/10 px-4 py-3">
+                <p className="text-ui text-text-primary">
+                  這個角色還沒有子職。
+                </p>
+                <p className="mt-1 text-small leading-relaxed text-text-secondary">
+                  升級當時內容庫離線，子職那一步被跳過了。補選後會一併補上到
+                  {c.level} 級為止的子職特性。
+                </p>
+                <AppLink
+                  href="/character-level-up?mode=subclass"
+                  className="mt-2 flex min-h-11 items-center justify-center rounded-chip border border-gold text-ui font-bold text-gold hover:bg-gold/10"
+                >
+                  補選子職
+                </AppLink>
+              </div>
+            </div>
+          )}
+          <div className="flex w-full flex-wrap gap-x-4">
+            <AppLink href="/character-choices" className="inline-flex min-h-11 items-center text-small text-gold">成長選擇／補選</AppLink>
+            {c.progression?.rest && <AppLink href="/character-choices?mode=rest" className="inline-flex min-h-11 items-center text-small text-gold">休息後調整</AppLink>}
+          </div>
+        </> : undefined}
         spellTools={persist ? {
           book: c.classNameEn==='Wizard' ? <SpellPicker c={c} kind="spellbook"/> : undefined,
           cantrips: <SpellPicker c={c} kind="cantrips" />,

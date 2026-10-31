@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense, useState, type ReactNode } from 'react';
 
 import type { Character } from '@/lib/domain/character';
-import { CharacterPdfExport } from './character-pdf-export';
+import { CharacterSettingsTab } from './tabs/settings-tab';
 import { CharacterTabBar } from './tab-bar';
 import { SwipeTabs } from './swipe-tabs';
 import { AbilitiesTab } from './tabs/abilities-tab';
@@ -41,12 +41,14 @@ const TAB_SLUG: Record<string, string> = {
   法術: 'spells',
   物品: 'inventory',
   傳記: 'bio',
+  設定: 'settings',
 };
 type SheetProps = {
   spellTools?: { cantrips: ReactNode; spells: ReactNode; book?: ReactNode };
   c: Character;
   /** 分享區塊。唯讀檢視不傳，該區塊即不渲染。 */
   share?: ReactNode;
+  growthTools?: ReactNode;
   /** 編輯入口。唯讀檢視不傳——寫入入口不予渲染，而非渲染後停用。 */
   onEditBasic?: () => void;
   onEditProficiency?: () => void;
@@ -81,6 +83,7 @@ function Sheet({
   spellTools,
   c,
   share,
+  growthTools,
   onEditBasic,
   onEditProficiency,
   onEditAbout,
@@ -91,7 +94,7 @@ function Sheet({
 }: SheetProps & { slug: string | null }) {
   const showSpells = c.spellSlots.length > 0 || c.cantrips.length > 0 || c.spells.length > 0 || !!spellTools;
 
-  const tabs = ['總覽', '屬性', ...(showSpells ? ['法術'] : []), '物品', '傳記'];
+  const tabs = ['總覽', '屬性', ...(showSpells ? ['法術'] : []), '物品', '傳記', '設定'];
   const detailTabs = tabs.slice(1);
 
   const at = (list: string[]) => {
@@ -131,7 +134,6 @@ function Sheet({
         return (
           <OverviewTab
             c={c}
-            share={share}
             onEditBasic={onEditBasic}
             onEditPortrait={onEditPortrait}
           />
@@ -142,6 +144,8 @@ function Sheet({
         return <SpellsTab c={c} tools={spellTools} />;
       case '物品':
         return <InventoryTab c={c} {...inventory} />;
+      case '設定':
+        return <CharacterSettingsTab c={c} growthTools={growthTools} share={share} />;
       default:
         return (
           <BiographyTab
@@ -156,9 +160,8 @@ function Sheet({
 
   return (
     <>
-      <CharacterPdfExport c={c} />
       {/* compact / medium：單欄分頁，可左右滑動切換。
-          高度扣掉頁首（約 3.5rem）、PDF 工具列（3.75rem）、分頁列（約 3rem）與底部書籤列——
+          高度扣掉頁首（約 3.5rem）、分頁列（約 3rem）與底部書籤列——
           medium 已改用側邊導覽，不再扣手機的 6rem，避免底部出現整條空白。
           每一頁在這個區域內各自垂直捲動，見 SwipeTabs 的說明。 */}
       <div className="expanded:hidden mx-auto flex w-full max-w-[700px] flex-col">
@@ -166,7 +169,7 @@ function Sheet({
         <SwipeTabs
           current={index}
           onSettle={select(tabs)}
-          className="h-[calc(100dvh-6.5rem-3.75rem-6rem-env(safe-area-inset-bottom))] medium:h-[calc(100dvh-6.5rem-3.75rem-env(safe-area-inset-bottom))]"
+          className="h-[calc(100dvh-6.5rem-6rem-env(safe-area-inset-bottom))] medium:h-[calc(100dvh-6.5rem-env(safe-area-inset-bottom))]"
         >
           {tabs.map((t) => (
             <div key={t}>{render(t)}</div>
@@ -189,7 +192,6 @@ function Sheet({
         <div className="min-w-0 flex-[2]">
           <OverviewTab
             c={c}
-            share={share}
             onEditBasic={onEditBasic}
             onEditPortrait={onEditPortrait}
           />

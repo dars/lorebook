@@ -53,8 +53,8 @@ export function CharacterPdfExport({ c }: { c: Character }) {
 
   return (
     <>
-      <div className="mx-auto flex w-full max-w-[700px] flex-wrap items-center justify-end gap-x-3 px-4 py-2 expanded:max-w-none">
-        <p id={hintId} className="sr-only text-small text-text-secondary medium:not-sr-only">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 py-2">
+        <p id={hintId} className="w-full text-small text-text-secondary">
           A4 跑團版 · 在列印視窗選擇「另存為 PDF」
         </p>
         <button
