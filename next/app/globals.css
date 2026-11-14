@@ -287,7 +287,8 @@ body {
 .login-edition { position: absolute; right: 2rem; bottom: 1rem; font-size: 9px; letter-spacing: .2em; color: var(--color-text-secondary); }
 @media (max-width: 839px) {
   .login-stage { flex-direction: column; gap: 1.5rem; padding: 2rem 1.5rem; }
-  .login-hero { width: 100%; max-width: 560px; }
+  /* 單欄時不可沿用桌面的 flex: 1，否則剩餘高度會變成角色圖下方的空白。 */
+  .login-hero { flex: none; width: 100%; max-width: 560px; }
   .login-hero-copy { text-align: center; }
   .login-kicker { justify-content: center; }
   .login-kicker::before { display: none; }
