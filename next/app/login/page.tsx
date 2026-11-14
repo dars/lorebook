@@ -1,28 +1,18 @@
+import Image from 'next/image';
 
 import { AppLink } from '@/components/ui/app-link';
 import { signIn } from '@/lib/auth/actions';
 
-function LorebookSigil() {
+function AdventuringParty() {
   return (
-    <div className="lorebook-sigil" aria-hidden="true">
-      <svg viewBox="0 0 220 220" fill="none">
-        <path d="M110 12a98 98 0 0 1 95 73M208 105a98 98 0 0 1-47 84M143 202a98 98 0 0 1-88-18M39 170A98 98 0 0 1 18 78M30 57a98 98 0 0 1 58-42" className="sigil-orbit" />
-        <circle cx="110" cy="110" r="84" className="sigil-orbit sigil-orbit-inner" />
-
-        <path d="m110 28 72 43-16 90-56 31-56-31-16-90 72-43Z" className="sigil-die" />
-        <path d="m110 28-37 62 37-12 37 12-37-62Z" className="sigil-facet sigil-facet-glow" />
-        <path d="m38 71 35 19-19 71 56-83-72-7ZM182 71l-35 19 19 71-56-83 72-7Z" className="sigil-facet" />
-        <path d="m54 161 56-20 56 20-56 31-56-31Z" className="sigil-facet sigil-facet-glow" />
-        <path d="M110 28 38 71l35 19-19 71 56 31 56-31-19-71 35-19-72-43Zm0 50L73 90l37 51 37-51-37-12Zm0 63-56 20m56-20 56 20" className="sigil-lines" />
-
-        <circle cx="110" cy="111" r="21" className="sigil-core-ring" />
-        <path d="M110 91c3 8 12 11 12 21 0 7-5 13-12 16-7-3-12-9-12-16 0-8 7-12 9-18 3 5 3 10 3 14 4-4 4-10 0-17Z" className="sigil-core" />
-        <path d="m110 101 5 11-5 9-5-9 5-11Z" className="sigil-core-cut" />
-        <text x="110" y="176" textAnchor="middle" className="sigil-number">XX</text>
-
-        <path d="M110 8v9M110 203v9M8 110h9M203 110h9M40 40l7 7M173 173l7 7M180 40l-7 7M47 173l-7 7" className="sigil-runes" />
-        <circle cx="110" cy="12" r="2" className="sigil-node" /><circle cx="208" cy="105" r="2" className="sigil-node" /><circle cx="39" cy="170" r="2" className="sigil-node" />
-      </svg>
+    <div className="login-party" role="img" aria-label="抱著盾牌的聖騎士、翻閱魔法書的法師與彈琴的詩人，一起準備出發冒險">
+      <div className="login-party-arch" aria-hidden="true" />
+      {['wizard', 'bard', 'paladin'].map((name) => (
+        <Image key={name} src={`/images/guide/${name}-expressive-v1.webp`}
+          width={768} height={768} alt="" unoptimized preload
+          className={`login-companion login-companion-${name}`} />
+      ))}
+      <span className="login-party-caption" aria-hidden="true">小小的英雄，大大的冒險。</span>
     </div>
   );
 }
@@ -58,22 +48,22 @@ export default async function LoginPage({
           <h1 id="login-title" className="login-wordmark font-display">Lorebook</h1>
           <p className="login-motto">每一位英雄，都值得一本自己的傳奇。</p>
         </div>
-        <LorebookSigil />
+        <AdventuringParty />
         <div className="login-features" aria-label="Lorebook 功能">
-          <p><span>01</span>角色卡</p><p><span>02</span>冒險筆記</p><p><span>03</span>法術與裝備</p>
+          <p>角色卡 · 法術與裝備 · 冒險筆記</p><AppLink href="/guide/classes">探索 12 種職業 <span aria-hidden="true">↗</span></AppLink>
         </div>
       </section>
 
       <section className="login-entry" aria-label="登入 Lorebook">
         <div className="login-panel">
-          <div className="login-panel-corners" aria-hidden="true" />
-          <p className="login-panel-eyebrow">OPEN YOUR CHRONICLE</p>
-          <h2 className="font-display text-heading text-text-primary">翻開你的冒險者典籍</h2>
-          <p className="mt-3 text-body leading-6 text-text-secondary">登入以繼續管理角色、裝備與旅途中寫下的每一頁紀錄。</p>
+
+          <p className="login-panel-eyebrow">YOUR ADVENTURE STARTS HERE</p>
+          <h2 className="font-display text-heading text-text-primary">下一頁，輪到你了。</h2>
+          <p className="mt-3 text-body leading-6 text-text-secondary">把角色、法術與旅途中的故事，收進你的冒險者典籍。</p>
           {error && <p role="alert" className="mt-5 rounded-chip border border-danger px-3 py-2 text-small text-danger">{error}</p>}
           <form className="mt-7" action={signIn.bind(null, back)}>
             <button type="submit" className="login-primary-button">
-              <GoogleMark />使用 Google 帳號繼續<span aria-hidden="true" className="ml-auto">→</span>
+              <GoogleMark />使用 Google 登入<span aria-hidden="true" className="ml-auto">→</span>
             </button>
           </form>
           <div className="login-divider"><span>或</span></div>
@@ -81,7 +71,7 @@ export default async function LoginPage({
             <span><strong>先以訪客身分試玩</strong><small>不用註冊，直接查看範例角色</small></span>
             <span aria-hidden="true">↗</span>
           </AppLink>
-          <p className="mt-7 text-center text-small leading-6 text-text-secondary">使用前請閱讀我們的資料處理方式與使用規範。</p>
+          <p className="mt-7 text-center text-small leading-6 text-text-secondary">繼續使用前，請閱讀隱私權政策與使用條款。</p>
           <nav aria-label="政策與條款" className="flex flex-wrap justify-center gap-x-5 text-small text-section-label">
             <AppLink href="/privacy" className="inline-flex min-h-11 items-center underline">隱私權政策</AppLink>
             <AppLink href="/terms" className="inline-flex min-h-11 items-center underline">使用條款</AppLink>
