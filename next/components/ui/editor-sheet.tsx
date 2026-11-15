@@ -96,7 +96,7 @@ function Sheet({
       <div
         autoFocus
         tabIndex={-1}
-        className={`flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-t-[16px] border border-border bg-surface-1 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] focus:outline-none medium:rounded-card medium:pb-5 ${
+        className={`flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-t-panel border border-border bg-surface-1 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] focus:outline-none medium:rounded-panel shadow-panel medium:pb-5 ${
           size === 'wide' ? 'max-w-[1100px]' : 'max-w-[560px]'
         }`}
       >
@@ -122,7 +122,7 @@ function Sheet({
               className={`min-h-11 flex-1 rounded-card border text-ui font-bold disabled:opacity-40 ${
                 saveTone === 'danger'
                   ? 'border-danger bg-danger/10 text-danger hover:bg-danger/20 disabled:hover:bg-danger/10'
-                  : 'border-gold bg-gold/10 text-gold hover:bg-gold/20 disabled:hover:bg-gold/10'
+                  : 'border-gold-solid bg-gold-solid text-on-gold hover:brightness-105 disabled:hover:brightness-100'
               }`}
             >
               {saveLabel}

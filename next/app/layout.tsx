@@ -62,7 +62,7 @@ export const metadata: Metadata = {
  * 這個 meta。兩者搭配才不會出現「深色 App、淺色狀態列」。
  */
 export const viewport: Viewport = {
-  themeColor: '#1c1610',
+  themeColor: '#19232d',
   viewportFit: 'cover',
 };
 
@@ -87,7 +87,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             error：script 位置、script 不能是 html 的子節點、屬性不符）。 */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var m=localStorage.getItem('lorebook-theme')||'system';var d=m==='dark'||(m==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';var t=document.querySelector('meta[name="theme-color"]');if(t)t.setAttribute('content',d?'#1c1610':'#faf7f2');}catch(e){}})()`,
+            __html: `(function(){try{var m=localStorage.getItem('lorebook-theme')||'system';var d=m==='dark'||(m==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';var t=document.querySelector('meta[name="theme-color"]');if(t)t.setAttribute('content',d?'#19232d':'#f2f5f3');}catch(e){}})()`,
           }}
         />
       </head>

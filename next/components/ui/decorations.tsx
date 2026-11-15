@@ -1,11 +1,8 @@
 import type { ReactNode } from 'react';
 
 /**
- * 視覺語言的基礎元件，逐項對照 Flutter 端的 `lib/app/theme/decorations.dart`。
- *
- * 這些不是「差不多就好」的裝飾——區段標題的英中雙標＋延伸線、卡片的角落括號、
- * 菱形分隔線，是這個 App 的識別。數值（字級、字距、線寬、間距）一律照搬，
- * 不憑感覺調整。
+ * 共用視覺元件：英中區段標題、細線與卡片輪廓。
+ * 色票與圓角集中在 globals.css，規範見 docs/design-system.md。
  */
 
 /**
@@ -47,7 +44,7 @@ export function SectionTitle({
  * 羊皮紙卡片：內容區塊的標準容器。
  *
  * Flutter 端是 Material 的 Card，取 theme 的 cardTheme——深色主題下即
- * surface-1 底、border 框、4px 圓角。
+ * surface-1 底、border 框；目前圓角取共用 radius-card。
  */
 export function ParchmentCard({
   children,

@@ -146,7 +146,9 @@ Campaign（多人共用筆記）**尚未實作**。
 
 ## 視覺語言
 
-深色是這個 App 的識別：暗金色調、Cinzel 標題、區段標題的英中雙標＋延伸線、
+全站設計 token 與使用方式見 [docs/design-system.md](docs/design-system.md)。
+
+深色是這個 App 的識別：夜藍底與暖金重點色、Cinzel 標題、區段標題的英中雙標＋延伸線、
 卡片角落括號、盾牌造型的 AC 與屬性。這些不是「差不多就好」的裝飾。
 
 - 色彩一律取 `globals.css` 的 token，不在元件裡寫死色碼

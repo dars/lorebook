@@ -72,7 +72,7 @@ export function BookmarkTabBar({ items, active, onSelect }: NavProps = {}) {
   // 少了它，膠囊會被指示條壓住。
   return (
     <nav className="medium:hidden pointer-events-none fixed inset-x-0 bottom-0 z-20 bg-linear-to-b from-transparent via-surface-0 via-40% to-surface-0 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-2">
-      <div className="pointer-events-auto ml-[max(1rem,env(safe-area-inset-left))] mr-[max(1rem,env(safe-area-inset-right))] flex h-[60px] items-center gap-0 rounded-[30px] border border-border bg-surface-1/80 px-3 py-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur">
+      <div className="pointer-events-auto ml-[max(1rem,env(safe-area-inset-left))] mr-[max(1rem,env(safe-area-inset-right))] flex h-[60px] items-center gap-0 rounded-[30px] border border-border bg-surface-1/80 px-3 py-1.5 shadow-panel backdrop-blur">
         {list.map((d) => {
           const selected = active ? active === d.path : pathname.startsWith(d.path);
           const cls = `flex h-12 flex-1 flex-col items-center justify-center rounded-[22px] ${

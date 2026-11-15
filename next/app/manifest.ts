@@ -13,8 +13,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'D&D 2024 角色卡與世界觀筆記',
     start_url: '/',
     display: 'standalone',
-    background_color: '#1c1610',
-    theme_color: '#1c1610',
+    background_color: '#19232d',
+    theme_color: '#19232d',
     /*
      * `any` 與 `maskable` 必須是**兩張不同的圖**，不能同一張掛兩個用途。
      *

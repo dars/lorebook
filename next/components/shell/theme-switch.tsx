@@ -40,7 +40,7 @@ export function applyTheme(mode: Mode) {
   // 與 layout.tsx 的預繪腳本是同一件事，換主題時再做一次。
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute('content', dark ? '#1c1610' : '#faf7f2');
+    ?.setAttribute('content', dark ? '#19232d' : '#f2f5f3');
 }
 
 export function ThemeSwitch({ compact = false }: { compact?: boolean }) {

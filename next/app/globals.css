@@ -19,47 +19,26 @@
  */
 
 @theme {
-  /* ── 核心色票 ───────────────────────────── */
-  --color-primary: #6b4e3e;
-  --color-primary-dark: #4b3766;
-  --color-gold: #c9a84c;
-  /*
-   * gold-dim／success／danger 的值比 Flutter 端亮一階。原值（#8b6e2a /
-   * #2e7d32 / #c0392b）在深色底上只有 3.3–3.0:1，低於 AA 的 4.5——而它們
-   * 分別是 entry-card 的說明內文、計算機的加項、以及**所有錯誤訊息**的顏色，
-   * 最需要讀得清楚的東西反而最看不清。
-   *
-   * 調法是保持色相與飽和、只把明度提到剛好達標，因此仍是同一組顏色。
-   * 淺色主題在下方另有一套覆寫，不受這裡影響。
-   */
-  --color-gold-dim: #a58332; /* 4.53:1，原 #8b6e2a 為 3.35 */
-  --color-success: #399a3d; /* 4.51:1，原 #2e7d32 為 3.15 */
-  --color-danger: #d96356; /* 4.51:1，原 #c0392b 為 2.97 */
+  /* 夜藍 × 暖金：全站共用，首頁不再持有獨立色票。
+   * 對比詳見 docs/design-system.md；各主題正文與狀態文字至少 4.5:1。 */
+  --color-primary: #ebc77c;
+  --color-primary-dark: #24333f;
+  --color-gold: #ebc77c;
+  --color-gold-dim: #cbb77e;
+  --color-success: #84c79b;
+  --color-danger: #f28e83;
+  --color-gold-solid: #ebc77c;
+  --color-on-gold: #19232d;
 
-  /*
-   * 實心金底按鈕（`bg-gold-solid` ＋ 近黑字）專用，**兩個主題都不變**。
-   *
-   * 淺色主題把 --color-gold 壓暗成可讀的深黃銅（見下方），那個值當文字很好，
-   * 當實心底色卻會讓近黑的字掉到 3.2:1。實心底需要的是「亮到能襯深色字」，
-   * 與「暗到能在淺底上被讀出來」是相反的需求，因此拆成兩個 token。
-   */
-  --color-gold-solid: #c9a84c;
-  --color-on-gold: #1c1610; /* 對 gold-solid 7.84:1；不可跟著淺色底切換。 */
-
-  /* ── 深色主題（主視覺，預設）─────────────
-   * 深色是這個 App 的識別；淺色為 :root[data-theme="light"] 覆寫，
-   * 值取自 Flutter 端 app_colors.dart 的 light theme（羊皮紙）。
-   */
-  --color-surface-0: #1c1610;
-  --color-surface-1: #2a1f0e;
-  --color-surface-2: #241a0c;
-  --color-border: #5c4420;
-  --color-border-2: #3d2d10;
-  --color-text-primary: #e8d9b5;
-  --color-text-secondary: #a08b62;
-  --color-text-light: #c9b48a;
-  /* 同上：原 #8b7340 在 surface-1 上只有 3.55:1，而區段小標本來就只有 10px。 */
-  --color-section-label: #9f8449; /* 4.51:1 */
+  --color-surface-0: #19232d;
+  --color-surface-1: #24333f;
+  --color-surface-2: #2c3c49;
+  --color-border: #607380;
+  --color-border-2: #3c4c58;
+  --color-text-primary: #f5ead5;
+  --color-text-secondary: #bcc7cf;
+  --color-text-light: #c6cbd0;
+  --color-section-label: #d4be8d;
 
   /* ── HP 與法術位 ───────────────────────── */
   --color-hp-full: #c0392b;
@@ -67,24 +46,24 @@
   --color-hp-low: #c0392b;
   --color-hp-bar-bg: #5b3b3b;
   --color-crystal-active: #2e7d4f;
-  --color-crystal-empty: #4a3518;
+  --color-crystal-empty: #3c4c58;
 
   /* ── 傷害類型（深色主題值）───────────────
    * 物理／力場／中性刻意共用金色：它們不是「某種元素」，用主題色比硬湊
    * 一個顏色更誠實。
    */
-  --color-damage-fire: #d4845a;
-  --color-damage-cold: #5a9ed4;
+  --color-damage-fire: #e09066;
+  --color-damage-cold: #66aae0;
   --color-damage-lightning: #6fb7d4;
-  --color-damage-thunder: #9b8fd0;
-  --color-damage-acid: #8fa86b;
-  --color-damage-poison: #7ba86b;
-  --color-damage-necrotic: #7e8c6b;
+  --color-damage-thunder: #a79bdc;
+  --color-damage-acid: #93ac6f;
+  --color-damage-poison: #82af72;
+  --color-damage-necrotic: #9aa887;
   --color-damage-radiant: #e0c56a;
-  --color-damage-psychic: #b58fd0;
-  --color-damage-force: #c9a84c;
-  --color-damage-physical: #c9a84c;
-  --color-damage-neutral: #c9a84c;
+  --color-damage-psychic: #bb95d6;
+  --color-damage-force: var(--color-gold);
+  --color-damage-physical: var(--color-gold);
+  --color-damage-neutral: var(--color-gold);
   --color-temp-hp: #6fb0d4;
 
   /* ── 間距 ─────────────────────────────
@@ -99,13 +78,12 @@
    *   xl 20px → 5   2xl 24px → 6  3xl 32px → 8  4xl 40px → 10
    */
 
-  /* ── 圓角 ─────────────────────────────
-   * 卡片與 chip 都是 4px——這個 App 的視覺語言偏方正，不是圓潤風格。
-   * 角色頁首的 16px 是刻意的例外。
-   */
-  --radius-card: 4px;
-  --radius-chip: 4px;
-  --radius-character-header: 16px;
+  /* 柔和輪廓不增加內距，保留跑團資訊的密度。 */
+  --radius-card: 12px;
+  --radius-chip: 8px;
+  --radius-panel: 24px;
+  --radius-character-header: 20px;
+  --shadow-panel: 0 16px 40px rgb(0 0 0 / .16);
 
   /* ── 字型 ─────────────────────────────
    * display（Cinzel）：標題與數值，自我託管，古書感的主要來源
@@ -162,41 +140,24 @@
    * 捲軸與下拉卻仍是深色。 */
   color-scheme: light;
 
-  --color-surface-0: #faf7f2;
-  --color-surface-1: #f3efe6;
-  --color-surface-2: #eee6d2;
-  --color-border: #e0d9c7;
-  --color-border-2: #e8e0cc;
-  --color-text-primary: #1e1e1e;
-  --color-text-light: #6b5d46;
+  --color-primary: #735719;
+  --color-primary-dark: #263d43;
+  --color-surface-0: #f2f5f3;
+  --color-surface-1: #ffffff;
+  --color-surface-2: #e7eeeb;
+  --color-border: #849693;
+  --color-border-2: #dbe3df;
+  --color-text-primary: #263d43;
+  --color-text-light: #526569;
+  --color-text-secondary: #526569;
   --color-hp-bar-bg: #e2cccc;
-  --color-crystal-empty: #ded3bb;
-
-  /*
-   * ── 前景色：淺色主題必須自己一套 ──────────────────────
-   *
-   * 原本只覆寫了底色與少數文字色，其餘（gold、danger、success、傷害類型、
-   * 臨時 HP）沿用深色主題的值——那些顏色是為了「在近黑底上發亮」調的，
-   * 放到羊皮紙底上全部糊掉。實測對比（對 surface-1 #f3efe6）：
-   *
-   *   gold #c9a84c ......... 1.99:1   ← 所有關鍵數值與選中態都是這個顏色
-   *   damage-radiant ....... 1.48:1
-   *   temp-hp .............. 2.07:1
-   *   text-secondary ....... 3.14:1
-   *
-   * 4.5:1 是 WCAG AA 的內文門檻。以下的值一律**保持原色相**、只壓明度，
-   * 讓淺色看起來仍是同一套色系，只是換了一邊的底。
-   *
-   * 注意：這使淺色主題與 Flutter 端的 app_colors.dart 分歧。Flutter 實作
-   * 已凍結（見根目錄 CLAUDE.md），不再回頭同步；designs.pen 若要跟進，
-   * 以這裡的值為準。
-   */
-  --color-gold: #755c20; /* 5.53:1，text-gold／border-gold／fill-gold 共用 */
-  --color-gold-dim: #7a6535; /* 4.89:1 */
-  --color-section-label: #7d6224; /* 5.02:1 */
-  --color-text-secondary: #6b665f; /* 4.96:1 */
-  --color-danger: #b33326; /* 5.35:1 */
-  --color-success: #2a6e2d; /* 5.44:1 */
+  --color-crystal-empty: #dbe3df;
+  --color-gold: #735719;
+  --color-gold-dim: #75602f;
+  --color-section-label: #735719;
+  --color-danger: #b33326;
+  --color-success: #2a6e2d;
+  --shadow-panel: 0 16px 40px rgb(38 61 67 / .10);
 
   /* 傷害類型與臨時 HP：同色相壓暗到 ≥4.5:1。 */
   --color-temp-hp: #216e98;
@@ -210,9 +171,9 @@
   --color-damage-radiant: #7d6511;
   --color-damage-psychic: #8d44c2;
   /* 物理／力場／中性刻意共用主題金色，跟著 --color-gold 一起變暗。 */
-  --color-damage-force: #755c20;
-  --color-damage-physical: #755c20;
-  --color-damage-neutral: #755c20;
+  --color-damage-force: var(--color-gold);
+  --color-damage-physical: var(--color-gold);
+  --color-damage-neutral: var(--color-gold);
 }
 
 html {
@@ -241,30 +202,6 @@ body {
   input, textarea, select { font-size: max(1rem, 1em); }
 }
 
-/* 首頁插畫色票：夜藍呼應法師披風，暖金呼應角色裝備。
- * 深色 primary/surface 13.3:1、muted/surface 9.7:1；淺色分別 10.4:1、5.6:1。 */
-.login-stage {
-  --color-surface-0: #19232d;
-  --color-surface-1: #24333f;
-  --color-border: #52616b;
-  --color-border-2: #3c4c58;
-  --color-text-primary: #f5ead5;
-  --color-text-light: #c6cbd0;
-  --color-text-secondary: #c6cbd0;
-  --color-gold: #ebc77c;
-  --color-gold-solid: #ebc77c;
-}
-:root[data-theme="light"] .login-stage {
-  --color-surface-0: #f2f5f3;
-  --color-surface-1: #ffffff;
-  --color-border: #c4d0cd;
-  --color-border-2: #dbe3df;
-  --color-text-primary: #263d43;
-  --color-text-light: #526569;
-  --color-text-secondary: #526569;
-  --color-gold: #735719;
-}
-
 /* ── 登入頁：冒險小隊 ────────────────────────────────── */
 .login-stage { position: relative; isolation: isolate; overflow: hidden; align-items: center; padding: clamp(1.5rem, 5vw, 5rem); gap: clamp(2rem, 5vw, 5rem); background: var(--color-surface-0); }
 .login-stage::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse at 30% 65%, color-mix(in srgb, var(--color-gold) 12%, transparent), transparent 60%); pointer-events: none; }
@@ -286,7 +223,7 @@ body {
 .login-features { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1rem; margin-top: 1.25rem; border-top: 1px solid var(--color-border); padding-top: .75rem; font-size: var(--text-small); color: var(--color-text-light); }
 .login-features a { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; color: var(--color-gold); }
 .login-entry { width: clamp(310px, 32vw, 420px); flex-shrink: 0; }
-.login-panel { border: 1px solid var(--color-border-2); border-radius: 1.75rem; background: var(--color-surface-1); padding: clamp(1.5rem, 3vw, 2.5rem); box-shadow: 0 16px 40px color-mix(in srgb, var(--color-surface-0) 20%, transparent); }
+.login-panel { border: 1px solid var(--color-border-2); border-radius: var(--radius-panel); background: var(--color-surface-1); padding: clamp(1.5rem, 3vw, 2.5rem); box-shadow: var(--shadow-panel); }
 .login-panel h2 { margin-top: 1rem; font-size: clamp(1.6rem, 2.5vw, 2.25rem); line-height: 1.4; }
 .login-panel .text-text-secondary { color: var(--color-text-light); }
 .login-panel nav { color: var(--color-text-light); }
@@ -294,7 +231,7 @@ body {
   position: relative;
   display: flex;
   min-height: 52px;
-  border-radius: .85rem;
+  border-radius: var(--radius-card);
   width: 100%;
   align-items: center;
   gap: .75rem;
