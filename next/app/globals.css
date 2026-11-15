@@ -241,6 +241,30 @@ body {
   input, textarea, select { font-size: max(1rem, 1em); }
 }
 
+/* 首頁插畫色票：夜藍呼應法師披風，暖金呼應角色裝備。
+ * 深色 primary/surface 13.3:1、muted/surface 9.7:1；淺色分別 10.4:1、5.6:1。 */
+.login-stage {
+  --color-surface-0: #19232d;
+  --color-surface-1: #24333f;
+  --color-border: #52616b;
+  --color-border-2: #3c4c58;
+  --color-text-primary: #f5ead5;
+  --color-text-light: #c6cbd0;
+  --color-text-secondary: #c6cbd0;
+  --color-gold: #ebc77c;
+  --color-gold-solid: #ebc77c;
+}
+:root[data-theme="light"] .login-stage {
+  --color-surface-0: #f2f5f3;
+  --color-surface-1: #ffffff;
+  --color-border: #c4d0cd;
+  --color-border-2: #dbe3df;
+  --color-text-primary: #263d43;
+  --color-text-light: #526569;
+  --color-text-secondary: #526569;
+  --color-gold: #735719;
+}
+
 /* ── 登入頁：冒險小隊 ────────────────────────────────── */
 .login-stage { position: relative; isolation: isolate; overflow: hidden; align-items: center; padding: clamp(1.5rem, 5vw, 5rem); gap: clamp(2rem, 5vw, 5rem); background: var(--color-surface-0); }
 .login-stage::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse at 30% 65%, color-mix(in srgb, var(--color-gold) 12%, transparent), transparent 60%); pointer-events: none; }
@@ -252,7 +276,7 @@ body {
 .login-wordmark { margin-top: .75rem; font-size: clamp(3.5rem, 7.5vw, 7rem); line-height: 1; letter-spacing: -.055em; color: var(--color-gold); }
 .login-motto { margin-top: 1rem; font-size: 1rem; letter-spacing: .08em; color: var(--color-text-light); }
 .login-party { position: relative; height: clamp(280px, 32vw, 470px); margin-top: 1.5rem; }
-.login-party-arch { position: absolute; inset: 0 15% 8%; border-radius: 50% 50% 0 0; border: 1px solid color-mix(in srgb, var(--color-gold) 24%, transparent); border-bottom: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--color-gold) 7%, transparent), transparent); }
+.login-party-arch { position: absolute; inset: 0 15% 8%; border-radius: 48% 52% 42% 58%; border: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--color-gold) 7%, transparent), transparent); }
 .login-party::after { content: ''; position: absolute; bottom: 7%; left: 10%; right: 10%; height: 8%; border-radius: 50%; background: color-mix(in srgb, var(--color-border) 25%, transparent); filter: blur(12px); z-index: -1; }
 .login-companion { position: absolute; object-fit: contain; width: 62%; height: 94%; bottom: 8%; filter: drop-shadow(0 12px 12px color-mix(in srgb, var(--color-surface-0) 50%, transparent)); }
 .login-companion-wizard { left: -7%; transform: rotate(-7deg); height: 82%; bottom: 13%; }
@@ -262,7 +286,7 @@ body {
 .login-features { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1rem; margin-top: 1.25rem; border-top: 1px solid var(--color-border); padding-top: .75rem; font-size: var(--text-small); color: var(--color-text-light); }
 .login-features a { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; color: var(--color-gold); }
 .login-entry { width: clamp(310px, 32vw, 420px); flex-shrink: 0; }
-.login-panel { border-left: 1px solid var(--color-border); padding: 2rem 0 2rem clamp(1.5rem, 3vw, 3rem); }
+.login-panel { border: 1px solid var(--color-border-2); border-radius: 1.75rem; background: var(--color-surface-1); padding: clamp(1.5rem, 3vw, 2.5rem); box-shadow: 0 16px 40px color-mix(in srgb, var(--color-surface-0) 20%, transparent); }
 .login-panel h2 { margin-top: 1rem; font-size: clamp(1.6rem, 2.5vw, 2.25rem); line-height: 1.4; }
 .login-panel .text-text-secondary { color: var(--color-text-light); }
 .login-panel nav { color: var(--color-text-light); }
@@ -270,6 +294,7 @@ body {
   position: relative;
   display: flex;
   min-height: 52px;
+  border-radius: .85rem;
   width: 100%;
   align-items: center;
   gap: .75rem;
@@ -277,7 +302,7 @@ body {
   padding: .8rem 1rem;
 }
 .login-primary-button { cursor: pointer; background: var(--color-gold-solid); color: var(--color-on-gold); font-weight: 700; box-shadow: 0 8px 24px color-mix(in srgb, var(--color-gold) 12%, transparent); }
-.login-primary-button::before { content: ''; position: absolute; inset: 3px; border: 1px solid color-mix(in srgb, var(--color-surface-0) 20%, transparent); pointer-events: none; }
+
 .login-divider { display: flex; align-items: center; gap: .75rem; margin: 1.25rem 0; font-size: var(--text-tiny); color: var(--color-text-secondary); }
 .login-divider::before, .login-divider::after { content: ''; height: 1px; flex: 1; background: var(--color-border-2); }
 .login-demo-link { justify-content: space-between; border-color: var(--color-border); color: var(--color-text-primary); }
@@ -296,7 +321,7 @@ body {
   .login-motto { font-size: .9rem; letter-spacing: .04em; margin-top: .6rem; }
   .login-party { height: clamp(190px, 44vw, 290px); margin-top: 1rem; }
   .login-entry { width: 100%; max-width: 430px; }
-  .login-panel { border-left: 0; padding: 0; }
+  .login-panel { padding: 1.5rem; }
   .login-panel-eyebrow, .login-features, .login-edition { display: none; }
   .login-panel h2 { margin-top: 0; text-align: center; font-size: 1.5rem; }
   .login-panel h2 + p { text-align: center; margin-top: .5rem; }

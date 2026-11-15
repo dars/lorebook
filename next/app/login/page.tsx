@@ -46,7 +46,7 @@ export default async function LoginPage({
         <div className="login-hero-copy">
           <p className="login-kicker">Dungeons &amp; Dragons · 2024</p>
           <h1 id="login-title" className="login-wordmark font-display">Lorebook</h1>
-          <p className="login-motto">每一位英雄，都值得一本自己的傳奇。</p>
+          <p className="login-motto">帶上角色，出發寫你的傳奇。</p>
         </div>
         <AdventuringParty />
         <div className="login-features" aria-label="Lorebook 功能">
@@ -57,8 +57,8 @@ export default async function LoginPage({
       <section className="login-entry" aria-label="登入 Lorebook">
         <div className="login-panel">
 
-          <p className="login-panel-eyebrow">YOUR ADVENTURE STARTS HERE</p>
-          <h2 className="font-display text-heading text-text-primary">下一頁，輪到你了。</h2>
+          <p className="login-panel-eyebrow">準備好出發了嗎？</p>
+          <h2 className="text-heading text-text-primary">你的冒險，從這裡開始。</h2>
           <p className="mt-3 text-body leading-6 text-text-secondary">把角色、法術與旅途中的故事，收進你的冒險者典籍。</p>
           {error && <p role="alert" className="mt-5 rounded-chip border border-danger px-3 py-2 text-small text-danger">{error}</p>}
           <form className="mt-7" action={signIn.bind(null, back)}>
