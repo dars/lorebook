@@ -55,7 +55,7 @@ export default async function LibraryPage() {
   );
 
   return (
-    <main id="main-content" className="mx-auto w-full max-w-[1100px] flex-1 px-4 pb-12 medium:px-6">
+    <main id="main-content" className="adventure-backdrop mx-auto w-full max-w-[1100px] flex-1 px-4 pb-12 medium:px-6">
       <header className="pb-7 pt-5">
         <BackButton fallback="/main/system" />
         <div className="mt-3 flex items-center gap-5 border-b border-border pb-6">

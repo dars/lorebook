@@ -76,7 +76,7 @@ export function JournalView({
   return (
     // 桌機吃得下兩欄——日誌卡是短摘要，單欄限寬 700 會在寬螢幕上留下大片空白。
     <div
-      className={`mx-auto w-full px-4 ${
+      className={`adventure-backdrop mx-auto w-full px-4 ${
         entries.length <= 1 ? 'max-w-[700px]' : 'max-w-[1100px]'
       }`}
     >
