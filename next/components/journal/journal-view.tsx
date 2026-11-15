@@ -76,7 +76,7 @@ export function JournalView({
   return (
     // 桌機吃得下兩欄——日誌卡是短摘要，單欄限寬 700 會在寬螢幕上留下大片空白。
     <div
-      className={`adventure-backdrop mx-auto w-full px-4 ${
+      className={`adventure-backdrop journal-backdrop mx-auto w-full px-4 ${
         entries.length <= 1 ? 'max-w-[700px]' : 'max-w-[1100px]'
       }`}
     >
@@ -97,7 +97,7 @@ export function JournalView({
           className={`grid gap-3 ${entries.length > 1 ? 'expanded:grid-cols-2' : ''}`}
         >
           {entries.map((e) => (
-            <ParchmentCard key={e.id} className="p-4">
+            <ParchmentCard key={e.id} className="journal-entry-card p-4">
               <button
                 type="button"
                 onClick={() => open(e.id)}

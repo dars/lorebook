@@ -217,6 +217,19 @@ body {
   opacity: .22;
 }
 :root[data-theme='light'] .adventure-backdrop::before { opacity: .13; mix-blend-mode: multiply; }
+/* 日誌卡使用半透明底，避免整個角色被裁成只剩腳；底色仍壓低插畫對比。 */
+.journal-backdrop::before { top: 2.5rem; width: min(70%, 320px); opacity: .3; }
+.journal-entry-card { background: color-mix(in srgb, var(--color-surface-1) 55%, transparent); }
+:root[data-theme='light'] .journal-backdrop::before { opacity: .18; }
+/* 收藏頁把插畫限制在標題旁的專屬欄位，不再壓在說明與分類上。 */
+.library-backdrop { padding-right: clamp(100px, 22vw, 190px); }
+.library-backdrop::before { top: 0; right: -12px; width: clamp(120px, 25vw, 210px); opacity: .7; }
+:root[data-theme='light'] .library-backdrop::before { opacity: .65; }
+@media (max-width: 599px) {
+  .library-backdrop > svg { width: 1.75rem; height: 1.75rem; align-self: flex-start; margin-top: 1.75rem; }
+  .library-backdrop .tracking-\[3px\] { letter-spacing: .12em; }
+}
+
 
 /* ── 登入頁：冒險小隊 ────────────────────────────────── */
 .login-stage { position: relative; isolation: isolate; overflow: hidden; align-items: center; padding: clamp(1.5rem, 5vw, 5rem); gap: clamp(2rem, 5vw, 5rem); background: var(--color-surface-0); }
