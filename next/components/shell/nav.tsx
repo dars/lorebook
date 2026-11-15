@@ -1,5 +1,7 @@
 'use client';
 
+import { AdventureIcon } from '@/components/ui/adventure-icon';
+
 import { AppLink } from '@/components/ui/app-link';
 
 import { usePathname } from 'next/navigation';
@@ -52,6 +54,7 @@ const ICONS: Record<string, string> = {
  */
 
 function NavIcon({ name, className }: { name: string; className: string }) {
+  if (name === 'book') return <AdventureIcon name="quill" className={`${className.replace('fill-gold', 'text-gold').replace('fill-text-secondary', 'text-text-secondary')} fill-none`} />;
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden>
       <path d={ICONS[name]} />

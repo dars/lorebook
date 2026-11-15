@@ -1,3 +1,4 @@
+import { AdventureIcon } from '@/components/ui/adventure-icon';
 import type { Metadata } from 'next';
 import { LibraryBrowser } from '@/components/homebrew/library-browser';
 import { redirect } from 'next/navigation';
@@ -58,10 +59,7 @@ export default async function LibraryPage() {
       <header className="pb-7 pt-5">
         <BackButton fallback="/main/system" />
         <div className="mt-3 flex items-center gap-5 border-b border-border pb-6">
-          <svg aria-hidden="true" viewBox="0 0 48 56" className="hidden h-14 w-12 shrink-0 fill-none stroke-gold medium:block" strokeWidth="1.2">
-            <path d="M9 4h29v44H13a5 5 0 0 1-5-5V9a5 5 0 0 1 5-5M13 4v37m-5 2h30M19 15h13M19 20h9" />
-            <path d="m25 26 5 5-5 5-5-5zM34 48v5l-4-3-4 3v-5" />
-          </svg>
+          <AdventureIcon name="chest" className="size-12 text-gold medium:size-14" />
           <div>
             <p className="font-label text-eyebrow tracking-[3px] text-section-label">PERSONAL ARCHIVE</p>
             <h1 className="mt-1 font-display text-[30px] font-bold text-gold medium:text-[36px]">收藏紀錄</h1>

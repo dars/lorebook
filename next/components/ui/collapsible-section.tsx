@@ -1,5 +1,7 @@
 'use client';
 
+import { AdventureIcon } from './adventure-icon';
+
 import { useState, type ReactNode } from 'react';
 
 /**
@@ -72,6 +74,7 @@ export function CollapsibleSection({
               <path d="M8.6 16.6 13.2 12 8.6 7.4 10 6l6 6-6 6z" />
             )}
           </svg>
+          {en === 'REST' && <AdventureIcon name="campfire" className="ml-1 size-5 text-gold" />}
           <span className="font-label ml-1.5 text-eyebrow font-bold tracking-[2px] text-gold">
             {en}
           </span>

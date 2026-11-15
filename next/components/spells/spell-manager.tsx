@@ -1,4 +1,5 @@
 'use client';
+import { AdventureEmpty } from '@/components/ui/adventure-empty';
 
 import { useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
@@ -32,7 +33,7 @@ export function SpellManager({ initial, extras, search = '' }: { initial: Custom
   const visible = initial.filter(s => [s.name, s.nameEn].some(name => name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())));
   return <section className="min-w-0">
     <LibrarySectionHeader title="法術" subtitle="撰寫咒語，再到角色的法術頁從收藏選用。" count={initial.length} onCreate={() => setEditing({ ...CustomSpell.parse({ id: randomId(), name: '新法術', level: 0, description: '法術效果' }), name: '', description: '' })} />
-      {!initial.length && <div className="rounded-card border border-dashed border-border px-4 py-10 text-center"><p className="text-body text-text-primary">尚未收藏法術</p><p className="mt-2 text-ui text-text-secondary">從「新增法術」開始，寫下你的第一道咒語。</p></div>}
+      {!initial.length && <AdventureEmpty title="尚未收藏法術" description="從「新增法術」開始，寫下你的第一道咒語。" />}
       {initial.length > 0 && !visible.length && <LibraryNoResults />}
       <div className="space-y-3">{visible.map(s => <ParchmentCard key={s.id} className="overflow-hidden">
         <div className="medium:flex medium:items-start">

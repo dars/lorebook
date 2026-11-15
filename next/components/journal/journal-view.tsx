@@ -1,5 +1,8 @@
 'use client';
 
+import { AdventureIcon } from '@/components/ui/adventure-icon';
+import { AdventureEmpty } from '@/components/ui/adventure-empty';
+
 import { useEffect, useState } from 'react';
 
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
@@ -77,7 +80,7 @@ export function JournalView({
         entries.length <= 1 ? 'max-w-[700px]' : 'max-w-[1100px]'
       }`}
     >
-      <SectionTitle en="JOURNAL" cn="旅程筆記" first />
+      <div className="flex items-center gap-2"><AdventureIcon name="quill" /><div className="min-w-0 flex-1"><SectionTitle en="JOURNAL" cn="旅程筆記" first /></div></div>
 
       {/* 試玩模式才提醒。HP 與裝備同樣只活在這次瀏覽，但那些是隨手可重做的
           數值；日誌是使用者**寫出來的東西**，弄丟一段字的代價完全不同。 */}
@@ -88,9 +91,7 @@ export function JournalView({
       )}
 
       {entries.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-secondary">
-          尚未建立任何日誌。<br />點下方的「＋」開始記錄你的冒險。
-        </p>
+        <AdventureEmpty title="故事，從第一頁開始。" description="點下方的「＋」，記下今天的冒險。" />
       ) : (
         <div
           className={`grid gap-3 ${entries.length > 1 ? 'expanded:grid-cols-2' : ''}`}

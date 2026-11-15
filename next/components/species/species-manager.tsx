@@ -1,4 +1,5 @@
 'use client';
+import { AdventureEmpty } from '@/components/ui/adventure-empty';
 
 import { type ReactNode, useId, useState } from 'react';
 
@@ -131,12 +132,7 @@ export function SpeciesManager({
       )}
 
       {list.length === 0 && (
-        <div className="mb-3 rounded-card border border-dashed border-border px-4 py-6 text-center">
-          <p className="text-ui text-text-light">尚未收藏種族</p>
-          <p className="mt-1 text-small text-text-secondary">
-            建立一個自訂種族，SRD 沒收錄的族群也能拿來建角。
-          </p>
-        </div>
+        <AdventureEmpty title="尚未收藏種族" description="建立一個自訂種族，SRD 沒收錄的族群也能拿來建角。" />
       )}
 
       {list.length > 0 && !list.some(item => item.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())) && <LibraryNoResults />}
