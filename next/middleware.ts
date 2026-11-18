@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { supabaseEnv } from './lib/supabase/env';
+import { canonicalPageUrl } from './lib/site';
 
 /**
  * 每次請求刷新 Supabase session 並寫回 cookie。
@@ -10,6 +11,8 @@ import { supabaseEnv } from './lib/supabase/env';
  * 少了這一步，session 過期後使用者會在毫無徵兆的情況下被登出。
  */
 export async function middleware(request: NextRequest) {
+  const canonical = canonicalPageUrl(new URL(request.url), request.method);
+  if (canonical) return NextResponse.redirect(canonical, 308);
   let response = NextResponse.next({ request });
   const { url, anonKey } = supabaseEnv();
 

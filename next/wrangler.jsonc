@@ -7,6 +7,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "main": ".open-next/worker.js",
   "name": "lorebook",
+  "account_id": "8651c11baf0d742018596afe8f5dcb6e",
   "compatibility_date": "2026-08-05",
   // nodejs_compat：Next.js 的 server runtime 需要 Node API
   // global_fetch_strictly_public：讓 worker 內的 fetch 走公開網路語意，
@@ -22,7 +23,11 @@
   // 自訂網域。原本掛在 `lorebook` Pages 專案上，切換到 Workers 後改綁這裡。
   // custom_domain 會自動建立 DNS 記錄與憑證；同名網域不能同時綁在 Pages 與
   // Worker 上，所以必須先在 Pages 專案移除才能 deploy 成功。
-  "routes": [{ "pattern": "lorebook.code4soul.dev", "custom_domain": true }],
+  "routes": [
+    { "pattern": "lorebook.party", "custom_domain": true },
+    { "pattern": "www.lorebook.party", "custom_domain": true },
+    { "pattern": "lorebook.code4soul.dev", "custom_domain": true }
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"

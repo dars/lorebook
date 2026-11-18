@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { SITE_ORIGIN } from '@/lib/site';
 import { Cinzel, Inter, Source_Sans_3 } from 'next/font/google';
 import { LegacySwCleanup } from '@/components/legacy-sw-cleanup';
 import { InstallPrompt } from '@/components/shell/install-prompt';
@@ -49,6 +50,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_ORIGIN),
   title: 'Lorebook',
   description: 'D&D 2024 跑團角色卡與世界觀筆記',
 };
