@@ -13,6 +13,15 @@ Auth Site URL 使用 `https://lorebook.party`，Redirect URLs 加入
 既有 localhost 與舊網域的白名單保留，讓進行中的登入仍能完成。
 Google provider 的 callback 仍是 Supabase 的 `/auth/v1/callback`，不是網站的 callback。
 
+### Google 品牌與所有權（2026-11-18 完成）
+
+- Google Cloud 專案：`lorebook-503208`，管理帳號 `devlin@code4soul.dev`。
+- Google Auth Platform 品牌首頁、隱私權與條款分別為正式網域根路徑、`/privacy`、`/terms`。
+- 授權網域包含 `lorebook.party`，保留 `code4soul.dev` 與既有 Supabase callback 網域。
+- Search Console 已透過根網域 DNS TXT 驗證所有權；Cloudflare 的 `google-site-verification` 記錄需保留。
+- Google 品牌重新驗證通過，已按「發布品牌宣傳內容」，狀態為「品牌已完成驗證，並向使用者顯示」。
+- 已實測 Google 登入成功回到 `https://lorebook.party/character-select`，既有角色清單正常顯示。
+
 Cookie、主題偏好與離線快取依網域隔離：新網域需要重新登入；已安裝的舊 PWA 可改由新網域重新加入主畫面。
 POST、API、OAuth callback 與靜態資產不轉址，避免舊頁面存檔和 PKCE 流程中斷。
 
