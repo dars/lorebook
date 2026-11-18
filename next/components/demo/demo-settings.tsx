@@ -3,6 +3,7 @@ import { AppLink } from '@/components/ui/app-link';
 import { ThemeSwitch } from '@/components/shell/theme-switch';
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
 import type { Character } from '@/lib/domain/character';
+import { CommunityLinks } from '@/components/shell/community-links';
 import { RulesLinks } from '@/components/shell/rules-links';
 
 /** 試玩專用設定：保留正式版有意義的角色切換與主題，不出現帳號專屬功能。 */
@@ -39,6 +40,8 @@ export function DemoSettings({ character }: { character: Character }) {
       </ParchmentCard>
 
       <RulesLinks />
+
+      <CommunityLinks />
 
       <ParchmentCard className="p-4">
         <h2 className="text-body font-semibold text-text-primary">外觀主題</h2>

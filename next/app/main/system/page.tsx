@@ -6,6 +6,7 @@ import { SignOutButton } from '@/components/shell/sign-out-button';
 import { getCurrentCharacterId } from '@/lib/characters/current';
 import { fetchMyCharacter } from '@/lib/characters/fetch';
 import { getSessionUser } from '@/lib/supabase/server';
+import { CommunityLinks } from '@/components/shell/community-links';
 import { RulesLinks } from '@/components/shell/rules-links';
 
 export const dynamic = 'force-dynamic';
@@ -69,6 +70,8 @@ export default async function SystemPage() {
       </ParchmentCard>
 
       <RulesLinks />
+
+      <CommunityLinks />
 
       <ParchmentCard className="p-4">
         <h2 className="text-body font-semibold text-text-primary">外觀主題</h2>
