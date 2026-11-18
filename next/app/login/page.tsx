@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { DiscordLink } from '@/components/shell/community-links';
 
 import { AppLink } from '@/components/ui/app-link';
 import { signIn } from '@/lib/auth/actions';
@@ -71,6 +72,7 @@ export default async function LoginPage({
             <span><strong>先以訪客身分試玩</strong><small>不用註冊，直接查看範例角色</small></span>
             <span aria-hidden="true">↗</span>
           </AppLink>
+          <DiscordLink className="mt-3 flex min-h-11 items-center justify-center gap-2 rounded-card px-2 text-small font-semibold text-gold hover:bg-gold/10" />
           <p className="mt-7 text-center text-small leading-6 text-text-secondary">繼續使用前，請閱讀隱私權政策與使用條款。</p>
           <nav aria-label="政策與條款" className="flex flex-wrap justify-center gap-x-5 text-small text-section-label">
             <AppLink href="/privacy" className="inline-flex min-h-11 items-center underline">隱私權政策</AppLink>
