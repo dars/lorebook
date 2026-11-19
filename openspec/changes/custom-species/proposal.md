@@ -1,5 +1,6 @@
 > **✅ 已解凍（2026-09-03）**：Next.js 重寫完成並於 2026-09-02 切換上線
-> （`lorebook.code4soul.dev` 自 Pages 的 Flutter build 改綁 Workers）。解凍條件
+> （當時正式站自 Pages 的 Flutter build 改綁 Workers；現行入口為
+> [lorebook.party](https://lorebook.party)）。解凍條件
 > 達成，proposal 與 design 已依 Next 實作更新。
 >
 > 原凍結記錄（2026-08-05）：專案改為 web-only 並以 Next.js 全面重寫，本變更

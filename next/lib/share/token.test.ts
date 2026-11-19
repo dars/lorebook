@@ -20,8 +20,8 @@ describe('分享 token', () => {
   });
 
   it('連結由前綴與 token 組成', () => {
-    expect(shareLinkFor('https://lorebook.code4soul.dev', 'abc')).toBe(
-      'https://lorebook.code4soul.dev/v/abc',
+    expect(shareLinkFor('https://lorebook.party', 'abc')).toBe(
+      'https://lorebook.party/v/abc',
     );
   });
 });

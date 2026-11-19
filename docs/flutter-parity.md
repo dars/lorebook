@@ -1,9 +1,12 @@
 # Flutter → Next.js 移植落差清單
 
+> 本文件保留 2026 年 8–9 月的移植核對紀錄，不代表目前部署狀態。
+> 正式網站已統一為 [lorebook.party](https://lorebook.party)，網域設定見 [domain-setup.md](domain-setup.md)。
+
 **本次重跑**：2026-09-01（前兩版 2026-08-13、2026-08-08）
 **⚠️ 本次核對強度低於前兩版**：只做了 **Next 端的靜態檢查**（讀 code 與 UI 文案），
 **沒有**還原 Flutter 端逐區對照，也**沒有**實際操作核對——Next 版至今未上線
-（`lorebook.code4soul.dev` 仍是 Flutter build），workers.dev 上的部署因缺
+（當時的正式站仍是 Flutter build），workers.dev 上的部署因缺
 `SUPABASE_URL` secret 而全數 500。因此下表標「✅ 已補」的項目是**看到實作存在**，
 不等於行為與 Flutter 一致；標「? 待實測」的是靜態讀不出來的互動行為。
 
@@ -16,7 +19,7 @@
 **方法**：Flutter `lib/**/presentation/**` 與 Next `app/`、`components/`、`lib/` 逐區對照，
 再開**線上版**實際操作核對。上一版只做中文字串差集，誤判率偏高（見文末）。
 
-**線上版的基準確認**：`https://lorebook.code4soul.dev` 目前仍是 Flutter build
+**當時線上版的基準確認**：當時正式站仍是 Flutter build
 （`flutter_bootstrap.js`）。抓下 `main.dart.js` 比對標記——無 `signInWithApple`、
 有 `get_shared_character` / `user_backgrounds` / `toolProficiencies`——確認**線上 bundle
 等於 git HEAD 的 `lib/`**，其後只有一筆「體能→運動」的中文改名（dart2js 編過後 grep 不到）。

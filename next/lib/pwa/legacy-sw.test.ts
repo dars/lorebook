@@ -4,13 +4,13 @@ import { CACHE_PREFIX, isLegacyCacheKey, isLegacyRegistration } from './legacy-s
 
 describe('辨識遺留的 service worker', () => {
   it('認得 Flutter 的 SW', () => {
-    expect(isLegacyRegistration('https://lorebook.pages.dev/flutter_service_worker.js')).toBe(true);
+    expect(isLegacyRegistration('https://lorebook.party/flutter_service_worker.js')).toBe(true);
     expect(isLegacyRegistration('/flutter_service_worker.js?v=123')).toBe(true);
   });
 
   it('不動本應用自己的 SW', () => {
     // 這是整段邏輯存在的理由：兩者 scope 都是 '/'，只有 script URL 分得出來。
-    expect(isLegacyRegistration('https://lorebook.pages.dev/sw.js')).toBe(false);
+    expect(isLegacyRegistration('https://lorebook.party/sw.js')).toBe(false);
     expect(isLegacyRegistration('/sw.js')).toBe(false);
   });
 

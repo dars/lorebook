@@ -59,6 +59,6 @@
 
 **版型影響**：手機與平板皆有。檢視頁沿用既有 `ResponsiveLayout` 級距與角色卡現有排列，無新版型分支；QR 顯示為新畫面。
 
-**相依**：需新增 QR code 產生套件（純本機繪製、無網路，如 `qr_flutter`）；deep link 需設定 universal link / app link 的 domain 驗證檔（web 部署 `lorebook-1om.pages.dev` 已存在）。不引入其他第三方服務。
+**相依**：需新增 QR code 產生套件（純本機繪製、無網路，如 `qr_flutter`）；deep link 需設定 universal link / app link 的 domain 驗證檔（當時已有 Pages web 部署；現行正式入口為 [lorebook.party](https://lorebook.party)）。不引入其他第三方服務。
 
 **與 `homebrew-share` 的關係**：兩者為**獨立的兩套機制**，不共用資料表、不互為前提。homebrew 分享的是內容定義的**快照複製**（匯入後兩邊各自獨立）；角色卡分享的是**活資料的持續授權**（撤銷即斷）。兩者的路徑前綴需錯開（homebrew 為 `/s/<token>`）。兩個 change 各自對 `data-layer` 新增**不同標題**的 requirement，delta 不重疊，可各自獨立 archive。

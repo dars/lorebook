@@ -10,7 +10,7 @@ import { shareLinkFor } from './token';
  * 服務會拿到分享連結，而那就是角色卡的通行證。
  */
 describe('分享 QR', () => {
-  const link = shareLinkFor('https://lorebook.code4soul.dev', 'rtvvqYWSrOt0cs');
+  const link = shareLinkFor('https://lorebook.party', 'rtvvqYWSrOt0cs');
 
   it('產出自包含的 SVG，不會發出任何網路請求', async () => {
     const svg = await QR.toString(link, { type: 'svg', margin: 0 });
@@ -25,7 +25,7 @@ describe('分享 QR', () => {
     expect(svg).not.toContain('url(');
 
     // 連結內容不得以明文出現在 SVG 裡——那代表它被當成文字嵌入而非編碼。
-    expect(svg).not.toContain('lorebook.code4soul.dev');
+    expect(svg).not.toContain('lorebook.party');
   });
 
   it('內容可還原為原連結（掃描得到正確網址）', async () => {

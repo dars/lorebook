@@ -13,7 +13,7 @@ export default function PrivacyPage() {
     <h1 className="mt-4 font-cjk text-heading font-bold">Lorebook 隱私權政策</h1>
     <p className="mt-2 text-small text-text-secondary">更新日期：2026 年 10 月 28 日</p>
     <div className="mt-8 space-y-7 [&_h2]:mb-2 [&_h2]:text-body [&_h2]:font-bold [&_p]:mt-2 [&_a]:underline">
-      <section><h2>適用範圍與聯絡方式</h2><p>本政策適用於 lorebook.party（及舊網址 lorebook.code4soul.dev）的 Lorebook 角色卡與冒險紀錄服務。關於資料處理、存取、更正或刪除，請聯絡 Lorebook 維護者：<a href="mailto:devlin@code4soul.dev">devlin@code4soul.dev</a>。</p></section>
+      <section><h2>適用範圍與聯絡方式</h2><p>本政策適用於 lorebook.party（包含舊網址轉址服務）的 Lorebook 角色卡與冒險紀錄服務。關於資料處理、存取、更正或刪除，請聯絡 Lorebook 維護者：<a href="mailto:devlin@code4soul.dev">devlin@code4soul.dev</a>。</p></section>
       <section><h2>我們處理哪些資料、用於什麼目的</h2>
         <p>Google 登入：透過 Google 與 Supabase 接收帳號識別碼、電子郵件，以及 Google 提供的基本個人資料（例如名稱與頭像），用來識別帳號、維持登入及將雲端資料歸屬於你。Lorebook 不取得你的 Google 密碼；目前的登入功能不要求讀取 Gmail、Google 雲端硬碟或聯絡人。</p>
         <p>你建立的內容：角色卡、角色圖片、冒險筆記、自創內容、收藏與分享紀錄，用來提供編輯、儲存、跨裝置同步及你主動使用的分享功能。請勿在內容中放入不必要的個人資料或他人的敏感資料。</p>

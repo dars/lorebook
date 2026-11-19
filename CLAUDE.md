@@ -78,7 +78,7 @@ wrangler 會照常說 Success 並給出網址。徵兆是部署輸出裡的
 ```bash
 P=_next/static/chunks/<含新碼的 chunk>.js
 md5 -q next/.open-next/assets/$P
-curl -s "https://lorebook.code4soul.dev/$P" | md5 -q
+curl -s "https://lorebook.party/$P" | md5 -q
 ```
 
 有 migration 時**先 `npx supabase db push` 再部署**，順序不可顛倒：程式碼先上線
