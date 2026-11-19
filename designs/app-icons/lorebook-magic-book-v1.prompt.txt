@@ -1,0 +1,14 @@
+Generator: built-in image_gen
+Status: design concept; existing application icons are unchanged.
+Small-size and platform mask checks are required before shipping.
+
+Use case: logo-brand
+Asset type: a single square app icon concept for Lorebook, a fantasy tabletop character sheet and adventure journal.
+Primary request: design a beautiful new illustrated magical-book app icon matching the project's established midnight-navy, warm-gold, cozy chibi fantasy visual style.
+Scene/backdrop: full-bleed solid midnight navy #19232d background, square canvas; no outer mockup, no surrounding presentation.
+Subject: ONE chunky open enchanted book centered, warmly lit ivory pages, thick midnight-blue leather covers with restrained brass-gold corner protectors, a short visible warm-gold ribbon bookmark. A single prominent four-point warm-gold magical star rises just above the central book gutter, with only two tiny companion sparks. Book pages have simple large curved shapes, no tiny text. The composition feels welcoming, magical, and adventurous.
+Style/medium: polished hand-painted fantasy game inventory icon, soft cel shading, confident dark contours, subtle paper grain, gently rounded forms, close to the warm illustrated storybook aesthetic of chibi RPG characters. Designed as a distinctive product icon with simplified bold silhouette and high small-size legibility. Not photorealistic or shiny 3D.
+Composition/framing: square 1024x1024, front-facing slightly elevated view of open book, centered and balanced. All book and star artwork fits comfortably in central 70 percent width and height, with generous navy breathing space for app masks. Book is the largest element, star secondary.
+Color palette: #19232d navy backdrop, #24333f and muted desaturated blue leather, #ebc77c warm gold fittings/star, #f5ead5 warm parchment pages. Minimal soft amber glow near star, distinct readable silhouette.
+Text: none.
+Constraints: single finished icon only. Full opaque background to all four square corners; do not pre-round or inset the app tile. No circles, compass rings, borders, swords, dice, letters, wordmarks, watermark, UI, labels, or extra objects. Avoid ornate filigree, hairline detail, crowded particles, harsh neon glow, gradients filling the background.

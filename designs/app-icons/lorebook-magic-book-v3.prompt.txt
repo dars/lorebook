@@ -1,0 +1,15 @@
+Generator: built-in image_gen
+Input: designs/app-icons/lorebook-magic-book-v2.png
+Status: design concept; existing application icons are unchanged.
+
+Use case: precise-object-edit
+Asset type: Lorebook illustrated app icon, revision v3.
+Input image 1: edit target, revision v2. Keep its midnight navy #19232d background, soft ivory #f5ead5 pages, desaturated navy leather cover, restrained warm gold #ebc77c, friendly hand-painted fantasy style, ample margins and square full-bleed opaque canvas.
+
+PRIMARY DESIGN CHANGE: redesign the book and star into ONE interlocking emblem, a magical light opening out of the central book seam. The star must be EMBEDDED IN THE BOOK, never a detached floating sparkle above it.
+Remove the floating star in the input completely. Lower and merge a single elongated four-point gold star into the center of the open book: its center sits directly on the middle fold, halfway up the visible ivory pages. The star's left and right tapered rays extend across and become part of the left and right page folds. Its long lower ray runs down the gutter and joins the short gold ribbon bookmark emerging from the bottom spine. Its upper ray rises a little past the top V-shaped notch of the book. There must be NO NAVY GAP between the gold star and the book: ivory pages visibly meet the gold light on both sides. The impression should be of ivory pages unfolding around a golden seam of starlight, one unified recognizable silhouette.
+
+Simplify the illustration further: two broad gently curved ivory page shapes, a minimal page stack, subtle soft shading and very light hand-painted grain. Keep the page areas ivory rather than yellow. The integrated gold star should be crisp and read as a compact symbol, not a huge yellow glow obscuring the pages. No orange wash, no radial beams or atmospheric light effects.
+Use a short centered gold bookmark continuing directly from the star's lower point as the one deliberate detail. Remove metal corner ornaments and all other hardware. Cover is dark muted blue, chunky and gently rounded.
+Composition: compact unified emblem centered optically, book about 62% of canvas width, overall artwork about 58% of canvas height, generous uninterrupted midnight navy space on every side. Front-facing slightly elevated view, balanced and calm. The integrated star, central crease and bookmark make one continuous gold vertical signature.
+Preserve cozy fantasy illustration character while refining silhouette for app use. No text, letters, borders, compass circles, extra sparkles, characters, dice, objects, watermarks, mockup or pre-rounded tile. Output one square finished icon.

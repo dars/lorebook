@@ -1,4 +1,5 @@
-
+import Image from 'next/image';
+import appIcon from '@/public/images/app-icon-192.png';
 import { AppLink } from '@/components/ui/app-link';
 import { ThemeSwitch } from '@/components/shell/theme-switch';
 import { ParchmentCard } from '@/components/ui/decorations';
@@ -88,10 +89,22 @@ export default async function SystemPage() {
 
       <ParchmentCard className="p-4">
         <h2 className="text-body font-semibold text-text-primary">關於</h2>
-        <p className="mt-3 text-small text-text-light">Lorebook v0.1.0</p>
-        <p className="mt-1 text-small text-text-secondary">
-          D&amp;D 5.5e（2024）角色卡管理工具
-        </p>
+        <div className="mt-3 flex items-center gap-3">
+          <Image
+            src={appIcon}
+            alt=""
+            width={64}
+            height={64}
+            unoptimized
+            className="size-16 shrink-0 rounded-card"
+          />
+          <div className="min-w-0">
+            <p className="text-small text-text-light">Lorebook v0.1.0</p>
+            <p className="mt-1 text-small text-text-secondary">
+              D&amp;D 5.5e（2024）角色卡管理工具
+            </p>
+          </div>
+        </div>
 
         <h2 className="mt-4 text-body font-semibold text-text-primary">
           授權聲明

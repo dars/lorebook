@@ -1,0 +1,15 @@
+Generator: built-in image_gen
+Input: designs/app-icons/lorebook-magic-book-v4.png
+Purpose: 32px legibility correction following the first v4 preview check.
+
+Use case: precise-object-edit
+Asset type: Lorebook app icon final v4, small-size legibility correction.
+Input image 1 is the edit target: the current v4 book and compact rotated gold star.
+Keep EVERYTHING the same except the star's size, position and simplification. Preserve exact book silhouette and scale, ivory paper, muted navy leather, short separate right-side gold ribbon, midnight navy full-bleed square background, generous margins, soft hand-painted character.
+
+The actual 32-pixel preview shows the current small star disappears into a tiny gold notch. Fix this:
+Make the single compact four-point gold sparkle roughly DOUBLE its current width (from about 12% to 24% of the canvas width). Make it a simple bold, filled warm-gold four-point sparkle with four short balanced rays and concave curved sides, rotated 15 degrees clockwise. Minimize internal facet lines and shadow, keeping a distinct ochre contour for contrast on ivory.
+Move the star UP slightly so that its center sits right at the central top V notch of the book: top half and side points clearly silhouetted against navy, bottom half visibly overlaps the top of the ivory pages. It must visually nest into the book notch, with no navy gap detaching the star from the book.
+The gold star must remain compact and balanced, not cross-like. Its bottom ray ends in the upper third of the page. Do NOT connect it to the lower spine or ribbon.
+Keep the existing short gold bookmark below the right page completely separate. Do not add any sparkles or rays, glow, text, borders, rings, metallic ornament, or change anything else.
+Goal: at 32px, the viewer can distinguish an approximately 7-pixel golden magical sparkle nestled into an approximately 19-pixel open ivory book. At 64px the same emblem is crisp and charming. All subject pixels remain comfortably inside the central 80%-diameter circle. Output one finished square opaque image.

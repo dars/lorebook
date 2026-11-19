@@ -1,0 +1,16 @@
+Generator: built-in image_gen
+Input: designs/app-icons/lorebook-magic-book-v3.png
+Status: final candidate; see v4-review.md for visual checks. Existing application icons are unchanged.
+
+Use case: precise-object-edit
+Asset type: final refinement of the Lorebook fantasy illustrated app icon, revision v4.
+Input image 1: edit target, revision v3.
+Keep the open book silhouette, cozy restrained hand-painted style, broad ivory pages #f5ead5, muted navy leather cover, ample midnight navy #19232d background, balanced front-facing view and fully opaque square image. This is a targeted correction, not a redesign.
+
+CRITICAL: eliminate the long cross-like gold vertical stroke in the current design.
+Replace the stretched gold star with ONE compact four-point magical sparkle, four equally short balanced tapered rays and concave curved sides. Rotate this compact sparkle about 15 degrees clockwise, so it is not a vertical cross. Gold shape should be clear warm brass-gold with subtle darker ochre contour, not pale yellow glow. Star overall size about 18% of canvas width, its center located in the TOP central V notch of the book. Its top two tips slightly protrude above the pages while the bottom half nests into the upper page crease; it visibly overlaps and touches the pages so it belongs to the book rather than floating in space. Lower star tip ends within the upper third of the pages. Make the center and tips readable at 32 pixels. NO stem, NO beam or gold line extending down to the bottom of the book.
+Below this compact star, restore a normal ivory paper gutter with a quiet beige crease all the way down to the spine. Remove all gold from this lower central gutter.
+Remove the centered gold bookmark. Instead add a small separate short warm-gold ribbon emerging below the RIGHT-hand page, slightly right of center at approximately x=60% of canvas. It must be physically separated from the star by a broad uninterrupted area of ivory page, no connecting gold stroke. Keep the ribbon short and simple, about 7% of the canvas height with a V-notched end.
+Keep cover and two broad page shapes simple and thick, no fine ornament or tiny details. Single compact star, single short offset bookmark. No extra sparks, no glow or shine obscuring the star edges. Preserve clear ivory vs gold separation.
+Composition: book width about 65% of square canvas; complete artwork comfortably within central 72% width and 65% height and inside a centered circle of diameter 80% of canvas. Optically center overall silhouette. At least 16% navy margin to every outer side. Background solid full-bleed midnight navy, not a pre-rounded tile.
+Avoid ANY religious cross silhouette, long vertical star ray, connected star-and-bookmark, compass, text, watermark, frame, UI or mockup. Output ONE finished square icon.

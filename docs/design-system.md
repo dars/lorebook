@@ -43,6 +43,14 @@
 
 新增元件取用語意 token，不複製色碼；優先使用共用卡片與 EditorSheet。主題切換、初始 theme-color 與 PWA manifest 的背景色須同步。頁面專屬構圖與互動之後逐項微調，不在此階段改動角色規則、資料或編輯流程。
 
+## 品牌圖示
+
+App icon 採夜藍底、象牙白魔法書、嵌入上方書縫的暖金星芒及偏右短書籤。星芒與書籤不連成長直線。定稿母圖為 `designs/app-icons/lorebook-magic-book-v4-final.png`，32px、64px 與圓形裁切檢查見同目錄的 `v4-checks/review.png`。
+
+設定頁「關於」在名稱與版本資訊旁顯示 64px logo，靜態匯入正式 192px 圖示，讓打包網址隨圖檔內容換版；使用共用卡片圓角，文字在窄螢幕可換行。
+
+在專案根目錄執行 `sh designs/app-icons/export-production.sh`（需要 ImageMagick），統一產出 favicon（16/32/48/64/256px）、Apple icon（180px）、PWA 一般圖示（192/512px）與 maskable 圖示（512px）。maskable 另留裁切邊距；全部正式圖示皆為不透明背景，由平台套用外形。更新母圖後，將指令印出的版本值同步到 `next/app/manifest.ts` 的 `iconVersion`，避免舊圖示快取。
+
 ## 情境圖示與空白狀態
 
 `AdventureIcon` 提供寶箱（收藏）、羽毛筆（旅程）、營火（休息）：32px viewBox、1.7px 圓頭描邊，少量金色半透明填色。圖示為裝飾，必須搭配文字，不單獨代替操作名稱。職業符號繼續使用既有 `ClassIcon` 圓頭描邊。

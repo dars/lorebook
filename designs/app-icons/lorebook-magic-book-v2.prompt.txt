@@ -1,0 +1,16 @@
+Generator: built-in image_gen
+Input: designs/app-icons/lorebook-magic-book-v1.png
+Status: design concept; existing application icons are unchanged.
+
+Use case: precise-object-edit
+Asset type: Lorebook app icon concept, revision v2.
+Input image 1: edit target, the existing v1 magical-book illustration.
+Preserve the friendly hand-painted fantasy illustration style, midnight-navy backdrop, open-book identity, soft rounded forms and front-facing slightly elevated view. Refine this design into a more restrained and recognizable app icon.
+Required changes:
+1. Scale the entire book and star composition DOWN substantially. The complete artwork including bookmark and star must fit within the center 66% of the square canvas. Leave broad uninterrupted navy margins on all four sides. The book width should be about 64% of canvas width, rather than almost edge-to-edge as in the input. All salient elements should also fit comfortably inside a circle of diameter 76% of the canvas centered on the canvas.
+2. Change the large page surfaces to soft light IVORY #f5ead5, with pale warm gray and muted beige shadows. Remove the orange/yellow wash from the paper. Clearly separate ivory pages, dark blue cover, and small gold accents.
+3. Simplify the book to two broad readable page shapes and only a couple of page layers, a chunky muted navy leather cover, and a single short centered warm-gold ribbon emerging below the gutter. Remove the large shiny corner protectors and spine hardware. Only very small restrained brass tips on the two lower outer cover corners, if needed. Reduce overall texture and detail, retain subtle hand-painted charm.
+4. Keep EXACTLY ONE clear four-point warm-gold star floating close above the center book crease. Remove the two small side stars and the broad orange halo. Use restrained warm gold #ebc77c and a tiny gentle local glow only. Make the star and central crease/bookmark form one memorable aligned vertical signature.
+Composition: carefully balanced central silhouette with generous negative space; ivory pages form a gentle open V echoing the star's lower point. At small sizes the viewer should immediately see one book and one star.
+Background: uniform solid midnight navy #19232d, fully opaque and full-bleed to the square corners. Square image 1024x1024.
+No text, letters, logos, labels, watermark, circular rings, frames, extra sparkles, gradients over the background, mockup, rounded tile border or added objects. Output ONE finished square icon.

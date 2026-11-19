@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-11-19T05:21:10.905Z",
+  "origin": "https://lorebook.party",
+  "buildId": "18fa933-icon-927eacc30d79",
+  "iconLinks": {
+    "icon": "/favicon.ico?favicon.2rfjia9rq4w40.ico",
+    "apple-touch-icon": "/apple-icon.png?apple-icon.0d1wqh2z6yk60.png"
+  },
+  "checks": [
+    {
+      "path": "/images/app-icon-192.png?v=927eacc30d79",
+      "status": 200,
+      "sha256": "d2af74a8fec08dfb1afb25c56b3b2713431a4af1654d51679b022fba6363535f",
+      "sizes": "192x192"
+    },
+    {
+      "path": "/images/app-icon-192.png",
+      "status": 200,
+      "sha256": "d2af74a8fec08dfb1afb25c56b3b2713431a4af1654d51679b022fba6363535f",
+      "sizes": "192x192"
+    },
+    {
+      "path": "/images/app-icon.png?v=927eacc30d79",
+      "status": 200,
+      "sha256": "7385937409bcbf2b473655853da0d6a0a9e2d1f8ea36a32adc25d210a0dca6ba",
+      "sizes": "512x512"
+    },
+    {
+      "path": "/images/app-icon.png",
+      "status": 200,
+      "sha256": "7385937409bcbf2b473655853da0d6a0a9e2d1f8ea36a32adc25d210a0dca6ba",
+      "sizes": "512x512"
+    },
+    {
+      "path": "/images/app-icon-maskable.png?v=927eacc30d79",
+      "status": 200,
+      "sha256": "9d4637b76cd6c4f24c5eaf8804c0c58b65f4f53aeadfd7b2caed128238a3592a",
+      "sizes": "512x512"
+    },
+    {
+      "path": "/images/app-icon-maskable.png",
+      "status": 200,
+      "sha256": "9d4637b76cd6c4f24c5eaf8804c0c58b65f4f53aeadfd7b2caed128238a3592a",
+      "sizes": "512x512"
+    },
+    {
+      "path": "/favicon.ico?favicon.2rfjia9rq4w40.ico",
+      "status": 200,
+      "sha256": "848d6596308ff93b1051d734bfc64d27add8b01a3e4567a33b35b3f32ed56a6c"
+    },
+    {
+      "path": "/apple-icon.png?apple-icon.0d1wqh2z6yk60.png",
+      "status": 200,
+      "sha256": "8ecd4e3e842c60651011bc582217e89c9b9cc602eb402e38ec778797dd710271",
+      "sizes": "180x180"
+    },
+    {
+      "path": "/favicon.ico",
+      "status": 200,
+      "sha256": "848d6596308ff93b1051d734bfc64d27add8b01a3e4567a33b35b3f32ed56a6c"
+    },
+    {
+      "path": "/apple-icon.png",
+      "status": 200,
+      "sha256": "8ecd4e3e842c60651011bc582217e89c9b9cc602eb402e38ec778797dd710271",
+      "sizes": "180x180"
+    }
+  ]
+}
