@@ -1,3 +1,4 @@
+import { effectiveAbility, equipmentStats } from './equipment-effects';
 import type { Character, CharacterFeature, ClassResource } from '../domain/character';
 import { deriveClassResources } from './class-resources';
 export const isLifeCleric = (c:Character) => c.classNameEn==='Cleric' && !c.customSubclass && c.subclassEn==='Life Domain';
@@ -35,8 +36,8 @@ export function clericPowers(c:Character):ClericPower[]{
  if(c.classNameEn!=='Cleric')return [];
  const out:ClericPower[]=[];
  if(c.level>=2){
-  out.push({id:'spark',name:'神聖火花',resource:'Channel Divinity',description:`魔法動作；30 呎內另一名可見生物恢復 ${isLifeCleric(c)&&c.level>=17?sparkDice(c)*8:`${sparkDice(c)}d8`}＋${c.abilityScores.wis.modifier} HP，或造成 ${sparkDice(c)}d8＋${c.abilityScores.wis.modifier} 黯蝕／光輝傷害（體質豁免 DC ${c.spellDc}，成功傷害減半）。消耗 1 次引導神力。`});
-  out.push({id:'turn',name:c.level>=5?'驅散不死／灼燒不死':'驅散不死',resource:'Channel Divinity',description:`魔法動作；30 呎內選定不死生物感知豁免 DC ${c.spellDc}，失敗則恐懼、失能並遠離你，持續 1 分鐘。受到傷害、你失能或死亡時結束。${c.level>=5?`灼燒不死：可對失敗者造成 ${Math.max(1,c.abilityScores.wis.modifier)}d8 光輝傷害，這次傷害不解除驅散；共用同一次引導神力，不額外扣次數。`:''}`});
+  out.push({id:'spark',name:'神聖火花',resource:'Channel Divinity',description:`魔法動作；30 呎內另一名可見生物恢復 ${isLifeCleric(c)&&c.level>=17?sparkDice(c)*8:`${sparkDice(c)}d8`}＋${effectiveAbility(c, 'wis').modifier} HP，或造成 ${sparkDice(c)}d8＋${effectiveAbility(c, 'wis').modifier} 黯蝕／光輝傷害（體質豁免 DC ${equipmentStats(c).spellDc}，成功傷害減半）。消耗 1 次引導神力。`});
+  out.push({id:'turn',name:c.level>=5?'驅散不死／灼燒不死':'驅散不死',resource:'Channel Divinity',description:`魔法動作；30 呎內選定不死生物感知豁免 DC ${equipmentStats(c).spellDc}，失敗則恐懼、失能並遠離你，持續 1 分鐘。受到傷害、你失能或死亡時結束。${c.level>=5?`灼燒不死：可對失敗者造成 ${Math.max(1,effectiveAbility(c, 'wis').modifier)}d8 光輝傷害，這次傷害不解除驅散；共用同一次引導神力，不額外扣次數。`:''}`});
  }
  if(isLifeCleric(c)&&c.level>=3)out.push({id:'preserve',name:'保存生命',resource:'Channel Divinity',description:`魔法動作；分配最多 ${c.level*5} HP 給 30 呎內浴血生物，每個目標最多恢復至最大 HP 的一半。可包含自己；不加生命門徒。`});
  if(c.level>=10)out.push({id:'intervention',name:c.level>=20?'神聖介入／高等神聖介入':'神聖介入',resource:'Divine Intervention',description:`魔法動作：施放任一 5 環以下、不以反應施放的牧師法術，不消耗法術位或材料。一般使用長休恢復。${c.level>=20?'也可選祈願術；此時改為擲 2d4，完成該次數的長休後才恢復。':''}`});
@@ -55,7 +56,7 @@ export function preserveLife(c:Character,targets:HealingTarget[]):Character {
  if(!targets.length||targets.filter(t=>t.self).length>1)throw Error('請填寫治療目標。');
  let total=0,selfHealing=0;
  for(const t of targets){
-  const current=t.self?c.currentHp:t.current,max=t.self?c.maxHp:t.max;
+  const current=t.self?c.currentHp:t.current,max=t.self?equipmentStats(c).maxHp:t.max;
   if(![current,max,t.amount].every(Number.isInteger)||current<0||max<1||current>max||t.amount<0||current>Math.floor(max/2)||t.amount>Math.floor(max/2)-current)throw Error('保存生命只能治療浴血目標，且不能超過最大HP的一半。');
   total+=t.amount;if(t.self)selfHealing=t.amount;
  }

@@ -213,6 +213,7 @@ function SubclassRules() {
           · 特性的等級<strong className="text-text-light">依職業而異</strong>，選定母職業後會自動列出
         </li>
         <li>· 同一等級可以有多個特性</li>
+        <li>· 有限次數能力會在取得等級加入角色卡資源，依設定於短休／長休回復</li>
       </ul>
       <p className="mt-2 text-small text-text-secondary">這是規則書的結構，不是這個 App 自訂的。</p>
     </>

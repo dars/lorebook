@@ -3,6 +3,7 @@
 import { useId } from 'react';
 
 import { FieldLabel } from '@/components/ui/editor-sheet';
+import { LimitedUseFields } from '@/components/homebrew/limited-use-fields';
 import { CLASSES, classCn } from '@/lib/creation/data';
 import {
   FEATURE_DESC_MAX,
@@ -131,7 +132,7 @@ export function SubclassEditor({
                   <button
                     type="button"
                     onClick={() => addFeature(level)}
-                    className="ml-auto min-h-9 text-small text-gold"
+                    className="ml-auto min-h-11 text-small text-gold"
                   >
                     ＋ 新增特性
                   </button>
@@ -158,7 +159,7 @@ export function SubclassEditor({
                           }
                           maxLength={FEATURE_NAME_MAX}
                           placeholder="特性名稱"
-                          className="min-h-11 flex-1 rounded-chip border border-border bg-surface-2 px-3 text-ui text-text-primary"
+                          className="min-h-11 min-w-0 flex-1 rounded-chip border border-border bg-surface-2 px-3 text-ui text-text-primary"
                         />
                         <button
                           type="button"
@@ -180,6 +181,28 @@ export function SubclassEditor({
                         placeholder="說明（選填）"
                         className="mt-2 w-full rounded-card border border-border bg-surface-2 p-2 text-ui text-text-primary"
                       />
+                      <label className="flex min-h-11 cursor-pointer items-center gap-2 text-small text-text-primary">
+                        <input
+                          type="checkbox"
+                          checked={!!f.limitedUse}
+                          onChange={(e) => setFeature(i, {
+                            limitedUse: e.target.checked ? { uses: 1, recovery: 'long' } : undefined,
+                          })}
+                          className="accent-gold"
+                        />
+                        有限次數能力
+                      </label>
+                      {f.limitedUse && (
+                        <>
+                          <LimitedUseFields
+                            value={f.limitedUse}
+                            onChange={(limitedUse) => setFeature(i, { limitedUse })}
+                          />
+                          <p className="mt-2 text-small text-text-secondary">
+                            {level} 級取得時加入角色卡資源，依設定在短休／長休回復。
+                          </p>
+                        </>
+                      )}
                     </div>
                   ))
                 )}
@@ -188,7 +211,7 @@ export function SubclassEditor({
           })}
 
           <p className="text-small leading-relaxed text-text-secondary">
-            特性僅為顯示文字，不會產生規則效果——寫「+2 AC」不會反映在角色卡的
+            有限次數能力會產生角色卡資源；其他說明僅為文字，寫「+2 AC」不會反映在角色卡的
             護甲等級上，數值請自行與 DM 確認。
           </p>
         </div>

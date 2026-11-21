@@ -1,9 +1,10 @@
+import { equipmentStats } from './equipment-effects';
 import type {Character,Spell} from '../domain/character';
 import {METAMAGIC,DAMAGE} from './progression/options';
 export const draconic=(c:Character)=>c.classNameEn==='Sorcerer'&&c.level>=3&&!c.customSubclass&&['Draconic Sorcery','Draconic Bloodline'].includes(c.subclassEn);
 export const sorceryPoints=(c:Character)=>c.resources.find(r=>r.nameEn==='Sorcery Points');
 export const innateActive=(c:Character)=>c.classNameEn==='Sorcerer'&&!!c.innateSorceryActive;
-export const effectiveSpellDc=(c:Character)=>c.spellDc+(innateActive(c)?1:0);
+export const effectiveSpellDc=(c:Character)=>equipmentStats(c).spellDc+(innateActive(c)?1:0);
 export const affinity=(c:Character)=>draconic(c)&&c.level>=6?DAMAGE.slice(0,5).find(o=>c.progression?.selections['elemental-affinity']?.includes(o.id)||c.features.some(f=>!f.isCustom&&f.progressionSource==='elemental-affinity'&&f.nameEn===o.id)):undefined;
 export const affinityMatches=(c:Character,s:Spell)=>{const a=affinity(c);return !!a&&!s.homebrewId&&(s.damageType.toLowerCase().includes(a.id.toLowerCase())||s.damageType.includes(a.name));};
 export const SLOT_CREATION=[{level:1,cost:2,min:2},{level:2,cost:3,min:3},{level:3,cost:5,min:5},{level:4,cost:6,min:7},{level:5,cost:7,min:9}];

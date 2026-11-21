@@ -1,3 +1,4 @@
+import { canEquip, effectiveAbility, equipmentAcBonus } from './equipment-effects';
 import {draconic} from './sorcerer';
 import type { Character, Equipment } from '@/lib/domain/character';
 
@@ -15,7 +16,7 @@ export type AcResult = {
 export const wearingArmor = (c: Character) =>
   c.equipment.some(
     (e) =>
-      e.equipped &&
+      canEquip(e) && e.equipped &&
       e.itemType === 'armor' &&
       e.armorCategory !== 'shield' &&
       e.armorCategory !== 'none',
@@ -23,12 +24,12 @@ export const wearingArmor = (c: Character) =>
 
 export const wieldingShield = (c: Character) =>
   c.equipment.some(
-    (e) => e.equipped && e.itemType === 'armor' && e.armorCategory === 'shield',
+    (e) => canEquip(e) && e.equipped && e.itemType === 'armor' && e.armorCategory === 'shield',
   );
 
 export const wearingHeavyArmor = (c: Character) =>
   c.equipment.some(
-    (e) => e.equipped && e.itemType === 'armor' && e.armorCategory === 'heavy',
+    (e) => canEquip(e) && e.equipped && e.itemType === 'armor' && e.armorCategory === 'heavy',
   );
 
 /** 角色是否已知法師護甲——決定行動頁的開關要不要出現。 */
@@ -74,12 +75,14 @@ export function featureArmorViolation(
 /** 已裝備的身體護甲（不含盾牌）。 */
 export function equippedBodyArmor(c: Character): Equipment | undefined {
   return c.equipment.find(
-    (e) => e.equipped && e.itemType === 'armor' && e.armorCategory !== 'shield',
+    (e) => canEquip(e) && e.equipped && e.itemType === 'armor' && e.armorCategory !== 'shield',
   );
 }
 
 export function computeAc(c: Character): AcResult {
-  const dex = c.abilityScores.dex.modifier;
+  const bonus = equipmentAcBonus(c);
+  const bonusLabel = bonus ? `・裝備 +${bonus}` : '';
+  const dex = effectiveAbility(c, 'dex').modifier;
   const shield = wieldingShield(c);
   const shieldBonus = shield ? 2 : 0;
   const shieldSuffix = shield ? '・盾牌' : '';
@@ -102,11 +105,11 @@ export function computeAc(c: Character): AcResult {
       default:
         if (armor.acBase <= 0) {
           // 自訂護甲缺推導資料：回退舊的靜態 ac 欄位。
-          return { value: c.ac + shieldBonus, label: `${armor.name}${shieldSuffix}` };
+          return { value: c.ac + shieldBonus + bonus, label: `${armor.name}${shieldSuffix}${bonusLabel}` };
         }
         base = armor.acBase;
     }
-    return { value: base + shieldBonus + defense, label: `${armor.name}${shieldSuffix}${defense ? '・防禦風格' : ''}` };
+    return { value: base + shieldBonus + defense + bonus, label: `${armor.name}${shieldSuffix}${defense ? '・防禦風格' : ''}${bonusLabel}` };
   }
 
   // 未著甲：候選公式**取最高**，不是後者覆蓋前者。
@@ -115,7 +118,7 @@ export function computeAc(c: Character): AcResult {
 
   if (c.classNameEn === 'Barbarian') {
     // 野蠻人的無甲防禦持盾仍有效。
-    const v = 10 + dex + c.abilityScores.con.modifier;
+    const v = 10 + dex + effectiveAbility(c, 'con').modifier;
     if (v > value) {
       value = v;
       label = '無甲防禦';
@@ -123,13 +126,13 @@ export function computeAc(c: Character): AcResult {
   }
   if (c.classNameEn === 'Monk' && !shield) {
     // 武僧持盾則無甲防禦失效——與野蠻人的差別，重寫時最容易漏掉的一條。
-    const v = 10 + dex + c.abilityScores.wis.modifier;
+    const v = 10 + dex + effectiveAbility(c, 'wis').modifier;
     if (v > value) {
       value = v;
       label = '無甲防禦';
     }
   }
-  if(draconic(c)){const v=10+dex+c.abilityScores.cha.modifier;if(v>value){value=v;label='龍族韌性';}}
+  if(draconic(c)){const v=10+dex+effectiveAbility(c, 'cha').modifier;if(v>value){value=v;label='龍族韌性';}}
   if (c.mageArmorActive) {
     const v = 13 + dex;
     if (v > value) {
@@ -138,5 +141,5 @@ export function computeAc(c: Character): AcResult {
     }
   }
 
-  return { value: value + shieldBonus, label: `${label}${shieldSuffix}` };
+  return { value: value + shieldBonus + bonus, label: `${label}${shieldSuffix}${bonusLabel}` };
 }

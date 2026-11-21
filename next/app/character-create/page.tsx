@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation';
 
 import { CreateWizard } from '@/components/creation/create-wizard';
 import { fetchCustomBackgrounds } from '@/lib/backgrounds/actions';
-import { fetchSpells, fetchItems } from '@/lib/catalog/fetch';
+import { fetchItems } from '@/lib/catalog/fetch';
+import { fetchChoiceSpells } from '@/lib/spells/choice-catalog-fetch';
 import { OfflineNotice } from '@/components/shell/offline-notice';
 import { fetchCustomSpecies } from '@/lib/species/actions';
 import { toSpeciesOption } from '@/lib/species/types';
@@ -21,7 +22,7 @@ export default async function CharacterCreatePage() {
   if (auth.status === 'unauthenticated') redirect('/login');
   if (auth.status === 'unknown') return <OfflineNotice />;
 
-  const [{ rows }, {rows:items}] = await Promise.all([fetchSpells(),fetchItems()]);
+  const [{ rows, error: spellsError }, {rows:items}] = await Promise.all([fetchChoiceSpells(),fetchItems()]);
   // 只有 0 與 1 環用得到——339 筆全傳會讓 HTML 多出數百 KB。
   const spells = rows.filter((s) => s.level <= 1);
 
@@ -48,6 +49,7 @@ export default async function CharacterCreatePage() {
   return (
     <CreateWizard
       spells={spells}
+      spellsError={spellsError}
       items={items}
       customBackgrounds={custom}
       customSpecies={species.map(toSpeciesOption)}

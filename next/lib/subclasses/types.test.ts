@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   SUBCLASS_FEATURE_LEVELS,
+  CustomSubclass,
   cleanFeatures,
   featureLevelsFor,
   isValid,
@@ -89,5 +90,23 @@ describe('結構驗證', () => {
         { level: 6, name: '   ', description: '寫了說明但沒名字' },
       ]),
     ).toEqual([{ level: 3, name: '有名字', description: '' }]);
+  });
+
+  it('有限次數設定能通過解析與清理，舊特性可不設定', () => {
+    const features = [{ level: 3, name: ' 火焰 ', description: '', limitedUse: { uses: 'proficiency' as const, recovery: 'short' as const } }];
+    expect(isValid({ ...base, features })).toBe(true);
+    const parsed = CustomSubclass.parse({ ...base, features });
+    expect(cleanFeatures(parsed.features)[0]).toEqual({ ...features[0], name: '火焰' });
+    expect(CustomSubclass.parse(base).features[0].limitedUse).toBeUndefined();
+  });
+
+  it.each([
+    { uses: 0, recovery: 'short' },
+    { uses: 4, recovery: 'long' },
+    { uses: 1, recovery: 'daily' },
+  ])('拒絕無效次數或回復時機：%o', (limitedUse) => {
+    const data = { ...base, features: [{ ...base.features[0], limitedUse }] };
+    expect(CustomSubclass.safeParse(data).success).toBe(false);
+    expect(validate(data as unknown as CustomSubclass)).toContain('有限次數');
   });
 });

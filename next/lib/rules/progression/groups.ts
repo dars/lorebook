@@ -8,10 +8,12 @@ import type { Character } from '@/lib/domain/character';
 import { CLASSES, SKILLS } from '@/lib/creation/data';
 import { CANTRIPS_KNOWN, PREPARED_SPELLS, CLASS_PROGRESSION, maxSpellRingFor, asiLevelsFor } from '../level-tables';
 import { castKindOf } from '@/lib/creation/spell-from-catalog';
+import { matchesChoiceSpell, type ChoiceSpell } from '@/lib/spells/choice-catalog';
 import { ARTISAN_TOOLS, DAMAGE, INSTRUMENTS, INVOCATIONS, LANGUAGES, METAMAGIC, ORIGINS, STYLES, TOOLS, opts, originId, featOriginKey, type Option } from './options';
 export type Selections = Record<string, string[]>;
 export type ChoiceCatalog = {
-    spells: CatalogSpell[];
+    spells: ChoiceSpell[];
+    spellError?: string | null;
     items: CatalogItem[];
     feats?: CatalogFeat[];
     /** 本次升級由主表單處理的專長等級，避免另開一次補選名額。 */
@@ -40,11 +42,7 @@ export type ChoiceGroup = {
     unlimited?: boolean;
 };
 const skillOptions = SKILLS.map(s => ({ id: s.nameEn, name: s.name }));
-const asOptions = (spells: CatalogSpell[]) => spells.map(s => ({ id: s.id, name: s.name, detail: `${s.eng_name ?? ''} · ${s.level === 0 ? '戲法' : `${s.level} 環`}`, description: ftFlattenEntries(s.entries) }));
-const knownKey = (s: {
-    name: string;
-    nameEn: string;
-}) => s.nameEn || s.name;
+const asOptions = (spells: ChoiceSpell[]) => spells.map(s => ({ id: s.id, name: s.name, detail: [s.homebrew ? '自創收藏' : '', s.eng_name, s.level === 0 ? '戲法' : `${s.level} 環`].filter(Boolean).join(' · '), description: s.homebrew?.description ?? ftFlattenEntries(s.entries) }));
 /** 不依靠翻譯文字判斷子職。自訂快照永遠不套 SRD 子職的額外規則。 */
 export function hasSrdSubclass(c: Character): boolean {
     if (c.customSubclass)
@@ -61,7 +59,7 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
         groups.push({...g,options:g.options.map(o=>({...o}))}); };
     const simple = (id: string, title: string, level: number, count: number, options: Option[], extra: Partial<ChoiceGroup> = {}) => add({ id, title, level, count, options, kind: 'feature', ...extra });
     const all = (family: string) => groups.filter(g => g.family === family).flatMap(g => values(g.id));
-    const spellOptions = (classes: string[], min: number, max: number, predicate: (s: CatalogSpell) => boolean = () => true) => catalog.spells.filter(s => s.level >= min && s.level <= max && (!classes.length || s.classes.some(k => classes.includes(k))) && predicate(s));
+    const spellOptions = (classes: string[], min: number, max: number, predicate: (s: CatalogSpell) => boolean = () => true) => catalog.spells.filter(s => s.level >= min && s.level <= max && (!!s.homebrew || !classes.length || s.classes.some(k => classes.includes(k))) && predicate(s));
     const spell = (id: string, title: string, level: number, count: number, classes: string[], min: number, max: number, extra: Partial<ChoiceGroup> = {}, predicate: (s: CatalogSpell) => boolean = () => true) => simple(id, title, level, count, asOptions(spellOptions(classes, min, max, predicate)), { kind: 'spell', ability: c.spellcastingAbility, ...extra });
     simple('equipment', '職業起始裝備', 1, 1, [...startingOptions(cls, catalog.items), { id: 'already', name: '已經領取', detail: '只登記，不再加入裝備與金幣；供既有角色補選使用。' }]);
     if (STARTING[cls]?.[Number(values('equipment')[0])]?.items.length) {
@@ -77,7 +75,7 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
         for (let l = 1; l <= lv; l++)
             spell(`book-${l}`, `法術書 · ${l} 級取得`, l, l === 1 ? 6 : 2, ['Wizard'], 1, maxSpellRingFor(CLASS_PROGRESSION.Wizard, l), { kind: 'book', family: 'book' });
     }
-    const bookIds = () => new Set([...all('book'), ...(c.spellbook ?? []).flatMap(s => catalog.spells.filter(v => (v.eng_name || v.name) === knownKey(s)).map(v => v.id))]);
+    const bookIds = () => new Set([...all('book'), ...(c.spellbook ?? []).flatMap(s => catalog.spells.filter(v => matchesChoiceSpell(s, v)).map(v => v.id))]);
     const prepared = PREPARED_SPELLS[cls]?.[lv - 1] ?? 0;
     const preparedClasses = cls === 'Bard' && lv >= 10 ? ['Bard', 'Cleric', 'Druid', 'Wizard'] : [cls];
     // 法師的已備候選在子職法術書建立後重新篩選。
@@ -260,7 +258,7 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
         const spell=catalog.spells.find(s=>s.id===o.id);
         if(spell?.level!==0)continue;
         const other=groups.some(x=>x.kind==='spell'&&x.id!==g.id&&values(x.id).includes(o.id));
-        const known=c.cantrips.some(x=>!x.homebrewId&&x.progressionSource!==g.id&&(!!x.progressionSource||g.id!=='cantrips')&&sameSpellName(x.nameEn,spell.eng_name??''));
+        const known=c.cantrips.some(x=>x.progressionSource!==g.id&&(!!x.progressionSource||g.id!=='cantrips')&&matchesChoiceSpell(x,spell));
         const priorOwners=groups.filter(x=>x.kind==='spell'&&c.progression?.selections[x.id]?.includes(o.id));
         const duplicateLegacy=priorOwners.length>1&&priorOwners[priorOwners.length-1].id!==g.id;
         if(duplicateLegacy||((other||known)&&!c.progression?.selections[g.id]?.includes(o.id)))o.disabledReason='角色已由其他來源學會此戲法，請選另一個';
@@ -278,9 +276,9 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
     }
     const discoveries = groups.find(g => g.id === 'lore-spells');
     if (discoveries) for (const o of discoveries.options) {
-        const name = catalog.spells.find(s => s.id === o.id)?.eng_name ?? '';
+        const spell = catalog.spells.find(s => s.id === o.id);
         const other = groups.some(g => g.kind === 'spell' && g.id !== discoveries.id && values(g.id).includes(o.id));
-        const known = [...c.cantrips, ...c.spells].some(s => !s.homebrewId && s.progressionSource !== discoveries.id && sameSpellName(s.nameEn, name));
+        const known = [...c.cantrips, ...c.spells].some(s => s.progressionSource !== discoveries.id && matchesChoiceSpell(s, spell));
         if ((other || known) && !c.progression?.selections[discoveries.id]?.includes(o.id)) o.disabledReason = '已由其他來源學會此法術，請選另一個';
     }
     const alwaysIds = new Set(groups.filter(g => g.kind === 'spell' && g.always).flatMap(g => values(g.id)));
@@ -291,17 +289,17 @@ export function choiceGroups(c: Character, catalog: ChoiceCatalog, selected: Sel
         basePrepared.detail=cls==='Ranger'?'獵人印記始終準備、不占名額；請另外選滿職業已備法術。':'始終準備法術另列、不占一般名額；空出的名額可稍後補選。';
     }
     if (basePrepared)
-        basePrepared.options = basePrepared.options.filter(o => !alwaysIds.has(o.id) && !automatic.some(n => sameSpellName(n, catalog.spells.find(s => s.id === o.id)?.eng_name ?? '')));
+        basePrepared.options = basePrepared.options.filter(o => !alwaysIds.has(o.id) && !automatic.some(n => { const s = catalog.spells.find(s => s.id === o.id); return !s?.homebrew && sameSpellName(n, s?.eng_name ?? ''); }));
     for (const g of groups.filter(g => g.id === 'tome-cantrips' || g.id === 'tome-rituals')) {
         const other = new Set(groups.filter(x => x.kind === 'spell' && x.id !== g.id && !x.id.startsWith('tome-')).flatMap(x => values(x.id)));
-        g.options = g.options.filter(o => !other.has(o.id) && ![...c.cantrips, ...c.spells].some(s => !s.progressionSource && !s.homebrewId && sameSpellName(s.nameEn, catalog.spells.find(x => x.id === o.id)?.eng_name ?? '')));
+        g.options = g.options.filter(o => !other.has(o.id) && ![...c.cantrips, ...c.spells].some(s => !s.progressionSource && matchesChoiceSpell(s, catalog.spells.find(x => x.id === o.id))));
     }
     for (const g of groups.filter(g => g.kind === 'book'))
         for (const o of g.options) {
             const elsewhere=groups.some(other=>other.kind==='book'&&other.id!==g.id&&values(other.id).includes(o.id));
-            const recorded=(c.spellbook??[]).some(s=>s.progressionSource && s.progressionSource!==g.id && sameSpellName(s.nameEn,catalog.spells.find(x=>x.id===o.id)?.eng_name??''));
+            const recorded=(c.spellbook??[]).some(s=>s.progressionSource && s.progressionSource!==g.id && matchesChoiceSpell(s,catalog.spells.find(x=>x.id===o.id)));
             if(elsewhere||recorded) o.disabledReason='已由其他來源加入法術書';
-            if (!c.progression?.selections[g.id]?.includes(o.id) && (c.spellbook ?? []).some(s => !s.progressionSource && sameSpellName(s.nameEn, catalog.spells.find(x => x.id === o.id)?.eng_name ?? '')))
+            if (!c.progression?.selections[g.id]?.includes(o.id) && (c.spellbook ?? []).some(s => !s.progressionSource && matchesChoiceSpell(s, catalog.spells.find(x => x.id === o.id))))
                 o.detail = `${o.detail ?? ''} · 已在法術書（補登時可歸入此來源）`;
         }
     const pendingSkills = groups.flatMap(g => g.kind === 'skill' ? values(g.id) : g.kind === 'mixed' ? values(g.id).filter(v => v.startsWith('skill:')).map(v => v.slice(6)) : []);

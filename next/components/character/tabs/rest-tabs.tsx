@@ -1,4 +1,5 @@
 'use client';
+import { canEquip, equipmentStats, equipmentEffectActive, equipmentEffectLabel } from '@/lib/rules/equipment-effects';
 import {effectiveSpellDc} from '@/lib/rules/sorcerer';
 
 import { showCantrips } from '@/lib/rules/cantrips-visible';
@@ -100,7 +101,7 @@ function SpellcastingCard({ c }: { c: Character }) {
     { en: 'SAVE DC', v: `${effectiveSpellDc(c)}`, sub: '法術豁免' },
     {
       en: 'ATTACK',
-      v: c.spellAttack >= 0 ? `+${c.spellAttack}` : `${c.spellAttack}`,
+      v: equipmentStats(c).spellAttack >= 0 ? `+${equipmentStats(c).spellAttack}` : `${equipmentStats(c).spellAttack}`,
       sub: '法術命中',
     },
   ];
@@ -361,9 +362,9 @@ function ProfRow({ label, items }: { label: string; items: string[] }) {
  * 結果把原版一眼可辨的東西（類型圖示、副標、分組）也一起藏掉了——那是把
  * 症狀當病因。原版不擠的真正原因是它**只顯示當下相關的那一個**：
  *
- * - 武器／護甲 → 裝備切換
+ * - 武器／護甲／一般裝備 → 裝備切換
  * - 消耗品 → 使用
- * - 其餘 → 沒有控制項
+ * - 唯讀 → 沒有控制項
  *
  * 編輯走「點整列」，刪除放在編輯面板裡（最不可逆的動作不該在列上待命）。
  */
@@ -405,7 +406,7 @@ function EquipmentGroups({
                 onEdit={onEditItem && (() => onEditItem(i))}
                 onToggleEquipped={
                   onToggleEquipped &&
-                  (item.itemType === 'weapon' || item.itemType === 'armor')
+                  canEquip(item)
                     ? () => onToggleEquipped(i)
                     : undefined
                 }
@@ -473,6 +474,11 @@ function EquipmentRow({
             {subtitle}
           </span>
         )}
+        {item.requiresAttunement && <span className="block text-small text-text-secondary">{item.attuned ? '已同調' : '待同調'}</span>}
+        {!!item.effects?.length && <span className="mt-1 block text-small leading-relaxed text-text-secondary">
+          {item.effects.map(equipmentEffectLabel).join(' · ')}
+          <span className={equipmentEffectActive(item) ? 'ml-1 text-gold' : 'ml-1'}>（{equipmentEffectActive(item) ? '已啟用' : '未啟用'}）</span>
+        </span>}
       </span>
     </>
   );
@@ -495,19 +501,17 @@ function EquipmentRow({
       )}
 
       {onToggleEquipped && (
-        // 對照 Flutter：**20px 的 radio 圖示**，不是帶外框的按鈕。
-        // 外框會讓它在列上比名稱還搶眼——它只是狀態指示，不是主要動作。
-        // 視覺 20px、可點區以偽元素補到 44px。
+        // 穿戴入口加上文字，避免只有圓圈時被誤認為裝飾或勾選。
         <button
           type="button"
           onClick={onToggleEquipped}
           aria-pressed={item.equipped}
           aria-label={item.equipped ? `卸下 ${item.name}` : `裝備 ${item.name}`}
-          className="relative shrink-0 before:absolute before:-inset-3 before:content-['']"
+          className="flex min-h-11 shrink-0 items-center gap-1 rounded-chip border border-border-2 px-2 text-small text-gold"
         >
           <svg
             viewBox="0 0 24 24"
-            className={`size-5 ${item.equipped ? 'fill-gold' : 'fill-text-secondary'}`}
+            className={`size-4 ${item.equipped ? 'fill-gold' : 'fill-text-secondary'}`}
             aria-hidden
           >
             {item.equipped ? (
@@ -516,6 +520,7 @@ function EquipmentRow({
               <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16" />
             )}
           </svg>
+          {item.equipped ? '卸下' : '裝備'}
         </button>
       )}
 

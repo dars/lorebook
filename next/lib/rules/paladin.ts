@@ -1,3 +1,4 @@
+import { effectiveAbility, equipmentStats } from './equipment-effects';
 import type { Character, ClassResource } from '@/lib/domain/character';
 import { deriveClassResources } from './class-resources';
 
@@ -17,11 +18,11 @@ export function backfillPaladin(c: Character): Character {
 export type PaladinPower = {id:string; name:string; kind:'action'|'bonus'|'free'|'passive'; description:string; resource?:string};
 export function paladinPowers(c: Character): PaladinPower[] {
   if (c.classNameEn !== 'Paladin') return [];
-  const lv=c.level, radius=lv>=18?30:10, cha=Math.max(1,c.abilityScores.cha.modifier);
+  const lv=c.level, radius=lv>=18?30:10, cha=Math.max(1,effectiveAbility(c, 'cha').modifier);
   const out:PaladinPower[]=[{id:'lay',name:lv>=14?'聖療／復原之觸':'聖療',kind:'bonus',resource:'Lay on Hands',description:'觸碰自己或其他生物，消耗聖療點數治療；解除中毒花費 5 點。解除狀態所花的點數不會同時治療。'}];
   if(lv>=3)out.push({id:'sense',name:'神聖感知',kind:'bonus',resource:'Channel Divinity',description:'消耗 1 次引導神力，10 分鐘內感知 60 呎內天界、邪魔、不死生物及被祝聖或褻瀆的地點與物品；失能時結束。'});
   if(lv>=3&&isDevotion(c))out.push({id:'weapon',name:'神聖武器',kind:'free',resource:'Channel Divinity',description:`採取攻擊動作時使用，消耗 1 次引導神力。持握的一把近戰武器命中 +${cha}，可改為光輝傷害，持續 10 分鐘；離手或再次使用時結束。`});
-  if(lv>=9)out.push({id:'abjure',name:'斥退敵人',kind:'action',resource:'Channel Divinity',description:`魔法動作；消耗 1 次引導神力。選 60 呎內至多 ${cha} 個可見目標，感知豁免 DC ${c.spellDc}，失敗則恐懼 1 分鐘或至受到傷害；期間每回合只能選移動、動作或附贈動作其中一項。`});
+  if(lv>=9)out.push({id:'abjure',name:'斥退敵人',kind:'action',resource:'Channel Divinity',description:`魔法動作；消耗 1 次引導神力。選 60 呎內至多 ${cha} 個可見目標，感知豁免 DC ${equipmentStats(c).spellDc}，失敗則恐懼 1 分鐘或至受到傷害；期間每回合只能選移動、動作或附贈動作其中一項。`});
   if(lv>=6)out.push({id:'aura',name:lv>=18?'守護靈光／靈光擴展':'守護靈光',kind:'passive',description:`${radius} 呎靈光，自己與盟友豁免 +${cha}；失能時失效。同類靈光不疊加。${lv>=10?'勇氣靈光：免疫恐懼。':''}${lv>=7&&isDevotion(c)?'奉獻靈光：免疫魅惑。':''}`});
   if(lv>=11)out.push({id:'radiant',name:'光輝打擊',kind:'passive',description:'近戰武器或徒手攻擊的攻擊擲骰命中時，額外造成 1d8 光輝傷害；不消耗資源。'});
   if(lv>=15&&isDevotion(c))out.push({id:'protection',name:'守護斬擊',kind:'passive',description:'施放至聖斬後，自己與靈光內盟友獲得半掩護，持續至自己下回合開始。'});
@@ -39,7 +40,7 @@ export function spendPaladinPower(c:Character,id:string, healing=0, conditions:s
     cost=healing+5*conditions.length;
   }
   if(!r||cost<1||r.current<cost)throw Error('剩餘資源不足。');
-  return {...c,resources:c.resources.map(x=>x===r?{...x,current:x.current-cost}:x),currentHp:self&&id==='lay'?Math.min(c.maxHp,c.currentHp+healing):c.currentHp,conditions:self&&id==='lay'?c.conditions.filter(x=>!conditions.includes(x)):c.conditions};
+  return {...c,resources:c.resources.map(x=>x===r?{...x,current:x.current-cost}:x),currentHp:self&&id==='lay'?Math.min(equipmentStats(c).maxHp,c.currentHp+healing):c.currentHp,conditions:self&&id==='lay'?c.conditions.filter(x=>!conditions.includes(x)):c.conditions};
 }
 export function restoreNimbus(c:Character):Character {
   const r=c.resources.find(r=>r.nameEn==='Holy Nimbus'), slot=c.spellSlots.find(s=>s.level===5&&s.used<s.total);
@@ -47,6 +48,8 @@ export function restoreNimbus(c:Character):Character {
   return {...c,resources:c.resources.map(x=>x===r?{...x,current:1}:x),spellSlots:c.spellSlots.map(s=>s===slot?{...s,used:s.used+1}:s)};
 }
 export function shortRestResource(c:Character,r:ClassResource):ClassResource {
+  // 自訂子職即使與職業資源同名，也依作者設定回復，不套用職業的特殊短休規則。
+  if(r.subclassFeatureKey)return r.recovery==='short'?{...r,current:r.max}:r;
   if(c.classNameEn==='Barbarian'&&(r.nameEn==='Rage'||r.name==='狂暴'))return {...r,current:Math.min(r.max,r.current+1)};
   const one = (c.classNameEn==='Druid'&&(r.nameEn==='Wild Shape'||r.name==='荒野變身')) || (['Paladin','Cleric'].includes(c.classNameEn)&&(r.nameEn==='Channel Divinity'||r.name==='引導神力')) || (c.classNameEn==='Fighter'&&r.nameEn==='Second Wind');
   if(one)return {...r,current:Math.min(r.max,r.current+1)};

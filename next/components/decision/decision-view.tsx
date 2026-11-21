@@ -1,4 +1,6 @@
 'use client';
+import { equipmentStats } from '@/lib/rules/equipment-effects';
+
 import {WarlockPowers} from './warlock-powers';
 import {SorcererPowers} from './sorcerer-powers';
 import { movementFeet } from '@/lib/rules/barbarian';
@@ -216,17 +218,17 @@ export function DecisionView({
               </div>
             ))}
             {c.resources.map((r) => (
-              <div key={r.name} className="flex items-center gap-3 py-2">
+              <div key={r.subclassFeatureKey ?? r.name} className="flex items-center gap-3 py-2">
                 <span className="w-14 shrink-0 truncate text-small text-text-secondary">
                   {r.name}
                 </span>
                 {r.display === 'number' ? (
                   <span className="flex items-center gap-2">
-                    <StepBtn label={`${r.name} 減 1`} onClick={() => characterActions.adjustResource(r.name, -1)}>−1</StepBtn>
+                    <StepBtn label={`${r.name} 減 1`} onClick={() => characterActions.adjustResource(r.name, -1, r.subclassFeatureKey)}>−1</StepBtn>
                     <span className="text-ui tabular-nums text-gold">
                       {r.current}/{r.max} {r.unit}
                     </span>
-                    <StepBtn label={`${r.name} 加 1`} onClick={() => characterActions.adjustResource(r.name, 1)}>+1</StepBtn>
+                    <StepBtn label={`${r.name} 加 1`} onClick={() => characterActions.adjustResource(r.name, 1, r.subclassFeatureKey)}>+1</StepBtn>
                   </span>
                 ) : (
                   <>
@@ -234,7 +236,7 @@ export function DecisionView({
                       total={r.max}
                       used={r.max - r.current}
                       label={r.name}
-                      onChange={(d) => characterActions.adjustResource(r.name, d)}
+                      onChange={(d) => characterActions.adjustResource(r.name, d, r.subclassFeatureKey)}
                     />
                     <span className="ml-auto text-ui tabular-nums text-gold">
                       {r.current}/{r.max}
@@ -487,17 +489,17 @@ function ChecksPanel({ c }: { c: Character }) {
     abilities.map(([k, cn, en]) => ({
       name: cn,
       nameEn: en,
-      value: c.abilityScores[k].modifier,
+      value: equipmentStats(c).abilityScores[k].modifier,
     })),
     abilities.map(([k, cn, en]) => ({
       name: cn,
       nameEn: en,
       value:
-        c.abilityScores[k].modifier +
-        (c.abilityScores[k].proficientSave ? c.proficiencyBonus : 0),
-      prof: c.abilityScores[k].proficientSave,
+        equipmentStats(c).abilityScores[k].modifier +
+        (equipmentStats(c).abilityScores[k].proficientSave ? c.proficiencyBonus : 0),
+      prof: equipmentStats(c).abilityScores[k].proficientSave,
     })),
-    c.skills.map((s) => ({
+    equipmentStats(c).skills.map((s) => ({
       name: s.name,
       nameEn: s.nameEn,
       value: s.modifier,
@@ -702,7 +704,7 @@ function HpColumn({
   onAdjust: (delta: number) => void;
   onEditTempHp: () => void;
 }) {
-  const ratio = c.maxHp === 0 ? 0 : Math.min(1, Math.max(0, c.currentHp / c.maxHp));
+  const ratio = equipmentStats(c).maxHp === 0 ? 0 : Math.min(1, Math.max(0, c.currentHp / equipmentStats(c).maxHp));
   const barColor =
     ratio <= 0.25 ? 'bg-danger' : ratio <= 0.5 ? 'bg-gold-dim' : 'bg-success';
   const dying = c.currentHp === 0;
@@ -725,7 +727,7 @@ function HpColumn({
           {c.currentHp}
         </span>
         <span className="font-display text-body tabular-nums text-text-secondary">
-          /{c.maxHp}
+          /{equipmentStats(c).maxHp}
         </span>
         {/* 臨時 HP。**0 的時候也要在**——先前只在 >0 時顯示一枚 chip，等於
             這個 App 根本沒有設定臨時 HP 的入口（吟遊詩人的激勵、藥水、
@@ -764,8 +766,8 @@ function HpColumn({
         {c.tempHp > 0 && (
           <span className="bg-temp-hp" style={{ flexGrow: c.tempHp }} />
         )}
-        {c.maxHp - c.currentHp > 0 && (
-          <span style={{ flexGrow: c.maxHp - c.currentHp }} />
+        {equipmentStats(c).maxHp - c.currentHp > 0 && (
+          <span style={{ flexGrow: equipmentStats(c).maxHp - c.currentHp }} />
         )}
       </span>
 

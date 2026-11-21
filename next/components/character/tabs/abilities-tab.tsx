@@ -1,3 +1,4 @@
+import { equipmentStats, abilityEquipmentSources } from '@/lib/rules/equipment-effects';
 import { CollapsibleSection } from '@/components/ui/collapsible-section';
 import { ParchmentCard } from '@/components/ui/decorations';
 import type { AbilityScore, Character } from '@/lib/domain/character';
@@ -20,8 +21,9 @@ const ORDER: [keyof Character['abilityScores'], string, string][] = [
 const sign = (n: number) => (n >= 0 ? `+${n}` : `${n}`);
 
 export function AbilitiesTab({ c }: { c: Character }) {
+  const stats = equipmentStats(c);
   const scoreOf = (k: keyof Character['abilityScores']): AbilityScore =>
-    c.abilityScores[k];
+    stats.abilityScores[k];
 
   return (
     <div className="px-4 pb-10">
@@ -47,14 +49,19 @@ export function AbilitiesTab({ c }: { c: Character }) {
             {ORDER.map(([key, cn, en]) => {
               const s = scoreOf(key);
               return (
+                <div key={en}>
                 <AbilityShield
-                  key={en}
                   nameCn={cn}
                   nameEn={en}
                   modifier={s.modifier}
                   score={s.score}
                   highlighted={en === c.spellcastingAbility}
                 />
+                {!!abilityEquipmentSources(c, key).length && <p className="mt-1 text-center text-small leading-relaxed text-text-secondary">
+                  基礎 {c.abilityScores[key].score}<br />
+                  <span className="text-gold">{abilityEquipmentSources(c, key).join('、')}</span>
+                </p>}
+                </div>
               );
             })}
           </div>
@@ -110,9 +117,9 @@ export function AbilitiesTab({ c }: { c: Character }) {
             拉齊高度後，間距完全由這裡的 space-y 決定。 */}
         <div className="space-y-5 pt-2">
         {ORDER.map(([key, cn, en]) => {
-          const skills = c.skills.filter((s) => s.abilityType === en);
+          const skills = stats.skills.filter((s) => s.abilityType === en);
           if (skills.length === 0) return null;
-          const mod = c.abilityScores[key].modifier;
+          const mod = stats.abilityScores[key].modifier;
           return (
             <div key={en} className="flex items-stretch gap-3">
               <div className="w-14 shrink-0 pt-2 text-center">

@@ -1,3 +1,4 @@
+import { reconcileEquipmentHp } from './equipment-effects';
 import {backfillWarlock} from './warlock';
 import {backfillSorcerer} from './sorcerer';
 import {backfillRanger} from './ranger';
@@ -21,6 +22,7 @@ import {
   averageHitDieValue,
 } from './ability';
 import { deriveClassResources } from './class-resources';
+import { syncSubclassResources } from './subclass-resources';
 import {
   CLASS_PROGRESSION,
   asiLevelsFor,
@@ -60,6 +62,7 @@ export type LevelUpChoices = {
   hpRoll?: number | null;
   subclass?: string;
   subclassEn?: string;
+  customSubclass?: Character['customSubclass'];
   /**
    * 能力代碼 → 加值（{INT:2} 或 {INT:1, WIS:1}）。
    * 專長的 +1 也走這裡——它在規則上就是能力值提升，另開一條路就得再實作一次
@@ -121,13 +124,13 @@ export function applySubclassPick(
     customSubclass?: Character['customSubclass'];
   },
 ): Character {
-  return {
+  return syncSubclassResources({
     ...c,
     subclass: choices.subclass,
     subclassEn: choices.subclassEn ?? '',
     features: [...c.features, ...(choices.features ?? [])],
     customSubclass: choices.customSubclass ?? c.customSubclass,
-  };
+  });
 }
 
 /**
@@ -246,6 +249,7 @@ export function applyLevelUp(
     spellSlots: caster ? spellSlots : c.spellSlots,
     subclass: choices.subclass ?? c.subclass,
     subclassEn: choices.subclassEn ?? c.subclassEn,
+    customSubclass: choices.customSubclass ?? c.customSubclass,
     features: [
       ...c.features,
       ...(choices.features ?? []),
@@ -255,7 +259,7 @@ export function applyLevelUp(
     spells: [...c.spells, ...(choices.spells ?? [])],
     resources: syncClassResources(c.resources, c.classNameEn, target, newScores),
   };
-  return backfillWarlock(backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(c.progression ? recalculateChoiceSkills(result) : result))))))))));
+  return reconcileEquipmentHp(c, syncSubclassResources(backfillWarlock(backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(c.progression ? recalculateChoiceSkills(result) : result))))))))))));
 }
 
 /**

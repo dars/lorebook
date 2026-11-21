@@ -7,6 +7,8 @@ export function toEquipment(i: CatalogItem): Equipment {
         type: '',
         description: '',
         equipped: false,
+        equippable: i.category === 'weapon' || i.category === 'armor',
+        requiresAttunement: false, attuned: false, effects: [],
         itemType: i.category === 'weapon'
             ? 'weapon'
             : i.category === 'armor'

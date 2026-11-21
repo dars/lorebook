@@ -1,4 +1,6 @@
 'use client';
+import { Choices } from '@/components/ui/choice-chips';
+import { LimitedUseFields } from '@/components/homebrew/limited-use-fields';
 import { AdventureEmpty } from '@/components/ui/adventure-empty';
 
 import { type ReactNode, useId, useState } from 'react';
@@ -27,7 +29,6 @@ import {
   TRAIT_DESC_MAX,
   TRAIT_MAX,
   TRAIT_NAME_MAX,
-  USES_CHOICES,
   type CustomSpecies,
   isValid,
   validate,
@@ -396,38 +397,6 @@ function summary(s: CustomSpecies): string {
     .join('・');
 }
 
-/** 單選的 chip 列。所有數值欄位都走這裡——沒有任何一格能自由輸入。 */
-function Choices<T extends string | number>({
-  ariaLabel,
-  options,
-  selected,
-  onSelect,
-}: {
-  ariaLabel: string;
-  options: { key: T; label: string }[];
-  selected: T;
-  onSelect: (key: T) => void;
-}) {
-  return (
-    <div role="group" aria-label={ariaLabel} className="flex flex-wrap gap-1.5">
-      {options.map((o) => (
-        <button
-          key={String(o.key)}
-          type="button"
-          aria-pressed={selected === o.key}
-          onClick={() => onSelect(o.key)}
-          className={`min-h-11 rounded-chip border px-4 text-ui ${
-            selected === o.key
-              ? 'border-gold bg-gold/10 font-semibold text-gold'
-              : 'border-border-2 text-text-secondary'
-          }`}
-        >
-          {o.label}
-        </button>
-      ))}
-    </div>
-  );
-}
 
 /**
  * 有限次數能力（D9）。
@@ -491,36 +460,7 @@ function AbilitiesField({
             </button>
           </div>
 
-          <div className="mt-2 flex flex-wrap gap-3">
-            <div>
-              <span className="text-small text-text-secondary">次數</span>
-              <div className="mt-1">
-                <Choices
-                  ariaLabel="次數"
-                  options={USES_CHOICES.map((u) => ({
-                    key: u,
-                    label: u === 'proficiency' ? '熟練加值' : `${u} 次`,
-                  }))}
-                  selected={a.uses}
-                  onSelect={(u) => set(i, { uses: u })}
-                />
-              </div>
-            </div>
-            <div>
-              <span className="text-small text-text-secondary">回復時機</span>
-              <div className="mt-1">
-                <Choices
-                  ariaLabel="回復時機"
-                  options={[
-                    { key: 'short' as const, label: '短休' },
-                    { key: 'long' as const, label: '長休' },
-                  ]}
-                  selected={a.recovery}
-                  onSelect={(r) => set(i, { recovery: r })}
-                />
-              </div>
-            </div>
-          </div>
+          <LimitedUseFields value={a} onChange={(patch) => set(i, patch)} />
 
           <textarea
             aria-label="能力說明"

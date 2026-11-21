@@ -9,7 +9,7 @@ import { computeAc } from '@/lib/rules/ac';
 
 import { AppLink } from '@/components/ui/app-link';
 import { ParchmentCard, SectionTitle } from '@/components/ui/decorations';
-import type { CatalogSpell } from '@/lib/catalog/types';
+import { spellFromChoice, type ChoiceSpell } from '@/lib/spells/choice-catalog';
 import { createCharacter } from '@/lib/creation/actions';
 import {
   autofillBonus,
@@ -46,7 +46,6 @@ import {
 import { PortraitPicker } from './portrait-picker';
 import { useFormDraft } from '@/lib/hooks/use-form-draft';
 import { newCharacterId } from '@/lib/creation/id';
-import { spellFromCatalog } from '@/lib/creation/spell-from-catalog';
 import type { Spell } from '@/lib/domain/character';
 import { AbilityStep, type Method } from './ability-step';
 
@@ -60,13 +59,15 @@ import { AbilityStep, type Method } from './ability-step';
 
 export function CreateWizard({
   spells,
+  spellsError,
   items = [],
   customBackgrounds = [],
   customSpecies = [],
   customSpeciesOffline = false,
 }: {
   items?: import('@/lib/catalog/types').CatalogItem[];
-  spells: CatalogSpell[];
+  spells: ChoiceSpell[];
+  spellsError?: string | null;
   /** 自訂背景，與內建並列供選擇。 */
   customBackgrounds?: BackgroundOption[];
   /** 自訂種族，與內建並列供選擇。已轉為 SpeciesOption——流程不區分來源。 */
@@ -176,7 +177,7 @@ export function CreateWizard({
         prepared: true, concentration: false,
       };
     }
-    return spellFromCatalog(s);
+    return spellFromChoice(s);
   };
 
   const basePreview = () =>
@@ -204,7 +205,7 @@ export function CreateWizard({
       : null;
 
   const baseCharacter = basePreview();
-  const choiceCatalog = {spells, items};
+  const choiceCatalog = {spells, items, spellError: spellsError};
   const choicesReady = !!baseCharacter && validateChoices(baseCharacter, choices, choiceCatalog, 'creation', !deferChoices).length === 0;
   const preview = () => baseCharacter && choicesReady ? applyChoices(baseCharacter, choices, choiceCatalog, 'creation', !deferChoices) : baseCharacter;
   const canNext = baseCanNext && (!['成長選擇','確認'].includes(current) || choicesReady);

@@ -1,3 +1,4 @@
+import { equipmentStats } from '@/lib/rules/equipment-effects';
 import { hitDiceRemaining, type Character } from '@/lib/domain/character';
 import { PrintMarks, WriteLine, WritingLines } from './print-fields';
 import styles from './character-print.module.css';
@@ -25,7 +26,7 @@ export function CharacterSessionTracker({ c }: { c: Character }) {
 
     <section className={styles.section}>
       <h3>HP 變動</h3>
-      <p className={styles.meta}>起始 HP {c.currentHp}／{c.maxHp} · 臨時 HP {c.tempHp}；空欄可記錄傷害、治療與變動後的數值。</p>
+      <p className={styles.meta}>起始 HP {c.currentHp}／{equipmentStats(c).maxHp} · 臨時 HP {c.tempHp}；空欄可記錄傷害、治療與變動後的數值。</p>
       <table className={styles.ledger}><colgroup><col style={{ width: '40%' }} /><col style={{ width: '20%' }} /><col style={{ width: '20%' }} /><col style={{ width: '20%' }} /></colgroup>
         <thead><tr><th>來源／回合</th><th>傷害／治療</th><th>目前 HP</th><th>臨時 HP</th></tr></thead>
         <tbody>{Array.from({ length: 4 }, (_, i) => <tr key={i}><td /><td /><td /><td /></tr>)}</tbody>

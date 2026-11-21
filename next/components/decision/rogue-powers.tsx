@@ -1,4 +1,6 @@
 'use client';
+import { equipmentStats } from '@/lib/rules/equipment-effects';
+
 import {useState} from 'react';
 import type {Character} from '@/lib/domain/character';
 import {sneakDice,cunningDc,cunningOptions,cunningRemaining,isThief,activateStrokeOfLuck} from '@/lib/rules/rogue';
@@ -23,7 +25,7 @@ export function RoguePowers({c,kind}:{c:Character;kind:'other'|'bonus'|'reaction
  {kind==='other'&&<>
  <p className="pb-2 text-gold">偷襲 {sneakDice(c.level)}d6{c.level>=5?` · 狡詐打擊 DC ${cunningDc(c)}`:''}</p><p className="pb-2 text-text-secondary">每回合一次，以靈巧或遠程武器命中且有優勢；或目標5呎內有未失能盟友且你無劣勢。符合條件才追加，傷害類型同武器。</p>
  {c.level>=5&&<details className="border-t border-border"><summary className="min-h-11 cursor-pointer py-3 font-semibold">狡詐打擊 · 本次偷襲效果</summary><p className="text-text-secondary">最多選 {c.level>=11?2:1} 種，先扣偷襲骰，再擲傷害；效果於傷害後發生。</p>{options.map(o=><label key={o.id} className="flex min-h-11 items-start gap-2 py-2"><input className="mt-1 accent-gold" type="checkbox" checked={active.includes(o.id)} disabled={!active.includes(o.id)&&(active.length>=(c.level>=11?2:1)||remaining<o.cost)} onChange={()=>setSelected(active.includes(o.id)?active.filter(id=>id!==o.id):[...active,o.id])}/><span>{o.name} · 減少{o.cost}d6<span className="block text-text-secondary">{o.desc}</span></span></label>)}<p role="status" className="py-2 font-semibold text-gold">本次偷襲：{remaining}d6 · 豁免 DC {cunningDc(c)}</p><button className={button} onClick={()=>setSelected([])}>清除本次效果</button></details>}
- {isThief(c)&&c.level>=17&&<p className="py-2 text-text-secondary">竊賊反射：戰鬥第一輪有兩個回合，先攻 {c.initiative} 與 {c.initiative-10}。</p>}
+ {isThief(c)&&c.level>=17&&<p className="py-2 text-text-secondary">竊賊反射：戰鬥第一輪有兩個回合，先攻 {equipmentStats(c).initiative} 與 {equipmentStats(c).initiative-10}。</p>}
  {c.level>=20&&<details className="border-t border-border"><summary className="min-h-11 cursor-pointer py-3 font-semibold">幸運一擊 · {luck?.current??0}/1</summary><p className="pb-2 text-text-secondary">D20檢定失敗時，將擲骰結果改為20。短休或長休恢復。</p><button className={button} disabled={!luck?.current} onClick={()=>{try{useCharacterStore.getState().update(current=>current.id===c.id?activateStrokeOfLuck(current):current);setMessage('幸運一擊已使用：本次D20擲骰結果改為20。');}catch(e){setMessage((e as Error).message);}}}>使用幸運一擊</button></details>}
  </>}
  {message&&<p role="status" className="py-2 text-gold">{message}</p>}

@@ -1,6 +1,7 @@
 import { ParchmentCard } from '@/components/ui/decorations';
 import { sizeCn } from '@/lib/creation/data';
 import type { CustomSpecies } from '@/lib/species/types';
+import { limitedUseLabel } from '@/lib/homebrew/limited-use';
 
 /**
  * 自訂種族的內容區塊。
@@ -54,8 +55,7 @@ export function SpeciesBody({ s }: { s: CustomSpecies }) {
                 <p className="text-body font-semibold text-text-primary">
                   {a.name}
                   <span className="ml-2 text-tiny font-normal text-text-secondary">
-                    {a.uses === 'proficiency' ? '熟練加值' : a.uses} 次／
-                    {a.recovery === 'short' ? '短休' : '長休'}
+                    {limitedUseLabel(a)}
                   </span>
                 </p>
                 {a.description && (

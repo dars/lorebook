@@ -1,4 +1,5 @@
 'use client';
+import { canEquip, equipmentStats, reconcileEquipmentHp, syncEquipmentAbilityResources } from '@/lib/rules/equipment-effects';
 import {recoverPact} from '../rules/warlock';
 import {endIncapacitatedDruidEffects} from '@/lib/rules/druid';
 import { interventionAfterLongRest } from '@/lib/rules/cleric';
@@ -8,7 +9,7 @@ import { beginChoiceRest } from '@/lib/rules/progression/engine';
 
 import { create } from 'zustand';
 
-import type { Character } from '@/lib/domain/character';
+import { Equipment, type Character } from '@/lib/domain/character';
 
 /**
  * 編輯中的角色狀態。
@@ -71,7 +72,7 @@ export const useCharacterStore = create<State & Actions>((set) => ({
   update: (fn) =>
     set((s) => {
       if (!s.character) return s;
-      let character = endIncapacitatedDruidEffects(fn(s.character));
+      let character = endIncapacitatedDruidEffects(syncEquipmentAbilityResources(reconcileEquipmentHp(s.character, fn(s.character))));
       if(character.monkSuperiorDefense&&character.conditions.some(x=>['失能','昏迷','麻痺','石化','震懾','Incapacitated','Unconscious','Paralyzed','Petrified','Stunned'].includes(x)))character={...character,monkSuperiorDefense:false};
       return { character: character.raging && !rageActive(character) ? {...character, raging:false} : character, dirty:true };
     }),
@@ -105,14 +106,14 @@ export const characterActions = {
   adjustHp(delta: number) {
     useCharacterStore.getState().update((c) => {
       if (delta >= 0) {
-        return { ...c, currentHp: clamp(c.currentHp + delta, 0, c.maxHp) };
+        return { ...c, currentHp: clamp(c.currentHp + delta, 0, equipmentStats(c).maxHp) };
       }
       const damage = -delta;
       const absorbed = Math.min(c.tempHp, damage);
       return {
         ...c,
         tempHp: c.tempHp - absorbed,
-        currentHp: clamp(c.currentHp - (damage - absorbed), 0, c.maxHp),
+        currentHp: clamp(c.currentHp - (damage - absorbed), 0, equipmentStats(c).maxHp),
       };
     });
   },
@@ -126,7 +127,7 @@ export const characterActions = {
   setHitPoints(currentHp: number, tempHp: number) {
     useCharacterStore.getState().update((c) => ({
       ...c,
-      currentHp: clamp(currentHp, 0, c.maxHp),
+      currentHp: clamp(currentHp, 0, equipmentStats(c).maxHp),
       tempHp: Math.max(0, tempHp),
     }));
   },
@@ -177,7 +178,7 @@ export const characterActions = {
         natureSanctuaryActive: false,
         druidCreatedSlots: {},
         sorceryCreatedSlots: {},
-        currentHp: c.maxHp,
+        currentHp: equipmentStats(c).maxHp,
         tempHp: 0,
         concentrationSpell: null,
         innateSorceryActive:false,
@@ -319,7 +320,7 @@ export const characterActions = {
   toggleEquipped(index: number) {
     useCharacterStore.getState().update((c) => {
       const item = c.equipment[index];
-      if (!item) return c;
+      if (!item || !canEquip(item) || item.quantity <= 0) return c;
       const next = { ...item, equipped: !item.equipped };
       const donsArmor =
         next.equipped && next.itemType === 'armor' && next.armorCategory !== 'shield';
@@ -334,16 +335,20 @@ export const characterActions = {
   },
 
   addItem(item: Character['equipment'][number]) {
+    item = Equipment.parse(item);
     useCharacterStore.getState().update((c) => ({
       ...c,
       equipment: [...c.equipment, item],
+      mageArmorActive: item.equipped && item.itemType === 'armor' && item.armorCategory !== 'shield' ? false : c.mageArmorActive,
     }));
   },
 
   updateItem(index: number, item: Character['equipment'][number]) {
+    item = Equipment.parse(item);
     useCharacterStore.getState().update((c) => ({
       ...c,
       equipment: c.equipment.map((x, i) => (i === index ? item : x)),
+      mageArmorActive: item.equipped && item.itemType === 'armor' && item.armorCategory !== 'shield' ? false : c.mageArmorActive,
     }));
   },
 
@@ -429,11 +434,11 @@ export const characterActions = {
   },
 
   /** 消耗或回復職業資源。delta 為負代表消耗。 */
-  adjustResource(name: string, delta: number) {
+  adjustResource(name: string, delta: number, subclassFeatureKey?: string) {
     useCharacterStore.getState().update((c) => ({
       ...c,
       resources: c.resources.map((r) =>
-        r.name === name
+        (subclassFeatureKey ? r.subclassFeatureKey === subclassFeatureKey : !r.subclassFeatureKey && r.name === name)
           ? { ...r, current: clamp(r.current + delta, 0, r.max) }
           : r,
       ),

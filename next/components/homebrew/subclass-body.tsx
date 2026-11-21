@@ -1,6 +1,7 @@
 import { ParchmentCard } from '@/components/ui/decorations';
 import { classCn } from '@/lib/creation/data';
 import type { CustomSubclass } from '@/lib/subclasses/types';
+import { limitedUseLabel } from '@/lib/homebrew/limited-use';
 
 /**
  * 自訂子職的內容區塊：母職業與各等級特性。
@@ -51,6 +52,11 @@ export function SubclassBody({ s }: { s: CustomSubclass }) {
                   <div key={i}>
                     <p className="text-body font-semibold text-text-primary">
                       {f.name}
+                      {f.limitedUse && (
+                        <span className="ml-2 text-tiny font-normal text-text-secondary">
+                          {limitedUseLabel(f.limitedUse)}
+                        </span>
+                      )}
                     </p>
                     {f.description && (
                       <p className="mt-1 whitespace-pre-wrap text-small leading-relaxed text-text-light">

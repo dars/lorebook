@@ -274,6 +274,7 @@ function LevelUpForm({
     ? applySubclassPick(initial, {
         subclass: subclass?.name ?? customSubclass?.name ?? '',
         subclassEn: subclass?.eng_name ?? customSubclass?.nameEn ?? undefined,
+        customSubclass: customSubclass ?? undefined,
         features: newFeatures,
       })
     : applyLevelUp(initial, plan, {
@@ -283,6 +284,7 @@ function LevelUpForm({
         feat: featChoice.feat,
         subclass: subclass?.name ?? customSubclass?.name,
         subclassEn: subclass?.eng_name ?? customSubclass?.nameEn ?? undefined,
+        customSubclass: customSubclass ?? undefined,
         features: newFeatures,
       });
 

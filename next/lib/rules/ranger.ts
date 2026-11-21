@@ -1,3 +1,4 @@
+import { effectiveAbility } from './equipment-effects';
 import type {Character,Spell} from '../domain/character';
 export const favoredUses=(level:number)=>level>=17?6:level>=13?5:level>=9?4:level>=5?3:2;
 export const isHuntersMark=(s:Spell)=>!s.homebrewId&&/^(Hunter['’]s Mark)$/i.test(s.nameEn);
@@ -23,8 +24,8 @@ export function backfillRanger(c:Character):Character{
  const resources=[...c.resources];
  const add=(name:string,en:string,max:number)=>{const i=resources.findIndex(r=>r.nameEn.replaceAll("'",'’')===en);const old=i<0?null:resources[i];const r={...old,name,nameEn:en,max,current:old?Math.min(max,Math.max(0,old.current+max-old.max)):max,recovery:'long' as const,display:'pips' as const,dieFaces:0,unit:'次'};if(i<0)resources.push(r);else resources[i]=r;};
  add('宿敵 · 獵人印記','Favored Enemy',favoredUses(c.level));
- if(c.level>=10)add('不知疲倦','Tireless',Math.max(1,c.abilityScores.wis.modifier));
- if(c.level>=14)add('自然面紗','Nature’s Veil',Math.max(1,c.abilityScores.wis.modifier));
+ if(c.level>=10)add('不知疲倦','Tireless',Math.max(1,effectiveAbility(c, 'wis').modifier));
+ if(c.level>=14)add('自然面紗','Nature’s Veil',Math.max(1,effectiveAbility(c, 'wis').modifier));
  const spells=c.spells.map(s=>isHuntersMark(s)?{...s,alwaysPrepared:true,prepared:true,damage:markDie(c),description:c.level>=20?s.description.replaceAll('1d6','1d10'):s.description}:s);
  if(!spells.some(isHuntersMark))spells.push({name:'獵人印記',nameEn:'Hunter’s Mark',level:1,damage:markDie(c),damageType:'force',description:'附贈動作標記90呎內可見生物，專注至多1小時。每次以攻擊骰命中該目標時追加力場傷害；追蹤目標的感知（察覺或求生）檢定具優勢。目標降至0HP後，可在之後的回合以附贈動作轉移標記。',upgrade:'三至四環專注至多8小時；五環以上至多24小時。',range:'90呎',castingTime:'附贈動作',castKind:'bonus',prepared:true,alwaysPrepared:true,concentration:true});
  return {...c,features,resources,spells};
@@ -33,5 +34,5 @@ export function rangerAction(c:Character,id:'mark'|'tireless'|'veil',roll?:numbe
  const level=id==='mark'?1:id==='tireless'?10:14,en=id==='mark'?'Favored Enemy':id==='tireless'?'Tireless':'Nature’s Veil';
  const r=c.resources.find(r=>r.nameEn===en);if(c.classNameEn!=='Ranger'||c.level<level||!r||r.current<1)throw Error('此能力尚不可用或次數已用完。');
  if(id==='tireless'&&(!Number.isInteger(roll)||roll!<1||roll!>8))throw Error('請填寫1d8的擲骰結果（1–8）。');
- return {...c,resources:c.resources.map(x=>x===r?{...x,current:x.current-1}:x),...(id==='mark'?{concentrationSpell:'獵人印記'}:id==='veil'?{rangerVeilActive:true}:{tempHp:Math.max(c.tempHp,Math.max(1,roll!+c.abilityScores.wis.modifier))})};
+ return {...c,resources:c.resources.map(x=>x===r?{...x,current:x.current-1}:x),...(id==='mark'?{concentrationSpell:'獵人印記'}:id==='veil'?{rangerVeilActive:true}:{tempHp:Math.max(c.tempHp,Math.max(1,roll!+effectiveAbility(c, 'wis').modifier))})};
 }

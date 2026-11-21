@@ -1,3 +1,4 @@
+import { equipmentStats, EQUIPMENT_ABILITIES, abilityEquipmentSources, equipmentEffectLabel } from '@/lib/rules/equipment-effects';
 import {effectiveSpellDc} from '@/lib/rules/sorcerer';
 import { featureSubtitle } from '@/lib/ui/feature-groups';
 import {cantripDamage} from '@/lib/rules/cantrip-damage';
@@ -26,10 +27,10 @@ export function CharacterPrintSheet({ c }: { c: Character }) {
   const caster = spells.length > 0 || c.spellSlots.length > 0 || !!c.spellcastingAbility;
   const stats: [string, ReactNode][] = [
     ['護甲等級 AC', <span key="ac">{ac.value} <WriteLine /></span>],
-    [`目前 HP · 起始 ${c.currentHp}`, <span key="hp"><WriteLine /> / {c.maxHp}</span>],
-    [`臨時 HP · 起始 ${c.tempHp}`, <WriteLine key="temp" />], ['先攻加值', sign(c.initiative)],
+    [`目前 HP · 起始 ${c.currentHp}`, <span key="hp"><WriteLine /> / {equipmentStats(c).maxHp}</span>],
+    [`臨時 HP · 起始 ${c.tempHp}`, <WriteLine key="temp" />], ['先攻加值', sign(equipmentStats(c).initiative)],
     ['速度', `${movementFeet(c)} 呎`], ['熟練加值', sign(c.proficiencyBonus)],
-    ['被動察覺', `${c.passivePerception}`], ['生命骰剩餘', `${hitDiceRemaining(c)} / ${c.level}（d${c.hitDieFaces}）`],
+    ['被動察覺', `${equipmentStats(c).passivePerception}`], ['生命骰剩餘', `${hitDiceRemaining(c)} / ${c.level}（d${c.hitDieFaces}）`],
   ];
 
   return (
@@ -64,29 +65,30 @@ export function CharacterPrintSheet({ c }: { c: Character }) {
 
       <Section title="戰鬥數值">
         <dl className={styles.stats}>{stats.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
-        <p className={styles.meta}>護甲：{ac.label} · HP 上限 {c.maxHp} · 空白欄可手寫更新，數值以匯出時為起始值。</p>
+        <p className={styles.meta}>護甲：{ac.label} · HP 上限 {equipmentStats(c).maxHp} · 空白欄可手寫更新，數值以匯出時為起始值。</p>
       </Section>
 
       <Section title="屬性與豁免">
         <table className={styles.abilities}>
           <thead><tr><th>屬性</th>{ABILITIES.map(([, cn, en]) => <th key={en}>{cn}<small>{en}</small></th>)}</tr></thead>
           <tbody>
-            <tr><th>屬性值</th>{ABILITIES.map(([key]) => <td key={key}>{c.abilityScores[key].score}</td>)}</tr>
-            <tr><th>調整值</th>{ABILITIES.map(([key]) => <td key={key}>{sign(c.abilityScores[key].modifier)}</td>)}</tr>
+            <tr><th>屬性值</th>{ABILITIES.map(([key]) => <td key={key}>{equipmentStats(c).abilityScores[key].score}</td>)}</tr>
+            <tr><th>調整值</th>{ABILITIES.map(([key]) => <td key={key}>{sign(equipmentStats(c).abilityScores[key].modifier)}</td>)}</tr>
             <tr><th>豁免</th>{ABILITIES.map(([key]) => {
-              const score = c.abilityScores[key];
+              const score = equipmentStats(c).abilityScores[key];
               return <td key={key}>{score.proficientSave ? '● ' : ''}{sign(proficientBonus(score.modifier, score.proficientSave, c.proficiencyBonus))}</td>;
             })}</tr>
           </tbody>
         </table>
         <p className={styles.meta}>● 表示熟練</p>
+        {EQUIPMENT_ABILITIES.filter(([key]) => abilityEquipmentSources(c, key).length).map(([key, name]) => <p key={key} className={styles.meta}>{name}：基礎 {c.abilityScores[key].score} · {abilityEquipmentSources(c, key).join('、')}</p>)}
       </Section>
 
       <div className={styles.columns}>
         <Section title="技能">
           <table><colgroup><col style={{ width: '40%' }} /><col style={{ width: '18%' }} /><col style={{ width: '18%' }} /><col style={{ width: '24%' }} /></colgroup><thead><tr><th>技能</th><th>屬性</th><th>加值</th><th className={styles.handwriteCell}>調整後</th></tr></thead><tbody>
-            {c.skills.map((skill, i) => <tr key={i}><td>{skill.expertise ? '◆ ' : skill.proficient ? '● ' : ''}{skill.name}</td><td>{skill.abilityType}</td><td>{sign(skill.modifier)}</td><td className={styles.handwriteCell} /></tr>)}
-            {c.skills.length === 0 && <tr><td colSpan={4}>尚無技能</td></tr>}
+            {equipmentStats(c).skills.map((skill, i) => <tr key={i}><td>{skill.expertise ? '◆ ' : skill.proficient ? '● ' : ''}{skill.name}</td><td>{skill.abilityType}</td><td>{sign(skill.modifier)}</td><td className={styles.handwriteCell} /></tr>)}
+            {equipmentStats(c).skills.length === 0 && <tr><td colSpan={4}>尚無技能</td></tr>}
           </tbody></table>
         </Section>
         <div>
@@ -95,7 +97,7 @@ export function CharacterPrintSheet({ c }: { c: Character }) {
               {attackEntries(c).map((attack, i) => <tr key={i}><td>{attack.name}</td><td>{attack.hitBonus === null ? '—' : sign(attack.hitBonus)}</td><td>{[attack.damage, attack.damageType].filter(Boolean).join(' ') || '—'}</td></tr>)}
             </tbody></table>
           </Section>
-          {caster && <Section title="施法數值"><p>{c.spellcastingAbility || '—'} · 法術 DC {effectiveSpellDc(c)} · 命中 {sign(c.spellAttack)}</p></Section>}
+          {caster && <Section title="施法數值"><p>{c.spellcastingAbility || '—'} · 法術 DC {effectiveSpellDc(c)} · 命中 {sign(equipmentStats(c).spellAttack)}</p></Section>}
           <Section title="戰鬥狀態" keepTogether>
             <div className={styles.quickRow}><span>先攻結果 <WriteLine /></span><span>英雄靈感 <PrintMarks count={1} label="英雄靈感" /></span></div>
             <p>死亡豁免</p>
@@ -116,7 +118,7 @@ export function CharacterPrintSheet({ c }: { c: Character }) {
         <p className={styles.meta}>金錢與數量為起始值；空欄供記錄目前餘額、數量或裝備狀態。</p>
         <div className={styles.coins}>{COIN_SPECS.map(({ code, label }) => <div key={code}><small>{label}</small><span><CoinIcon code={code} /> {c.currency[code]}</span><div><WriteLine /></div></div>)}</div>
         <table className={styles.inventory}><colgroup><col style={{ width: '25%' }} /><col style={{ width: '8%' }} /><col style={{ width: '12%' }} /><col style={{ width: '15%' }} /><col style={{ width: '40%' }} /></colgroup><thead><tr><th>物品</th><th>起始<small>數量</small></th><th className={styles.handwriteCell}>目前數量</th><th>裝備狀態</th><th>說明</th></tr></thead><tbody>
-          {c.equipment.map((item, i) => <tr key={i}><td>{item.name}{item.nameEn && <small>{item.nameEn}</small>}</td><td>{item.quantity}</td><td className={styles.handwriteCell} /><td>{[item.equipped && '已裝備', item.quest && '任務'].filter(Boolean).join('、') || '—'}<div><WriteLine /></div></td><td>{[item.type, item.damage, item.damageType, ...item.properties, item.description].filter(Boolean).join(' · ') || '—'}</td></tr>)}
+          {c.equipment.map((item, i) => <tr key={i}><td>{item.name}{item.nameEn && <small>{item.nameEn}</small>}</td><td>{item.quantity}</td><td className={styles.handwriteCell} /><td>{[item.equipped && '已裝備', item.requiresAttunement && (item.attuned ? '已同調' : '待同調'), item.quest && '任務'].filter(Boolean).join('、') || '—'}<div><WriteLine /></div></td><td>{[item.type, item.damage, item.damageType, ...item.properties, ...(item.effects ?? []).map(equipmentEffectLabel), item.description].filter(Boolean).join(' · ') || '—'}</td></tr>)}
           {c.equipment.length === 0 && <tr><td colSpan={5}>沒有物品</td></tr>}
         </tbody></table>
       </Section>
@@ -128,7 +130,7 @@ export function CharacterPrintSheet({ c }: { c: Character }) {
       </PrintEntry>)}</Section>}
 
       {caster && <Section title="施法與法術">
-        <p>施法屬性：{c.spellcastingAbility || '—'} · 法術豁免 DC：{effectiveSpellDc(c)} · 法術命中：{sign(c.spellAttack)}</p>
+        <p>施法屬性：{c.spellcastingAbility || '—'} · 法術豁免 DC：{effectiveSpellDc(c)} · 法術命中：{sign(equipmentStats(c).spellAttack)}</p>
         {c.spellSlots.length > 0 && <p className={styles.slots}>法術位（剩餘／上限）：{c.spellSlots.map((s) => `${s.level} 環 ${Math.max(0, s.total - s.used)} / ${s.total}`).join('　')}</p>}
         {spells.map((spell, i) => <PrintSpell key={i} spell={{...spell,damage:cantripDamage(spell,c.level)}} />)}
       </Section>}

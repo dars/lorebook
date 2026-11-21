@@ -21,7 +21,7 @@ export type CustomSpell = z.infer<typeof CustomSpell>;
 
 /** 選用時快照；收藏後續編輯、刪除不會改寫角色。 */
 export function spellFromCustom(s: CustomSpell): Spell {
-  return Spell.parse({ ...s, homebrewId: s.id, description: [
+  return Spell.parse({ ...s, homebrewId: s.id, homebrewSchool: s.school, homebrewRitual: s.ritual, description: [
     [s.school, s.ritual ? '儀式' : '', s.duration && `持續：${s.duration}`, s.components && `成分：${s.components}`].filter(Boolean).join(' · '),
     s.description,
   ].filter(Boolean).join('\n\n') });

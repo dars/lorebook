@@ -1,3 +1,4 @@
+import { reconcileEquipmentHp } from '@/lib/rules/equipment-effects';
 import {backfillWarlock} from '../rules/warlock';
 import {backfillSorcerer} from '../rules/sorcerer';
 import {backfillRanger} from '../rules/ranger';
@@ -13,6 +14,8 @@ import { repairFeatDescriptions } from '@/lib/rules/repair-feat-descriptions';
 import { backfillFighterFeatures } from '@/lib/rules/fighter-features';
 import { backfillIndomitable } from '@/lib/rules/class-resources';
 import { z } from 'zod';
+import { SubclassFeature } from '@/lib/subclasses/types';
+import { syncSubclassResources } from '@/lib/rules/subclass-resources';
 
 /**
  * 角色卡的領域模型，逐欄對齊 Flutter 端的
@@ -73,6 +76,9 @@ export const Spell = z.object({
   alwaysPrepared: z.boolean().optional(),
   progressionSource: z.string().optional(),
   homebrewId: z.string().optional(),
+  /** 自創法術的資格快照；來源修改或刪除後仍能判斷學派與儀式名額。 */
+  homebrewSchool: z.string().optional(),
+  homebrewRitual: z.boolean().optional(),
   name: z.string(),
   nameEn: z.string().default(''),
   level: z.number().int(),
@@ -110,6 +116,15 @@ export const Weapon = z.object({
   properties: z.array(z.string()).default([]),
 });
 
+export const EquipmentAbility = z.enum(['str', 'dex', 'con', 'int_', 'wis', 'cha']);
+export const EquipmentEffect = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('abilityFloor'), ability: EquipmentAbility, value: z.number().int().min(1).max(30) }),
+  z.object({ kind: z.literal('abilityBonus'), ability: EquipmentAbility, value: z.number().int().min(1).max(10), max: z.number().int().min(1).max(30).optional() }),
+  z.object({ kind: z.literal('acBonus'), value: z.number().int().min(1).max(10) }),
+  z.object({ kind: z.literal('weaponBonus'), attack: z.number().int().min(0).max(10), damage: z.number().int().min(0).max(10) }),
+]);
+export type EquipmentEffect = z.infer<typeof EquipmentEffect>;
+
 export const Equipment = z.object({
   name: z.string(),
   nameEn: z.string().default(''),
@@ -117,6 +132,11 @@ export const Equipment = z.object({
   type: z.string().default(''),
   description: z.string().default(''),
   equipped: z.boolean().default(false),
+  /** 缺值代表舊物品，由類型、穿戴狀態與既有效果判定相容行為。 */
+  equippable: z.boolean().optional(),
+  requiresAttunement: z.boolean().default(false),
+  attuned: z.boolean().default(false),
+  effects: z.array(EquipmentEffect).max(12).default([]),
   itemType: ItemType.default('gear'),
   source: ItemSource.default('custom'),
   quantity: z.number().int().default(1),
@@ -133,7 +153,10 @@ export const Equipment = z.object({
   // 護甲機制（itemType=armor）：AC 公式參數
   armorCategory: ArmorCategory.default('none'),
   acBase: z.number().int().default(0),
-});
+}).transform(item => ({
+  ...item,
+  equipped: item.itemType !== 'consumable' && item.equippable !== false && item.equipped,
+}));
 
 export const Currency = z.object({
   pp: z.number().int().default(0),
@@ -178,6 +201,8 @@ export const FEAT_DESC_MAX = 200;
 
 export const ClassResource = z.object({
   progressionSource: z.string().optional(),
+  /** 快照內的特性索引；與名稱分開，避免同名能力連動扣次數。 */
+  subclassFeatureKey: z.string().optional(),
   name: z.string(),
   nameEn: z.string().default(''),
   current: z.number().int().default(0),
@@ -264,15 +289,7 @@ export const Character = z.object({
       nameEn: z.string().default(''),
       classEn: z.string(),
       levels: z.array(z.number().int()).default([]),
-      features: z
-        .array(
-          z.object({
-            level: z.number().int(),
-            name: z.string(),
-            description: z.string().default(''),
-          }),
-        )
-        .default([]),
+      features: z.array(SubclassFeature).default([]),
     })
     .nullish()
     .transform((v) => v ?? null),
@@ -389,5 +406,6 @@ export const hitDiceRemaining = (c: Character) =>
 
 /** 解析雲端／快取的角色 JSON。失敗時拋出，由呼叫端決定如何呈現。 */
 export function parseCharacter(json: unknown): Character {
-  return backfillWarlock(backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(backfillPaladin(repairFeatDescriptions(backfillFighterFeatures(backfillIndomitable(Character.parse(json)))))))))))))));
+  const character = Character.parse(json);
+  return reconcileEquipmentHp(character, syncSubclassResources(backfillWarlock(backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(backfillWizard(backfillPaladin(repairFeatDescriptions(backfillFighterFeatures(backfillIndomitable(character))))))))))))))));
 }

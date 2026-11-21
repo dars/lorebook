@@ -1,3 +1,4 @@
+import { canEquip, effectiveAbility, equipmentWeaponBonus } from './equipment-effects';
 import {hasInvocation,pactAttacks} from './warlock';
 import {sneakDice} from './rogue';
 import {martialArtsActive,martialDie,monkWeapon} from './monk';
@@ -31,15 +32,15 @@ export type AttackEntry = {
  * 調整值。徒手（2024 全角色皆有）：命中＝力調＋熟練，傷害＝1＋力調，下限 0。
  */
 export function attackEntries(c: Character): AttackEntry[] {
-  const str = c.abilityScores.str.modifier;
-  const dex = c.abilityScores.dex.modifier;
+  const str = effectiveAbility(c, 'str').modifier;
+  const dex = effectiveAbility(c, 'dex').modifier;
   const prof = c.proficiencyBonus;
   const martial=martialArtsActive(c), die=martialDie(c.level), unarmedMod=martial?Math.max(str,dex):str;
 
   const entries: AttackEntry[] = [];
 
   for (const e of c.equipment) {
-    if (e.itemType !== 'weapon' || !e.equipped) continue;
+    if (e.itemType !== 'weapon' || !e.equipped || !canEquip(e)) continue;
 
     if (e.damage === '') {
       // 缺機制資料：降級為僅顯示名稱，不猜測數值。
@@ -61,14 +62,15 @@ export function attackEntries(c: Character): AttackEntry[] {
     const monk=martial&&monkWeapon(e);
     const mod = (e.finesse||monk) ? Math.max(str, dex) : ranged ? dex : str;
     const usesStrength = (e.finesse||monk) ? str >= dex : !ranged;
-    const damageMod = mod + (usesStrength && rageActive(c) ? rageDamage(c) : 0);
+    const bonus = equipmentWeaponBonus(e);
+    const damageMod = mod + bonus.damage + (usesStrength && rageActive(c) ? rageDamage(c) : 0);
     const baseDamage=monk&&/^1d(\d+)$/.test(e.damage)&&Number(e.damage.slice(2))<die?`1d${die}`:e.damage;
     const damage = damageMod === 0 ? baseDamage : `${baseDamage}${damageMod > 0 ? `+${damageMod}` : `${damageMod}`}`;
 
     entries.push({
       name: e.name,
       nameEn: e.nameEn,
-      hitBonus: mod + prof + archery,
+      hitBonus: mod + prof + archery + bonus.attack,
       damage,
       damageType: e.damageType,
       quantity: e.quantity,
@@ -80,8 +82,8 @@ export function attackEntries(c: Character): AttackEntry[] {
   }
 
   if(c.pactWeapon&&hasInvocation(c,'Pact of the Blade')){
-    const w=c.pactWeapon,mod=c.abilityScores.cha.modifier;
-    entries.push({name:`契約武器 · ${w.name}`,nameEn:w.nameEn,hitBonus:mod+prof,damage:`${w.damage}${mod>=0?'+':''}${mod}`,damageType:w.damageType,quantity:1,unarmed:false,properties:[`${w.damageType} 傷害`,...(['Glaive','Greataxe','Greatsword','Halberd','Lance','Maul','Pike'].includes(w.nameEn)&&c.abilityScores.str.score<13?['重型武器：力量未達13，攻擊擲骰具有劣勢。']:[]),`魅力攻擊 · 每個攻擊動作${pactAttacks(c)}次（僅限契約武器）`,'可作施法法器；離身超過5呎滿1分鐘或死亡時解除契約。']});
+    const w=c.pactWeapon,mod=effectiveAbility(c, 'cha').modifier;
+    entries.push({name:`契約武器 · ${w.name}`,nameEn:w.nameEn,hitBonus:mod+prof,damage:`${w.damage}${mod>=0?'+':''}${mod}`,damageType:w.damageType,quantity:1,unarmed:false,properties:[`${w.damageType} 傷害`,...(['Glaive','Greataxe','Greatsword','Halberd','Lance','Maul','Pike'].includes(w.nameEn)&&effectiveAbility(c, 'str').score<13?['重型武器：力量未達13，攻擊擲骰具有劣勢。']:[]),`魅力攻擊 · 每個攻擊動作${pactAttacks(c)}次（僅限契約武器）`,'可作施法法器；離身超過5呎滿1分鐘或死亡時解除契約。']});
   }
   entries.push({
     name: '徒手攻擊',

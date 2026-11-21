@@ -1,6 +1,7 @@
+import { effectiveAbility } from './equipment-effects';
 import type {Character} from '../domain/character';
 export const sneakDice=(level:number)=>Math.ceil(level/2);
-export const cunningDc=(c:Character)=>8+c.abilityScores.dex.modifier+c.proficiencyBonus;
+export const cunningDc=(c:Character)=>8+effectiveAbility(c, 'dex').modifier+c.proficiencyBonus;
 export const isThief=(c:Character)=>c.classNameEn==='Rogue'&&!c.customSubclass&&c.subclassEn==='Thief';
 const features:[number,string,string,string][]=[
  [1,'Expertise','專精','1級選兩項已熟練技能取得專精；6級再選兩項不同技能。專精使用雙倍熟練加值。'],

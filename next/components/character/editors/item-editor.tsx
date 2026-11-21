@@ -3,13 +3,15 @@
 import { useId, useState } from 'react';
 
 import { EditorSheet, FieldLabel } from '@/components/ui/editor-sheet';
-import type { Equipment } from '@/lib/domain/character';
+import { Equipment } from '@/lib/domain/character';
+import { ItemEffectFields } from './item-effect-fields';
+import { canEquip } from '@/lib/rules/equipment-effects';
 
 /**
  * 自訂物品編輯，對照 Flutter 端的 `item_editor_sheet.dart`。
  *
  * 機制欄位依 itemType 顯示：武器出傷害骰／傷害類型／靈巧，護甲出 AC 基值與
- * 種類。**缺值時不參與推導**——填一半的護甲不會讓 AC 變成 NaN，只是不算它。
+ * 種類；所有可穿戴物品共用效果設定。缺值時不參與護甲推導。
  *
  * 任務物品（quest）是一個旗標而非型別：刪除需確認、用罄保留、不可販售。
  */
@@ -37,6 +39,8 @@ const ARMOR_CATEGORIES: { v: Equipment['armorCategory']; label: string }[] = [
 
 export const emptyItem = (): Equipment => ({
   name: '', nameEn: '', type: '', description: '', equipped: false,
+  equippable: false,
+  requiresAttunement: false, attuned: false, effects: [],
   itemType: 'gear', source: 'custom', quantity: 1, quest: false,
   priceCp: 0, catalogRef: '', damage: '', damageType: '', finesse: false,
   properties: [], armorCategory: 'none', acBase: 0,
@@ -65,7 +69,8 @@ export function ItemEditor({
   const uid = useId();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
-  const problem = !item.name.trim() ? '名稱必填' : null;
+  const valid = Equipment.safeParse(item);
+  const problem = !item.name.trim() ? '名稱必填' : !valid.success ? '效果數值請填整數：能力值 1–30、加值 1–10、武器加值 0–10。' : null;
 
   const close = () => {
     setV(null);
@@ -118,7 +123,13 @@ export function ItemEditor({
             <button
               key={t.v}
               type="button"
-              onClick={() => set('itemType', t.v)}
+              onClick={() => setV({
+                ...item,
+                itemType: t.v,
+                equippable: t.v === 'consumable' ? false : t.v === 'weapon' || t.v === 'armor' ? true : canEquip(item),
+                effects: t.v === 'consumable' ? [] : item.effects.filter(effect => t.v === 'weapon' || effect.kind !== 'weaponBonus'),
+                ...(t.v === 'consumable' ? { equipped: false, requiresAttunement: false, attuned: false } : {}),
+              })}
               className={`min-h-11 rounded-chip border text-small ${
                 item.itemType === t.v
                   ? 'border-gold bg-gold/10 text-gold'
@@ -229,6 +240,26 @@ export function ItemEditor({
           <p className="mt-1 text-small text-text-secondary">缺值時不參與 AC 推導。</p>
         </div>
       )}
+
+      {item.itemType !== 'consumable' && <>
+        <div className="mt-5 rounded-card border border-border p-3">
+          <label className="flex min-h-11 cursor-pointer items-center gap-2 text-ui text-text-primary">
+            <input type="checkbox" checked={canEquip(item)} onChange={e => setV({ ...item, equippable: e.target.checked, equipped: e.target.checked ? item.equipped : false })} className="size-4 accent-gold" />
+            可裝備
+          </label>
+          <p className="mb-1 text-small leading-relaxed text-text-secondary">開啟後，可在物品清單裝備或卸下。</p>
+          {canEquip(item) && <label className="flex min-h-11 cursor-pointer items-center gap-2 text-ui text-text-primary">
+            <input type="checkbox" checked={item.requiresAttunement} onChange={e => setV({ ...item, requiresAttunement: e.target.checked, attuned: e.target.checked ? item.attuned : false })} className="size-4 accent-gold" />
+            需要同調
+          </label>}
+          {canEquip(item) && item.requiresAttunement && <label className="flex min-h-11 cursor-pointer items-center gap-2 text-ui text-text-primary">
+            <input type="checkbox" checked={item.attuned} onChange={e => set('attuned', e.target.checked)} className="size-4 accent-gold" />
+            已同調
+          </label>}
+          {canEquip(item) && item.requiresAttunement && !item.attuned && <p className="text-small text-text-secondary">穿戴並完成同調後，裝備效果才會生效。</p>}
+        </div>
+        {canEquip(item) && <ItemEffectFields effects={item.effects} weapon={item.itemType === 'weapon'} onChange={effects => set('effects', effects)} />}
+      </>}
 
       <div className="mt-4">
         <FieldLabel htmlFor={`${uid}-desc`}>敘述（選填）</FieldLabel>

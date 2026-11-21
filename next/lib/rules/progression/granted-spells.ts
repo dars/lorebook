@@ -41,11 +41,11 @@ export function automaticSpellNames(c: Character, s: Record<string, string[]>): 
 }
 
 /** 誓言等自動授予的法術不佔準備名額；移出一般清單，保留於自動授予清單。 */
-export function normalizePreparedSelections(c:Character, s:Record<string,string[]>, spells:{id:string;eng_name:string|null}[]):Record<string,string[]> {
+export function normalizePreparedSelections(c:Character, s:Record<string,string[]>, spells:{id:string;eng_name:string|null;homebrew?:unknown}[]):Record<string,string[]> {
     s=normalizeOrigins(c,s);
     if(!s.prepared)return s;
     const names=automaticSpellNames(c,s);
     const extra = new Set(Object.entries(s).filter(([key]) => /^(spell-mastery-[12]|signature|lore-spells|arcanum-\d+|tome-rituals)$/.test(key) || key.endsWith('/spell')).flatMap(([, ids])=>ids));
-    const prepared=s.prepared.filter(id=>!extra.has(id)&&!names.some(n=>sameSpellName(n,spells.find(x=>x.id===id)?.eng_name??'')));
+    const prepared=s.prepared.filter(id=>!extra.has(id)&&!names.some(n=>{const spell=spells.find(x=>x.id===id);return !spell?.homebrew&&sameSpellName(n,spell?.eng_name??'');}));
     return prepared.length===s.prepared.length?s:{...s,prepared};
 }

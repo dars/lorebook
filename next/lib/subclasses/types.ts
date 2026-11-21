@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { LimitedUse } from '@/lib/homebrew/limited-use';
 
 import levels from './feature-levels.json';
 
@@ -9,13 +10,14 @@ import levels from './feature-levels.json';
  * 無規律（戰士 3/7/10/15/18、牧師 3/6/17、盜賊 3/9/13/17），要使用者自填
  * 等於要他先去查規則書。
  *
- * 內容為**顯示文字**，不驅動任何數值推導——與自訂背景一致。
+ * 特性可設定有限次數，於取得等級產生角色卡資源；其他敘述仍為顯示文字。
  */
 
 export const SubclassFeature = z.object({
   level: z.number().int(),
   name: z.string(),
   description: z.string().default(''),
+  limitedUse: LimitedUse.optional(),
 });
 
 export const CustomSubclass = z.object({
@@ -67,6 +69,14 @@ export function validate(b: Partial<CustomSubclass>): string | null {
   // 3 級是取得子職的等級；沒有該級特性的子職在規則上不成立。
   if (!features.some((f) => f.level === 3)) {
     return '至少需要一個 3 級特性——3 級是取得子職的等級';
+  }
+  for (const feature of features) {
+    if (!featureLevelsFor(b.classEn).includes(feature.level)) {
+      return '特性等級需符合母職業的子職等級';
+    }
+    if (feature.limitedUse && !LimitedUse.safeParse(feature.limitedUse).success) {
+      return '有限次數能力需選擇合法次數與短休或長休';
+    }
   }
   return null;
 }

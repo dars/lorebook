@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { USES_CHOICES } from '@/lib/homebrew/limited-use';
 
 import {
   SKILLS,
@@ -59,7 +60,7 @@ export const DARKVISION_CHOICES = [0, 60, 120] as const;
 /** 上限 2：SRD 只有矮人的 1，留一格給「更堅韌」的自創種族，但不開到會明顯壓垮 HP 曲線。 */
 export const HP_PER_LEVEL_CHOICES = [0, 1, 2] as const;
 export const SKILL_PICK_CHOICES = [0, 1, 2] as const;
-export const USES_CHOICES = [1, 2, 3, 'proficiency'] as const;
+export { USES_CHOICES } from '@/lib/homebrew/limited-use';
 
 export const SIZE_MODES = [
   { key: 'medium', label: '固定中型' },

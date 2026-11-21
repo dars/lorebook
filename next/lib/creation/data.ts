@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { LimitedUse } from '@/lib/homebrew/limited-use';
 
 import raw from './creation-data.json';
 
@@ -30,16 +31,8 @@ export const SpeciesTrait = z.object({
  * 選用該種族建角時展開為角色卡的資源項目。內建種族的資料尚未標記這一類
  * 特性（仍在 traits 的文字裡），因此目前只有自訂種族會有值。
  */
-export const SpeciesAbility = z.object({
+export const SpeciesAbility = LimitedUse.extend({
   name: z.string(),
-  /** 1／2／3 或 'proficiency'（熟練加值，隨等級變動）。 */
-  uses: z.union([
-    z.literal(1),
-    z.literal(2),
-    z.literal(3),
-    z.literal('proficiency'),
-  ]),
-  recovery: z.enum(['short', 'long']),
   description: z.string().default(''),
 });
 

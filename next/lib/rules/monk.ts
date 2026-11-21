@@ -1,3 +1,4 @@
+import { canEquip, effectiveAbility, equipmentStats } from './equipment-effects';
 import type {Character,Equipment,CharacterFeature} from '../domain/character';
 import {wearingArmor,wieldingShield} from './ac';
 import {abilityModifier} from './ability';
@@ -5,8 +6,8 @@ export const martialDie=(level:number)=>level>=17?12:level>=11?10:level>=5?8:6;
 export const monkMoveBonus=(level:number)=>level<2?0:level>=18?30:level>=14?25:level>=10?20:level>=6?15:10;
 export const unarmoredMonk=(c:Character)=>c.classNameEn==='Monk'&&!wearingArmor(c)&&!wieldingShield(c);
 export const monkWeapon=(e:Equipment)=>['Club','Dagger','Greatclub','Handaxe','Javelin','Light Hammer','Mace','Quarterstaff','Sickle','Spear','Scimitar','Shortsword'].includes(e.nameEn);
-export const martialArtsActive=(c:Character)=>unarmoredMonk(c)&&c.equipment.filter(e=>e.equipped&&e.itemType==='weapon').every(monkWeapon);
-export const focusDc=(c:Character)=>8+c.proficiencyBonus+c.abilityScores.wis.modifier;
+export const martialArtsActive=(c:Character)=>unarmoredMonk(c)&&c.equipment.filter(e=>canEquip(e)&&e.equipped&&e.itemType==='weapon').every(monkWeapon);
+export const focusDc=(c:Character)=>8+c.proficiencyBonus+effectiveAbility(c, 'wis').modifier;
 export const focusResource=(c:Character)=>c.resources.find(r=>['Focus Points','Ki Points'].includes(r.nameEn)||r.name==='專注點');
 export const openHand=(c:Character)=>c.classNameEn==='Monk'&&!c.customSubclass&&['Warrior of the Open Hand','Way of the Open Hand','Open Hand'].includes(c.subclassEn);
 const definitions:[number,string,string,string][]=[
@@ -43,7 +44,7 @@ export function backfillMonk(c:Character):Character{
  const resources=[...result.resources];
  const add=(name:string,en:string,max:number,recovery:'short'|'long')=>{const i=resources.findIndex(r=>r.nameEn===en||(en==='Focus Points'&&r===focusResource(result)));if(i<0)resources.push({name,nameEn:en,max,current:max,recovery,display:'pips',dieFaces:0,unit:'次'});else resources[i]={...resources[i],name,nameEn:en,max,current:Math.min(max,Math.max(0,resources[i].current+max-resources[i].max)),recovery};};
  if(c.level>=2){add('專注點','Focus Points',c.level,'short');add('超凡代謝','Uncanny Metabolism',1,'long');}
- if(openHand(c)&&c.level>=6)add('全身之愈','Wholeness of Body',Math.max(1,result.abilityScores.wis.modifier),'long');
+ if(openHand(c)&&c.level>=6)add('全身之愈','Wholeness of Body',Math.max(1,effectiveAbility(result, 'wis').modifier),'long');
  return {...result,features,resources};
 }
 export type MonkPower={id:string;name:string;kind:'bonus'|'other'|'reaction';level:number;cost:number;description:string};
@@ -64,7 +65,7 @@ export function monkPowers(c:Character):MonkPower[]{
  {id:'perfect',name:'完滿專注',kind:'other',level:15,cost:0,description:'擲先攻且不使用超凡代謝，若專注少於4點則回復至4點。'},
  {id:'superior',name:'卓絕防禦',kind:'other',level:18,cost:3,description:'回合開始啟用；1分鐘內抗所有傷害但不含力場，失能時結束。'},
  ];
- if(openHand(c))p.push({id:'whole',name:'全身之愈',kind:'bonus',level:6,cost:0,description:`恢復1d${d}＋${c.abilityScores.wis.modifier} HP（至少1），請輸入骰子結果。每長休感知修正次，至少1次。`},{id:'palm',name:'顫掌 · 設下震動',kind:'other',level:17,cost:4,description:`徒手命中後記錄一個目標，持續${c.level}天；只能同時保留一個目標。`});
+ if(openHand(c))p.push({id:'whole',name:'全身之愈',kind:'bonus',level:6,cost:0,description:`恢復1d${d}＋${effectiveAbility(c, 'wis').modifier} HP（至少1），請輸入骰子結果。每長休感知修正次，至少1次。`},{id:'palm',name:'顫掌 · 設下震動',kind:'other',level:17,cost:4,description:`徒手命中後記錄一個目標，持續${c.level}天；只能同時保留一個目標。`});
  return p.filter(p=>p.level<=c.level);
 }
 export function activateMonkPower(c:Character,id:string,roll?:number,target?:string):Character{
@@ -75,8 +76,8 @@ export function activateMonkPower(c:Character,id:string,roll?:number,target?:str
  const dice=(count=1)=>{if(!Number.isInteger(roll)||roll!<count||roll!>count*martialDie(c.level))throw Error('請填入有效的武藝骰結果。');return roll!;};
  if(p.cost)spend('Focus Points',p.cost);
  if(id==='patient'&&c.level>=10)result={...result,tempHp:Math.max(c.tempHp,dice(2))};
- if(id==='metabolism'){const heal=dice()+c.level;spend('Uncanny Metabolism');result={...result,currentHp:Math.min(c.maxHp,c.currentHp+heal),resources:result.resources.map(r=>r.nameEn==='Focus Points'?{...r,current:r.max}:r)};}
- if(id==='whole'){const heal=Math.max(1,dice()+c.abilityScores.wis.modifier);spend('Wholeness of Body');result={...result,currentHp:Math.min(c.maxHp,c.currentHp+heal)};}
+ if(id==='metabolism'){const heal=dice()+c.level;spend('Uncanny Metabolism');result={...result,currentHp:Math.min(equipmentStats(c).maxHp,c.currentHp+heal),resources:result.resources.map(r=>r.nameEn==='Focus Points'?{...r,current:r.max}:r)};}
+ if(id==='whole'){const heal=Math.max(1,dice()+effectiveAbility(c, 'wis').modifier);spend('Wholeness of Body');result={...result,currentHp:Math.min(equipmentStats(c).maxHp,c.currentHp+heal)};}
  if(id==='perfect'){const r=focusResource(c);if(!r||r.current>=4)throw Error('擲先攻時專注須少於4點，且此次不使用超凡代謝。');result={...result,resources:result.resources.map(x=>x===r?{...x,current:4}:x)};}
  if(id==='superior')result={...result,monkSuperiorDefense:true};
  if(id==='palm'){if(!target?.trim())throw Error('請填寫命中的目標。');result={...result,quiveringPalmTarget:target.trim()};}

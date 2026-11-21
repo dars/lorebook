@@ -1,3 +1,4 @@
+import { reconcileEquipmentHp } from '../equipment-effects';
 import {backfillWarlock} from '../warlock';
 import {backfillSorcerer} from '../sorcerer';
 import {backfillRanger} from '../ranger';
@@ -13,6 +14,8 @@ import { ftFlattenEntries } from '@/lib/catalog/fivetools';
 import { applyStartingEquipment, startingEquipmentIssue } from './equipment';
 import type { Character, CharacterFeature, Spell, ClassResource } from '@/lib/domain/character';
 import { spellFromCatalog } from '@/lib/creation/spell-from-catalog';
+import { matchesChoiceSpell, spellFromChoice, type ChoiceSpell } from '@/lib/spells/choice-catalog';
+import { spellKey } from '@/lib/spells/selection';
 import { choiceGroups, type ChoiceCatalog, type ChoiceGroup, type Selections } from './groups';
 import { LANGUAGES, TOOLS, originId, featOriginKey } from './options';
 import { automaticSpellNames, sameSpellName, normalizePreparedSelections } from './granted-spells';
@@ -69,7 +72,7 @@ export function validateChoices(c: Character, selections: Selections, catalog: C
         if (before.length && !same(before, v)) {
             const extra = groups.filter(x => x.kind === 'spell' && x.always).flatMap(x => selections[x.id] ?? []);
             const auto = automaticSpellNames(c, selections);
-            const replacedBefore = g.id === 'prepared' ? before.filter(id => !extra.includes(id) && !auto.some(n => sameSpellName(n, catalog.spells.find(s => s.id === id)?.eng_name ?? ''))) : before;
+            const replacedBefore = g.id === 'prepared' ? before.filter(id => !extra.includes(id) && !auto.some(n => { const s = catalog.spells.find(s => s.id === id); return !s?.homebrew && sameSpellName(n, s?.eng_name ?? ''); })) : before;
             const validBefore = g.kind==='form'?replacedBefore:replacedBefore.filter(id=>{const o=g.options.find(o=>o.id===id);return o&&!o.disabledReason;});
             const dropped = g.kind==='form'?validBefore.filter(old=>!v.some(next=>{try{return JSON.parse(old).name===JSON.parse(next).name;}catch{return false;}})).length:removed(validBefore, v), limit = replacementLimit(c, g, context);
             const repairingOrigin=g.id.endsWith('/list')&&before.some(id=>g.options.find(o=>o.id===id)?.disabledReason);
@@ -101,7 +104,7 @@ export function validateChoices(c: Character, selections: Selections, catalog: C
                 continue;
             }
             if (option.disabledReason) issue(g, `${option.name}：${option.disabledReason}`);
-            if (g.kind === 'book' && context !== 'backfill' && !before.includes(id) && (c.spellbook ?? []).some(s => !s.progressionSource && sameSpellName(s.nameEn, catalog.spells.find(x => x.id === id)?.eng_name ?? '')))
+            if (g.kind === 'book' && context !== 'backfill' && !before.includes(id) && (c.spellbook ?? []).some(s => !s.progressionSource && matchesChoiceSpell(s, catalog.spells.find(x => x.id === id))))
                 issue(g, '法術書已經有這個法術，免費抄錄請選新的法術。');
             if (option.requires && !has(selections, g.id, option.requires))
                 issue(g, `${option.name} 需要 ${option.requires}，不能移除其前置祈喚。`);
@@ -189,7 +192,7 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
     const resources: ClassResource[] = c.resources.filter(r => !r.progressionSource);
     const generatedSpells: Spell[] = [], book: Spell[] = [];
     const skills = new Set<string>(), tools = new Set<string>(), languages = new Set<string>(), expertise = new Set<string>();
-    const oldSpell = (name: string) => [...c.spells, ...c.cantrips, ...(c.spellbook ?? [])].find(s => !s.homebrewId && (s.nameEn || s.name) === name);
+    const oldSpell = (option: ChoiceSpell) => [...c.spells, ...c.cantrips, ...(c.spellbook ?? [])].find(s => matchesChoiceSpell(s, option));
     for (const g of groups) {
         const ids = active[g.id];
         if (!ids)
@@ -212,8 +215,7 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
             }
             if (g.kind === 'spell' || g.kind === 'book') {
                 const s = catalog.spells.find(s => s.id === id)!;
-                const name = s.eng_name || s.name;
-                const snapshot = { ...(oldSpell(name) ?? spellFromCatalog(s)), progressionSource: g.id, spellAbility: g.ability, alwaysPrepared: g.always, castingSources: g.kind === 'book' ? undefined : [{ source: g.id, title: g.title, ability: g.ability, free: g.unlimited ? 'atWill' as const : g.recovery }], prepared: g.kind !== 'book' };
+                const snapshot = { ...spellFromChoice(s), ...oldSpell(s), progressionSource: g.id, spellAbility: g.ability, alwaysPrepared: g.always, castingSources: g.kind === 'book' ? undefined : [{ source: g.id, title: g.title, ability: g.ability, free: g.unlimited ? 'atWill' as const : g.recovery }], prepared: g.kind !== 'book' };
                 if (g.kind === 'book')
                     book.push(snapshot);
                 else
@@ -232,7 +234,7 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
         }
     }
     for (const name of automaticSpellNames(c, active)) {
-        const s = catalog.spells.find(s => sameSpellName(s.eng_name ?? '', name));
+        const s = catalog.spells.find(s => !s.homebrew && sameSpellName(s.eng_name ?? '', name));
         if (!s)
             continue;
         generatedSpells.push({ ...spellFromCatalog(s), progressionSource: 'automatic', spellAbility: c.spellcastingAbility, alwaysPrepared: true });
@@ -258,10 +260,10 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
         grantedSkills: [...skills].filter(id => c.progression?.grantedSkills.includes(id) || !c.skills.some(s => s.nameEn === id && s.proficient)),
         grantedTools: newTools.filter(v => c.progression?.grantedTools.includes(v) || !c.toolProficiencies.includes(v)),
         grantedLanguages: newLang.filter(v => c.progression?.grantedLanguages.includes(v) || !c.languages.includes(v)) };
-    const retain = (list: Spell[]) => (s: Spell) => !s.progressionSource && (!!s.homebrewId || !list.some(v => (v.nameEn || v.name) === (s.nameEn || s.name)));
+    const retain = (list: Spell[]) => (s: Spell) => !s.progressionSource && !list.some(v => spellKey(v) === spellKey(s));
     // 明確選入名額的舊法術採用既有快照；其餘手動／自創法術原樣保留。
     const dedupe = (arr: Spell[]) => { const result: Spell[] = []; for (const spell of arr) {
-        const existing = result.find(x => (x.nameEn || x.name) === (spell.nameEn || spell.name) && x.homebrewId === spell.homebrewId);
+        const existing = result.find(x => spellKey(x) === spellKey(spell));
         if (existing) {
             existing.alwaysPrepared ||= spell.alwaysPrepared;
             existing.prepared ||= spell.prepared;
@@ -296,7 +298,7 @@ export function applyChoices(c: Character, selections: Selections, catalog: Choi
         }
     const hpDelta = (abilityScores.con.modifier - c.abilityScores.con.modifier) * c.level;
     const ability = (c.spellcastingAbility === 'INT' ? 'int_' : c.spellcastingAbility.toLowerCase()) as keyof Character['abilityScores'];
-    return backfillWarlock(backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(recalculateChoiceSkills({ ...result, abilityScores, maxHp: result.maxHp + hpDelta, currentHp: result.currentHp + hpDelta, spellAttack: abilityScores[ability] ? c.proficiencyBonus + abilityScores[ability].modifier : result.spellAttack, spellDc: abilityScores[ability] ? 8 + c.proficiencyBonus + abilityScores[ability].modifier : result.spellDc }))))))))));
+    return reconcileEquipmentHp(c, backfillWarlock(backfillSorcerer(backfillRanger(backfillRogue(backfillMonk(backfillDruid(backfillCleric(backfillBard(backfillBarbarian(recalculateChoiceSkills({ ...result, abilityScores, maxHp: result.maxHp + hpDelta, currentHp: result.currentHp + hpDelta, spellAttack: abilityScores[ability] ? c.proficiencyBonus + abilityScores[ability].modifier : result.spellAttack, spellDc: abilityScores[ability] ? 8 + c.proficiencyBonus + abilityScores[ability].modifier : result.spellDc })))))))))));
 }
 /** 集中重算，升級增加 PB／能力值後亦須使用，否則專精會悄悄退回普通熟練。 */
 export function recalculateChoiceSkills(c: Character): Character {

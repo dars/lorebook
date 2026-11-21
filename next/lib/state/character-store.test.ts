@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { type Character, parseCharacter } from '@/lib/domain/character';
+import { type Character, parseCharacter, Equipment } from '@/lib/domain/character';
 import { characterActions, useCharacterStore } from './character-store';
 
 /**
@@ -156,6 +156,7 @@ describe('休息', () => {
 describe('裝備', () => {
   const armor = {
     name: '鏈甲', nameEn: '', type: '', description: '', equipped: false,
+    effects: [], requiresAttunement: false, attuned: false,
     itemType: 'armor' as const, source: 'catalog' as const, quantity: 1,
     quest: false, priceCp: 0, catalogRef: '', damage: '', damageType: '',
     finesse: false, properties: [], armorCategory: 'medium' as const, acBase: 13,
@@ -236,5 +237,80 @@ describe('載入不覆蓋未推送的變更', () => {
 
     useCharacterStore.getState().load({ ...base(), id: 'c2', name: '另一隻' });
     expect(useCharacterStore.getState().character!.name).toBe('另一隻');
+  });
+});
+
+
+describe('裝備數值與 HP 編輯', () => {
+  const c = () => useCharacterStore.getState().character!;
+  const amulet = () => Equipment.parse({ name: '體質護符', equipped: true, effects: [{ kind: 'abilityFloor', ability: 'con', value: 19 }] });
+  beforeEach(() => loadFresh({ ...base(), level: 4 }));
+
+  it('一般裝備能穿脫，反覆穿脫不累加基值，卸下保留同調', () => {
+    characterActions.addItem(Equipment.parse({ name: '護手', equippable: true, requiresAttunement: true, attuned: true }));
+    characterActions.toggleEquipped(0); expect(c().equipment[0].equipped).toBe(true);
+    characterActions.toggleEquipped(0); expect(c().equipment[0]).toMatchObject({ equipped: false, attuned: true });
+    expect(c().abilityScores.str.score).toBe(10);
+  });
+  it('體質變更保留受傷量，治療與長休使用有效上限，卸下不留下加值', () => {
+    characterActions.adjustHp(-5);
+    characterActions.addItem(amulet());
+    expect(c()).toMatchObject({ maxHp: 20, currentHp: 31 });
+    characterActions.adjustHp(100); expect(c().currentHp).toBe(36);
+    characterActions.toggleEquipped(0); expect(c().currentHp).toBe(20);
+    characterActions.toggleEquipped(0); expect(c().currentHp).toBe(36);
+    characterActions.adjustHp(-10); expect(c().currentHp).toBe(26);
+    characterActions.longRest(); expect(c().currentHp).toBe(36);
+    characterActions.removeItem(0); expect(c()).toMatchObject({ maxHp: 20, currentHp: 20 });
+  });
+  it('高於基礎HP時受傷與復原採有效上限，臨時HP先吸收', () => {
+    characterActions.addItem(amulet());
+    characterActions.setTempHp(5);
+    characterActions.adjustHp(-3);
+    expect(c()).toMatchObject({ currentHp: 36, tempHp: 2 });
+    characterActions.adjustHp(-5);
+    expect(c().currentHp).toBe(33);
+    characterActions.setHitPoints(36, 5);
+    expect(c()).toMatchObject({ currentHp: 36, tempHp: 5 });
+  });
+  it('修改效果或同調條件也會更新HP；0HP不因穿戴復活', () => {
+    characterActions.addItem(amulet());
+    characterActions.updateItem(0, { ...c().equipment[0], requiresAttunement: true });
+    expect(c().currentHp).toBe(20);
+    characterActions.adjustHp(-100);
+    characterActions.updateItem(0, { ...c().equipment[0], attuned: true });
+    expect(c().currentHp).toBe(0);
+  });
+  it('穿戴裝備編輯為護甲時，法師護甲同步結束', () => {
+    characterActions.addItem(Equipment.parse({ name: '袍', equipped: true }));
+    characterActions.setMageArmor(true);
+    characterActions.updateItem(0, { ...c().equipment[0], itemType: 'armor', armorCategory: 'light', acBase: 11 });
+    expect(c().mageArmorActive).toBe(false);
+  });
+});
+
+
+describe('物品可裝備設定', () => {
+  const c = () => useCharacterStore.getState().character!;
+  beforeEach(() => loadFresh(base()));
+
+  it('普通物品沒有裝備操作，啟用可裝備後才可穿戴', () => {
+    characterActions.addItem(Equipment.parse({ name: '繩索', equippable: false }));
+    characterActions.toggleEquipped(0);
+    expect(c().equipment[0].equipped).toBe(false);
+    characterActions.updateItem(0, { ...c().equipment[0], equippable: true });
+    expect(c().equipment[0].equipped).toBe(false);
+    characterActions.toggleEquipped(0);
+    expect(c().equipment[0].equipped).toBe(true);
+  });
+  it('停用可裝備會卸下並解除能力與HP效果，重新啟用不會自動穿上', () => {
+    characterActions.addItem(Equipment.parse({ name: '體質護符', equippable: true, equipped: true, effects: [{ kind: 'abilityFloor', ability: 'con', value: 19 }] }));
+    expect(c().currentHp).toBe(24);
+    characterActions.updateItem(0, { ...c().equipment[0], equippable: false });
+    expect(c().equipment[0].equipped).toBe(false);
+    expect(c().currentHp).toBe(20);
+    characterActions.updateItem(0, { ...c().equipment[0], equippable: true });
+    expect(c().equipment[0].equipped).toBe(false);
+    expect(c().currentHp).toBe(20);
   });
 });

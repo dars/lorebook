@@ -1,4 +1,6 @@
 'use client';
+import { equipmentStats } from '@/lib/rules/equipment-effects';
+
 import {useState} from 'react';
 import type {Character} from '@/lib/domain/character';
 import {clericPowers,channelResource,spendClericPower,preserveLife,isLifeCleric,discipleHealingBonus,type ClericPower,type HealingTarget} from '@/lib/rules/cleric';
@@ -19,7 +21,7 @@ function PowerCard({c,p}:{c:Character;p:ClericPower}){
    {targets.map((t,i)=><fieldset key={i} className="border-t border-border-2 pt-2"><legend>目標 {i+1}</legend>
     <label className="flex min-h-11 items-center gap-2"><input type="checkbox" checked={!!t.self} onChange={e=>updateTarget(i,{self:e.target.checked})}/>自己（同步 HP）</label>
     {!t.self&&<label className="block">名稱<input aria-label={`目標${i+1}名稱`} value={t.name} onChange={e=>updateTarget(i,{name:e.target.value})} className="min-h-11 w-full border border-border bg-surface-2 px-2"/></label>}
-    <div className="grid grid-cols-3 gap-2">{(['current','max','amount'] as const).map((key,j)=><label key={key}>{['目前HP','最大HP','治療量'][j]}<input aria-label={`目標${i+1}${['目前HP','最大HP','治療量'][j]}`} type="number" min={key==='max'?1:0} disabled={t.self&&key!=='amount'} value={t.self&&key!=='amount'?(key==='max'?c.maxHp:c.currentHp):t[key]} onChange={e=>updateTarget(i,{[key]:Number(e.target.value)})} className="min-h-11 w-full border border-border bg-surface-2 px-2"/></label>)}</div>
+    <div className="grid grid-cols-3 gap-2">{(['current','max','amount'] as const).map((key,j)=><label key={key}>{['目前HP','最大HP','治療量'][j]}<input aria-label={`目標${i+1}${['目前HP','最大HP','治療量'][j]}`} type="number" min={key==='max'?1:0} disabled={t.self&&key!=='amount'} value={t.self&&key!=='amount'?(key==='max'?equipmentStats(c).maxHp:c.currentHp):t[key]} onChange={e=>updateTarget(i,{[key]:Number(e.target.value)})} className="min-h-11 w-full border border-border bg-surface-2 px-2"/></label>)}</div>
     <button type="button" className="min-h-11 text-gold" onClick={()=>setTargets(old=>old.filter((_,n)=>n!==i))}>移除目標</button>
    </fieldset>)}
    <button type="button" className="min-h-11 text-gold" onClick={()=>setTargets(old=>[...old,{name:'其他目標',current:0,max:20,amount:0}])}>＋新增治療目標</button>

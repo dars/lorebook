@@ -81,7 +81,7 @@ function SpellSelection({ c, kind, onClose }: { c: Character; kind: 'cantrips' |
         <button type="button" aria-pressed={source === 'custom'} className={tabClass(source === 'custom')} onClick={() => { setSource('custom'); setError(null); }}>自創收藏</button>
       </div>}
       {initial.some(s=>s.progressionSource)&&<p className="my-2 text-small text-text-secondary">成長選擇授予的法術會保留；名額與替換請到 <AppLink href="/character-choices" className="text-gold underline">成長選擇</AppLink> 調整。</p>}
-      {kind==='spellbook'&&<p className="my-2 text-small text-text-secondary">抄錄冒險中獲得的法術；請與 DM 確認資格、抄錄時間與費用。加入法術書不會自動準備。</p>}
+      {kind==='spellbook'&&<p className="my-2 text-small text-text-secondary">抄錄冒險中獲得的法術；請與 DM 確認資格、抄錄時間與費用。加入法術書不會自動準備。自創法術請切換上方「自創收藏」。</p>}
       <input type="search" name="spellSearch" autoComplete="off" aria-label={`搜尋${label}`} placeholder="搜尋中文或英文名稱…" className="min-h-11 w-full rounded-card border border-border bg-surface-0 px-3 text-body" value={search} onChange={e => setSearch(e.target.value)} />
       {!onlySelected && source === 'catalog' && classKnown && <label className="flex min-h-11 items-center gap-2 text-ui text-text-secondary"><input type="checkbox" checked={ownClassOnly} onChange={e => setOwnClassOnly(e.target.checked)} />只顯示{c.className || c.classNameEn}的{label}</label>}
       {onlySelected && <p className="mt-2 text-small text-text-secondary">包含所有來源與角色既有版本；取消只影響角色，不會刪除收藏。</p>}

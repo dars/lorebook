@@ -1,3 +1,4 @@
+import { equipmentStats } from './equipment-effects';
 import type { Character, ClassResource } from '../domain/character';
 import { deriveClassResources } from './class-resources';
 
@@ -10,9 +11,9 @@ export const inspirationResource = (c: Character) => c.resources.find(r => r.nam
 export function backfillBard(c: Character): Character {
   let result = c;
   if (c.classNameEn === 'Bard') {
-    const resource = deriveClassResources('Bard', c.level, c.abilityScores)[0];
+    const resource = deriveClassResources('Bard', c.level, equipmentStats(c).abilityScores)[0];
     const old = inspirationResource(c);
-    const resources = old ? c.resources.map(r => r === old ? { ...r, nameEn: resource.nameEn, dieFaces: resource.dieFaces, recovery: resource.recovery } : r) : [...c.resources, resource];
+    const resources = old ? c.resources.map(r => r === old ? { ...r, nameEn: resource.nameEn, max: resource.max, current: Math.min(resource.max, Math.max(0, r.current + resource.max - r.max)), dieFaces: resource.dieFaces, recovery: resource.recovery } : r) : [...c.resources, resource];
     result = { ...c, resources, ...(isLoreBard(c) ? { subclass: '學識學院', subclassEn: 'College of Lore', features: c.features.map(f => !f.isCustom ? { ...f, source: f.source.replaceAll('逸聞學院', '學識學院') } : f) } : {}) };
   }
   if (hasFate(result) && !result.resources.some(r => r.nameEn === 'Boon of Fate')) {
@@ -33,7 +34,7 @@ export function bardPowers(c: Character): BardPower[] {
     if (c.level >= 5) powers.push({ id: 'font', name: '激勵泉源', kind: 'free', resource: 'Bardic Inspiration', description: '不耗動作，消耗任一環法術位，恢復 1 次已花用的詩人激勵。5 級起短休及長休皆恢復全部激勵。' });
     if (isLoreBard(c) && c.level >= 14) powers.push({ id: 'peerless', name: '無與倫比技能', kind: 'free', resource: 'Bardic Inspiration', description: `自己的屬性檢定或攻擊擲骰失敗時，可擲 ${die} 加入結果；若仍失敗，不消耗激勵。確認結果後再登記消耗。` });
     if (c.level >= 18) powers.push({ id: 'superior', name: '高等激勵', kind: 'free', resource: 'Bardic Inspiration', description: '擲先攻時，若激勵少於 2 次則恢復至 2 次；不會在原有次數上額外加 2。' });
-    if (c.level >= 2) powers.push({ id: 'jack', name: '萬事通', kind: 'passive', description: `未熟練且未另加熟練加值的技能檢定，加 ${Math.floor(c.proficiencyBonus / 2)}（半數熟練加值，無條件捨去）。已計入技能欄；2024 規則不適用於先攻。先攻加值 ${c.initiative >= 0 ? '+' : ''}${c.initiative}。` });
+    if (c.level >= 2) powers.push({ id: 'jack', name: '萬事通', kind: 'passive', description: `未熟練且未另加熟練加值的技能檢定，加 ${Math.floor(c.proficiencyBonus / 2)}（半數熟練加值，無條件捨去）。已計入技能欄；2024 規則不適用於先攻。先攻加值 ${equipmentStats(c).initiative >= 0 ? '+' : ''}${equipmentStats(c).initiative}。` });
   }
   if (hasFate(c)) powers.push({ id: 'fate', name: '命運恩惠', kind: 'free', resource: 'Boon of Fate', description: '自己或 60 呎內生物的 D20 檢定成功或失敗時，擲 2d4 加上或扣除其結果，不耗反應。擲先攻、短休或長休後恢復。' });
   return powers;

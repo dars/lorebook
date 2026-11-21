@@ -1,4 +1,6 @@
 'use client';
+import { equipmentStats } from '@/lib/rules/equipment-effects';
+
 import {useState} from 'react';
 import type {Character} from '@/lib/domain/character';
 import {useCharacterStore} from '@/lib/state/character-store';
@@ -21,7 +23,7 @@ export function SorcererPowers({c,kind}:{c:Character;kind:'other'|'bonus'|'rest'
  </>}
  {kind==='other'&&<>
  <p className="py-2 text-gold">術法點 {points?.current??0}/{points?.max??0} · 術士法術DC {effectiveSpellDc(c)}{active?'（天生術法＋1） · 術士法術攻擊有優勢':''}</p>
- {element&&<p className="py-2 text-gold">元素親和 · {element.name}抗性；造成{element.name}傷害的法術，其中一次傷害擲骰＋{c.abilityScores.cha.modifier}。</p>}
+ {element&&<p className="py-2 text-gold">元素親和 · {element.name}抗性；造成{element.name}傷害的法術，其中一次傷害擲骰＋{equipmentStats(c).abilityScores.cha.modifier}。</p>}
  {c.level>=2&&<details className="border-t border-border"><summary className="min-h-11 cursor-pointer py-3 font-semibold">魔力之泉 · 法術位換術法點</summary><p>不耗動作，回復等同環數的點數，不能超過{c.level}點；超過上限的部分不保留。</p><select aria-label="轉換法術位環數" className="min-h-11 border border-border bg-surface-2 px-2" value={ring} onChange={e=>setRing(Number(e.target.value))}>{c.spellSlots.map(s=><option key={s.level} value={s.level}>{s.level}環 · 剩{s.total-s.used}個</option>)}</select><button className={btn} disabled={!c.spellSlots.some(s=>s.level===ring&&s.used<s.total)||!points||points.current>=points.max} onClick={()=>update(c=>convertSorcery(c,'slot-to-points',ring),`已消耗${ring}環法術位並回復術法點。`)}>轉換</button></details>}
  {c.level>=2&&<details className="border-t border-border"><summary className="min-h-11 cursor-pointer py-3 font-semibold">超魔 · 施法時選擇</summary><p className="text-text-secondary">依下列條件套用本次法術，按下使用只扣術法點；法術位另外記錄。{active&&c.level>=7?'術法化身允許兩種超魔。':'通常每個法術一種。'}強效、追蹤可與其他超魔併用。</p>{known.map(o=><label key={o.id} className="flex min-h-11 items-start gap-2 py-2"><input className="mt-1 accent-gold" type="checkbox" checked={selected.includes(o.id)} onChange={()=>{setSelected(selected.includes(o.id)?selected.filter(x=>x!==o.id):[...selected,o.id]);setFree('');}}/><span>{o.name} · {metamagicCost(o.id)}點<span className="block text-text-secondary">{o.detail}</span></span></label>)}{!known.length&&<p>尚未選擇超魔，請先補齊成長選擇。</p>}
  {c.level>=20&&active&&<><label className="flex min-h-11 items-center gap-2">奧術神化<select aria-label="免費超魔" disabled={c.apotheosisUsed} value={free} onChange={e=>setFree(e.target.value)} className="min-h-11 border border-border bg-surface-2 px-2"><option value="">此次不使用</option>{selected.map(id=><option key={id} value={id}>{known.find(o=>o.id===id)?.name} · 免費</option>)}</select></label><p>每個自己的回合可免費一種超魔；{c.apotheosisUsed?'本回合已用。':'本回合尚未使用。'}</p><button className={btn} onClick={()=>{setFree('');update(c=>({...c,apotheosisUsed:false}),'已開始自己的新回合，奧術神化可再次使用。');}}>自己的新回合</button></>}

@@ -1,3 +1,4 @@
+import { effectiveAbility } from './equipment-effects';
 import type {Character,Spell} from '../domain/character';
 import {spellSlotTotalsFor} from './level-tables';
 import {cantripDamage} from './cantrip-damage';
@@ -23,7 +24,7 @@ export function warlockDamage(c:Character,s:Spell):string {
  const base=cantripDamage(s,c.level);if(c.classNameEn!=='Warlock'||s.level!==0||s.homebrewId||!base)return base;
  const chosen=c.features.some(f=>!f.isCustom&&((f.nameEn.startsWith('Agonizing Blast:')&&f.name.split(' · ').at(-1)===s.name)||(f.nameEn==='Agonizing Blast'&&s.nameEn==='Eldritch Blast')));
  if(!chosen)return base;
- const mod=c.abilityScores.cha.modifier,add=mod>=0?`+${mod}`:`${mod}`;
+ const mod=effectiveAbility(c, 'cha').modifier,add=mod>=0?`+${mod}`:`${mod}`;
  return s.nameEn==='Eldritch Blast'?base.replace('1d10',`(1d10${add})`):`${base}${add}`;
 }
 const defs:[number,string,string,string][]=[
@@ -46,7 +47,7 @@ export function backfillWarlock(c:Character):Character {
  const i=features.findIndex(f=>!f.isCustom&&canonical(f.nameEn)===en);const f={name,nameEn:en,description,source:`${fiendDefs.some(f=>f[1]===en)?'子職：邪魔宗主':'職業：邪術師'} Lv${lv}`,isCustom:false};if(i<0)features.push(f);else features[i]={...features[i],...f};}
  const resources=[...c.resources];const add=(en:string,name:string,max:number)=>{const i=resources.findIndex(r=>canonical(r.nameEn)===en),old=resources[i];const r={...old,name,nameEn:en,max,current:old?Math.min(max,Math.max(0,old.current+max-old.max)):max,recovery:'long' as const,display:'pips' as const,dieFaces:0,unit:'次'};if(i<0)resources.push(r);else resources[i]=r;};
  if(c.level>=2)add('Magical Cunning','魔法機巧',1);if(c.level>=9)add('Contact Patron','聯絡宗主',1);
- if(fiend(c)&&c.level>=6)add("Dark One's Own Luck",'黑暗者幸運',Math.max(1,c.abilityScores.cha.modifier));if(fiend(c)&&c.level>=14)add('Hurl Through Hell','拋入地獄',1);
+ if(fiend(c)&&c.level>=6)add("Dark One's Own Luck",'黑暗者幸運',Math.max(1,effectiveAbility(c, 'cha').modifier));if(fiend(c)&&c.level>=14)add('Hurl Through Hell','拋入地獄',1);
  return {...c,features,resources,spells:c.spells.map(s=>invocationSpell(c,s)),cantrips:c.cantrips.map(s=>invocationSpell(c,s))};
 }
 function spend(c:Character,en:string):Character{const r=c.resources.find(r=>r.nameEn===en);if(!r||r.current<1)throw Error('剩餘次數不足。');return {...c,resources:c.resources.map(x=>x===r?{...x,current:x.current-1}:x)};}
@@ -56,7 +57,7 @@ export function warlockAction(c:Character,id:'cunning'|'contact'|'blessing'|'luc
  if(id==='contact'){if(c.level<9)throw Error('尚未取得聯絡宗主。');return spend(c,'Contact Patron');}
  if(id==='vigor'){if(!hasInvocation(c,'Fiendish Vigor'))throw Error('尚未取得邪魔活力。');return {...c,tempHp:Math.max(c.tempHp,12)};}
  if(!fiend(c))throw Error('需要邪魔宗主。');
- if(id==='blessing'){if(c.level<3)throw Error('尚未取得黑暗祝福。');return {...c,tempHp:Math.max(c.tempHp,c.level+c.abilityScores.cha.modifier,1)};}
+ if(id==='blessing'){if(c.level<3)throw Error('尚未取得黑暗祝福。');return {...c,tempHp:Math.max(c.tempHp,c.level+effectiveAbility(c, 'cha').modifier,1)};}
  if(id==='luck'){if(c.level<6)throw Error('尚未取得黑暗者幸運。');return spend(c,"Dark One's Own Luck");}
  if(c.level<14)throw Error('尚未取得拋入地獄。');
  if(id==='hurl')return spend(c,'Hurl Through Hell');
